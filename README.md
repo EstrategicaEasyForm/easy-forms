@@ -45,11 +45,8 @@ cd easy-forms/
 ```
 ```
 npm install
-```
-```
- 
+``` 
 To test server use. In this mode the Cordova plugins doesn't work
-
 ```
 ionic serve
 ```
