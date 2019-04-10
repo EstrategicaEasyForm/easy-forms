@@ -29,7 +29,7 @@ ionic --version
 For clone the easy-form repository, you can using the git-Cli.
 
 ```
-git clone https://github.com/davith01/easy-forms.git
+git clone https://github.com/EstrategicaEasyForm/easy-forms
 ```
 
 or you can clone repository in Github Client.
