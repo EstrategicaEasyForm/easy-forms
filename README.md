@@ -78,19 +78,21 @@ For testing the app with the AVD running in Genymotion,
 ```
 ionic run android --device
 ```
-  
 ## Liberies / Plugins included 
-
-* [Ionic-Angular Components](https://ionicframework.com/docs/components/)
-* [Cordova Plugin Facebook](https://ionicframework.com/docs/native/facebook/)
-* [Cordova build android](https://ionicframework.com/docs/cli/cordova/build/)
-* cordova-sqlite-storage
-* cordova-plugin-fingerprint-aio
-* angular2-signaturepad
-
+* [Ionic-Components](https://ionicframework.com/docs/components/)
+* [cordova-plugin-network-information](https://ionicframework.com/docs/native/network)
+* [signature_pad](https://www.npmjs.com/package/signature_pad)
+* [ApolloGraqhl]() 
+* [ApolloGraqhl-Link](https://www.apollographql.com/docs/link/links/error)
+* [fingerprint-aio](https://ionicframework.com/docs/native/fingerprint-aio)
+* [pdf-maker](https://pdfmake.github.io/docs/)
+* [pdf-maker-tutorial](https://ionicacademy.com/create-pdf-files-ionic-pdfmake/)
+* [local-storage](https://ionicframework.com/docs/building/storage)
+* [LoadingController](https://ionicframework.com/docs/v3/api/components/loading/LoadingController/)
+* [ToastController](https://ionicframework.com/docs/v3/api/components/toast/ToastController/)
 
 ## Copyright and license
 
-Easy Maker Framekork is licensed under The MIT License (MIT). Which means that you can use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software. But you always need to state that Colorlib is the original author of this template.
+Easy Forms App is licensed for Estrategica&copy; 2019.
 
-Project is developed by [David Camacho](https://davithc01@gmail.com)
+Project is developed by [EstrategicaComunicaciones](https://github.com/EstrategicaEasyForm)
