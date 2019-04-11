@@ -8,11 +8,10 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-
 import { HttpClientModule } from '@angular/common/http';
-import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { ApolloModule, Apollo } from 'apollo-angular';
+import { ApolloModule } from 'apollo-angular';
+import { GraphQLModule } from './graphql.module';
+import { FingerprintAIOOriginal } from '@ionic-native/fingerprint-aio';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,9 +19,9 @@ import { ApolloModule, Apollo } from 'apollo-angular';
   imports: [BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
+    ApolloModule,
     HttpClientModule,
-    HttpLinkModule,
-    ApolloModule],
+    FingerprintAIOOriginal],
   providers: [
     StatusBar,
     SplashScreen,
@@ -31,13 +30,5 @@ import { ApolloModule, Apollo } from 'apollo-angular';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(
-    apollo: Apollo,
-    httpLink: HttpLink
-  ) {
-    apollo.create({
-      link: httpLink.create({ uri: 'http://tester.estrategicacomunicaciones.com/graphql' }),
-      cache: new InMemoryCache()
-    });
-  }
+  constructor() {}
 }

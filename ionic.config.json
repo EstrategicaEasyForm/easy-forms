@@ -1,5 +1,7 @@
 {
   "name": "easy-forms",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

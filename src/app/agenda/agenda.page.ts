@@ -16,10 +16,11 @@ export class AgendaPage implements OnInit {
   ngOnInit() {
     const _self = this;
     const onSuccess = function(ordersList) {
-      console.log(ordersList);
       _self.orders = ordersList;
     }
-    const onError = function(error) {}
+    const onError = function(error) {
+      console.log(error);
+    }
     this.ordersService.getOrderList(onSuccess,onError);
   }
 

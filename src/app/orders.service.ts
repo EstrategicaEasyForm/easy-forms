@@ -62,8 +62,14 @@ query orders{
         cellphone
         email
         contact
-        city
-        department
+        citiesOne{
+          id
+          name
+        }
+        departmentOne{
+          id
+          name
+        }
         quota
         payment_deadline
         locals {
@@ -334,15 +340,23 @@ export class OrdersService {
   getOrderList(onSuccess, onError) {
 
     let orders: Observable<any>;
+    try {
+      orders = this.apollo
+        .watchQuery({ 
+          query: OrdersQuery, 
+          errorPolicy: 'all'
+        })
+        .valueChanges.pipe(map((response: any) =>
+          response.data.orders.data
+        ));
+      orders.subscribe(data => {
+        // Handle the data from the API
+        onSuccess(data);
+      });
+    } catch (e) {
+      console.log(e);
+      onError(e);
+    }
 
-    orders = this.apollo
-      .watchQuery({ query: OrdersQuery })
-      .valueChanges.pipe(map((response: any) =>
-        response.data.orders.data
-      ));
-    orders.subscribe(data => {
-      // Handle the data from the API
-      onSuccess(data);
-    });
   }
 }

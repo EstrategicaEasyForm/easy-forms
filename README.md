@@ -29,7 +29,7 @@ ionic --version
 For clone the easy-form repository, you can using the git-Cli.
 
 ```
-git clone https://github.com/EstrategicaEasyForm/easy-forms
+git clone https://github.com/EstrategicaEasyForm/easy-forms.git
 ```
 
 or you can clone repository in Github Client.
@@ -45,7 +45,13 @@ cd easy-forms/
 ```
 ```
 npm install
-``` 
+```
+ 
+Add Graphql Libreries
+```
+yarn add apollo-client apollo-cache-inmemory apollo-angular-link-http graphql-tag graphql apollo-link-error apollo-link-context --save
+```
+
 To test server use. In this mode the Cordova plugins doesn't work
 ```
 ionic serve
