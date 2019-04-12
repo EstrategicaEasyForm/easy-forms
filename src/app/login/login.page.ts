@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FingerprintAIO, FingerprintAIOOriginal } from '@ionic-native/fingerprint-aio';
+
 
 
 @Component({
@@ -11,24 +11,16 @@ import { FingerprintAIO, FingerprintAIOOriginal } from '@ionic-native/fingerprin
 export class LoginPage implements OnInit {
 
   showFingerPrint = false;
-  constructor(public router: Router,
-    public faio: FingerprintAIOOriginal) { 
-    
-    //initialize the FingerPrint control
-		this.faio.isAvailable().then(result => {
-			this.showFingerPrint = true;
-		}).catch(err => {
-			this.showFingerPrint = false;
-		});
+  constructor(public router: Router) {
   }
 
   ngOnInit() {
-    
+
   }
 
   goToHome() {
-		//continue with access to the app
+    //continue with access to the app
     this.router.navigateByUrl('/agenda');
-	}
+  }
 
 }

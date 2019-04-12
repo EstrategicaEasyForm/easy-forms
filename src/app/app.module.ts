@@ -11,7 +11,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ApolloModule } from 'apollo-angular';
 import { GraphQLModule } from './graphql.module';
-import { FingerprintAIOOriginal } from '@ionic-native/fingerprint-aio';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,7 +20,7 @@ import { FingerprintAIOOriginal } from '@ionic-native/fingerprint-aio';
     AppRoutingModule,
     ApolloModule,
     HttpClientModule,
-    FingerprintAIOOriginal],
+    GraphQLModule],
   providers: [
     StatusBar,
     SplashScreen,
@@ -30,5 +29,5 @@ import { FingerprintAIOOriginal } from '@ionic-native/fingerprint-aio';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor() {}
+  constructor() { }
 }

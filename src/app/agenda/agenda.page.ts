@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OrdersService } from '../orders.service';
 
-
 @Component({
   selector: 'app-agenda',
   templateUrl: './agenda.page.html',
@@ -16,7 +15,9 @@ export class AgendaPage implements OnInit {
   ngOnInit() {
     const _self = this;
     const onSuccess = function(ordersList) {
-      _self.orders = ordersList;
+      if(ordersList){
+        _self.orders = ordersList;
+      }
     }
     const onError = function(error) {
       console.log(error);

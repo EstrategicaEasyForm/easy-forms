@@ -342,12 +342,17 @@ export class OrdersService {
     let orders: Observable<any>;
     try {
       orders = this.apollo
-        .watchQuery({ 
-          query: OrdersQuery, 
+        .watchQuery({
+          query: OrdersQuery,
           errorPolicy: 'all'
         })
-        .valueChanges.pipe(map((response: any) =>
-          response.data.orders.data
+        .valueChanges.pipe(map((response: any) => {
+          if (response.error) {
+            this.parseError(onError, response);
+          } else {
+            onSuccess(response.data.orders.data);
+          }
+        }
         ));
       orders.subscribe(data => {
         // Handle the data from the API
@@ -358,5 +363,9 @@ export class OrdersService {
       onError(e);
     }
 
+  }
+
+  private parseError(onError: any, response: any) {
+    return response.error;
   }
 }
