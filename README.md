@@ -44,12 +44,7 @@ Download for Windows (msi): [https://desktop.github.com/](https://desktop.github
 cd easy-forms/
 ```
 ```
-npm install
-```
- 
-Add Graphql Libreries
-```
-yarn add apollo-client apollo-cache-inmemory apollo-angular-link-http graphql-tag graphql apollo-link-error apollo-link-context --save
+yarn install
 ```
 
 To test server use. In this mode the Cordova plugins doesn't work
