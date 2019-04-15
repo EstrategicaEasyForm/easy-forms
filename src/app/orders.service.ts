@@ -340,6 +340,7 @@ export class OrdersService {
   getOrderList(onSuccess, onError) {
 
     let orders: Observable<any>;
+    
     try {
       orders = this.apollo
         .watchQuery({

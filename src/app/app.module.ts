@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ApolloModule } from 'apollo-angular';
 import { GraphQLModule } from './graphql.module';
+import { IonicStorageModule } from '@ionic/storage';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,7 +21,8 @@ import { GraphQLModule } from './graphql.module';
     AppRoutingModule,
     ApolloModule,
     HttpClientModule,
-    GraphQLModule],
+    GraphQLModule,
+    IonicStorageModule.forRoot()],
   providers: [
     StatusBar,
     SplashScreen,

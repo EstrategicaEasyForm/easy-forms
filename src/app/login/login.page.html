@@ -1,9 +1,32 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>login</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
+
+  <img class="logoIcon" src="assets/imgs/logoInvitroAlfa_968x576.png" />
+
+  <form (ngSubmit)="onLogin('Login',this)">
+
+    <ion-item id="login-input1">
+      <ion-label stacked> Usuario</ion-label>
+      <ion-input type="email" [(ngModel)]="email" [ngModelOptions]="{standalone: true}" value="cristianjojoa01@gmail.com"></ion-input>
+    </ion-item>
+    <ion-item id="login-input2">
+      <ion-label stacked> Contraseña </ion-label>
+      <ion-input type="password" [(ngModel)]="password" [ngModelOptions]="{standalone: true}" value="cristian123"></ion-input>
+    </ion-item>
+
+    <div class="spacer" style="height:10px;"></div>
+
+    <ion-button type="submit" color="stable" class="login-button btn-primary" expand="full" fill="outline">
+      Iniciar
+    </ion-button>
+
+    <div class="spacer" style="height:40px;"></div>
+
+  </form>
+
+  <ion-button *ngIf="!showFingerPrint" expand="full" id="login-finger">
+    O ingrese con Huella Digital&nbsp;
+    <ion-icon name="finger-print" class="finger-print"></ion-icon>
+  </ion-button>
+
 
 </ion-content>
