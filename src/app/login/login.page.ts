@@ -72,12 +72,15 @@ export class LoginPage implements OnInit {
           this.goToHome();
         }, (error) => {
           loading.onDidDismiss();
-          if (error.graphQLErrors[0] &&
-            error.graphQLErrors[0].category === 'authentication') {
-            this.showMessage('Usuario o clave incorrectos');
-          }
-          else {
-            this.showMessage('No se puede iniciar sesion');
+          if (error.graphQLErrors) {
+            for (let err of error.graphQLErrors) {
+              if (err.category === 'authentication') {
+                this.showMessage('Usuario o clave incorrectos');
+              }
+              else {
+                this.showMessage('No se puede iniciar sesion');
+              }
+            }
           }
         });
     }
