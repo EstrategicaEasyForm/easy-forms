@@ -28,8 +28,8 @@ export class UsersService {
       mutation: loginMutation,
       variables: {
         "data": {
-          "username": "cristianjojoa01@gmail.com",
-          "password": "cristian123"
+          "username": userAuth.email,
+          "password": userAuth.password
         }
       }
     });

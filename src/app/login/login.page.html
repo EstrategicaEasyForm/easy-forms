@@ -4,18 +4,32 @@
 
   <form novalidate [formGroup]="signinForm" (ngSubmit)="onLogin('Login',this)">
 
-    <ion-item id="login-input1">
+    <ion-item>
       <ion-label stacked> Usuario</ion-label>
-      <ion-input type="email" [(ngModel)]="email" formControlName="email" [ngModelOptions]="{standalone: true}" value="cristianjojoa01@gmail.com"></ion-input>
+      <ion-input type="email" [(ngModel)]="email" formControlName="email"></ion-input>
+      <div class="validation-errors">
+        <ng-container *ngFor="let validation of validation_messages.email">
+          <div class="error-message" *ngIf="signinForm.get('email').hasError(validation.type) && (signinForm.get('email').dirty || signinForm.get('email').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
+      </div>
     </ion-item>
-    <ion-item id="login-input2">
+    <ion-item>
       <ion-label stacked> Contraseña </ion-label>
-      <ion-input type="password" [(ngModel)]="password" formControlName="password" [ngModelOptions]="{standalone: true}" value="cristian123"></ion-input>
+      <ion-input type="password" [(ngModel)]="password" formControlName="password"></ion-input>
+      <div class="validation-errors">
+        <ng-container *ngFor="let validation of validation_messages.password">
+          <div class="error-message" *ngIf="signinForm.get('password').hasError(validation.type) && (signinForm.get('password').dirty || signinForm.get('password').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
+      </div>
     </ion-item>
 
     <div class="spacer" style="height:10px;"></div>
 
-    <ion-button type="submit" color="stable" class="login-button btn-primary" expand="full" fill="outline">
+    <ion-button type="submit" [disabled]="!signinForm.valid" color="stable" class="login-button btn-primary" expand="full" fill="outline">
       Iniciar
     </ion-button>
 
