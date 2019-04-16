@@ -12,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ApolloModule } from 'apollo-angular';
 import { GraphQLModule } from './graphql.module';
 import { IonicStorageModule } from '@ionic/storage';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,6 +23,8 @@ import { IonicStorageModule } from '@ionic/storage';
     ApolloModule,
     HttpClientModule,
     GraphQLModule,
+    FormsModule,
+    ReactiveFormsModule,
     IonicStorageModule.forRoot()],
   providers: [
     StatusBar,
