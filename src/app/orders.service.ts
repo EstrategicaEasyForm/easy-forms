@@ -3,6 +3,7 @@ import { Apollo } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import gql from 'graphql-tag';
+import { Storage } from '@ionic/storage';
 
 const OrdersQuery = gql`
 query orders{
@@ -335,12 +336,13 @@ query orders{
 })
 export class OrdersService {
 
-  constructor(private apollo: Apollo) { }
+  constructor(private apollo: Apollo,
+    private storage: Storage) { }
 
-  getOrderList(onSuccess, onError) {
+  getOrdersList(onSuccess, onError) {
 
     let orders: Observable<any>;
-    
+
     try {
       orders = this.apollo
         .watchQuery({
@@ -366,7 +368,13 @@ export class OrdersService {
 
   }
 
-  private parseError(onError: any, response: any) {
+  private parseError(onError: any, response: any): string {
     return response.error;
+  }
+
+  /* Order Storage */
+ 
+  getOrdersListStorage() {
+    return this.storage.get('ordersList');
   }
 }

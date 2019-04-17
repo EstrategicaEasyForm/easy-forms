@@ -1,8 +1,8 @@
 <ion-content>
 
-  <img class="logoIcon" src="assets/imgs/logoInvitroAlfa_968x576.png" />
+  <img class="logoIcon ion-padding" src="assets/imgs/logoInvitroAlfa_968x576.png" />
 
-  <form novalidate [formGroup]="signinForm" (ngSubmit)="onLogin('Login',this)">
+  <form class="ion-padding" novalidate [formGroup]="signinForm" (ngSubmit)="onLogin('Login',this)">
 
     <ion-item>
       <ion-label stacked> Usuario</ion-label>
@@ -37,7 +37,7 @@
 
   </form>
 
-  <ion-button *ngIf="!showFingerPrint" expand="full" id="login-finger">
+  <ion-button class="ion-padding" *ngIf="!showFingerPrint" expand="full" id="login-finger">
     O ingrese con Huella Digital&nbsp;
     <ion-icon name="finger-print" class="finger-print"></ion-icon>
   </ion-button>
