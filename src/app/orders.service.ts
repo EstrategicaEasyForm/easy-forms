@@ -6,27 +6,73 @@ import gql from 'graphql-tag';
 import { Storage } from '@ionic/storage';
 
 const OrdersQuery = gql`
-query orders{
+query orders {
+  
   orders {
     id
+    client_id
+    project
+    observation
+    date
+    approved 
     agenda {
       id
+      order_id
       start_date
       end_date
       all_day
       name_client
-      event_id
       event {
         id
         name
       }
       employee_id
-      order_id
+      user {
+        id
+        name
+        email
+        created_at
+        updated_at
+      }
+      other_user {
+        id
+        name
+      }
+      department {
+        id
+        name
+      }
+      municipality {
+        id
+        name
+      }
       address
       observation
       numAgenda
+      name_local
     }
-    client_id
+    detailsApi {
+      id
+      order_id
+      local {
+        id
+        name
+        city
+        department
+      }
+    }
+    subservices {
+      service {
+        id
+        name
+      }
+      subservice {
+        id
+        name
+      }
+      value
+    }
+    
     client {
       id
       identification_type_id
@@ -39,14 +85,26 @@ query orders{
       cellphone
       email
       contact
-      citiesOne{
+      position
+      citiesOne {
         id
         name
+      }
+      departmentOne {
+        id
+        name
+      }
+      quota
+      payment_deadline
+      locals {
+        id
+        name
+        city
+        department
       }
     }
   }
 }
-
 `;
 
 

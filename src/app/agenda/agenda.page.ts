@@ -10,7 +10,8 @@ import { OrdersService } from '../orders.service';
 export class AgendaPage implements OnInit {
 
   orders: any;
-  agendas: any = [];
+  agendaList: any = [];
+  agendasOri: any = [];
   filter: any = { dayStr: "Hoy", dayTime: new Date(), mySelf: true };
 
   constructor(public ordersService: OrdersService,
@@ -18,34 +19,42 @@ export class AgendaPage implements OnInit {
     public toastCtrl: ToastController) { }
 
 
-  ngOnInit() {
+  async ngOnInit() {
     const _self = this;
+    const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere'
+    });
+    await loading.present();
+
+
     this.ordersService.getOrdersListStorage()
       .then((ordersList) => {
-        if (ordersList) {
-          _self.orders = ordersList;
+        if (ordersList) { 
           for (let order of ordersList) {
-            _self.agendas.concat(order.agenda);
-          }
-
+            _self.agendasOri = _self.agendasOri.concat(order.agenda);
+          } 
+          _self.filterItems();
+          loading.dismiss();
         }
         else {
-          this.getOrdersList();
+          this.getOrdersList(loading);
         }
       });
   }
 
-  async getOrdersList() {
+  async getOrdersList(loading) {
     const _self = this;
     const onSuccess = function (ordersList) {
-      if (ordersList) {
-        _self.orders = ordersList;
+      loading.dismiss();
+      if (ordersList) { 
         for (let order of ordersList) {
-          _self.agendas = _self.agendas.concat(order.agenda);
-        }
+          _self.agendasOri = _self.agendasOri.concat(order.agenda);
+        } 
+        _self.filterItems();
       }
     }
     const onError = function (error) {
+      loading.dismiss();
       this.showMessage('No se puede consultar la lista de ordenes');
       this.showMessage(error);
     }
@@ -117,11 +126,12 @@ export class AgendaPage implements OnInit {
   }
 
   filterItems() {
-    this.agendas = this.agendas.filter((agenda) => {
+    const _self = this;
+    this.agendaList = this.agendasOri.filter((agenda) => {
       const employee_id = 9;
       return agenda.start_date !== null &&
-      (!this.filter || agenda.employee_id === employee_id)
-    });
+        (!_self.filter.mySelf || agenda.employee_id == employee_id)
+    }); 
   }
 
   async showMessage(message: string) {
@@ -130,5 +140,5 @@ export class AgendaPage implements OnInit {
       duration: 2000
     });
     toast.present();
-  }  
+  }
 }

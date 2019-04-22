@@ -7,12 +7,13 @@
 <ion-content>
   <ion-card>
     <ion-row class="text-align-center">
-      <ion-col>
+      <ion-col class="item-length">
+        {{agendaList.length}} item(s) encontrado(s)
       </ion-col>
       <ion-col>
         <ion-item>
           <ion-label color="primary">Solo mías</ion-label>
-          <ion-toggle [(ngModel)]="filter.mySelf"></ion-toggle>
+          <ion-toggle [(ngModel)]="filter.mySelf" (ngModelChange)="filterItems()"></ion-toggle>
         </ion-item>
       </ion-col>
       <ion-col>
@@ -42,16 +43,16 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <ion-card *ngFor="let agenda of agendas">
+        <ion-card *ngFor="let agenda of agendaList">
           <ion-card-header>
             <h3 style="font-size: 1.2rem;">
               <ion-icon style="color:red;" name="aperture"></ion-icon>Aspiracion</h3>
-            <small>Orden de producción {{agenda.order_id}} </small>
+            <small>Orden de producción {{agenda?.order_id}} </small>
           </ion-card-header>
 
           <ion-card-content style="font-size: 1.3rem;">
-            Orden realizada a {{agenda.client.contact}} en la cuidad de {{agenda.client.citiesOne.name}}.
-            <small>Fecha: {{agenda.start_date}} </small>
+            Orden realizada a {{agenda.client?.contact}} en la cuidad de {{agenda.client?.citiesOne.name}}.
+            <small>Fecha: {{agenda?.start_date}} </small>
           </ion-card-content>
         </ion-card>
       </ion-col>
