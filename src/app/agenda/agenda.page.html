@@ -5,8 +5,58 @@
 </ion-header>
 
 <ion-content>
-  <ul *ngFor="let order of orders">
-    Id: {{order.id}}
-    Agenda: {{order.agenda}}
-  </ul>
+  <ion-card>
+    <ion-row class="text-align-center">
+      <ion-col>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-label color="primary">Solo mías</ion-label>
+          <ion-toggle [(ngModel)]="filter.mySelf"></ion-toggle>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-row>
+          <ion-col col-3>
+            <ion-button color="primary" (click)="backDay()">
+              <ion-icon name="skip-backward"></ion-icon>
+            </ion-button>
+          </ion-col>
+          <ion-col class="dayCalendar" col-6>
+            <ion-label color="primary">{{filter.dayStr}}</ion-label>
+          </ion-col>
+          <ion-col col-3>
+            <ion-button color="primary" (click)="forwardDay()">
+              <ion-icon name="skip-forward"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+
+    </ion-row>
+
+  </ion-card>
+
+
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card *ngFor="let agenda of agendas">
+          <ion-card-header>
+            <h3 style="font-size: 1.2rem;">
+              <ion-icon style="color:red;" name="aperture"></ion-icon>Aspiracion</h3>
+            <small>Orden de producción {{agenda.order_id}} </small>
+          </ion-card-header>
+
+          <ion-card-content style="font-size: 1.3rem;">
+            Orden realizada a {{agenda.client.contact}} en la cuidad de {{agenda.client.citiesOne.name}}.
+            <small>Fecha: {{agenda.start_date}} </small>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
 </ion-content>

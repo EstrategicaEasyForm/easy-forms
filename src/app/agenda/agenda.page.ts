@@ -10,6 +10,8 @@ import { OrdersService } from '../orders.service';
 export class AgendaPage implements OnInit {
 
   orders: any;
+  agendas: any = [];
+  filter: any = { dayStr: "Hoy", dayTime: new Date(), mySelf: true };
 
   constructor(public ordersService: OrdersService,
     public loadingCtrl: LoadingController,
@@ -22,6 +24,10 @@ export class AgendaPage implements OnInit {
       .then((ordersList) => {
         if (ordersList) {
           _self.orders = ordersList;
+          for (let order of ordersList) {
+            _self.agendas.concat(order.agenda);
+          }
+
         }
         else {
           this.getOrdersList();
@@ -29,17 +35,93 @@ export class AgendaPage implements OnInit {
       });
   }
 
-  getOrdersList() {
+  async getOrdersList() {
     const _self = this;
     const onSuccess = function (ordersList) {
       if (ordersList) {
         _self.orders = ordersList;
+        for (let order of ordersList) {
+          _self.agendas = _self.agendas.concat(order.agenda);
+        }
       }
     }
     const onError = function (error) {
       this.showMessage('No se puede consultar la lista de ordenes');
+      this.showMessage(error);
     }
     this.ordersService.getOrdersList(onSuccess, onError);
+  }
+
+  backDay() {
+    let day: Date;
+    switch (this.filter.dayStr) {
+      case 'Hoy':
+        this.filter.dayTime = new Date(Date.now() - 1 * 24 * 60 * 60 * 1000);
+        this.filter.dayStr = 'Ayer';
+        break;
+      case 'Mañana':
+        this.filter.dayTime = new Date(Date.now());
+        this.filter.dayStr = 'Hoy';
+        break;
+      case 'Ayer':
+      default:
+        day = new Date(this.filter.dayTime - 1 * 24 * 60 * 60 * 1000);
+        this.filter.dayTime = day;
+        this.filter.dayStr = this.formatDate(day);
+        break;
+    }
+  }
+
+  forwardDay() {
+    let day: Date;
+    switch (this.filter.dayStr) {
+      case 'Hoy':
+        this.filter.dayTime = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
+        this.filter.dayStr = 'Mañana';
+        break;
+      case 'Ayer':
+        this.filter.dayTime = new Date(Date.now());
+        this.filter.dayStr = 'Hoy';
+        break;
+      case 'Mañana':
+      default:
+        day = new Date(this.filter.dayTime.getTime() + 1 * 24 * 60 * 60 * 1000);
+        this.filter.dayTime = day;
+        this.filter.dayStr = this.formatDate(day);
+        break;
+    }
+  }
+
+  formatDate(day: Date) {
+    const yesterday = new Date(Date.now() - 1 * 24 * 60 * 60 * 1000);
+    const tomorrow = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
+    const today = new Date(Date.now());
+    if (this.truncDate(day) === this.truncDate(yesterday))
+      return 'Ayer';
+    if (this.truncDate(day) === this.truncDate(tomorrow))
+      return 'Mañana';
+    if (this.truncDate(day) === this.truncDate(today))
+      return 'Hoy';
+
+    const mount = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const date = day.getDate() < 10 ? '0' + day.getDate() : day.getDate();
+    return date + ' ' + mount[day.getMonth()];
+  }
+
+  truncDate(day: Date) {
+    day.setHours(0);
+    day.setMinutes(0);
+    day.setSeconds(0);
+    day.setMilliseconds(0);
+    return day.getTime();
+  }
+
+  filterItems() {
+    this.agendas = this.agendas.filter((agenda) => {
+      const employee_id = 9;
+      return agenda.start_date !== null &&
+      (!this.filter || agenda.employee_id === employee_id)
+    });
   }
 
   async showMessage(message: string) {
@@ -48,6 +130,5 @@ export class AgendaPage implements OnInit {
       duration: 2000
     });
     toast.present();
-  }
-
+  }  
 }

@@ -39,15 +39,15 @@ export class UsersService {
   /* Token Authentication Storage */
 
   setToken(userAuth: any) {
-    this.storage.set('userAuthToken', userAuth.token);
+    this.storage.set('userAuthToken', userAuth);
   }
-
-  deleteToken(userAuth: any) {
-    this.storage.remove('userAuthToken');
-  }
-
+  
   getToken() {
     return this.storage.get('userAuthToken');
+  }
+
+  deleteToken() {
+    this.storage.remove('userAuthToken');
   }
 
   /* Users list authentication Storage */
@@ -55,14 +55,14 @@ export class UsersService {
   addUserAuthStorage(userAuth) {
 
     //retrive users authentication list and replace current user if exists
-    this.storage.get('users-auth-list').then((usersAuth) => {
-      usersAuth = usersAuth ? usersAuth.filter((dataAuth) => {
+    this.storage.get('users-auth-list').then((usersAuthList) => {
+      usersAuthList = usersAuthList ? usersAuthList.filter((dataAuth) => {
         return userAuth.email !== dataAuth.email;
       }) : [];
 
       //save user authentication list
-      usersAuth.push(userAuth);
-      this.storage.set('users-auth-list', usersAuth);
+      usersAuthList.push(userAuth);
+      this.storage.set('users-auth-list', usersAuthList);
     });
   }
 
@@ -75,7 +75,7 @@ export class UsersService {
         }) : [];
 
         //Return user authentication data if exists
-        resolve(usersAuthList[0] ? usersAuthList[0] : false);
+        resolve(usersAuthList[0] ? true : false);
       });
     });
   }

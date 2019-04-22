@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 import { ViewChild } from '@angular/core';
 import { LoadingController, ToastController } from '@ionic/angular';
-import { UsersService } from '../users.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UsersService } from '../users.service';
 
 @Component({
   selector: 'app-login',
@@ -43,11 +43,12 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
+
   }
 
   goToHome() {
     //continue with access to the app
-    this.router.navigateByUrl('/tabs');
+    this.router.navigateByUrl('/tabs/agenda');
   }
 
   async onLogin(type: string, data: any) {
@@ -74,10 +75,12 @@ export class LoginPage implements OnInit {
           loading.dismiss();
           const next = this.showError(error);
           if (next) {
+
             //get user auth storage
             this.usersService.isUserAuthStorage(userAuth)
               .then((isValid: boolean) => {
                 if (isValid) {
+                  this.usersService.setToken(userAuth);
                   this.goToHome();
                 }
                 else {

@@ -12,40 +12,39 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            //loadChildren: '../agenda/agenda.module#AgendaPageModule'
+            loadChildren: '../agenda/agenda.module#AgendaPageModule'
+            
+          }
+        ]
+      },
+      {
+        path: 'sync',
+        children: [
+          {
+            path: '',
             loadChildren: '../syncronization/syncronization.module#SyncronizationPageModule'
           }
         ]
       },
       {
-        path: 'tab2',
+        path: 'more',
         children: [
           {
             path: '',
-            //loadChildren: '../agenda/agenda.module#AgendaPageModule'
-            loadChildren: '../syncronization/syncronization.module#SyncronizationPageModule'
-          }
-        ]
-      },
-      {
-        path: 'syncronization',
-        children: [
-          {
-            path: '',
-            loadChildren: '../syncronization/syncronization.module#SyncronizationPageModule'
+            loadChildren: '../more/more.module#MorePageModule'
           }
         ]
       },
       {
         path: '',
-        redirectTo: '/tabs/syncronization',
+        redirectTo: '/tabs/agenda',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/tabs/syncronization',
+    redirectTo: '/tabs/agenda',
     pathMatch: 'full'
   }
 ];
