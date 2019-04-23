@@ -5,10 +5,13 @@ import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { onError } from 'apollo-link-error';
 import { HttpHeaders } from '@angular/common/http';
+import { ToastController } from '@ionic/angular';
 
 const uri = 'http://tester.estrategicacomunicaciones.com/graphql'; // <-- add the URL of the GraphQL server here
 
-export function createApollo(httpLink: HttpLink) {
+export function createApollo(httpLink: HttpLink,
+  toastCtrl: ToastController) {
+
   const http = httpLink.create({ uri });
 
   const auth = setContext(async (_, { headers }) => {
@@ -23,12 +26,16 @@ export function createApollo(httpLink: HttpLink) {
     }
   });
   const linkError = onError(({ graphQLErrors, networkError }) => {
-    if (networkError) {
-      console.log(networkError);
-    }
-    if (graphQLErrors) {
-      console.log(graphQLErrors);
-    }
+    let toast = this.toastCtrl.create({
+      message: 'No se puede consultar la lista de agendas',
+      duration: 2000
+    });
+    toast.present();
+    toast = this.toastCtrl.create({
+      message: networkError || graphQLErrors || '',
+      duration: 2000
+    });
+    toast.present();
   });
   return {
     link: linkError.concat(auth).concat(http),

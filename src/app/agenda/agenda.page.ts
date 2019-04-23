@@ -9,7 +9,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
   templateUrl: './agenda.page.html',
   styleUrls: ['./agenda.page.scss'],
 })
-export class AgendaPage implements OnInit {
+export class AgendaPage {
 
   orders: any;
   agendaList: any = [];
@@ -22,23 +22,22 @@ export class AgendaPage implements OnInit {
 
     // Add an icon to the library for convenient access in other components
     library.add(faCoffee);
+    this.retriveAgenda();
   }
 
-  async ngOnInit() {
+  async retriveAgenda() {
     const _self = this;
     const loading = await this.loadingCtrl.create({
       message: 'Por favor espere'
     });
     await loading.present();
 
-    this.ordersService.getOrdersListStorage()
-      .then((ordersList) => {
-        if (ordersList) {
-          for (let order of ordersList) {
-            _self.agendasOri = _self.agendasOri.concat(order.agenda);
-          }
-          _self.filterItems();
+    this.ordersService.getAgendasListStorage()
+      .then((agendasList) => {
+        if (agendasList) {
           loading.dismiss();
+          _self.agendasOri = agendasList;
+          _self.filterItems();
         }
         else {
           this.getOrdersList(loading);
@@ -48,21 +47,20 @@ export class AgendaPage implements OnInit {
 
   async getOrdersList(loading) {
     const _self = this;
-    const onSuccess = function (ordersList) {
+    const onSuccess = function (agendasList) {
       loading.dismiss();
-      if (ordersList) {
-        for (let order of ordersList) {
-          _self.agendasOri = _self.agendasOri.concat(order.agenda);
-        }
-        _self.filterItems();
-      }
+      _self.agendasOri = agendasList;
+      _self.ordersService.setAgendasListStorage(agendasList);
+      _self.filterItems();
     }
     const onError = function (error) {
       loading.dismiss();
-      this.showMessage('No se puede consultar la lista de ordenes');
-      this.showMessage(error);
+      if (typeof error === 'string') {
+        this.showMessage(error);
+      }
+      else this.showMessage('No se puede consultar la lista de agendas');
     }
-    this.ordersService.getOrdersList(onSuccess, onError);
+    this.ordersService.getAgendaOrders(onSuccess, onError);
   }
 
   backDay() {

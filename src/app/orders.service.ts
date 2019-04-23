@@ -5,6 +5,49 @@ import { map } from 'rxjs/operators';
 import gql from 'graphql-tag';
 import { Storage } from '@ionic/storage';
 
+const templates = [
+  {
+    "id": "1",
+    "name": "Evaluación Receptoras",
+    "icon": "['fas', 'search']"
+  },
+  {
+    "id": "2",
+    "name": "Aspiración Folicular",
+    "icon": "['fas', 'eye-dropper']"
+  },
+  {
+    "id": "3",
+    "name": "Orden de Producción",
+    "icon": "['fas', 'arrow']"
+  },
+  {
+    "id": "4",
+    "name": "Producción Embrión",
+    "icon": "['fas', 'flask']"
+  },
+  {
+    "id": "5",
+    "name": "Transferencia Embrión",
+    "icon": "['fas', 'magic']"
+  },
+  {
+    "id": "6",
+    "name": "Diagnóstico",
+    "icon": "['fas', 'stethoscope']"
+  },
+  {
+    "id": "7",
+    "name": "Sexaje",
+    "icon": "['fas', 'random']"
+  },
+  {
+    "id": "8",
+    "name": "Entrega",
+    "icon": "['fas', 'truck']"
+  }
+];
+
 const OrdersQuery = gql`
 query orders {
   orders {
@@ -16,8 +59,6 @@ query orders {
     approved
     detailsApi {
       id
-      order_id
-      local_id
       local {
         id
         name
@@ -27,10 +68,8 @@ query orders {
       apply_evaluation
       invoiced
       invoiced_event
-      invoiced_event
       evaluationApi {
         id
-        order_detail_id
         comments
         state
         date
@@ -60,7 +99,6 @@ query orders {
           }
         }
         url_signing
-        
       }
       aspiration {
         id
@@ -147,10 +185,6 @@ query orders {
           id
           production_id
           aspiration_detail_id
-          aspirationdetail {
-            id
-            aspiration_id
-          }
           production_summary_id
           civ
           cleavage
@@ -176,15 +210,7 @@ query orders {
         details {
           id
           transfer_id
-          transfer {
-            id
-            order_detail_id
-          }
           production_detail_id
-          productionDetail {
-            id
-            production_id
-          }
           evaluation_detail_id
           receiver
           embryo
@@ -201,7 +227,6 @@ query orders {
             department
           }
           discard
-          
         }
       }
       diagnostic {
@@ -225,12 +250,7 @@ query orders {
       delivery {
         id
       }
-      
     }
-    subservices {
-      id
-    }
-    
     agenda {
       id
       order_id
@@ -267,28 +287,6 @@ query orders {
       numAgenda
       name_local
     }
-    detailsApi {
-      id
-      order_id
-      local {
-        id
-        name
-        city
-        department
-      }
-    }
-    subservices {
-      service {
-        id
-        name
-      }
-      subservice {
-        id
-        name
-      }
-      value
-    }
-    
     client {
       id
       identification_type_id
@@ -332,10 +330,10 @@ export class OrdersService {
   constructor(private apollo: Apollo,
     private storage: Storage) { }
 
-  getOrdersList(onSuccess, onError) {
+  getAgendaOrders(onSuccess, onError) {
 
     let orders: Observable<any>;
-
+    const _self = this;
     try {
       orders = this.apollo
         .watchQuery({
@@ -344,9 +342,17 @@ export class OrdersService {
         })
         .valueChanges.pipe(map((response: any) => {
           if (response.errors) {
-            onError(response.errors[0].message);
+            onError(response.errors);
           } else {
-            onSuccess(response.data.orders);
+            const agendasList = [];
+            for (let order of response.data.orders) {
+              for (let agenda of order.agenda) {
+                agenda.front = {};
+                agenda.front.templateType = _self.getTemplate(agenda) || {};
+                agendasList.push(agenda);
+              }
+            }
+            onSuccess(agendasList);
           }
         }
         ));
@@ -355,14 +361,26 @@ export class OrdersService {
         onSuccess(data);
       });
     } catch (e) {
-      console.log(e);
       onError(e);
     }
   }
 
   /* Order Storage */
- 
-  getOrdersListStorage() {
-    return this.storage.get('ordersList');
+
+  getAgendasListStorage() {
+    return this.storage.get('agendasList');
+  }
+
+  setAgendasListStorage(agendasList) {
+    return this.storage.set('agendasList',agendasList);
+  }
+
+  getTemplate(agenda) {
+    for (let template of templates) {
+      if (template.id === agenda.event.id) {
+        return template;
+      }
+    }
+    return null;
   }
 }
