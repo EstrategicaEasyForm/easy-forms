@@ -38,18 +38,25 @@
 
   </ion-card>
 
-
-
   <ion-grid>
     <ion-row>
       <ion-col>
         <ion-card *ngFor="let agenda of agendaList">
           <ion-card-header>
             <h3 style="font-size: 1.2rem;">
-              <ion-icon style="color:red;" name="aperture"></ion-icon>Aspiracion</h3>
+                <fa-icon [icon]="['fas', 'search']"></fa-icon>
+                <fa-icon [icon]="['fas', 'eye-dropper']"></fa-icon>
+                <fa-icon [icon]="['fas', 'flask']"></fa-icon>
+                <fa-icon [icon]="['fas', 'magic']"></fa-icon>
+                <fa-icon [icon]="['fas', 'stethoscope']"></fa-icon>
+                <fa-icon [icon]="['fas', 'random']"></fa-icon>
+                <fa-icon [icon]="['fas', 'truck']"></fa-icon>
+
+
+              <ion-icon style="color:red;" name="aperture"></ion-icon>
+              Aspiracion</h3>
             <small>Orden de producción {{agenda?.order_id}} </small>
           </ion-card-header>
-
           <ion-card-content style="font-size: 1.3rem;">
             Orden realizada a {{agenda.client?.contact}} en la cuidad de {{agenda.client?.citiesOne.name}}.
             <small>Fecha: {{agenda?.start_date}} </small>
@@ -58,6 +65,5 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-
 
 </ion-content>

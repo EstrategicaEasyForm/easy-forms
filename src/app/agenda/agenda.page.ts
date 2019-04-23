@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadingController, ToastController } from '@ionic/angular';
 import { OrdersService } from '../orders.service';
+import { faCoffee } from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core';
 
 @Component({
   selector: 'app-agenda',
@@ -16,8 +18,11 @@ export class AgendaPage implements OnInit {
 
   constructor(public ordersService: OrdersService,
     public loadingCtrl: LoadingController,
-    public toastCtrl: ToastController) { }
+    public toastCtrl: ToastController) {
 
+    // Add an icon to the library for convenient access in other components
+    library.add(faCoffee);
+  }
 
   async ngOnInit() {
     const _self = this;
@@ -26,13 +31,12 @@ export class AgendaPage implements OnInit {
     });
     await loading.present();
 
-
     this.ordersService.getOrdersListStorage()
       .then((ordersList) => {
-        if (ordersList) { 
+        if (ordersList) {
           for (let order of ordersList) {
             _self.agendasOri = _self.agendasOri.concat(order.agenda);
-          } 
+          }
           _self.filterItems();
           loading.dismiss();
         }
@@ -46,10 +50,10 @@ export class AgendaPage implements OnInit {
     const _self = this;
     const onSuccess = function (ordersList) {
       loading.dismiss();
-      if (ordersList) { 
+      if (ordersList) {
         for (let order of ordersList) {
           _self.agendasOri = _self.agendasOri.concat(order.agenda);
-        } 
+        }
         _self.filterItems();
       }
     }
@@ -131,7 +135,7 @@ export class AgendaPage implements OnInit {
       const employee_id = 9;
       return agenda.start_date !== null &&
         (!_self.filter.mySelf || agenda.employee_id == employee_id)
-    }); 
+    });
   }
 
   async showMessage(message: string) {
@@ -141,4 +145,5 @@ export class AgendaPage implements OnInit {
     });
     toast.present();
   }
+
 }
