@@ -13,7 +13,7 @@ export class TabsPage {
 
     this.usersService.getToken().then((authUser) => {
       if(!authUser) {
-        this.router.navigateByUrl('/login');
+        //this.router.navigateByUrl('/login');
       }
     });
   }

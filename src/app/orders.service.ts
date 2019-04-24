@@ -330,33 +330,37 @@ export class OrdersService {
   constructor(private apollo: Apollo,
     private storage: Storage) { }
 
-  getOrdersList(onSuccess, onError) {
+  getDetailsApi(onSuccess, onError) {
 
-    let orders: Observable<any>;
     const _self = this;
     try {
-      orders = this.apollo
+      this.apollo
         .watchQuery({
           query: OrdersQuery,
           errorPolicy: 'all'
         })
-        .valueChanges.pipe(map((response: any) => {
-          if (response.errors) {
-            onError(response.errors);
-          } else {
-            const agendasList = [];
-            for (let order of response.data.orders) {
+        .valueChanges
+        .subscribe((data:any) => {
+          if(data.data.orders) {
+            const detailsApiList = [];
+            for (let order of data.data.orders) {
               for (let agenda of order.agenda) {
-                agenda.front = {};
-                agenda.front.templateType = _self.getTemplate(agenda) || {};
-                agenda.detailsApi = order.detailsApi;
-                agendasList.push(agenda);
+                for(let detailsApi of order.detailsApi) {
+                  console.log(detailsApi.id);
+                  if(detailsApi.local.name === agenda.name_local ) {
+                    detailsApi.order = order;
+                    detailsApi.agenda = agenda;
+                    detailsApiList.push(detailsApi);
+                  }
+                }
               }
             }
-            onSuccess(agendasList);
+            onSuccess(detailsApiList);
           }
-        }
-        ));
+          else {
+            onError("Error consultando el servicio");
+          }
+        });
     } catch (e) {
       onError(e);
     }
@@ -364,20 +368,22 @@ export class OrdersService {
 
   /* Order Storage */
 
-  getAgendasListStorage() {
-    return this.storage.get('agendasList');
+  getDetailsApiStorage() {
+    return this.storage.get('detailsApi');
   }
 
-  setAgendasListStorage(agendasList) {
-    return this.storage.set('agendasList',agendasList);
+  setDetailsApiStorage(detailsApi) {
+    return this.storage.set('detailsApi',detailsApi);
   }
 
-  getTemplate(agenda) {
-    for (let template of templates) {
-      if (template.id === agenda.event.id) {
-        return template;
-      }
-    }
-    return null;
+  detailApi: any;
+  
+  setDetailApiParam(detailApi) {
+   this.detailApi = detailApi;
   }
+
+  getDetailApiParam() {
+    return this.detailApi;
+  }
+
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { OrdersService } from '../orders.service';
 
 @Component({
   selector: 'app-aspiration',
@@ -8,12 +8,11 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AspirationPage implements OnInit {
 
-  constructor(private router: ActivatedRoute) { 
-    this.router.queryParamMap.subscribe(params => {
-      if (params && params.keys) {
-        console.log(params.keys);
-      }
-    });
+  aspiration: any;
+
+  constructor(public ordersService: OrdersService) { 
+    
+    this.aspiration = this.ordersService.getDetailApiParam().aspiration;
   }
 
   ngOnInit() {

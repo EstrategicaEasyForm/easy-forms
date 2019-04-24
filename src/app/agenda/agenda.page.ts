@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoadingController, ToastController } from '@ionic/angular';
 import { NavigationExtras, Router } from '@angular/router';
 import { OrdersService } from '../orders.service';
-import { faCoffee } from '@fortawesome/free-solid-svg-icons';
-import { library } from '@fortawesome/fontawesome-svg-core';
+import { UsersService } from '../users.service';
 
 @Component({
   selector: 'app-agenda',
@@ -13,17 +12,23 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 export class AgendaPage {
 
   orders: any;
-  agendaList: any = [];
-  agendasOri: any = [];
+  detailsApi: any = [];
+  detailsApiOriginal: any = [];
+  userId: any;
   filter: any = { dayStr: "Hoy", dayTime: new Date(), mySelf: true };
 
-  constructor(public ordersService: OrdersService,
-    public router: Router,
+  constructor(
+    public ordersService: OrdersService,
+    public router: Router, 
+    public usersService: UsersService,
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController) {
+    
+    const _self = this;
+    this.usersService.getToken().then((authUser) => {
+      _self.userId = authUser.id_user;
+    });
 
-    // Add an icon to the library for convenient access in other components
-    library.add(faCoffee);
     this.retriveAgenda();
   }
 
@@ -34,33 +39,25 @@ export class AgendaPage {
     });
     await loading.present();
 
-    this.ordersService.getAgendasListStorage()
-      .then((agendasList) => {
-        if (agendasList) {
+    this.ordersService.getDetailsApiStorage()
+      .then((detailsApi) => {
+        if (detailsApi) {
           loading.dismiss();
-          _self.agendasOri = agendasList;
+          _self.detailsApiOriginal = detailsApi;
           _self.filterItems();
         }
         else {
-          this.getOrdersList(loading);
+          this.getDetailsApi(loading);
         }
       });
   }
 
-  async getOrdersList(loading) {
+  async getDetailsApi(loading) {
     const _self = this;
-    const onSuccess = function (ordersList) {
+    const onSuccess = function (detailsApi) {
         loading.dismiss();
-
-        const agendasList = [];
-        for (let order of ordersList) {
-          for (let agenda of order.agenda) {
-            agendasList.push(agenda);
-          }
-        }
-
-        _self.agendasOri = agendasList;
-        _self.ordersService.setAgendasListStorage(agendasList);
+        _self.detailsApiOriginal = detailsApi;
+        _self.ordersService.setDetailsApiStorage(detailsApi);
         _self.filterItems();
     }
     const onError = function (error) {
@@ -70,7 +67,7 @@ export class AgendaPage {
       }
       else this.showMessage('No se puede consultar la lista de agendas');
     }
-    this.ordersService.getOrdersList(onSuccess, onError);
+    this.ordersService.getDetailsApi(onSuccess, onError);
   }
 
   backDay() {
@@ -139,10 +136,10 @@ export class AgendaPage {
 
   filterItems() {
     const _self = this;
-    this.agendaList = this.agendasOri.filter((agenda) => {
-      const employee_id = 9;
-      return agenda.start_date !== null &&
-        (!_self.filter.mySelf || agenda.employee_id == employee_id)
+    this.detailsApi = this.detailsApiOriginal.filter((detailApi) => {
+      
+      return detailApi.agenda.start_date !== null &&
+        (!_self.filter.mySelf || detailApi.agenda.employee_id == _self.userId)
     });
   }
 
@@ -154,22 +151,21 @@ export class AgendaPage {
     toast.present();
   }
 
-  goToTemplate(agenda) {
-    if (agenda.event)
-      switch (agenda.event.id) {
+  goToTemplate(detailApi) {
+    if (detailApi.agenda && detailApi.agenda.event)
+      switch (detailApi.agenda.event.id) {
         case "1":
           this.router.navigate(['evaluation', {
-            evaluation: agenda.detailsApi.evaluationApi
+            detailApiId: detailApi.id
           }]);
           break;
         case "2":
-          this.router.navigate(['aspiration', {
-            aspiration: agenda.detailsApi.aspiration
-          }]);
+          this.ordersService.setDetailApiParam(detailApi);
+          this.router.navigate(['aspiration']);
           break;
         case "3":
           this.router.navigate(['production', {
-            production: agenda.detailsApi.production
+            detailApiId: detailApi.id
           }]);
           break;
       }

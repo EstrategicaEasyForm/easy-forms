@@ -43,7 +43,7 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
-
+    this.usersService.deleteToken();
   }
 
   goToHome() {
@@ -66,11 +66,11 @@ export class LoginPage implements OnInit {
       this.usersService.login(userAuth)
         .subscribe(({ data }) => {
           loading.dismiss();
-          const token = data.login ? data.login.access_token || '' : '';
-          userAuth.token = token;
-          this.usersService.setToken(userAuth);
-          this.usersService.addUserAuthStorage(userAuth);
-          this.goToHome();
+          if (data.login) {
+            this.usersService.setToken(data.login);
+            this.usersService.addUserAuthStorage(userAuth);
+            this.goToHome();
+          }
         }, (error) => {
           loading.dismiss();
           const next = this.showError(error);
@@ -96,7 +96,7 @@ export class LoginPage implements OnInit {
 
     if (error.graphQLErrors) {
       for (let err of error.graphQLErrors) {
-        if (err.category === 'authentication') {
+        if (err.extensions.category === 'authentication') {
           this.showMessage('Usuario o clave incorrectos');
           return false;
         }

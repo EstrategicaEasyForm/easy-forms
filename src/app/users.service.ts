@@ -22,6 +22,11 @@ export class UsersService {
       mutation login($data: LoginInput!){
         login(data:$data){
           access_token
+          expires_in
+          token_type
+          id_user
+          name_user
+          email_user
         }
       }
       `;
