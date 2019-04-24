@@ -23,13 +23,13 @@ const templates = [
   },
   {
     "id": "4",
-    "name": "Producción Embrión",
-    "icon": "['fas', 'flask']"
+    "name": "Transferencia Embrión",
+    "icon": "['fas', 'magic']"
   },
   {
     "id": "5",
-    "name": "Transferencia Embrión",
-    "icon": "['fas', 'magic']"
+    "name": "Producción Embrión",
+    "icon": "['fas', 'flask']"
   },
   {
     "id": "6",
@@ -330,7 +330,7 @@ export class OrdersService {
   constructor(private apollo: Apollo,
     private storage: Storage) { }
 
-  getAgendaOrders(onSuccess, onError) {
+  getOrdersList(onSuccess, onError) {
 
     let orders: Observable<any>;
     const _self = this;
@@ -349,6 +349,7 @@ export class OrdersService {
               for (let agenda of order.agenda) {
                 agenda.front = {};
                 agenda.front.templateType = _self.getTemplate(agenda) || {};
+                agenda.detailsApi = order.detailsApi;
                 agendasList.push(agenda);
               }
             }
@@ -356,10 +357,6 @@ export class OrdersService {
           }
         }
         ));
-      orders.subscribe(data => {
-        // Handle the data from the API
-        onSuccess(data);
-      });
     } catch (e) {
       onError(e);
     }

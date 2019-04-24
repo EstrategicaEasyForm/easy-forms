@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadingController, ToastController } from '@ionic/angular';
+import { NavigationExtras, Router } from '@angular/router';
 import { OrdersService } from '../orders.service';
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -17,6 +18,7 @@ export class AgendaPage {
   filter: any = { dayStr: "Hoy", dayTime: new Date(), mySelf: true };
 
   constructor(public ordersService: OrdersService,
+    public router: Router,
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController) {
 
@@ -47,11 +49,19 @@ export class AgendaPage {
 
   async getOrdersList(loading) {
     const _self = this;
-    const onSuccess = function (agendasList) {
-      loading.dismiss();
-      _self.agendasOri = agendasList;
-      _self.ordersService.setAgendasListStorage(agendasList);
-      _self.filterItems();
+    const onSuccess = function (ordersList) {
+        loading.dismiss();
+
+        const agendasList = [];
+        for (let order of ordersList) {
+          for (let agenda of order.agenda) {
+            agendasList.push(agenda);
+          }
+        }
+
+        _self.agendasOri = agendasList;
+        _self.ordersService.setAgendasListStorage(agendasList);
+        _self.filterItems();
     }
     const onError = function (error) {
       loading.dismiss();
@@ -60,7 +70,7 @@ export class AgendaPage {
       }
       else this.showMessage('No se puede consultar la lista de agendas');
     }
-    this.ordersService.getAgendaOrders(onSuccess, onError);
+    this.ordersService.getOrdersList(onSuccess, onError);
   }
 
   backDay() {
@@ -142,6 +152,27 @@ export class AgendaPage {
       duration: 2000
     });
     toast.present();
+  }
+
+  goToTemplate(agenda) {
+    if (agenda.event)
+      switch (agenda.event.id) {
+        case "1":
+          this.router.navigate(['evaluation', {
+            evaluation: agenda.detailsApi.evaluationApi
+          }]);
+          break;
+        case "2":
+          this.router.navigate(['aspiration', {
+            aspiration: agenda.detailsApi.aspiration
+          }]);
+          break;
+        case "3":
+          this.router.navigate(['production', {
+            production: agenda.detailsApi.production
+          }]);
+          break;
+      }
   }
 
 }
