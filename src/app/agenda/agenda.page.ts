@@ -3,6 +3,8 @@ import { LoadingController, ToastController } from '@ionic/angular';
 import { NavigationExtras, Router } from '@angular/router';
 import { OrdersService } from '../orders.service';
 import { UsersService } from '../users.service';
+import { ViewChild } from '@angular/core';
+import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 
 @Component({
   selector: 'app-agenda',
@@ -16,6 +18,7 @@ export class AgendaPage {
   detailsApiOriginal: any = [];
   userId: any;
   filter: any = { dayStr: "Hoy", dayTime: new Date(), mySelf: true };
+  @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
 
   constructor(
     public ordersService: OrdersService,
