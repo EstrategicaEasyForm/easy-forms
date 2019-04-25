@@ -14,6 +14,8 @@ import { GraphQLModule } from './graphql.module';
 import { Network } from "@ionic-native/network/ngx";
 import { NetworkNotifyService } from './network-notify.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { IonicStorageModule } from '@ionic/storage';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,7 +26,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppRoutingModule,
     ApolloModule,
     HttpClientModule,
-    GraphQLModule],
+    GraphQLModule,
+    FormsModule,
+    ReactiveFormsModule,
+    IonicStorageModule.forRoot()],
   providers: [
     StatusBar,
     SplashScreen,

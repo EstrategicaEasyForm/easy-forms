@@ -1,9 +1,45 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>login</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
+
+  <img class="logoIcon ion-padding" src="assets/imgs/logoInvitroAlfa_968x576.png" />
+
+  <form class="ion-padding" novalidate [formGroup]="signinForm" (ngSubmit)="onLogin('Login',this)">
+
+    <ion-item>
+      <ion-label stacked> Usuario</ion-label>
+      <ion-input type="email" [(ngModel)]="email" formControlName="email"></ion-input>
+      <div class="validation-errors">
+        <ng-container *ngFor="let validation of validation_messages.email">
+          <div class="error-message" *ngIf="signinForm.get('email').hasError(validation.type) && (signinForm.get('email').dirty || signinForm.get('email').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
+      </div>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked> Contraseña </ion-label>
+      <ion-input type="password" [(ngModel)]="password" formControlName="password"></ion-input>
+      <div class="validation-errors">
+        <ng-container *ngFor="let validation of validation_messages.password">
+          <div class="error-message" *ngIf="signinForm.get('password').hasError(validation.type) && (signinForm.get('password').dirty || signinForm.get('password').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
+      </div>
+    </ion-item>
+
+    <div class="spacer" style="height:10px;"></div>
+
+    <ion-button type="submit" [disabled]="!signinForm.valid" color="stable" class="login-button btn-primary" expand="full" fill="outline">
+      Iniciar
+    </ion-button>
+
+    <div class="spacer" style="height:40px;"></div>
+
+  </form>
+
+  <ion-button class="ion-padding" *ngIf="!showFingerPrint" expand="full" id="login-finger">
+    O ingrese con Huella Digital&nbsp;
+    <ion-icon name="finger-print" class="finger-print"></ion-icon>
+  </ion-button>
 
 </ion-content>

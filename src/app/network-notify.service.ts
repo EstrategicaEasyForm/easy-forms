@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Events } from '@ionic/angular';
 import { Network } from '@ionic-native/network/ngx';
+import { Events } from '@ionic/angular';
 
 export enum ConnectionStatusEnum {
-    Online,
-    Offline
+  Online,
+  Offline
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class NetworkNotifyService {
-    previousStatus : any;
+
+  previousStatus : any;
 
     constructor(public network: Network, public eventCtrl: Events) {
   	    this.previousStatus = ConnectionStatusEnum.Online;
@@ -31,5 +32,4 @@ export class NetworkNotifyService {
             this.previousStatus = ConnectionStatusEnum.Online;
         });
     }
-
 }

@@ -91,6 +91,7 @@ ionic run android --device
 * [local-storage](https://ionicframework.com/docs/building/storage)
 * [LoadingController](https://ionicframework.com/docs/v3/api/components/loading/LoadingController/)
 * [ToastController](https://ionicframework.com/docs/v3/api/components/toast/ToastController/)
+* [FontAwesome](https://github.com/FortAwesome/angular-fontawesome)
 
 ## Copyright and license
 
