@@ -1,4 +1,7 @@
-<p [@banner-state]="ejecutarAnimacion" style="background-color: red">
+<!--p [@banner-state]="ejecutarAnimacion" style="background-color: red">
   network-notify-banner works!
-</p>
+</p-->
+<ion-toolbar [@banner-state]="ejecutarAnimacion" [color]="--ion-color-dark" [ngStyle]="{'background-color': failedNetwork ? 'red': 'lime'}">
+  <ion-title>{{ textBanner }}</ion-title>
+</ion-toolbar>
  
