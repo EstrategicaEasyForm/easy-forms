@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { AgendaPage } from './agenda.page';
+import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [AgendaPage]
+  declarations: [AgendaPage, NetworkNotifyBannerComponent]
 })
 export class AgendaPageModule {}

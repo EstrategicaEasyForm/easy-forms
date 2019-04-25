@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -12,6 +10,7 @@ export class LoginPage implements OnInit {
 
   showFingerPrint = false;
   constructor(public router: Router) {
+
   }
 
   ngOnInit() {

@@ -11,11 +11,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ApolloModule } from 'apollo-angular';
 import { GraphQLModule } from './graphql.module';
+import { Network } from "@ionic-native/network/ngx";
+import { NetworkNotifyService } from './network-notify.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [BrowserModule,
+    BrowserAnimationsModule,
     IonicModule.forRoot(),
     AppRoutingModule,
     ApolloModule,
@@ -24,6 +28,8 @@ import { GraphQLModule } from './graphql.module';
   providers: [
     StatusBar,
     SplashScreen,
+    Network,
+    NetworkNotifyService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
