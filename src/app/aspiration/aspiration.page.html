@@ -7,6 +7,81 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-{{aspiration.aspirator}}
+<ion-content padding>
+    <ion-slides pager>
+        <ion-slide>
+          <ion-toolbar>
+            <ion-buttons end>
+              <button ion-button color="primary">Skip</button>
+            </ion-buttons>
+          </ion-toolbar>
+          <h2 class="slide-title">Orden de producción</h2>
+          <ion-card>
+              <button  ion-button (click)="openViewer()">
+              </button>
+              
+              <ion-card-header class="ibox-title">
+                <ion-grid>
+                <ion-row>
+                  <ion-col col-8>
+                    <h5 class="white-color">Orden de Producción  order.id}}</h5>
+                  </ion-col>
+                  <ion-col col-2>
+                    <h5 class="white-color">Fecha   order.date}}</h5>
+                  </ion-col>
+                </ion-row>
+                </ion-grid>
+                
+              </ion-card-header>
+              
+              <ion-card-content>
+              <ion-grid>
+                <ion-row>
+                  <ion-col col-2 style="flex: 0 0 13.66667%;">
+                    <label class="label">Cliente</label>
+                  </ion-col>
+                  <ion-col col-10>
+                    <label> order.client.contact}}</label>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col col-2 style="flex: 0 0 10.66667%;">
+                    <label>Local</label>
+                  </ion-col>
+                  <ion-col col-4 style="max-width: 42.33333%;  flex: 0 0 41.33333%;">
+                    <label> order.local.name}}</label>
+                  </ion-col>
+                  <ion-col col-2>
+                    <label>Ciudad</label>
+                  </ion-col>
+                  <ion-col col-4 style="flex: 0 0 29.33333%;">
+                    <label> order.local.city}}</label>
+                  </ion-col>
+                </ion-row>
+                
+              </ion-grid>
+              </ion-card-content>
+              
+              </ion-card>
+              
+        </ion-slide>
+
+        <ion-slide>
+            <ion-toolbar>
+              <ion-buttons end>
+                <button ion-button color="primary">Skip</button>
+              </ion-buttons>
+            </ion-toolbar>
+            <h2 class="slide-title">Plantilla Aspiración Folicular</h2>
+          </ion-slide>
+        <ion-slide>
+          <ion-toolbar>
+          </ion-toolbar>
+          <h2 class="slide-title">Datos Generales</h2>
+          <button ion-button large clear icon-end color="primary">
+            Continue
+            <ion-icon name="arrow-forward"></ion-icon>
+          </button>
+        </ion-slide>
+      </ion-slides>
 </ion-content>
