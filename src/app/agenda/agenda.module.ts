@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faEyeDropper, faSearch, faFlask, faMagic, faRandom, faTruck, faStethoscope } from '@fortawesome/free-solid-svg-icons';
-import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
+import { ComponentsModule } from '../components.module';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -24,9 +24,10 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     FontAwesomeModule,
+    ComponentsModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [AgendaPage, NetworkNotifyBannerComponent]
+  declarations: [AgendaPage]
 })
 export class AgendaPageModule {
   constructor() { 

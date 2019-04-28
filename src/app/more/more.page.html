@@ -6,4 +6,12 @@
 
 <ion-content>
   <app-network-notify-banner id="networkNotifyBanner"></app-network-notify-banner>
+  <ion-list no-border>
+    <ion-item (click)="logOut()">
+      <ion-label>
+        Cerrar Sesión
+      </ion-label>
+        <ion-icon name='arrow-forward' color="primary" item-end></ion-icon>
+    </ion-item>
+  </ion-list>
 </ion-content>

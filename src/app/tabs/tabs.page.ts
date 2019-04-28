@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import { UsersService } from '../users.service';
 
 @Component({
@@ -8,12 +8,12 @@ import { UsersService } from '../users.service';
   styleUrls: ['tabs.page.scss']
 })
 export class TabsPage {
-  constructor(public router: Router,
+  constructor(
+    public navCtrl: NavController,
     public usersService: UsersService) {
-
-    this.usersService.getToken().then((authUser) => {
-      if(!authUser) {
-        //this.router.navigateByUrl('/login');
+    usersService.getUserAuthToken().then((userAuth) => {
+      if (!userAuth) {
+        this.navCtrl.navigateRoot('/login');
       }
     });
   }

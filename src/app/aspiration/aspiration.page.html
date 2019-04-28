@@ -1,88 +1,197 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button ></ion-back-button>
+      <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>aspiration</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-    <app-network-notify-banner id="networkNotifyBanner"></app-network-notify-banner>
-    <ion-slides pager>
-        <ion-slide>
-          <ion-toolbar>
-            <ion-buttons end>
-              <button ion-button color="primary">Skip</button>
-            </ion-buttons>
-          </ion-toolbar>
-          <h2 class="slide-title">Orden de producción</h2>
-          <ion-card>
-              <button  ion-button (click)="openViewer()">
-              </button>
-              
+  <app-network-notify-banner id="networkNotifyBanner"></app-network-notify-banner>
+  <ion-slides pager>
+    <ion-slide>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-card class="card-order">
               <ion-card-header class="ibox-title">
-                <ion-grid>
-                <ion-row>
-                  <ion-col col-8>
-                    <h5 class="white-color">Orden de Producción  order.id}}</h5>
-                  </ion-col>
-                  <ion-col col-2>
-                    <h5 class="white-color">Fecha   order.date}}</h5>
-                  </ion-col>
-                </ion-row>
-                </ion-grid>
-                
+                <h5 class="white-color">Orden de Producción</h5>
               </ion-card-header>
-              
               <ion-card-content>
-              <ion-grid>
-                <ion-row>
-                  <ion-col col-2 style="flex: 0 0 13.66667%;">
-                    <label class="label">Cliente</label>
-                  </ion-col>
-                  <ion-col col-10>
-                    <label> order.client.contact}}</label>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col col-2 style="flex: 0 0 10.66667%;">
-                    <label>Local</label>
-                  </ion-col>
-                  <ion-col col-4 style="max-width: 42.33333%;  flex: 0 0 41.33333%;">
-                    <label> order.local.name}}</label>
-                  </ion-col>
-                  <ion-col col-2>
-                    <label>Ciudad</label>
-                  </ion-col>
-                  <ion-col col-4 style="flex: 0 0 29.33333%;">
-                    <label> order.local.city}}</label>
-                  </ion-col>
-                </ion-row>
-                
-              </ion-grid>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col col-4>
+                      <label>Orden de producción</label>
+                    </ion-col>
+                    <ion-col col-8>
+                      <label>Cliente</label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col col-4  class="text-readonly">
+                      <label>{{order.id}}</label>
+                    </ion-col>
+                    <ion-col col-8 class="text-readonly">
+                      <label>{{order.client.bussiness_name}}</label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col col-6>
+                      <label>Local</label>
+                    </ion-col>
+                    <ion-col col-3>
+                      <label>Fecha Aspiración</label>
+                    </ion-col>
+                    <ion-col col-3>
+                      <label>Receptoras Sincronizadas</label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col col-6 class="text-readonly">
+                      <label>{{agenda.name_local}}</label>
+                    </ion-col>
+                    <ion-col col-3 class="text-readonly">
+                      <label>{{aspiration.date}}</label>
+                    </ion-col>
+                    <ion-col col-3 class="text-readonly">
+                      <label>{{aspiration.synchronized_receivers}}</label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col col-6>
+                      <label>Medio OPU</label>
+                    </ion-col>
+                    <ion-col col-6>
+                      <label>Lote medio OPU</label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col col-6>
+                      <ion-input [(ngModel)]="aspiration.medium_opu"></ion-input>
+                    </ion-col>
+                    <ion-col col-6>
+                      <ion-input [(ngModel)]="aspiration.medium_lot_opu"></ion-input>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col col-6>
+                      <label>Aspirador</label>
+                    </ion-col>
+                    <ion-col col-6>
+                      <label>Buscador</label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col col-6>
+                      <ion-input [(ngModel)]="aspiration.aspirator"></ion-input>
+                    </ion-col>
+                    <ion-col col-6>
+                      <ion-input [(ngModel)]="aspiration.searcher"></ion-input>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
               </ion-card-content>
-              
-              </ion-card>
-              
-        </ion-slide>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-card class="card-order">
+              <ion-card-header class="ibox-title">
+                <h5 class="white-color">Datos Generales</h5>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col col-6>
+                      <label>Recibido por</label>
+                    </ion-col>
+                    <ion-col col-6>
+                      <label>Cédula</label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col col-6>
+                      <ion-input [(ngModel)]="aspiration.receiver_name"></ion-input>
+                    </ion-col>
+                    <ion-col col-6>
+                      <ion-input [(ngModel)]="aspiration.identification_number"></ion-input>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col col-12>
+                      <label>Observaciones</label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col col-12>
+                      <ion-textarea class="border-input" [(ngModel)]="aspiration.comments"></ion-textarea>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col col-12>
+                      <label>Firma</label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col col-12>
+                      <ion-button expand="full">
+                        Modificar Firma
+                        <ion-icon name="create"></ion-icon>
+                      </ion-button>
+                      <div style="border: solid 1px grey; min-height: 147px;">
+                        <img [src]="signatureImage" *ngIf="signatureImage" />
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col col-6>
+                      <label>Temperatura de llegada</label>
+                    </ion-col>
+                    <ion-col col-6>
+                      <label>Tipo transporte</label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col col-6>
+                      <ion-input [(ngModel)]="aspiration.arrived_temperature"></ion-input>
+                    </ion-col>
+                    <ion-col col-6>
+                      <ion-input [(ngModel)]="aspiration.transport_type"></ion-input>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col col-6>
+                      <ion-button expand="full">
+                        Generar Foto
+                        <ion-icon name="camera"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                    <ion-col col-6>
+                      <ion-button expand="full">
+                        Generar PDF
+                        <ion-icon name="archive"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-slide>
+    <ion-slide>
+      <ion-toolbar>
+      </ion-toolbar>
+      <img src="assets/img/ica-slidebox-img-4.png" class="slide-image" />
+      <h2 class="slide-title">Ready to Play?</h2>
+      <button ion-button large clear icon-end color="primary">
+        Continue
+        <ion-icon name="arrow-forward"></ion-icon>
+      </button>
+    </ion-slide>
+  </ion-slides>
 
-        <ion-slide>
-            <ion-toolbar>
-              <ion-buttons end>
-                <button ion-button color="primary">Skip</button>
-              </ion-buttons>
-            </ion-toolbar>
-            <h2 class="slide-title">Plantilla Aspiración Folicular</h2>
-          </ion-slide>
-        <ion-slide>
-          <ion-toolbar>
-          </ion-toolbar>
-          <h2 class="slide-title">Datos Generales</h2>
-          <button ion-button large clear icon-end color="primary">
-            Continue
-            <ion-icon name="arrow-forward"></ion-icon>
-          </button>
-        </ion-slide>
-      </ion-slides>
 </ion-content>

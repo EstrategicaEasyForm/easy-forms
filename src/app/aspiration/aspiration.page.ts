@@ -11,13 +11,19 @@ import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-n
 export class AspirationPage implements OnInit {
 
   aspiration: any;
+  order: any;
+  agenda: any;
+  signatureImage: any;
+
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
-  constructor(public ordersService: OrdersService) { 
-    
-    this.aspiration = this.ordersService.getDetailApiParam().aspiration;
+  constructor(public ordersService: OrdersService) {
   }
 
   ngOnInit() {
+    const detail = this.ordersService.getDetailApiParam();
+    this.aspiration = detail.aspiration;
+    this.order = detail.order;
+    this.agenda = detail.agendas ? detail.agendas[0] : {};
   }
 
 }

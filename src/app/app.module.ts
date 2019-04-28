@@ -16,6 +16,7 @@ import { NetworkNotifyService } from './network-notify.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IonicStorageModule } from '@ionic/storage';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ComponentsModule } from './components.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,6 +30,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     GraphQLModule,
     FormsModule,
     ReactiveFormsModule,
+    ComponentsModule,
     IonicStorageModule.forRoot()],
   providers: [
     StatusBar,

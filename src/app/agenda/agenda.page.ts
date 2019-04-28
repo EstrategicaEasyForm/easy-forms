@@ -1,38 +1,42 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingController, ToastController } from '@ionic/angular';
+import { ModalController, LoadingController, ToastController } from '@ionic/angular';
 import { NavigationExtras, Router } from '@angular/router';
 import { OrdersService } from '../orders.service';
 import { UsersService } from '../users.service';
 import { ViewChild } from '@angular/core';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
+import { AlertOptions, AlertButton } from '@ionic/core';
 
 @Component({
   selector: 'app-agenda',
   templateUrl: './agenda.page.html',
   styleUrls: ['./agenda.page.scss'],
 })
-export class AgendaPage {
+export class AgendaPage implements OnInit {
 
   orders: any;
   detailsApi: any = [];
   detailsApiOriginal: any = [];
   userId: any;
   filter: any = { dayStr: "Hoy", dayTime: new Date(), mySelf: true };
-  
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
+
   constructor(
     public ordersService: OrdersService,
-    public router: Router, 
+    public router: Router,
     public usersService: UsersService,
     public loadingCtrl: LoadingController,
-    public toastCtrl: ToastController) {
-    
-    const _self = this;
-    this.usersService.getToken().then((authUser) => {
-      _self.userId = authUser.id_user;
-    });
+    public toastCtrl: ToastController,
+    public modalCtrl: ModalController) {
 
-    this.retriveAgenda();
+  }
+
+  ngOnInit() {
+    const _self = this;
+    this.usersService.getUserAuthToken().then((userAuth) => {
+      _self.userId = "" + userAuth.id_user;
+      _self.retriveAgenda();
+    });
   }
 
   async retriveAgenda() {
@@ -58,10 +62,10 @@ export class AgendaPage {
   async getDetailsApi(loading) {
     const _self = this;
     const onSuccess = function (detailsApi) {
-        loading.dismiss();
-        _self.detailsApiOriginal = detailsApi;
-        _self.ordersService.setDetailsApiStorage(detailsApi);
-        _self.filterItems();
+      loading.dismiss();
+      _self.detailsApiOriginal = detailsApi;
+      _self.ordersService.setDetailsApiStorage(detailsApi);
+      _self.filterItems();
     }
     const onError = function (error) {
       loading.dismiss();
@@ -88,9 +92,10 @@ export class AgendaPage {
       default:
         day = new Date(this.filter.dayTime - 1 * 24 * 60 * 60 * 1000);
         this.filter.dayTime = day;
-        this.filter.dayStr = this.formatDate(day);
+        this.filter.dayStr = this.formatFilterDate(day);
         break;
     }
+    this.filterItems();
   }
 
   forwardDay() {
@@ -108,20 +113,22 @@ export class AgendaPage {
       default:
         day = new Date(this.filter.dayTime.getTime() + 1 * 24 * 60 * 60 * 1000);
         this.filter.dayTime = day;
-        this.filter.dayStr = this.formatDate(day);
+        this.filter.dayStr = this.formatFilterDate(day);
         break;
     }
+    this.filterItems();
   }
 
-  formatDate(day: Date) {
+  formatFilterDate(day: Date) {
     const yesterday = new Date(Date.now() - 1 * 24 * 60 * 60 * 1000);
     const tomorrow = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
     const today = new Date(Date.now());
-    if (this.truncDate(day) === this.truncDate(yesterday))
+
+    if (day.toISOString().split('T')[0] === yesterday.toISOString().split('T')[0])
       return 'Ayer';
-    if (this.truncDate(day) === this.truncDate(tomorrow))
+    if (day.toISOString().split('T')[0] === tomorrow.toISOString().split('T')[0])
       return 'Mañana';
-    if (this.truncDate(day) === this.truncDate(today))
+    if (day.toISOString().split('T')[0] === today.toISOString().split('T')[0])
       return 'Hoy';
 
     const mount = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
@@ -129,21 +136,48 @@ export class AgendaPage {
     return date + ' ' + mount[day.getMonth()];
   }
 
-  truncDate(day: Date) {
-    day.setHours(0);
-    day.setMinutes(0);
-    day.setSeconds(0);
-    day.setMilliseconds(0);
-    return day.getTime();
+  /*
+  async presentAgendaFilterModal() {
+    const modal = await this.modalCtrl.create({
+      component: 'AgendaFilters'
+    });
+
+    modal.onDidDismiss().then(data => {
+
+    });
+
+    return await modal.present();
   }
+  */
 
   filterItems() {
     const _self = this;
     this.detailsApi = this.detailsApiOriginal.filter((detailApi) => {
-      
-      return detailApi.agenda.start_date !== null &&
-        (!_self.filter.mySelf || detailApi.agenda.employee_id == _self.userId)
+
+      return _self.filterCalendar(detailApi.agendas) &&
+      _self.filterEmployer(detailApi.agendas)
     });
+  }
+  
+
+  filterEmployer(agendas) {
+    if (!this.filter.mySelf) return true;
+    for (let agenda of agendas) {
+      if (agenda.employee_id == this.userId) {
+        return true;
+      };
+    }
+    return false;
+  }
+  
+  //start_date: fecha de la agenda de la orden en formato "YYYY-MM-DD"
+  filterCalendar(agendas) {
+    if (!this.filter.mySelf) return true;
+    for (let agenda of agendas) {
+      if (agenda && this.filter.dayTime.toISOString().split('T')[0] === agenda.start_date.split(" ")[0])
+        return true;
+    }
+    return false;
   }
 
   async showMessage(message: string) {
@@ -155,9 +189,10 @@ export class AgendaPage {
   }
 
   goToTemplate(detailApi) {
-    if (detailApi.agenda && detailApi.agenda.event)
-      switch (detailApi.agenda.event.id) {
+    if (detailApi.event)
+      switch (detailApi.event.id) {
         case "1":
+          this.ordersService.setDetailApiParam(detailApi);
           this.router.navigate(['evaluation', {
             detailApiId: detailApi.id
           }]);
@@ -167,6 +202,7 @@ export class AgendaPage {
           this.router.navigate(['aspiration']);
           break;
         case "3":
+          this.ordersService.setDetailApiParam(detailApi);
           this.router.navigate(['production', {
             detailApiId: detailApi.id
           }]);
