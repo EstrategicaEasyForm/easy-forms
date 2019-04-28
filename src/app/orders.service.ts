@@ -346,7 +346,7 @@ export class OrdersService {
             for (let order of data.data.orders) {
               for (let agenda of order.agenda) {
                 for(let detailsApi of order.detailsApi) {
-                  console.log(detailsApi.id);
+                  //console.log(detailsApi);
                   if(detailsApi.local.name === agenda.name_local ) {
                     detailsApi.order = order;
                     detailsApi.agenda = agenda;

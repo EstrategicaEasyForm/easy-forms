@@ -18,8 +18,8 @@ export class AgendaPage {
   detailsApiOriginal: any = [];
   userId: any;
   filter: any = { dayStr: "Hoy", dayTime: new Date(), mySelf: true };
+  
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
-
   constructor(
     public ordersService: OrdersService,
     public router: Router, 

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { LoadingController, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { OrdersService } from '../orders.service';
+import { ViewChild } from '@angular/core';
+import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 
 @Component({
   selector: 'app-syncronization',
@@ -10,6 +12,7 @@ import { OrdersService } from '../orders.service';
 })
 export class SyncronizationPage {
 
+  @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
   constructor(
     public ordersService: OrdersService,
     public router: Router,
@@ -19,6 +22,13 @@ export class SyncronizationPage {
   }
 
   ionViewWillEnter() {
+    //this.ordersService.getDetailsApiStorage().then((data) =>{
+      //if (data) {
+        //data.forEach(element => {
+          //console.log(element);
+        //});
+      //}
+    //});
     this.retriveAgenda();
   }
 
