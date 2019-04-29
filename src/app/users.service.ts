@@ -58,6 +58,10 @@ export class UsersService {
     return this.userAuthToken ? this.userAuthToken.access_token : '';
   }
 
+  getUserId() {
+    return this.userAuthToken ? this.userAuthToken.id_user : '';
+  }
+
   deleteUserAuthToken() {
     this.storage.remove('userAuthToken');
   }

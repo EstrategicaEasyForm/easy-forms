@@ -377,7 +377,7 @@ export class OrdersService {
           "input" : {
             "id" : data.id,
             "details" : {
-              //"create" : [data.details.create]
+              "create" : data.details.create,
               "update" : data.details.update
             }
           }

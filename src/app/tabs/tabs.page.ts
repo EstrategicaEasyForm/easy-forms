@@ -12,7 +12,9 @@ export class TabsPage {
     public navCtrl: NavController,
     public usersService: UsersService) {
     usersService.getUserAuthToken().then((userAuth) => {
-      if (!userAuth) {
+      if (userAuth) {
+        this.usersService.setUserAuthToken(userAuth);
+      } else {
         this.navCtrl.navigateRoot('/login');
       }
     });
