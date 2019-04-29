@@ -15,6 +15,9 @@ const routes: Routes = [
   { path: 'diagnostic', loadChildren: './diagnostic/diagnostic.module#DiagnosticPageModule' },
   { path: 'sexage', loadChildren: './sexage/sexage.module#SexagePageModule' },
   { path: 'delivery', loadChildren: './delivery/delivery.module#DeliveryPageModule' }
+  ///{ path: 'signature-draw-pad', loadChildren: './signature-draw-pad/signature-draw-pad.module#SignatureDrawPadPageModule' }
+
+
 
 ];
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, LoadingController, ToastController } from '@ionic/angular';
+import { LoadingController, ToastController } from '@ionic/angular';
 import { NavigationExtras, Router } from '@angular/router';
 import { OrdersService } from '../orders.service';
 import { UsersService } from '../users.service';
@@ -26,8 +26,7 @@ export class AgendaPage implements OnInit {
     public router: Router,
     public usersService: UsersService,
     public loadingCtrl: LoadingController,
-    public toastCtrl: ToastController,
-    public modalCtrl: ModalController) {
+    public toastCtrl: ToastController) {
 
   }
 
@@ -135,20 +134,6 @@ export class AgendaPage implements OnInit {
     const date = day.getDate() < 10 ? '0' + day.getDate() : day.getDate();
     return date + ' ' + mount[day.getMonth()];
   }
-
-  /*
-  async presentAgendaFilterModal() {
-    const modal = await this.modalCtrl.create({
-      component: 'AgendaFilters'
-    });
-
-    modal.onDidDismiss().then(data => {
-
-    });
-
-    return await modal.present();
-  }
-  */
 
   filterItems() {
     const _self = this;

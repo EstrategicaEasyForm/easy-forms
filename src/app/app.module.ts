@@ -17,10 +17,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IonicStorageModule } from '@ionic/storage';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ComponentsModule } from './components.module';
+import { SignatureDrawPadPage } from './signature-draw-pad/signature-draw-pad.page';
+import { SignatureDrawPadPageModule } from './signature-draw-pad/signature-draw-pad.module';
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [],
+  entryComponents: [SignatureDrawPadPage],
   imports: [BrowserModule,
     BrowserAnimationsModule,
     IonicModule.forRoot(),
@@ -31,6 +33,7 @@ import { ComponentsModule } from './components.module';
     FormsModule,
     ReactiveFormsModule,
     ComponentsModule,
+    SignatureDrawPadPageModule,
     IonicStorageModule.forRoot()],
   providers: [
     StatusBar,
