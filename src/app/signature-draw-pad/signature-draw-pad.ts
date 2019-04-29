@@ -69,7 +69,7 @@ export class SignatureDrawPad {
 		this.canvas = document.querySelector("canvas");
 		this.canvas.width = 600;
 		this.canvas.height = 250;
-		this.velocityFilterWeight = options.velocityFilterWeight || 0.7;
+		this.velocityFilterWeight = options.velocityFilterWeight || 1;
 		this.minWidth = options.minWidth || 0.5;
 		this.maxWidth = options.maxWidth || 2.5;
 		this.throttle = ('throttle' in options ? options.throttle : 16) as number; // in milisecondss

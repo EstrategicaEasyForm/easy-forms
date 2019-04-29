@@ -5,6 +5,7 @@ import { LoadingController, ToastController, ModalController } from '@ionic/angu
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SignatureDrawPadPage } from '../signature-draw-pad/signature-draw-pad.page';
+import { AspirationDetailModal } from './aspiration-detail.modal';
 
 @Component({
   selector: 'app-aspiration',
@@ -182,16 +183,30 @@ export class AspirationPage implements OnInit {
     // this.parentPage.refresItemList(this.order);
   }
 
-  async openSignatureModel()
-  {
-
+  async openAspirationModal(indx) {
+    const _self = this;
+    this.ordersService.setDetailApiParam(this.aspiration.details);
     const modalPage = await this.modalCtrl.create({
-      //component: SignatureDrawPadComponent
-      component: SignatureDrawPadPage,
-      cssClass: 'signature-modal'
-
+      component: AspirationDetailModal,
+      componentProps: { value: indx }
     });
 
+    modalPage.onDidDismiss().then(({data}) => {
+      if (data) {
+        _self.aspiration.details = data;
+        //this.localStorage.updateServices(this.order);
+      }
+    });
+
+    return await modalPage.present();
+  }
+
+  async openSignatureModel() {
+    var data = { message : 'hello world' };
+    const modalPage = await this.modalCtrl.create({
+      component: SignatureDrawPadPage
+    });
+    
     modalPage.onDidDismiss().then(({data}) => {
       if (data) {
         this.aspiration.signatureImage = data.signatureImage;

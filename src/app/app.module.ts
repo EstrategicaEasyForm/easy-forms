@@ -19,10 +19,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ComponentsModule } from './components.module';
 import { SignatureDrawPadPage } from './signature-draw-pad/signature-draw-pad.page';
 import { SignatureDrawPadPageModule } from './signature-draw-pad/signature-draw-pad.module';
+import { AspirationDetailModal } from './aspiration/aspiration-detail.modal';
+import { AspirationDetailModalModule } from './aspiration/aspiration-detail-modal.module';
+
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [SignatureDrawPadPage],
+  entryComponents: [SignatureDrawPadPage,AspirationDetailModal],
   imports: [BrowserModule,
     BrowserAnimationsModule,
     IonicModule.forRoot(),
@@ -34,6 +37,7 @@ import { SignatureDrawPadPageModule } from './signature-draw-pad/signature-draw-
     ReactiveFormsModule,
     ComponentsModule,
     SignatureDrawPadPageModule,
+    AspirationDetailModalModule,
     IonicStorageModule.forRoot()],
   providers: [
     StatusBar,

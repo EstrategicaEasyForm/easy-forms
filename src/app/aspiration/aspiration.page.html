@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>aspiration</ion-title>
+    <ion-title>PLANTILLA DE ASPIRACIÓN FOLICULAR</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -178,170 +178,84 @@
       </ion-grid>
     </ion-slide>
     <ion-slide>
-
       <ion-grid>
         <ion-row>
-          <ion-item style="margin: 0 auto">Registro {{indx + 1 }} de {{aspiration?.details?.length + ajustList }} </ion-item>
-
-          <ion-fab right middle>
-            <button class="fab-button" ion-fab [disabled]="!validations_form.valid" (click)="nextItem()">
-              <ion-icon style="font-size: 3.2em;" name="arrow-dropright-circle"></ion-icon>
-            </button>
-          </ion-fab>
-          <ion-fab left middle>
-            <button ion-fab class="fab-button" [disabled]="indx===0" (click)="backItem()">
-              <ion-icon style="font-size: 3.2em;" name="arrow-dropleft-circle"></ion-icon>
-            </button>
-          </ion-fab>
+          <ion-col>
+            <ion-item>
+              <ion-label style="margin: 0 auto"> Registros encontratos {{aspiration.details?.length }} </ion-label>
+              <ion-button expand="full" (click)="openAspirationModal()">
+                 Nuevo registro
+                <ion-icon name="create"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-col>
         </ion-row>
         <ion-row>
-          <form class="form" [formGroup]="validations_form">
-            <ion-card class="card-order">
-              <ion-card-header class="ibox-title">
-                <h5 class="white-color">Plantilla Aspiración Fonicular</h5>
-              </ion-card-header>
-              <ion-card-content>
+          <ion-col>
+            <form class="form" [formGroup]="validations_form">
+              <ion-card class="card-order">
+                <ion-card-header class="ibox-title">
+                  <h5 class="white-color">Plantilla Aspiración Fonicular</h5>
+                </ion-card-header>
+                <ion-card-content>
 
-                <table style="width:100%;" *ngIf="aspiration.details">
-                  <tr>
-                    <th>Id Animal</th>
-                    <th>Chapeta</th>
-                    <th>Diagnóstico</th>
-                    <th>Apta</th>
-                    <th>Sincronizada</th>
-                    <th>Encargado</th>
-                    <th>Observaciones</th>
-                  </tr>
-                  <tr *ngFor="let item of aspiration.details; let indx = index" (click)="goToForm(indx)">
-                    <td>{{item.idAnimal}}</td>
-                    <td>{{item.chapeta }}</td>
-                    <td>{{item.diagnostico}}</td>
-                    <td>{{item.apta ? 'Si':'No'}}</td>
-                    <td>{{item.sincronizada ? 'Si':'No'}}</td>
-                    <td>{{item.encargado}}</td>
-                    <td>{{item.observaciones}}</td>
-                  </tr>
-                  <tr *ngIf="aspiration.details.length === 0">
-                    <td colspan="7"> No se encuentran datos !</td>
-                  </tr>
-                </table>
-
-
-
-                <ion-grid>
-                  <ion-row>
-                    <ion-col col-6>
-                      <label>Donadora</label>
-                    </ion-col>
-                    <ion-col col-6>
-                      <label>Raza</label>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col col-6>
-                      <ion-input type="text" formControlName="donor" [ngClass]="{ 'is-invalid': submitted && f.donor.errors }" [(ngModel)]="item.donor"></ion-input>
-                      <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
-                        <div *ngIf="f.donor.errors.required">Campo es recorrido</div>
-                      </div>
-                    </ion-col>
-                    <ion-col col-6>
-                      <ion-input formControlName="donor_breed" [(ngModel)]="item.donor_breed"></ion-input>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col col-4>
-                      <label>Local</label>
-                    </ion-col>
-                    <ion-col col-4>
-                      <label>Tipo</label>
-                    </ion-col>
-                    <ion-col col-4>
-                      <label>Hora</label>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col col-4>
-                      <ion-select placeholder="Local" [(ngModel)]="item.local" formControlName="local">
-                        <!--ion-select-option *ngFor="local of order.client.locals" [value]="local.id">Female</ion-select-option-->
-                      </ion-select>
-                    </ion-col>
-                    <ion-col col-4>
-                      <ion-select placeholder="Tipo" formControlName="type">
-                        <!--ion-option value="Leche">Leche</ion-option>
-                      <ion-option value="Carne">Carne</ion-option-->
-                      </ion-select>
-                    </ion-col>
-                    <ion-col col-4>
-                      <ion-input formControlName="arrived_temperature" [(ngModel)]="aspiration.arrived_temperature"></ion-input>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col col-6>
-                      <label>Toro</label>
-                    </ion-col>
-                    <ion-col col-6>
-                      <label>Raza</label>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col col-6>
-                      <ion-input formControlName="bull" [(ngModel)]="item.bull"></ion-input>
-                    </ion-col>
-                    <ion-col col-6>
-                      <ion-input formControlName="bull_breed" [(ngModel)]="item.bull_breed"></ion-input>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col col-3>
-                      <label>GI</label>
-                    </ion-col>
-                    <ion-col col-3>
-                      <label>GII</label>
-                    </ion-col>
-                    <ion-col col-3>
-                      <label>GIII</label>
-                    </ion-col>
-                    <ion-col col-3>
-                      <label>Otros</label>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col col-3>
-                      <ion-input formControlName="gi" [(ngModel)]="item.gi"></ion-input>
-                    </ion-col>
-                    <ion-col col-3>
-                      <ion-input formControlName="gii" [(ngModel)]="item.gii"></ion-input>
-                    </ion-col>
-                    <ion-col col-3>
-                      <ion-input formControlName="giii" [(ngModel)]="item.giii"></ion-input>
-                    </ion-col>
-                    <ion-col col-3>
-                      <ion-input formControlName="others" [(ngModel)]="item.others"></ion-input>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col col-6>
-                      <label>Viables</label>
-                    </ion-col>
-                    <ion-col col-6>
-                      <label>Total</label>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col col-6 class="text-readonly">
-                      <label></label>
-                    </ion-col>
-                    <ion-col col-6>
-                      <label>{{item?.total}}</label>
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
-              </ion-card-content>
-            </ion-card>
-          </form>
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col col-1>
+                        <ion-label>#</ion-label>
+                      </ion-col>
+                      <ion-col col-3>
+                        <ion-label>Donadora</ion-label>
+                      </ion-col>
+                      <ion-col col-2>
+                        <ion-label>Raza</ion-label>
+                      </ion-col>
+                      <ion-col col-1>
+                        <ion-label>Tipo</ion-label>
+                      </ion-col>
+                      <ion-col col-1>
+                        <ion-label>Hora</ion-label>
+                      </ion-col>
+                      <ion-col col-2>
+                        <ion-label>Toro</ion-label>
+                      </ion-col>
+                      <ion-col col-2>
+                        <ion-label>RAZA</ion-label>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row *ngFor="let item of aspiration.details; let indx = index" (click)="openAspirationModal(indx)">
+                      <ion-col col-1>
+                        <ion-label>{{indx + 1}}</ion-label>
+                      </ion-col>
+                      <ion-col col-3>
+                        <ion-label>{{item.donor }}</ion-label>
+                      </ion-col>
+                      <ion-col col-2>
+                        <ion-label>{{item.donor_breed }}</ion-label>
+                      </ion-col>
+                      <ion-col col-1>
+                        <ion-label>{{item.type }}</ion-label>
+                      </ion-col>
+                      <ion-col col-1>
+                        <ion-label>{{item.arrived_time }}</ion-label>
+                      </ion-col>
+                      <ion-col col-2>
+                        <ion-label>{{item.bull }}</ion-label>
+                      </ion-col>
+                      <ion-col col-2>
+                        <ion-label>{{item.bull_breed }}</ion-label>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row *ngIf="aspiration.details.length === 0">
+                      <ion-label>No se encontraron registros</ion-label>
+                    </ion-row>
+                  </ion-grid>
+                </ion-card-content>
+              </ion-card>
+            </form>
+          </ion-col>
         </ion-row>
       </ion-grid>
-
     </ion-slide>
   </ion-slides>
 

@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { AspirationPage } from './aspiration.page';
 import { ComponentsModule } from '../components.module';
 import { SignatureDrawPadPageModule } from '../signature-draw-pad/signature-draw-pad.module';
+import { AspirationDetailModalModule } from './aspiration-detail-modal.module';
 
 const routes: Routes = [
   {
@@ -24,6 +25,7 @@ const routes: Routes = [
     FormsModule,
     ComponentsModule,
     SignatureDrawPadPageModule,
+    AspirationDetailModalModule,
     RouterModule.forChild(routes)
   ],
   declarations: [AspirationPage]
