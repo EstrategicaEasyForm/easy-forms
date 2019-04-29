@@ -330,6 +330,61 @@ export class OrdersService {
   constructor(private apollo: Apollo,
     private storage: Storage) { }
 
+    updateAspiration(data : any) {
+      const aspirationMutation = gql`
+        mutation updateAspiration($input: UpdateAspirationInput!){
+          updateAspiration(input: $input) {
+            id
+          }
+        }`;
+
+        return this.apollo.mutate({
+          mutation : aspirationMutation,
+          variables : {
+            "input" : {
+              "id" : data.id,
+              //"order_detail_id" : data.order_detail_id + "",
+              "arrived_temperature" : data.arrived_temperature,
+              "aspirator" : data.aspirator,
+              "comments" : data.comments,
+              "date" : data.date,
+              "identification_number" : data.identification_number,
+              //"locals" : data.locals,
+              "medium_lot_miv" : data.medium_lot_miv,
+              "medium_lot_opu" : data.medium_lot_opu,
+              "medium_opu" : data.medium_opu,
+              "received_by" : data.received_by,
+              "received_name" : data.received_name,
+              "searcher" : data.searcher,
+              "state" : data.state,
+              "synchronized_receivers" : data.synchronized_receivers,
+              "transport_type" : data.transport_type
+            }
+          }
+        });
+    }
+
+    updateAspirationDetails(data : any) {
+      const aspirationMutation = gql`
+      mutation updateAspiration($input: UpdateAspirationInput!){
+        updateAspiration(input: $input) {
+          id
+        }
+      }`;
+      return this.apollo.mutate({
+        mutation : aspirationMutation,
+        variables : {
+          "input" : {
+            "id" : data.id,
+            "details" : {
+              //"create" : [data.details.create]
+              "update" : data.details.update
+            }
+          }
+        }
+      });
+    }
+
   getDetailsApi(onSuccess, onError) {
 
     const _self = this;

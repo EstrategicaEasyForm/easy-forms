@@ -53,7 +53,7 @@ export class NetworkNotifyBannerComponent implements OnInit {
 			});
 
     });
-  }
+	}	
 
   ngOnInit() { }
 
@@ -68,3 +68,4 @@ export class NetworkNotifyBannerComponent implements OnInit {
 	}
 
 }
+

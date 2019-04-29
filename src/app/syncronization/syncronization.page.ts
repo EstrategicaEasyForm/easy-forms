@@ -22,14 +22,90 @@ export class SyncronizationPage {
   }
 
   ionViewWillEnter() {
-    //this.ordersService.getDetailsApiStorage().then((data) =>{
-      //if (data) {
-        //data.forEach(element => {
-          //console.log(element);
-        //});
-      //}
-    //});
-    this.retriveAgenda();
+    this.ordersService.getDetailsApiStorage().then((data) => {
+      if (data) {
+        console.log(data);
+        data.forEach(element => {
+          if (element.aspiration) {
+            //Update aspiration
+            if (element.aspiration.id == '1') {
+              element.aspiration.stateSync = 'U';
+            }
+            if (element.aspiration.stateSync && element.aspiration.stateSync == 'U') {
+              this.ordersService.updateAspiration(element.aspiration)
+                  .subscribe(({ data }) => {
+                    if (data.updateAspiration) {
+                      console.log(data.updateAspiration);
+                    }
+                  });
+            }
+            //Update details from aspiration
+            var details : any = {};
+            var creates : any = [];
+            var updates : any = [];
+            element.aspiration.details.forEach(elementDetail => {
+              if (elementDetail.id == '1') {
+                elementDetail.stateSync = 'C';
+              }
+              if (elementDetail.id == '2') {
+                elementDetail.stateSync = 'U';
+              }
+              if (elementDetail.stateSync && elementDetail.stateSync == 'U') {
+                var elementUpdate : any = {};
+                elementUpdate['id'] = elementDetail.id;
+                //elementUpdate['aspiration_id'] = elementDetail.aspiration_id;
+                elementUpdate['donor'] = elementDetail.donor;
+                elementUpdate['donor_breed'] = elementDetail.donor_breed;
+                elementUpdate['arrived_time'] = elementDetail.arrived_time;
+                elementUpdate['bull'] = elementDetail.bull;
+                elementUpdate['bull_breed'] = elementDetail.bull_breed;
+                elementUpdate['type'] = elementDetail.type;
+                elementUpdate['gi'] = elementDetail.gi;
+                elementUpdate['gii'] = elementDetail.gii;
+                elementUpdate['giii'] = elementDetail.giii;
+                elementUpdate['others'] = elementDetail.others;
+                elementUpdate['user_id_updated'] = "";
+                updates.push(elementUpdate);
+              } 
+              if (elementDetail.stateSync && elementDetail.stateSync == 'C') {
+                var elementCreate : any = {};
+                elementCreate['local_id'] = elementDetail.local_id;
+                //elementCreate['aspiration_id'] = elementDetail.aspiration_id;
+                elementCreate['donor'] = elementDetail.donor;
+                elementCreate['donor_breed'] = elementDetail.donor_breed;
+                elementCreate['arrived_time'] = elementDetail.arrived_time;
+                elementCreate['bull'] = elementDetail.bull;
+                elementCreate['bull_breed'] = elementDetail.bull_breed;
+                elementCreate['type'] = elementDetail.type;
+                elementCreate['gi'] = elementDetail.gi;
+                elementCreate['gii'] = elementDetail.gii;
+                elementCreate['giii'] = elementDetail.giii;
+                elementCreate['others'] = elementDetail.others;
+                //elementCreate['local'] = elementDetail.local;
+                creates.push(elementCreate);
+              }
+            });
+            if (creates.length > 0) {
+              details['create'] = creates;
+            }
+            if (updates.length > 0) {
+              details['update'] = updates;
+            }
+            if (Object.getOwnPropertyNames(details).length > 0) {
+              console.log(details);
+              var dataDetails : any = {};
+              dataDetails['id'] = element.aspiration.id;
+              dataDetails['details'] = details;
+              this.ordersService.updateAspirationDetails(dataDetails)
+                  .subscribe(({ data }) => {
+                    console.log("Update detail " + data);
+                  });
+            }
+          }
+        });
+      }
+      this.retriveAgenda();
+    });
   }
 
   async retriveAgenda() {
