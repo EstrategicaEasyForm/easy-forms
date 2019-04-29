@@ -1,0 +1,137 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>PLANTILLA DE ASPIRACION FOLICULAR</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-fab vertical="center" horizontal="end" slot="fixed">
+    <ion-fab-button class="fab-button" [disabled]="!validations_form.valid" (click)="nextItem()">
+      <ion-icon style="font-size: 3.2em;" name="arrow-dropright-circle"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-fab vertical="center" horizontal="start" slot="fixed">
+    <ion-fab-button class="fab-button" [disabled]="indx===0" (click)="backItem()">
+      <ion-icon style="font-size: 3.2em;" name="arrow-dropleft-circle"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <form class="form" [formGroup]="validations_form">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item style="margin: 0 auto">Registro {{indx + 1 }} de {{detailsList?.length + ajustList }} </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-6>
+          <label>Donadora</label>
+        </ion-col>
+        <ion-col col-6>
+          <label>Raza</label>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-6>
+          <ion-input type="text" formControlName="donor" [ngClass]="{ 'is-invalid': submitted && f.donor.errors }" [(ngModel)]="dataItem.donor"></ion-input>
+          <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+            <div *ngIf="f.donor.errors.required">Campo es requerido</div>
+          </div>
+        </ion-col>
+        <ion-col col-6>
+          <ion-input formControlName="donor_breed" [(ngModel)]="dataItem.donor_breed"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-4>
+          <label>Local</label>
+        </ion-col>
+        <ion-col col-4>
+          <label>Tipo</label>
+        </ion-col>
+        <ion-col col-4>
+          <label>Hora</label>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-4>
+          <ion-select placeholder="Local" [(ngModel)]="dataItem.local" formControlName="local">
+            <!--ion-select-option *ngFor="local of order.client.locals" [value]="local.id">{{local.name}}</ion-select-option-->
+          </ion-select>
+        </ion-col>
+        <ion-col col-4>
+            <ion-select placeholder="Tipo" [(ngModel)]="dataItem.type">
+                <ion-select-option value="Leche">Leche</ion-select-option>
+                <ion-select-option value="Carne">Carne</ion-select-option>
+              </ion-select>
+        </ion-col>
+        <ion-col col-4>
+          <ion-input formControlName="arrived_time" [(ngModel)]="dataItem.arrived_time"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-6>
+          <label>Toro</label>
+        </ion-col>
+        <ion-col col-6>
+          <label>Raza</label>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-6>
+          <ion-input formControlName="bull" [(ngModel)]="dataItem.bull"></ion-input>
+        </ion-col>
+        <ion-col col-6>
+          <ion-input formControlName="bull_breed" [(ngModel)]="dataItem.bull_breed"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-3>
+          <label>GI</label>
+        </ion-col>
+        <ion-col col-3>
+          <label>GII</label>
+        </ion-col>
+        <ion-col col-3>
+          <label>GIII</label>
+        </ion-col>
+        <ion-col col-3>
+          <label>Otros</label>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-3>
+          <ion-input formControlName="gi" [(ngModel)]="dataItem.gi"></ion-input>
+        </ion-col>
+        <ion-col col-3>
+          <ion-input formControlName="gii" [(ngModel)]="dataItem.gii"></ion-input>
+        </ion-col>
+        <ion-col col-3>
+          <ion-input formControlName="giii" [(ngModel)]="dataItem.giii"></ion-input>
+        </ion-col>
+        <ion-col col-3>
+          <ion-input formControlName="others" [(ngModel)]="dataItem.others"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-6>
+          <label>Viables</label>
+        </ion-col>
+        <ion-col col-6>
+          <label>Total</label>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-6 class="text-readonly">
+          <label>{{dataItem.gi + dataItem.gii + dataItem.giii + 0 }}</label>
+        </ion-col>
+        <ion-col col-6 class="text-readonly">
+          <label>{{dataItem.gi + dataItem.gii + dataItem.giii + dataItem.others + 0 }}</label>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

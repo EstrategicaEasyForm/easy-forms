@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  //{ path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '', loadChildren: './tabs/tabs.module#TabsPageModule' },
   { path: 'agenda', loadChildren: './agenda/agenda.module#AgendaPageModule' },
   { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
@@ -16,6 +15,9 @@ const routes: Routes = [
   { path: 'diagnostic', loadChildren: './diagnostic/diagnostic.module#DiagnosticPageModule' },
   { path: 'sexage', loadChildren: './sexage/sexage.module#SexagePageModule' },
   { path: 'delivery', loadChildren: './delivery/delivery.module#DeliveryPageModule' }
+  ///{ path: 'signature-draw-pad', loadChildren: './signature-draw-pad/signature-draw-pad.module#SignatureDrawPadPageModule' }
+
+
 
 ];
 

@@ -395,17 +395,24 @@ export class OrdersService {
           errorPolicy: 'all'
         })
         .valueChanges
-        .subscribe((data:any) => {
-          if(data.data.orders) {
+
+        .subscribe(({ data }: any) => {
+          if (data.orders) {
             const detailsApiList = [];
-            for (let order of data.data.orders) {
-              for (let agenda of order.agenda) {
-                for(let detailsApi of order.detailsApi) {
-                  //console.log(detailsApi);
-                  if(detailsApi.local.name === agenda.name_local ) {
-                    detailsApi.order = order;
-                    detailsApi.agenda = agenda;
-                    detailsApiList.push(detailsApi);
+            let detailObj: any;
+
+            for (let order of data.orders) {
+              for (let detailsApi of order.detailsApi) {
+                for (let agenda of order.agenda) {
+
+                  if (detailsApi.local.name === agenda.name_local) {
+                    detailObj = Object.assign({}, detailsApi);
+                    detailObj.order = order;
+                    detailObj.agendas = [agenda];
+                    detailObj.event = agenda.event;
+                    if (!_self.isDetailLoader(detailsApiList, detailObj)) {
+                      detailsApiList.push(detailObj);
+                    }
                   }
                 }
               }
@@ -414,6 +421,7 @@ export class OrdersService {
           }
           else {
             onError("Error consultando el servicio");
+            onError(data.errors);
           }
         });
     } catch (e) {
@@ -421,20 +429,36 @@ export class OrdersService {
     }
   }
 
+  isDetailLoader(detailsApiList, detailObj) {
+    for (let detail of detailsApiList) {
+      if (detail.id === detailObj.id) {
+        for (let agenda of detail.agendas) {
+          if (agenda.event.id === detailObj.agendas[0].event.id &&
+            agenda.name_local === detailObj.agendas[0].name_local) {
+            detail.agendas = detail.agendas.concat(detailObj.agendas);
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
   /* Order Storage */
+
+  detailApi: any;
 
   getDetailsApiStorage() {
     return this.storage.get('detailsApi');
   }
 
   setDetailsApiStorage(detailsApi) {
-    return this.storage.set('detailsApi',detailsApi);
+    return this.storage.set('detailsApi', detailsApi);
   }
 
-  detailApi: any;
-  
+
   setDetailApiParam(detailApi) {
-   this.detailApi = detailApi;
+    this.detailApi = detailApi;
   }
 
   getDetailApiParam() {

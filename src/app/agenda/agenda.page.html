@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>agenda</ion-title>
+    <ion-title>AGENDA</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -9,7 +9,7 @@
   <ion-card>
     <ion-row class="text-align-center">
       <ion-col class="item-length">
-        {{detailsApi.length}} item(s) encontrado(s)
+          {{detailsApi.length}} item(s) filtrado(s) de {{detailsApiOriginal.length}} encontrado(s)
       </ion-col>
       <ion-col>
         <ion-item>
@@ -45,22 +45,20 @@
         <ion-card *ngFor="let detailApi of detailsApi" (click)="goToTemplate(detailApi)">
           <ion-card-header>
             <h3 style="font-size: 1.2rem;">
-              <fa-icon *ngIf="detailApi.agenda.event.id === '1'" [icon]="['fas', 'search']" style="color:yellow;"></fa-icon>
-              <fa-icon *ngIf="detailApi.agenda.event.id === '2'" [icon]="['fas', 'eye-dropper']" style="color:blue;"></fa-icon>
-              <fa-icon *ngIf="detailApi.agenda.event.id === '3'" [icon]="['fas', 'arrow']" style="color:red;"></fa-icon>
-              <fa-icon *ngIf="detailApi.agenda.event.id === '4'" [icon]="['fas', 'flask']" style="color:red;"></fa-icon>
-              <fa-icon *ngIf="detailApi.agenda.event.id === '5'" [icon]="['fas', 'magic']" style="color:red;"></fa-icon>
-              <fa-icon *ngIf="detailApi.agenda.event.id === '6'" [icon]="['fas', 'stethoscope']" style="color:red;"></fa-icon>
-              {{detailApi.agenda.event.name}}
+              <fa-icon *ngIf="detailApi.event.id === '1'" [icon]="['fas', 'search']" style="color:yellow;"></fa-icon>
+              <fa-icon *ngIf="detailApi.event.id === '2'" [icon]="['fas', 'eye-dropper']" style="color:blue;"></fa-icon>
+              <fa-icon *ngIf="detailApi.event.id === '3'" [icon]="['fas', 'arrow']" style="color:red;"></fa-icon>
+              <fa-icon *ngIf="detailApi.event.id === '4'" [icon]="['fas', 'flask']" style="color:red;"></fa-icon>
+              <fa-icon *ngIf="detailApi.event.id === '5'" [icon]="['fas', 'magic']" style="color:red;"></fa-icon>
+              <fa-icon *ngIf="detailApi.event.id === '6'" [icon]="['fas', 'stethoscope']" style="color:red;"></fa-icon>
+              {{detailApi.event.name}}
             </h3>
             <small>Orden de producción {{detailApi.order.id}} </small>
           </ion-card-header>
           <ion-card-content style="font-size: 1.3rem;">
-            Orden realizada a {{detailApi.order?.client?.bussiness_name}}
-             en la ciudad de {{detailApi.order?.citiesOne?.name}} 
-             en el {{detailApi.order?.client?.departmentOne?.name}}
-             local {{detailApi.agenda?.name_local}}
-            <small>Fecha: {{detailApi.agenda.start_date}} </small>
+            Orden realizada a {{detailApi.order?.client?.bussiness_name}} en la ciudad de {{detailApi.order?.citiesOne?.name}} en el
+            {{detailApi.order?.client?.departmentOne?.name}} local {{detailApi.agendas[0]?.name_local}}
+            <small>Fecha: {{detailApi.agendas[0].start_date}} </small>
           </ion-card-content>
         </ion-card>
       </ion-col>

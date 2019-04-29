@@ -16,10 +16,16 @@ import { NetworkNotifyService } from './network-notify.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IonicStorageModule } from '@ionic/storage';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ComponentsModule } from './components.module';
+import { SignatureDrawPadPage } from './signature-draw-pad/signature-draw-pad.page';
+import { SignatureDrawPadPageModule } from './signature-draw-pad/signature-draw-pad.module';
+import { AspirationDetailModal } from './aspiration/aspiration-detail.modal';
+import { AspirationDetailModalModule } from './aspiration/aspiration-detail-modal.module';
+
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [],
+  entryComponents: [SignatureDrawPadPage,AspirationDetailModal],
   imports: [BrowserModule,
     BrowserAnimationsModule,
     IonicModule.forRoot(),
@@ -29,6 +35,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     GraphQLModule,
     FormsModule,
     ReactiveFormsModule,
+    ComponentsModule,
+    SignatureDrawPadPageModule,
+    AspirationDetailModalModule,
     IonicStorageModule.forRoot()],
   providers: [
     StatusBar,

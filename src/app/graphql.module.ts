@@ -10,49 +10,11 @@ import { UsersService } from './users.service';
 
 const uri = 'http://tester.estrategicacomunicaciones.com/graphql'; // <-- add the URL of the GraphQL server here
 
-export function createApollo(httpLink: HttpLink,
-  toastCtrl: ToastController,
-  usersService: UsersService) {
-
-  const http = httpLink.create({ uri });
-
-  const auth = setContext(async (_, { headers }) => {
-    headers = headers || new HttpHeaders();
-
-    const token = usersService.getToken();
-    if (!token) {
-      return {};
-    } else {
-      return {
-        headers: headers.append('Authorization', 'Bearer ' + token)
-      };
-    }
-  });
-  const linkError = onError(({ graphQLErrors, networkError }) => {
-    let toast = this.toastCtrl.create({
-      message: 'No se puede consultar la lista de agendas',
-      duration: 2000
-    });
-    toast.present();
-    toast = this.toastCtrl.create({
-      message: networkError || graphQLErrors || '',
-      duration: 2000
-    });
-    toast.present();
-  });
-  return {
-    link: linkError.concat(auth).concat(http),
-    cache: new InMemoryCache(),
-  };
-}
-
 @NgModule({
   exports: [ApolloModule, HttpLinkModule],
 
 })
 export class GraphQLModule {
-
-  authUser: any;
 
   constructor(
     public apollo: Apollo,
@@ -64,9 +26,10 @@ export class GraphQLModule {
 
     const authToken = setContext(async (_, { headers }) => {
       headers = headers || new HttpHeaders();
-      if (this.authUser) {
+      const access_token: string = this.usersService.getAccessToken();
+      if (access_token.length > 0) {
         return {
-          headers: headers.append('Authorization', 'Bearer ' + this.authUser.access_token)
+          headers: headers.append('Authorization', 'Bearer ' + access_token)
         };
       }
       return {};
@@ -77,14 +40,11 @@ export class GraphQLModule {
         duration: 2000
       });
     });
-    const _self = this;
-    usersService.getToken().then((authUser) => {
-      _self.authUser = authUser;
-      apollo.create({
-        link: linkError.concat(authToken).concat(http),
-        // other options like cache
-        cache: new InMemoryCache(),
-      });
+
+    apollo.create({
+      link: linkError.concat(authToken).concat(http),
+      // other options like cache
+      cache: new InMemoryCache(),
     });
   }
 }

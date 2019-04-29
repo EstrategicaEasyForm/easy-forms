@@ -12,6 +12,8 @@ import { Storage } from '@ionic/storage';
 })
 export class UsersService {
 
+  userAuthToken: any;
+
   constructor(private apollo: Apollo,
     private storage: Storage) { }
 
@@ -43,15 +45,20 @@ export class UsersService {
 
   /* Token Authentication Storage */
 
-  setToken(userAuth: any) {
+  setUserAuthToken(userAuth: any) {
+    this.userAuthToken = userAuth;
     this.storage.set('userAuthToken', userAuth);
   }
   
-  getToken() {
+  getUserAuthToken() {
     return this.storage.get('userAuthToken');
   }
 
-  deleteToken() {
+  getAccessToken() {
+    return this.userAuthToken ? this.userAuthToken.access_token : '';
+  }
+
+  deleteUserAuthToken() {
     this.storage.remove('userAuthToken');
   }
 
