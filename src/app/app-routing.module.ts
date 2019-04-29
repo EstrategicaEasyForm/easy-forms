@@ -14,7 +14,8 @@ const routes: Routes = [
   { path: 'transfer', loadChildren: './transfer/transfer.module#TransferPageModule' },
   { path: 'diagnostic', loadChildren: './diagnostic/diagnostic.module#DiagnosticPageModule' },
   { path: 'sexage', loadChildren: './sexage/sexage.module#SexagePageModule' },
-  { path: 'delivery', loadChildren: './delivery/delivery.module#DeliveryPageModule' }
+  { path: 'delivery', loadChildren: './delivery/delivery.module#DeliveryPageModule' },
+  { path: 'pdf-viewer', loadChildren: './pdf-viewer/pdf-viewer.module#PdfViewerPageModule' }
   ///{ path: 'signature-draw-pad', loadChildren: './signature-draw-pad/signature-draw-pad.module#SignatureDrawPadPageModule' }
 
 

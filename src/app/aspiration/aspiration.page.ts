@@ -6,6 +6,7 @@ import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-n
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SignatureDrawPadPage } from '../signature-draw-pad/signature-draw-pad.page';
 import { AspirationDetailModal } from './aspiration-detail.modal';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-aspiration',
@@ -65,7 +66,8 @@ export class AspirationPage implements OnInit {
     public formBuilder: FormBuilder,
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
-    public modalCtrl: ModalController) {
+    public modalCtrl: ModalController,
+	public router: Router) {
   }
 
   ngOnInit() {
@@ -217,6 +219,10 @@ export class AspirationPage implements OnInit {
     return await modalPage.present();
   }
   
+  openPdfViewer() {
+	this.router.navigate(['pdf-viewer']);
+  }
+
   async showMessage(message: string) {
     const toast = await this.toastCtrl.create({
       message: message,
