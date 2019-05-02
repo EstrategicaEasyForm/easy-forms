@@ -187,7 +187,8 @@ export class AspirationPage implements OnInit {
 
   async openAspirationModal(indx) {
     const _self = this;
-    this.ordersService.setDetailApiParam(this.aspiration.details);
+    this.ordersService.setDetailApiParam(this.aspiration);
+	
     const modalPage = await this.modalCtrl.create({
       component: AspirationDetailModal,
       componentProps: { value: indx }

@@ -58,18 +58,20 @@
       </ion-row>
       <ion-row>
         <ion-col col-4>
-          <ion-select placeholder="Local" [(ngModel)]="dataItem.local" formControlName="local">
-            <!--ion-select-option *ngFor="local of order.client.locals" [value]="local.id">{{local.name}}</ion-select-option-->
+          <ion-select placeholder="Local" [(ngModel)]="dataItem.local_id" formControlName="local">
+            <ion-select-option *ngFor="let local of aspiration.locals" [value]="local.id">{{local.name}}</ion-select-option>
           </ion-select>
         </ion-col>
         <ion-col col-4>
-            <ion-select placeholder="Tipo" [(ngModel)]="dataItem.type">
+            <ion-select formControlName="type" placeholder="Tipo" [(ngModel)]="dataItem.type">
                 <ion-select-option value="Leche">Leche</ion-select-option>
                 <ion-select-option value="Carne">Carne</ion-select-option>
               </ion-select>
         </ion-col>
         <ion-col col-4>
-          <ion-input formControlName="arrived_time" [(ngModel)]="dataItem.arrived_time"></ion-input>
+			<ion-item>
+				<ion-datetime formControlName="arrived_time" displayFormat="hh:mmA" pickerFormat="hh:mmA" [(ngModel)]="dataItem.arrived_time"></ion-datetime>
+			</ion-item>
         </ion-col>
       </ion-row>
       <ion-row>

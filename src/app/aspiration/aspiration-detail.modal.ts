@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { OrdersService } from '../orders.service';
 import { ToastController, NavParams, ModalController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import * as moment from 'moment-timezone';
 
 
 @Component({
@@ -12,6 +13,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class AspirationDetailModal {
 
   // Aspiration form template
+  aspiration: any;
   action: string;
   ajustList: number = 0;
   detailsList: any;
@@ -24,17 +26,16 @@ export class AspirationDetailModal {
   //validations_form = new FormGroup({
   validations_form = this.formBuilder.group({
     donor: ['', Validators.required],
-    arrived_temperature: [''],
-    donor_breed: [''],
-    local: [''],
-    type: [''],
-    arrived_time: [''],
-    bull: [''],
-    bull_breed: [''],
-    gi: [''],
-    gii: [''],
-    giii: [''],
-    others: ['']
+    donor_breed: ['', Validators.required],
+    local: ['', Validators.required],
+    type: ['', Validators.required],
+    arrived_time: ['', Validators.required],
+    bull: ['', Validators.required],
+    bull_breed: ['', Validators.required],
+    gi: ['', Validators.required],
+    gii: ['', Validators.required],
+    giii: ['', Validators.required],
+    others: ['', Validators.required]
   });
 
   constructor(
@@ -44,7 +45,17 @@ export class AspirationDetailModal {
     public navParams: NavParams,
     public modalCtrl: ModalController) {
 
-    this.detailsList = this.ordersService.getDetailApiParam();
+	this.aspiration = this.ordersService.getDetailApiParam();
+    this.detailsList = this.aspiration.details;
+	for (let detail of this.detailsList){
+		if(detail.arrived_time){
+			let hour = 11;//detail.arrived_time;
+			let minute = 30;//detail.arrived_time;
+			let time = moment();
+			time.set({hour:hour,minute:minute});
+			detail.arrived_time = time.format();
+		}
+	}
     if (typeof this.navParams.data.value != 'undefined') {
       this.indx = this.navParams.data.value || 0;
       this.dataItem = this.detailsList[this.indx];
@@ -62,7 +73,6 @@ export class AspirationDetailModal {
   newItem() {
     this.dataItem = {
       donor: '',
-      arrived_temperature: '',
       donor_breed: '',
       local: '',
       type: '',
