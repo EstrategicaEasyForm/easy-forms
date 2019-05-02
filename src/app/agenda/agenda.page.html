@@ -1,68 +1,171 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>AGENDA</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
-  <app-network-notify-banner id="networkNotifyBanner"></app-network-notify-banner>
-  <ion-card>
-    <ion-row class="text-align-center">
-      <ion-col class="item-length">
-          {{detailsApi.length}} item(s) filtrado(s) de {{detailsApiOriginal.length}} encontrado(s)
-      </ion-col>
-      <ion-col>
+<ion-split-pane>
+  <ion-menu side="end">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Filtros de búsqueda</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list>
         <ion-item>
-          <ion-label color="primary">Solo mías</ion-label>
-          <ion-toggle [(ngModel)]="filter.mySelf" (ngModelChange)="filterItems()"></ion-toggle>
+          <ion-label>Sólo mis agendas</ion-label>
+          <ion-toggle item-end [(ngModel)]="filter.mySelf" (ngModelChange)="filterItems()"></ion-toggle>
         </ion-item>
-      </ion-col>
-      <ion-col>
+        <ion-item>
+          <ion-label>Todos los dias</ion-label>
+          <ion-toggle item-end [(ngModel)]="filter.allDays" (ngModelChange)="filterItems()"></ion-toggle>
+        </ion-item>
+        <ion-item *ngIf="!filter.allDays">
+          <ion-icon name="calendar"></ion-icon>
+          <ion-label> &nbsp; Seleccione el día </ion-label>
+          <ion-datetime [(ngModel)]="filter.datetime" (ngModelChange)="updateDateTime()" display-format="DD/MM"
+            picker-format="MMMM DD"></ion-datetime>
+        </ion-item>
+        <ion-item>
+          <ion-label>Todas las plantillas</ion-label>
+          <ion-toggle item-end [(ngModel)]="filter.allTemplates" (ngModelChange)="filterItems()"></ion-toggle>
+        </ion-item>
+        <div *ngIf="!filter.allTemplates">
+          <ion-item *ngFor="let template of templates">
+            <fa-icon [icon]="template.icon" item-start></fa-icon>
+            <ion-label> &nbsp; {{template.name}}</ion-label>
+            <ion-checkbox item-end checked="true" [(ngModel)]="template.check" (ngModelChange)="filterItems()">
+            </ion-checkbox>
+          </ion-item>
+        </div>
+        <ion-item>
+          <ion-button class="ion-padding reset-filters" expand="full" fill="outline" shape="round"
+            (click)="resetFilter()">
+            &nbsp; Reestablecer Filtros
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+
+  <ion-router-outlet main>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="end">
+          <ion-menu-button>
+            <ion-icon name="options"></ion-icon>
+          </ion-menu-button>
+        </ion-buttons>
+        <ion-title>AGENDA</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <app-network-notify-banner id="networkNotifyBanner"></app-network-notify-banner>
+      <ion-card>
+        <ion-grid>
+          <ion-row>
+            <ion-col class="filter-registry" col-10>
+              {{detailsApi.length}} item(s) filtrado(s) de {{detailsApiOriginal.length}} encontrado(s)
+            </ion-col>
+            <ion-col col-1 class="filter-all-days">
+              <ion-item>
+                <ion-label>Solo mías</ion-label>
+                <ion-toggle item-end [(ngModel)]="filter.mySelf" (ngModelChange)="filterItems()"></ion-toggle>
+              </ion-item>
+            </ion-col>
+            <ion-col col-1 class="filter-datetime">
+              <ion-grid>
+                <ion-row class="ion-text-center">
+                  <ion-col>
+                    <ion-button [disabled]="filter.allDays" color="primary" (click)="backDay()">
+                      <ion-icon name="skip-backward"></ion-icon>
+                    </ion-button>
+                  </ion-col>
+                  <ion-col class="filter-datetime-str">
+                    <ion-label *ngIf="filter.allDays">{{filter.dayStr}}</ion-label>
+                    <ion-label *ngIf="!filter.allDays" color="primary">{{filter.dayStr}}</ion-label>
+                  </ion-col>
+                  <ion-col>
+                    <ion-button [disabled]="filter.allDays" color="primary" (click)="forwardDay()">
+                      <ion-icon name="skip-forward"></ion-icon>
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+      <ion-grid>
         <ion-row>
-          <ion-col col-3>
-            <ion-button color="primary" (click)="backDay()">
-              <ion-icon name="skip-backward"></ion-icon>
-            </ion-button>
-          </ion-col>
-          <ion-col class="dayCalendar" col-6>
-            <ion-label color="primary">{{filter.dayStr}}</ion-label>
-          </ion-col>
-          <ion-col col-3>
-            <ion-button color="primary" (click)="forwardDay()">
-              <ion-icon name="skip-forward"></ion-icon>
-            </ion-button>
+          <ion-col>
+            <ion-card *ngFor="let detailApi of detailsApi" (click)="goToTemplate(detailApi)">
+              <ion-card-header>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col class="cart-col">
+                      <fa-icon class="cart-fa-icon" *ngIf="detailApi.event.id === '1'" [icon]="['fas', 'search']"
+                        style="color:yellow;">
+                      </fa-icon>
+                      <fa-icon class="cart-fa-icon" *ngIf="detailApi.event.id === '2'" [icon]="['fas', 'eye-dropper']"
+                        style="color:blue;">
+                      </fa-icon>
+                      <fa-icon class="cart-fa-icon" *ngIf="detailApi.event.id === '3'" [icon]="['fas', 'arrow']"
+                        style="color:red;">
+                      </fa-icon>
+                      <fa-icon class="cart-fa-icon" *ngIf="detailApi.event.id === '4'" [icon]="['fas', 'flask']"
+                        style="color:red;">
+                      </fa-icon>
+                      <fa-icon class="cart-fa-icon" *ngIf="detailApi.event.id === '5'" [icon]="['fas', 'magic']"
+                        style="color:red;">
+                      </fa-icon>
+                      <fa-icon class="cart-fa-icon" *ngIf="detailApi.event.id === '6'" [icon]="['fas', 'stethoscope']"
+                        style="color:red;">
+                      </fa-icon>
+                    </ion-col>
+                    <ion-col col-1>
+                      <h3 class="cart-fa-name" style="font-size: 1.2rem;"> {{detailApi.event.name}} </h3>
+                    </ion-col>
+                    <ion-col col-2>
+                      <h5>Orden de producción {{detailApi.order.id}}</h5>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card-header>
+              <ion-card-content style="font-size: 1.3rem;">
+                <!--
+                 Orden realizada a {{detailApi.order?.client?.bussiness_name}} en la ciudad de
+                 {{detailApi.order?.citiesOne?.name}} en el
+                 {{detailApi.order?.client?.departmentOne?.name}} local {{detailApi.agendas[0]?.name_local}}
+                 <small>Fecha: {{detailApi.agendas[0].start_date}} </small>
+                -->
+                <ion-list>
+                  <ion-item>
+                    Fecha y hora:
+                    <ion-label  class="card-item-field"  *ngIf="!detailApi.agendas[0].all_day" item-end>{{detailApi.agendas[0].start_date}}
+                    </ion-label>
+                    <ion-label  class="card-item-field"  *ngIf="detailApi.agendas[0].all_day" item-end>
+                      {{detailApi.agendas[0].start_date.split(' ')[0]}} todo el día</ion-label>
+                  </ion-item>
+                  <ion-item>
+                    Nombre cliente:
+                    <ion-label  class="card-item-field" item-end>{{detailApi.order?.client?.bussiness_name}}</ion-label>
+                  </ion-item>
+                  <ion-item>
+                    Local:
+                    <ion-label  class="card-item-field" item-end>{{detailApi.agendas[0]?.name_local}}</ion-label>
+                  </ion-item>
+                  <ion-item>
+                    Personal asignado:
+                    <ion-label class="card-item-field" item-end>{{detailApi.agendas[0]?.name_local}}</ion-label>
+                  </ion-item>
+                  <ion-item>
+                    Observaciones:
+                    <ion-label class="card-item-field" item-end>{{detailApi.agendas[0]?.name_local}}</ion-label>
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-card>
           </ion-col>
         </ion-row>
-      </ion-col>
-
-    </ion-row>
-
-  </ion-card>
-
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <ion-card *ngFor="let detailApi of detailsApi" (click)="goToTemplate(detailApi)">
-          <ion-card-header>
-            <h3 style="font-size: 1.2rem;">
-              <fa-icon *ngIf="detailApi.event.id === '1'" [icon]="['fas', 'search']" style="color:yellow;"></fa-icon>
-              <fa-icon *ngIf="detailApi.event.id === '2'" [icon]="['fas', 'eye-dropper']" style="color:blue;"></fa-icon>
-              <fa-icon *ngIf="detailApi.event.id === '3'" [icon]="['fas', 'arrow']" style="color:red;"></fa-icon>
-              <fa-icon *ngIf="detailApi.event.id === '4'" [icon]="['fas', 'flask']" style="color:red;"></fa-icon>
-              <fa-icon *ngIf="detailApi.event.id === '5'" [icon]="['fas', 'magic']" style="color:red;"></fa-icon>
-              <fa-icon *ngIf="detailApi.event.id === '6'" [icon]="['fas', 'stethoscope']" style="color:red;"></fa-icon>
-              {{detailApi.event.name}}
-            </h3>
-            <small>Orden de producción {{detailApi.order.id}} </small>
-          </ion-card-header>
-          <ion-card-content style="font-size: 1.3rem;">
-            Orden realizada a {{detailApi.order?.client?.bussiness_name}} en la ciudad de {{detailApi.order?.citiesOne?.name}} en el
-            {{detailApi.order?.client?.departmentOne?.name}} local {{detailApi.agendas[0]?.name_local}}
-            <small>Fecha: {{detailApi.agendas[0].start_date}} </small>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
-</ion-content>
+      </ion-grid>
+    </ion-content>
+  </ion-router-outlet>
+</ion-split-pane>

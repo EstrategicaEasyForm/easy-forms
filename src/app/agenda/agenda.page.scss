@@ -1,14 +1,32 @@
-.dayCalendar {
-    text-align: center;
+.filter-datetime-str {
     margin-top: 14px;
 }
-
-.text-align-center {
-    text-align: center;
+ion-datetime {
+    border: solid 1px black;
+    min-width: calc(35%);
 }
-
-.item-length {
-    margin-top: 14px;
+.reset-filters {
+    padding-top: 0;
+    margin-bottom: 15px;
+}
+.filter-registry {
+    margin-top: 17px;
     margin-left: 5px;
-    text-align: left;
+    flex: 132px;
+}
+.filter-datetime {
+    flex: 30px;
+}
+.cart-col {
+    flex: 0.1;
+}
+.cart-fa-icon {
+    font-size: 41px;
+}
+.cart-fa-name {
+    font-size: 1.8rem;
+    margin-top: 0px;
+}
+.card-item-field { 
+    margin-left: 18px;
 }

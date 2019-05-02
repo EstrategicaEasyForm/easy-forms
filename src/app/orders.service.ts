@@ -5,49 +5,6 @@ import { map } from 'rxjs/operators';
 import gql from 'graphql-tag';
 import { Storage } from '@ionic/storage';
 
-const templates = [
-  {
-    "id": "1",
-    "name": "Evaluación Receptoras",
-    "icon": "['fas', 'search']"
-  },
-  {
-    "id": "2",
-    "name": "Aspiración Folicular",
-    "icon": "['fas', 'eye-dropper']"
-  },
-  {
-    "id": "3",
-    "name": "Orden de Producción",
-    "icon": "['fas', 'arrow']"
-  },
-  {
-    "id": "4",
-    "name": "Transferencia Embrión",
-    "icon": "['fas', 'magic']"
-  },
-  {
-    "id": "5",
-    "name": "Producción Embrión",
-    "icon": "['fas', 'flask']"
-  },
-  {
-    "id": "6",
-    "name": "Diagnóstico",
-    "icon": "['fas', 'stethoscope']"
-  },
-  {
-    "id": "7",
-    "name": "Sexaje",
-    "icon": "['fas', 'random']"
-  },
-  {
-    "id": "8",
-    "name": "Entrega",
-    "icon": "['fas', 'truck']"
-  }
-];
-
 const OrdersQuery = gql`
 query orders {
   orders {
