@@ -5,7 +5,6 @@ import { LoadingController, ToastController, ModalController } from '@ionic/angu
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SignatureDrawPadPage } from '../signature-draw-pad/signature-draw-pad.page';
-import { AspirationDetailModal } from './aspiration-detail.modal';
 import { Router } from '@angular/router';
 
 @Component({
@@ -67,7 +66,7 @@ export class AspirationPage implements OnInit {
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
     public modalCtrl: ModalController,
-	public router: Router) {
+    public router: Router) {
   }
 
   ngOnInit() {
@@ -185,43 +184,36 @@ export class AspirationPage implements OnInit {
     // this.parentPage.refresItemList(this.order);
   }
 
-  async openAspirationModal(indx) {
-    const _self = this;
-    this.ordersService.setDetailApiParam(this.aspiration);
-	
-    const modalPage = await this.modalCtrl.create({
-      component: AspirationDetailModal,
-      componentProps: { value: indx }
+  openAspirationDetail(indx) {
+    this.ordersService.setDetailApiParam({
+      aspiration: this.aspiration,
+      detailApiId: indx,
+      parentPage: this
     });
+    this.router.navigate(['aspiration-detail']);
+  }
 
-    modalPage.onDidDismiss().then(({data}) => {
-      if (data) {
-        _self.aspiration.details = data;
-        //this.localStorage.updateServices(this.order);
-      }
-    });
-
-    return await modalPage.present();
+  reloadDetailsList(detailsList) {
+    this.aspiration.details = detailsList;
   }
 
   async openSignatureModel() {
-    var data = { message : 'hello world' };
     const modalPage = await this.modalCtrl.create({
       component: SignatureDrawPadPage
     });
-    
-    modalPage.onDidDismiss().then(({data}) => {
+
+    modalPage.onDidDismiss().then(({ data }) => {
       if (data) {
         this.aspiration.signatureImage = data.signatureImage;
-        //this.localStorage.updateServices(this.order);
+        this.ordersService.updateAspiration(this.aspiration);
       }
     });
 
     return await modalPage.present();
   }
-  
+
   openPdfViewer() {
-	this.router.navigate(['pdf-viewer']);
+    this.router.navigate(['pdf-viewer']);
   }
 
   async showMessage(message: string) {

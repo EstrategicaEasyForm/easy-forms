@@ -183,7 +183,7 @@
           <ion-col>
             <ion-item>
               <ion-label style="margin: 0 auto"> Registros encontratos {{aspiration.details?.length }} </ion-label>
-              <ion-button expand="full" (click)="openAspirationModal()">
+              <ion-button expand="full" (click)="openAspirationDetail()">
                  Nuevo registro
                 <ion-icon name="create"></ion-icon>
               </ion-button>
@@ -223,7 +223,7 @@
                         <ion-label>RAZA</ion-label>
                       </ion-col>
                     </ion-row>
-                    <ion-row *ngFor="let item of aspiration.details; let indx = index" (click)="openAspirationModal(indx)">
+                    <ion-row *ngFor="let item of aspiration.details; let indx = index" (click)="openAspirationDetail(indx)">
                       <ion-col col-1>
                         <ion-label>{{indx + 1}}</ion-label>
                       </ion-col>

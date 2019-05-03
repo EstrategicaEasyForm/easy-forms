@@ -9,13 +9,13 @@
 
 <ion-content>
 
-  <ion-fab vertical="center" horizontal="end" slot="fixed">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button class="fab-button" [disabled]="!validations_form.valid" (click)="nextItem()">
       <ion-icon style="font-size: 3.2em;" name="arrow-dropright-circle"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-  <ion-fab vertical="center" horizontal="start" slot="fixed">
-    <ion-fab-button class="fab-button" [disabled]="indx===0" (click)="backItem()">
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button class="fab-button" [disabled]="indx===0 || !validations_form.valid" (click)="backItem()">
       <ion-icon style="font-size: 3.2em;" name="arrow-dropleft-circle"></ion-icon>
     </ion-fab-button>
   </ion-fab>
@@ -23,7 +23,8 @@
     <ion-grid>
       <ion-row>
         <ion-col>
-          <ion-item style="margin: 0 auto">Registro {{indx + 1 }} de {{detailsList?.length + ajustList }} </ion-item>
+          <ion-item *ngIf="!newRegistry" style="margin: 0 auto">Registro {{indx + 1 }} de {{detailsList?.length + 1 }} </ion-item>
+          <ion-item *ngIf="newRegistry" style="margin: 0 auto">Nuevo Registro de {{detailsList?.length + 1 }} </ion-item>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -106,16 +107,16 @@
       </ion-row>
       <ion-row>
         <ion-col col-3>
-          <ion-input formControlName="gi" [(ngModel)]="dataItem.gi"></ion-input>
+          <ion-input type="number" formControlName="gi" [(ngModel)]="dataItem.gi"></ion-input>
         </ion-col>
         <ion-col col-3>
-          <ion-input formControlName="gii" [(ngModel)]="dataItem.gii"></ion-input>
+          <ion-input type="number" formControlName="gii" [(ngModel)]="dataItem.gii"></ion-input>
         </ion-col>
         <ion-col col-3>
-          <ion-input formControlName="giii" [(ngModel)]="dataItem.giii"></ion-input>
+          <ion-input type="number" formControlName="giii" [(ngModel)]="dataItem.giii"></ion-input>
         </ion-col>
         <ion-col col-3>
-          <ion-input formControlName="others" [(ngModel)]="dataItem.others"></ion-input>
+          <ion-input type="number" formControlName="others" [(ngModel)]="dataItem.others"></ion-input>
         </ion-col>
       </ion-row>
       <ion-row>

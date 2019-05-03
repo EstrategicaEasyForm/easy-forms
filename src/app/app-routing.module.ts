@@ -10,11 +10,10 @@ const routes: Routes = [
   { path: 'more', loadChildren: './more/more.module#MorePageModule' },
   { path: 'evaluation', loadChildren: './evaluation/evaluation.module#EvaluationPageModule' },
   { path: 'aspiration', loadChildren: './aspiration/aspiration.module#AspirationPageModule' },
-  { path: 'production', loadChildren: './production/production.module#ProductionPageModule' },
+  { path: 'aspiration-detail', loadChildren: './aspiration/aspiration-detail.module#AspirationDetailPageModule' },
   { path: 'transfer', loadChildren: './transfer/transfer.module#TransferPageModule' },
   { path: 'diagnostic', loadChildren: './diagnostic/diagnostic.module#DiagnosticPageModule' },
   { path: 'sexage', loadChildren: './sexage/sexage.module#SexagePageModule' },
-  { path: 'delivery', loadChildren: './delivery/delivery.module#DeliveryPageModule' },
   { path: 'pdf-viewer', loadChildren: './pdf-viewer/pdf-viewer.module#PdfViewerPageModule' }
   ///{ path: 'signature-draw-pad', loadChildren: './signature-draw-pad/signature-draw-pad.module#SignatureDrawPadPageModule' }
 

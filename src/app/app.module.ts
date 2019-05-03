@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule, RouteReuseStrategy, Routes } from '@angular/router';
-
+import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -21,13 +20,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ComponentsModule } from './components.module';
 import { SignatureDrawPadPage } from './signature-draw-pad/signature-draw-pad.page';
 import { SignatureDrawPadPageModule } from './signature-draw-pad/signature-draw-pad.module';
-import { AspirationDetailModal } from './aspiration/aspiration-detail.modal';
-import { AspirationDetailModalModule } from './aspiration/aspiration-detail-modal.module';
-
+import { AspirationDetailPageModule } from './aspiration/aspiration-detail.module';
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [SignatureDrawPadPage,AspirationDetailModal],
+  entryComponents: [SignatureDrawPadPage],
   imports: [BrowserModule,
     BrowserAnimationsModule,
     IonicModule.forRoot(),
@@ -39,7 +36,7 @@ import { AspirationDetailModalModule } from './aspiration/aspiration-detail-moda
     ReactiveFormsModule,
     ComponentsModule,
     SignatureDrawPadPageModule,
-    AspirationDetailModalModule,
+    AspirationDetailPageModule,
     IonicStorageModule.forRoot()],
   providers: [
     StatusBar,

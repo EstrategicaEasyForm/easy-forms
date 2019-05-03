@@ -2,13 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
-
 import { IonicModule } from '@ionic/angular';
-
 import { AspirationPage } from './aspiration.page';
 import { ComponentsModule } from '../components.module';
 import { SignatureDrawPadPageModule } from '../signature-draw-pad/signature-draw-pad.module';
-import { AspirationDetailModalModule } from './aspiration-detail-modal.module';
 
 const routes: Routes = [
   {
@@ -20,12 +17,11 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    IonicModule.forRoot(),
     ReactiveFormsModule,
-    IonicModule,
     FormsModule,
     ComponentsModule,
     SignatureDrawPadPageModule,
-    AspirationDetailModalModule,
     RouterModule.forChild(routes)
   ],
   declarations: [AspirationPage]
