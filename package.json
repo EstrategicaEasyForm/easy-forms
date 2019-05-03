@@ -43,7 +43,7 @@
     "apollo-link": "^1.2.0",
     "apollo-link-context": "^1.0.17",
     "apollo-link-error": "^1.1.10",
-    "cordova-android": "7.1.4",
+    "cordova-android": "8.0.0",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-file-opener2": "2.0.19",
     "cordova-plugin-fingerprint-aio": "^1.7.0",

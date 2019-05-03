@@ -13,8 +13,8 @@ const routes: Routes = [
   { path: 'aspiration-detail', loadChildren: './aspiration/aspiration-detail.module#AspirationDetailPageModule' },
   { path: 'transfer', loadChildren: './transfer/transfer.module#TransferPageModule' },
   { path: 'diagnostic', loadChildren: './diagnostic/diagnostic.module#DiagnosticPageModule' },
-  { path: 'sexage', loadChildren: './sexage/sexage.module#SexagePageModule' },
-  { path: 'pdf-viewer', loadChildren: './pdf-viewer/pdf-viewer.module#PdfViewerPageModule' }
+  { path: 'sexage', loadChildren: './sexage/sexage.module#SexagePageModule' },  { path: 'pdf-viewer-aspiration', loadChildren: './pdf-viewer-aspiration/pdf-viewer-aspiration.module#PdfViewerAspirationPageModule' }
+
   ///{ path: 'signature-draw-pad', loadChildren: './signature-draw-pad/signature-draw-pad.module#SignatureDrawPadPageModule' }
 
 

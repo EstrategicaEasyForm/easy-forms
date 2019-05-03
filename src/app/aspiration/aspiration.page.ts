@@ -213,7 +213,11 @@ export class AspirationPage implements OnInit {
   }
 
   openPdfViewer() {
-    this.router.navigate(['pdf-viewer']);
+	 this.ordersService.setDetailApiParam({
+      aspiration: this.aspiration,
+	  order: this.order
+    });
+    this.router.navigate(['pdf-viewer-aspiration']);
   }
 
   async showMessage(message: string) {

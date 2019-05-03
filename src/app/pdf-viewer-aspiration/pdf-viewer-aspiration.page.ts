@@ -4,17 +4,26 @@ import * as jsPDF from 'jspdf';
 import domtoimage from 'dom-to-image';
 import { File, IWriteOptions } from '@ionic-native/file/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { OrdersService } from '../orders.service';
 
 @Component({
-  selector: 'app-pdf-viewer',
-  templateUrl: './pdf-viewer.page.html',
-  styleUrls: ['./pdf-viewer.page.scss'],
+  selector: 'app-pdf-viewer-aspiration',
+  templateUrl: './pdf-viewer-aspiration.page.html',
+  styleUrls: ['./pdf-viewer-aspiration.page.scss'],
 })
-export class PdfViewerPage {
+export class PdfViewerAspirationPage {
   loading: any;
-  constructor(public loadingController: LoadingController,
+  aspiration: any;
+  order: any;
+  
+  constructor(
+    public loadingController: LoadingController,
     private file: File,
-    private fileOpener: FileOpener) {
+    private fileOpener: FileOpener,
+	public ordersService: OrdersService) {
+		const detail = this.ordersService.getDetailApiParam();
+		this.aspiration = detail.aspiration;
+		this.order= detail.order;
   }
   async presentLoading(msg) {
     this.loading = await this.loadingController.create({
