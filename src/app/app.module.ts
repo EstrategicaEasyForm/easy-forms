@@ -21,6 +21,7 @@ import { ComponentsModule } from './components.module';
 import { SignatureDrawPadPage } from './signature-draw-pad/signature-draw-pad.page';
 import { SignatureDrawPadPageModule } from './signature-draw-pad/signature-draw-pad.module';
 import { AspirationDetailPageModule } from './aspiration/aspiration-detail.module';
+import { Camera } from '@ionic-native/camera/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -43,6 +44,7 @@ import { AspirationDetailPageModule } from './aspiration/aspiration-detail.modul
     SplashScreen,
     Network,
     NetworkNotifyService,
+    Camera,
 	File,
     FileOpener,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }

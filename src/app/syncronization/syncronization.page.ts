@@ -100,13 +100,13 @@ export class SyncronizationPage {
               dataDetails['details'] = details;
               this.ordersService.updateAspirationDetails(dataDetails)
                   .subscribe(({ data }) => {
-                    //console.log("Update detail " + data);
+                    console.log("Update detail " + data);
                   });
             }
           }
         });
       }
-      this.retriveAgenda();
+      //this.retriveAgenda();
     });
   }
 

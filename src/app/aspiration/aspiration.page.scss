@@ -27,9 +27,12 @@
     color: inherit;
     margin-bottom: 0;
     padding: 5px 7px 2px;
+    text-align: center;
+    text-transform: uppercase;
 }
 .card-order {
     text-align: left;
+    width: 700px;
 }
 .swiper-zoom-container {
     height: 100%;
@@ -60,10 +63,6 @@ ion-textarea{
     background-color: transparent;
     color: #488aff !important;
 }
-ion-card-header {
-    text-align: center;
-    text-transform: uppercase;
-}
 h5 {
     font-weight: bold;
     margin-top: 0.6rem;
@@ -72,4 +71,10 @@ h5 {
     td {
         width: 10px;
     }
+}
+.modal-signature {
+    height: 400px;
+}
+.signatureImage {
+    transform: translate3d(0px, 0px, 0px) scale(1)!important;
 }

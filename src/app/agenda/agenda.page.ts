@@ -34,15 +34,13 @@ export class AgendaPage implements OnInit {
   }
 
   ngOnInit() {
-    const _self = this;
     this.usersService.getUserAuthToken().then((userAuth) => {
-      _self.userId = "" + userAuth.id_user;
-      _self.retriveAgenda();
+      this.userId = "" + userAuth.id_user;
+      this.retriveAgenda();
     });
   }
 
   async retriveAgenda() {
-    const _self = this;
     const loading = await this.loadingCtrl.create({
       message: 'Por favor espere'
     });
@@ -52,8 +50,8 @@ export class AgendaPage implements OnInit {
       .then((detailsApi) => {
         if (detailsApi) {
           loading.dismiss();
-          _self.detailsApiOriginal = detailsApi;
-          _self.filterItems();
+          this.detailsApiOriginal = detailsApi;
+          this.filterItems();
         }
         else {
           this.getDetailsApi(loading);
@@ -72,9 +70,9 @@ export class AgendaPage implements OnInit {
     const onError = function (error) {
       loading.dismiss();
       if (typeof error === 'string') {
-        this.showMessage(error);
+        _self.showMessage(error);
       }
-      else this.showMessage('No se puede consultar la lista de agendas');
+      else _self.showMessage('No se puede consultar la lista de agendas');
     }
     this.ordersService.getDetailsApi(onSuccess, onError);
   }
@@ -136,13 +134,18 @@ export class AgendaPage implements OnInit {
     return date + ' ' + mount[datetime.month()];
   }
 
-  filterItems() {
-    const _self = this;
+  async filterItems() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere',
+      duration: 100
+    });
+    await loading.present();
+
     this.detailsApi = this.detailsApiOriginal.filter((detailApi) => {
 
-      return _self.filterDateTime(detailApi.agendas) &&
-        _self.filterEmployer(detailApi.agendas) &&
-        _self.filterTemplate(detailApi.agendas)
+      return this.filterDateTime(detailApi.agendas) &&
+        this.filterEmployer(detailApi.agendas) &&
+        this.filterTemplate(detailApi.agendas)
     });
   }
 
@@ -254,7 +257,12 @@ export class AgendaPage implements OnInit {
     toast.present();
   }
 
-  goToTemplate(detailApi) {
+  async goToTemplate(detailApi) {
+    const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere'
+    });
+    await loading.present();
+
     if (detailApi.event)
       switch (detailApi.event.id) {
         case "1":
@@ -274,6 +282,14 @@ export class AgendaPage implements OnInit {
           }]);
           break;
       }
+      await this.wait(1000);
+      loading.dismiss();
+  }
+
+  async wait(ms) {
+    return new Promise(resolve => {
+      setTimeout(resolve, ms);
+    });
   }
 
 }

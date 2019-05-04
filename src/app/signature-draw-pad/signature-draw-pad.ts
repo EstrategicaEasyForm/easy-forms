@@ -62,7 +62,10 @@ export class SignatureDrawPad {
 
 	canvas: any;
 	constructor() {
-
+		try {
+			const modalDom: any = document.getElementsByClassName('modal-signature')[0].getElementsByClassName('modal-wrapper')[0];
+			modalDom.style.height = "400px";
+		} catch (e) { }
 	}
 
 	public initSignaturePad(options: IOptions) {
@@ -447,9 +450,9 @@ export class SignatureDrawPad {
 		color,
 		point,
 	}: {
-			color: string;
-			point: IBasicPoint;
-		}): void {
+		color: string;
+		point: IBasicPoint;
+	}): void {
 		const ctx = this._ctx;
 		const width =
 			typeof this.dotSize === 'function' ? this.dotSize() : this.dotSize;

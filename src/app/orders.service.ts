@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import gql from 'graphql-tag';
 import { Storage } from '@ionic/storage';
 
