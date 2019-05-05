@@ -10,7 +10,7 @@ import * as moment from 'moment-timezone';
   styleUrls: ['./aspiration.page.scss'],
 })
 export class AspirationDetailPage implements OnInit, OnDestroy {
-  
+
   // Aspiration form template
   aspiration: any;
   action: string;
@@ -45,7 +45,7 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
     public toastCtrl: ToastController) {
 
   }
-  
+
   ngOnInit() {
 
     const dataParam = this.ordersService.getDetailApiParam();
@@ -56,11 +56,12 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
 
     for (let detail of this.detailsList) {
       if (detail.arrived_time) {
-        let hour = 11;//detail.arrived_time;
-        let minute = 30;//detail.arrived_time;
-        let time = moment();
-        time.set({ hour: hour, minute: minute });
-        detail.arrived_time = time.format();
+        const minute = Number(detail.arrived_time.split(':')[1].substr(0,2));
+        const pm = detail.arrived_time.split(':')[1].substr(2,2) === 'PM' ? 12 : 0;
+        const hour = Number(detail.arrived_time.split(':')[0]) + pm;
+        let time = moment().set({ hour: hour, minute: minute });
+        detail.ionDateTime = time.format();
+        detail.arrived_time = time.format('hh:mmA');
       }
       detail.gi = Number(detail.gi) || 0;
       detail.gii = Number(detail.gii) || 0;
@@ -202,27 +203,31 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
   ionViewWillLeave() {
 
     if (this.validations_form.valid) {
-        const dataObjOri = this.detailsList[this.indx];
-        if (!this.equalsDetailsAspiration(dataObjOri, this.dataItem)) {
-          if (this.action === 'new') {
-            this.detailsList.push(this.dataItem);
-            this.showMessage('Registro agregado');
-          }
-          if (this.action === 'update') {
-            let list = [];
-              this.dataItem.stateSync = this.dataItem.stateSync || 'U';
-              for (let item of this.detailsList) {
-                list.push(item.id === this.dataItem.id ? this.dataItem : item);
-              }
-              this.detailsList = list;
-              this.showMessage('Registro modificado');
-          }    
+      const dataObjOri = this.detailsList[this.indx];
+      if (!this.equalsDetailsAspiration(dataObjOri, this.dataItem)) {
+        if (this.action === 'new') {
+          this.detailsList.push(this.dataItem);
+          this.showMessage('Registro agregado');
         }
+        if (this.action === 'update') {
+          let list = [];
+          this.dataItem.stateSync = this.dataItem.stateSync || 'U';
+          for (let item of this.detailsList) {
+            list.push(item.id === this.dataItem.id ? this.dataItem : item);
+          }
+          this.detailsList = list;
+          this.showMessage('Registro modificado');
+        }
+      }
     }
   }
 
   ngOnDestroy(): void {
     this.parentPage.reloadDetailsList(this.detailsList);
+  }
+
+  onChangeDatetime($datetime) {
+    this.dataItem.arrived_time = moment($datetime).format('hh:mmA');
   }
 
   async showMessage(message: string) {

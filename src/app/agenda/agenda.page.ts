@@ -51,12 +51,19 @@ export class AgendaPage implements OnInit {
         if (detailsApi) {
           loading.dismiss();
           this.detailsApiOriginal = detailsApi;
+          this.setTemplateToDetail();
           this.filterItems();
         }
         else {
           this.getDetailsApi(loading);
         }
       });
+  }
+  
+  setTemplateToDetail() {
+    for(let detail of this.detailsApiOriginal) {
+      detail.templateType =  this.templates[Number(detail.agendas[0].event.id) - 1 ];
+    }
   }
 
   async getDetailsApi(loading) {
@@ -142,7 +149,6 @@ export class AgendaPage implements OnInit {
     await loading.present();
 
     this.detailsApi = this.detailsApiOriginal.filter((detailApi) => {
-
       return this.filterDateTime(detailApi.agendas) &&
         this.filterEmployer(detailApi.agendas) &&
         this.filterTemplate(detailApi.agendas)

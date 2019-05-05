@@ -18,8 +18,13 @@
         <ion-item *ngIf="!filter.allDays">
           <ion-icon name="calendar"></ion-icon>
           <ion-label> &nbsp; Seleccione el día </ion-label>
-          <ion-datetime [(ngModel)]="filter.datetime" (ngModelChange)="updateDateTime()" display-format="DD/MM"
-            picker-format="MMMM DD"></ion-datetime>
+          <ion-datetime [(ngModel)]="filter.datetime" (ngModelChange)="updateDateTime()" 
+            displayFormat="DD/MMM"
+            pickerFormat="DD MMMM"
+            cancelText = "Cancelar"
+            doneText = "Aceptar"
+            monthNames="Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre"
+            monthShortNames="Ene,Feb,Mar,Abr,May,Jun,Jul,Ago,Sep,Oct,Nov,Dic"></ion-datetime>
         </ion-item>
         <ion-item>
           <ion-label>Todas las plantillas</ion-label>
@@ -98,12 +103,7 @@
           <ion-col>
             <ion-card *ngFor="let detailApi of detailsApi" (click)="goToTemplate(detailApi)">
                 <ion-fab vertical="top" horizontal="start" slot="fixed">
-                      <fa-icon class="cart-fa-icon" *ngIf="detailApi.event.id === '1'" [icon]="['fas', 'search']"></fa-icon>
-                      <fa-icon class="cart-fa-icon" *ngIf="detailApi.event.id === '2'" [icon]="['fas', 'eye-dropper']"></fa-icon>
-                      <fa-icon class="cart-fa-icon" *ngIf="detailApi.event.id === '3'" [icon]="['fas', 'arrow']"></fa-icon>
-                      <fa-icon class="cart-fa-icon" *ngIf="detailApi.event.id === '4'" [icon]="['fas', 'flask']"></fa-icon>
-                      <fa-icon class="cart-fa-icon" *ngIf="detailApi.event.id === '5'" [icon]="['fas', 'magic']"></fa-icon>
-                      <fa-icon class="cart-fa-icon" *ngIf="detailApi.event.id === '6'" [icon]="['fas', 'stethoscope']"></fa-icon>
+                      <fa-icon class="cart-fa-icon" [icon]="detailApi.templateType.icon"></fa-icon>
                   </ion-fab>
               <ion-card-header>
                 <ion-grid>

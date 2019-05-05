@@ -23,8 +23,10 @@
     <ion-grid>
       <ion-row>
         <ion-col>
-          <ion-item *ngIf="!newRegistry" style="margin: 0 auto">Registro {{indx + 1 }} de {{detailsList?.length + 1 }} </ion-item>
-          <ion-item *ngIf="newRegistry" style="margin: 0 auto">Nuevo Registro de {{detailsList?.length + 1 }} </ion-item>
+          <ion-item *ngIf="!newRegistry" style="margin: 0 auto">Registro {{indx + 1 }} de {{detailsList?.length + 1 }}
+          </ion-item>
+          <ion-item *ngIf="newRegistry" style="margin: 0 auto">Nuevo Registro de {{detailsList?.length + 1 }}
+          </ion-item>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -37,7 +39,8 @@
       </ion-row>
       <ion-row>
         <ion-col col-6>
-          <ion-input type="text" formControlName="donor" [ngClass]="{ 'is-invalid': submitted && f.donor.errors }" [(ngModel)]="dataItem.donor"></ion-input>
+          <ion-input type="text" formControlName="donor" [ngClass]="{ 'is-invalid': submitted && f.donor.errors }"
+            [(ngModel)]="dataItem.donor"></ion-input>
           <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
             <div *ngIf="f.donor.errors.required">Campo es requerido</div>
           </div>
@@ -60,19 +63,23 @@
       <ion-row>
         <ion-col col-4>
           <ion-select placeholder="Local" [(ngModel)]="dataItem.local_id" formControlName="local">
-            <ion-select-option *ngFor="let local of aspiration.locals" [value]="local.id">{{local.name}}</ion-select-option>
+            <ion-select-option *ngFor="let local of aspiration.locals" [value]="local.id">{{local.name}}
+            </ion-select-option>
           </ion-select>
         </ion-col>
         <ion-col col-4>
-            <ion-select formControlName="type" placeholder="Tipo" [(ngModel)]="dataItem.type">
-                <ion-select-option value="Leche">Leche</ion-select-option>
-                <ion-select-option value="Carne">Carne</ion-select-option>
-              </ion-select>
+          <ion-select formControlName="type" placeholder="Tipo" [(ngModel)]="dataItem.type">
+            <ion-select-option value="Leche">Leche</ion-select-option>
+            <ion-select-option value="Carne">Carne</ion-select-option>
+          </ion-select>
         </ion-col>
         <ion-col col-4>
-			<ion-item>
-				<ion-datetime formControlName="arrived_time" displayFormat="hh:mmA" pickerFormat="hh:mmA" [(ngModel)]="dataItem.arrived_time"></ion-datetime>
-			</ion-item>
+          <ion-item>
+            <ion-datetime #datetimePicker formControlName="arrived_time" [(ngModel)]="dataItem.ionDateTime"
+              displayFormat="hh:mmA" pickerFormat="hh:mmA" cancelText="Cancelar" doneText="Aceptar"
+              (ionChange)="onChangeDatetime(datetimePicker.value)">
+            </ion-datetime>
+          </ion-item>
         </ion-col>
       </ion-row>
       <ion-row>
