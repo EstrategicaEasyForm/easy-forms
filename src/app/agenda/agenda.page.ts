@@ -104,7 +104,7 @@ export class AgendaPage implements OnInit {
         this.filter.dayStr = 'Mañana';
         break;
       case 'Ayer':
-      this.filter.datetime = moment().format();
+        this.filter.datetime = moment().format();
         this.filter.dayStr = 'Hoy';
         break;
       case 'Mañana':
@@ -191,7 +191,7 @@ export class AgendaPage implements OnInit {
         "id": "1",
         "name": "Evaluación Receptoras",
         "icon": ['fas', 'search'],
-        "style": {'color': "yellow"},
+        "style": { 'color': "yellow" },
         "check": true,
         "color": "yellow"
       },
@@ -199,14 +199,14 @@ export class AgendaPage implements OnInit {
         "id": "2",
         "name": "Aspiración Folicular",
         "icon": ['fas', 'eye-dropper'],
-        "style": {'color': "blue"},
+        "style": { 'color': "blue" },
         "check": true
       },
       {
         "id": "4",
         "name": "Transferencia Embrión",
         "icon": ['fas', 'magic'],
-        "style": {'color': "red"},
+        "style": { 'color': "red" },
         "check": true
       },
       {
@@ -267,23 +267,30 @@ export class AgendaPage implements OnInit {
       switch (detailApi.event.id) {
         case "1":
           this.ordersService.setDetailApiParam(detailApi);
-          this.router.navigate(['evaluation', {
-            detailApiId: detailApi.id
-          }]);
+          this.router.navigate(['evaluation']);
           break;
         case "2":
-          this.ordersService.setDetailApiParam(detailApi);
+          this.ordersService.setDetailApiParam({
+            aspiration: detailApi.aspiration,
+            parent: this,
+            detailItem: detailApi,
+            order: detailApi.order,
+            agenda: detailApi.agendas ? detailApi.agendas[0] : {}
+          });
           this.router.navigate(['aspiration']);
           break;
         case "3":
           this.ordersService.setDetailApiParam(detailApi);
-          this.router.navigate(['production', {
-            detailApiId: detailApi.id
-          }]);
+          this.router.navigate(['production']);
           break;
       }
-      await this.wait(1000);
-      loading.dismiss();
+    await this.wait(1000);
+    loading.dismiss();
+  }
+
+  detailApiRefresh(detailsApi) {
+    this.detailsApiOriginal = detailsApi;
+    this.filterItems();
   }
 
   async wait(ms) {

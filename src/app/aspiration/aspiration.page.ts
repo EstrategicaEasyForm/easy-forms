@@ -3,12 +3,12 @@ import { OrdersService } from '../orders.service';
 import { ViewChild } from '@angular/core';
 import { LoadingController, ToastController, ModalController, AlertController, Platform } from '@ionic/angular';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { SignatureDrawPadPage } from '../signature-draw-pad/signature-draw-pad.page';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { Cordova } from '@ionic-native/core';
+import { cordova } from '@ionic-native/core';
 
 @Component({
   selector: 'app-aspiration',
@@ -18,12 +18,20 @@ import { Cordova } from '@ionic-native/core';
 export class AspirationPage implements OnInit {
 
   aspiration: any;
+  detailItem: any;
+  parent: any;
   aspirationObjOri: any;
   order: any;
   agenda: any;
   signatureImage: any;
   showTakePhoto = false;
   photoImage: any;
+  mbControlPanel: number = 1;
+
+  // Optional parameters to pass to the swiper instance. See http://idangero.us/swiper/api/ for valid options.
+  slideAspirationOpts = {
+    initialSlide: 1
+  };
 
   //validations_form = new FormGroup({
   validations_form = this.formBuilder.group({
@@ -50,11 +58,13 @@ export class AspirationPage implements OnInit {
   ngOnInit() {
     const detail = this.ordersService.getDetailApiParam();
     this.aspirationObjOri = detail.aspiration;
-    this.aspiration = Object.assign({}, detail.aspiration);
-    this.order = detail.order;
-    this.agenda = detail.agendas ? detail.agendas[0] : {};
+    this.aspiration = Object.assign({}, this.aspirationObjOri);
 
-    if (Cordova && typeof Cordova !== 'undefined') {
+    this.parent = detail.parent;
+    this.order = detail.order;
+    this.detailItem = detail.detailItem;
+    this.agenda = detail.agenda;
+    if (cordova && typeof cordova !== 'undefined') {
       this.showTakePhoto = true;
     }
   }
@@ -83,22 +93,18 @@ export class AspirationPage implements OnInit {
   reloadDetailsList(detailsList) {
     this.aspiration.details = detailsList;
   }
-  
-  onSignatureImage() {
-    event.stopPropagation();
-  }
 
   async openSignatureModel() {
     const modalPage = await this.modalCtrl.create({
       component: SignatureDrawPadPage,
       cssClass: "modal-signature"
-
     });
 
     modalPage.onDidDismiss().then(({ data }) => {
       if (data) {
         this.aspiration.signatureImage = data.signatureImage;
-        this.ordersService.updateAspiration(this.aspiration);
+        this.showMessage('Captura realizada exitósamente');
+        this.saveAspiration();
       }
     });
 
@@ -124,16 +130,24 @@ export class AspirationPage implements OnInit {
             }
           }
         this.ordersService.setDetailsApiStorage(detailsApi);
+        this.detailItem.aspiration = this.aspiration;
         this.showMessage('Registro modificado');
       });
     }
   }
 
-  equalsAspiration(aspirationObjOri, aspiration) {
+  equalsAspiration(aspirationObjOri: any, aspiration: any) {
     return aspirationObjOri.medium_opu === aspiration.medium_opu &&
       aspirationObjOri.medium_lot_opu === aspiration.medium_lot_opu &&
       aspirationObjOri.searcher === aspiration.searcher &&
-      aspirationObjOri.aspirator === aspiration.aspirator;
+      aspirationObjOri.aspirator === aspiration.aspirator &&
+      aspirationObjOri.photoImage === aspiration.photoImage &&
+      aspirationObjOri.signatureImage === aspiration.signatureImage &&
+      aspirationObjOri.comments === aspiration.comments &&
+      aspirationObjOri.identification_number === aspiration.identification_number &&
+      aspirationObjOri.receiver_name === aspiration.receiver_name &&
+      aspirationObjOri.transport_type === aspiration.transport_type &&
+      aspirationObjOri.arrived_temperature === aspiration.arrived_temperature;
   }
 
   finalizeAspiration() {
@@ -178,22 +192,27 @@ export class AspirationPage implements OnInit {
   }
 
   openCamera() {
-
     const options: CameraOptions = {
       quality: 100,
-      destinationType: this.camera.DestinationType.FILE_URI,
-      encodingType: this.camera.EncodingType.JPEG,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.PNG,
       mediaType: this.camera.MediaType.PICTURE
     };
 
     this.camera.getPicture(options).then((imageData) => {
       // imageData is either a base64 encoded string or a file URI
       // If it's base64 (DATA_URL):
-      this.photoImage = 'data:image/jpeg;base64,' + imageData;
+      this.aspiration.photoImage = 'data:image/png;base64,' + imageData;
+      this.showMessage('Captura realizada exitósamente');
+      this.saveAspiration();
     }, (err) => {
       // Handle error
-      this.showMessage("Ha ocurrido un error al abrir la camara");
-      this.showMessage(err);
+      if (err === 'cordova_not_available') {
+        this.showMessage('No se reconoce un dispositivo de cámara');
+      }
+      else {
+        this.showMessage(err);
+      }
     });
   }
 

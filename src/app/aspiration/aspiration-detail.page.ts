@@ -202,18 +202,22 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
   ionViewWillLeave() {
 
     if (this.validations_form.valid) {
-      if (this.action === 'new') {
-        this.detailsList.push(this.dataItem);
-        this.showMessage('Registro agregado');
-      }
-      if (this.action === 'update') {
-        let list = [];
-        for (let item of this.detailsList) {
-          list.push(item.idAnimal === this.dataItem.idAnimal ? this.dataItem : item);
+        const dataObjOri = this.detailsList[this.indx];
+        if (!this.equalsDetailsAspiration(dataObjOri, this.dataItem)) {
+          if (this.action === 'new') {
+            this.detailsList.push(this.dataItem);
+            this.showMessage('Registro agregado');
+          }
+          if (this.action === 'update') {
+            let list = [];
+              this.dataItem.stateSync = this.dataItem.stateSync || 'U';
+              for (let item of this.detailsList) {
+                list.push(item.id === this.dataItem.id ? this.dataItem : item);
+              }
+              this.detailsList = list;
+              this.showMessage('Registro modificado');
+          }    
         }
-        this.detailsList = list;
-        this.showMessage('Registro modificado');
-      }
     }
   }
 

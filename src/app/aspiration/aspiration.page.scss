@@ -30,15 +30,8 @@
     text-align: center;
     text-transform: uppercase;
 }
-.card-order {
-    text-align: left;
-    width: 700px;
-}
 .swiper-zoom-container {
     height: 100%;
-}
-ion-input {
-    border: solid 1px black;
 }
 .border-input {
     border: solid 1px black;
@@ -75,6 +68,166 @@ h5 {
 .modal-signature {
     height: 400px;
 }
-.signatureImage {
-    transform: translate3d(0px, 0px, 0px) scale(1)!important;
+.signature-image {
+    transform: translate3d(0px, 0px, 0px) scale(1) !important;
+    border: solid 1px grey; 
+    min-height: 250px;
+}
+.signature-image {
+    img {
+        transform: translate3d(0px, 0px, 0px) scale(1) !important;
+    }
+}
+.photo-image {
+    border: solid 1px grey; 
+    min-height: 147px;
+    padding: 32px;
+    background-color: rgba(80, 80, 80, 0.02);
+}
+.photo-image {
+    img {
+        transform: translate3d(0px, 0px, 0px) scale(1) !important;
+    }
+}
+.comment {
+    height: 107px;
+}
+ion-input {
+    border: solid 1px black;
+    input {
+        margin-left: 10px;
+    }
+}
+.card-page-1 {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 688px;
+}
+@media screen and (max-width: 600px) {
+    .card-page-1 {
+        width: 100%;
+    }
+}
+@media screen and (min-width: 600px) { .card-page-1 { margin-left: 0px; width: 631px; }}
+
+@media screen and (min-width: 630px) { .card-page-1 { margin-left: 6px; width: 631px; } }
+@media screen and (min-width: 660px) { .card-page-1 { margin-left: 12px; width: 630px; } }
+@media screen and (min-width: 690px) { .card-page-1 { margin-left: 6px; width: 618px; } }
+@media screen and (min-width: 720px) { .card-page-1 { margin-left: 13px; width: 627px; } }
+@media screen and (min-width: 750px) { .card-page-1 { margin-left: 30px; width: 664px; } }
+@media screen and (min-width: 780px) { .card-page-1 { margin-left: 36px; width: 669px; } }
+@media screen and (min-width: 810px) { .card-page-1 { margin-left: 40px; width: 688px; } }
+@media screen and (min-width: 840px) { .card-page-1 { margin-left: 46px; width: 708px; } }
+@media screen and (min-width: 870px) { .card-page-1 { margin-left: 52px; width: 721px; } }
+@media screen and (min-width: 900px) { .card-page-1 { margin-left: 58px; width: 741px; } }
+@media screen and (min-width: 1024px) { .card-page-1 { margin-left: 61px; width: 837px; } }
+
+// @media screen and (min-width: 630px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 100%; } }
+// @media screen and (min-width: 660px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 630px; } }
+// @media screen and (min-width: 690px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 590px; } }
+// @media screen and (min-width: 720px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 630px; } }
+// @media screen and (min-width: 750px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 656px; } }
+// @media screen and (min-width: 780px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 695px; } }
+// @media screen and (min-width: 810px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 731px; } }
+// @media screen and (min-width: 840px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 708px; } }
+// @media screen and (min-width: 870px) { .card-page-2 { .other-fields{ display: none; } .other-fields-xl{ display: flex; } width: 721px; } }
+// @media screen and (min-width: 900px) { .card-page-2 { .other-fields{ display: none; } .other-fields-xl{ display: flex; } width: 741px; } }
+// @media screen and (min-width: 1024px) { .card-page-2 { .other-fields{ display: none; } .other-fields-xl{ display: flex; } width: 929px; } }
+
+@media screen and (min-width: 630px) { .card-page-2 { width: 100%; } }
+@media screen and (min-width: 660px) { .card-page-2 { width: 630px; } }
+@media screen and (min-width: 690px) { .card-page-2 { width: 590px; } }
+@media screen and (min-width: 720px) { .card-page-2 { width: 630px; } }
+@media screen and (min-width: 750px) { .card-page-2 { width: 667px; } }
+@media screen and (min-width: 780px) { .card-page-2 { width: 678px; } }
+@media screen and (min-width: 810px) { .card-page-2 { width: 731px; } }
+@media screen and (min-width: 840px) { .card-page-2 { width: 810px; } }
+@media screen and (min-width: 870px) { .card-page-2 { width: 851px; } }
+@media screen and (min-width: 900px) { .card-page-2 { width: 881px; } }
+@media screen and (min-width: 1024px) { .card-page-2 { width: 929px; } }
+
+.card-page-2 {
+    ion-card-content {
+        padding: 0;
+    }
+}
+.detail-id {
+    flex: 0 0 calc(calc(0.5 / var(--ion-grid-columns, 12)) * 100%);
+}
+.detail-donor {
+    flex: 0 0 calc(calc(1.5 / var(--ion-grid-columns, 12)) * 100%);
+}
+.detail-donor-breed {
+    flex: 0 0 calc(calc(1.5 / var(--ion-grid-columns, 12)) * 100%);
+}
+.detail-local-name {
+    flex: 0 0 calc(calc(1.8 / var(--ion-grid-columns, 12)) * 100%);
+}
+.detail-type {
+    flex: 0 0 calc(calc(1 / var(--ion-grid-columns, 12)) * 100%);
+}
+.detail-arrived-time {
+    flex: 0 0 calc(calc(1 / var(--ion-grid-columns, 12)) * 100%);
+}
+.detail-bull {
+    flex: 0 0 calc(calc(1 / var(--ion-grid-columns, 12)) * 100%);
+}
+.detail-bull-breed {
+    flex: 0 0 calc(calc(1 / var(--ion-grid-columns, 12)) * 100%);
+}
+.detail-gi {
+    flex: 0 0 calc(calc(0.5 / var(--ion-grid-columns, 12)) * 100%);
+}
+.detail-gii {
+    flex: 0 0 calc(calc(0.5 / var(--ion-grid-columns, 12)) * 100%);
+}
+.detail-giii {
+    flex: 0 0 calc(calc(0.5 / var(--ion-grid-columns, 12)) * 100%);
+}
+.detail-others {
+    flex: 0 0 calc(calc(0.5 / var(--ion-grid-columns, 12)) * 100%);
+}
+.card-page-3 {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    ion-card {
+        text-align: left;
+        width: 100%;
+    }
+}
+.button-panel-enabled {
+    color: white;
+    font-weight: bold;
+    background-color:#1AB394;
+    text-align: center;
+    padding-top: 12px;
+    height: 45px;
+    ion-button {
+        border: none;
+    }
+}
+.button-panel-disabled {
+    color: white;
+    font-weight: bold;
+    background-color: #6fd1bd;
+    text-align: center;
+    padding-top: 12px;
+    height: 45px;
+    ion-button {
+        border: none;
+    }
+}
+.button-finalize {
+    min-height: 147px;
+    padding: 30px;
+    font-weight: bold;
+    ion-button {
+        height: 139px;
+        background-color: #1AB394!important;
+    }
+}
+.detail-table-header {
+    font-weight: bold;
 }
