@@ -4,8 +4,8 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-menu-button>
-        <ion-icon class="filter-button" name="save"></ion-icon>
+      <ion-menu-button (click)="saveAspiration()">
+        <ion-icon class="save-button" name="save"></ion-icon>
       </ion-menu-button>
     </ion-buttons>
     <ion-title>PLANTILLA DE ASPIRACIÓN FOLICULAR</ion-title>
@@ -337,6 +337,11 @@
           </ion-card>
         </ion-item>
       </ion-list>
+    </ion-item>
+    <ion-item>
+      <ion-button expland="full" fill="outline" class="save-button-page" (click)="saveAspiration()">
+        <ion-icon name="save"></ion-icon>
+      </ion-button>
     </ion-item>
   </ion-list>
 </ion-content>

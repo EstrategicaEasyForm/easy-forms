@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { OrdersService } from '../orders.service';
-import { ViewChild } from '@angular/core';
 import { LoadingController, ToastController, ModalController, AlertController, Platform } from '@ionic/angular';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -151,7 +150,7 @@ export class AspirationPage implements OnInit {
   }
 
   finalizeAspiration() {
-    this.aspiration.state = 2;
+    this.aspiration.state = 1;
     this.ordersService.getDetailsApiStorage().then((detailsApi) => {
       if (detailsApi) {
         for (let detail of detailsApi) {

@@ -55,6 +55,9 @@ ion-textarea{
 .fab-button {
     background-color: transparent;
     color: #488aff !important;
+    font-size: 33px;
+    height: 51px;
+    width: 109px;
 }
 h5 {
     font-weight: bold;
@@ -122,19 +125,7 @@ ion-input {
 @media screen and (min-width: 870px) { .card-page-1 { margin-left: 52px; width: 721px; } }
 @media screen and (min-width: 900px) { .card-page-1 { margin-left: 58px; width: 741px; } }
 @media screen and (min-width: 1024px) { .card-page-1 { margin-left: 61px; width: 837px; } }
-
-// @media screen and (min-width: 630px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 100%; } }
-// @media screen and (min-width: 660px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 630px; } }
-// @media screen and (min-width: 690px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 590px; } }
-// @media screen and (min-width: 720px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 630px; } }
-// @media screen and (min-width: 750px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 656px; } }
-// @media screen and (min-width: 780px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 695px; } }
-// @media screen and (min-width: 810px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 731px; } }
-// @media screen and (min-width: 840px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 708px; } }
-// @media screen and (min-width: 870px) { .card-page-2 { .other-fields{ display: none; } .other-fields-xl{ display: flex; } width: 721px; } }
-// @media screen and (min-width: 900px) { .card-page-2 { .other-fields{ display: none; } .other-fields-xl{ display: flex; } width: 741px; } }
-// @media screen and (min-width: 1024px) { .card-page-2 { .other-fields{ display: none; } .other-fields-xl{ display: flex; } width: 929px; } }
-
+ 
 @media screen and (min-width: 630px) { .card-page-2 { width: 100%; } }
 @media screen and (min-width: 660px) { .card-page-2 { width: 630px; } }
 @media screen and (min-width: 690px) { .card-page-2 { width: 590px; } }
@@ -230,4 +221,26 @@ ion-input {
 }
 .detail-table-header {
     font-weight: bold;
+}
+.close-button {
+    font-size: 28px;
+}
+.save-button {
+    font-size: 28px;
+}
+.save-button-page {
+    width: 90px;
+    height: 68px;
+    font-size: 34px;
+    margin-left: 10px;
+}
+.logo-icon-small {
+    width: 87px;
+    height: auto;
+    padding: 0;
+    margin-left: 10px;
+}
+.close-button {
+    width: 87px;
+    height: auto;
 }

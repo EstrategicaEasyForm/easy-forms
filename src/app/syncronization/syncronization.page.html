@@ -1,25 +1,14 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Sincronización</ion-title>
-  </ion-toolbar>
-</ion-header>
+    <ion-toolbar>
+      <img class="logo-icon-small ion-padding" src="assets/imgs/logoInvitroAlfa_968x576.png" />
+      <ion-label>  Sincronización</ion-label>
+    </ion-toolbar>
+  </ion-header>
 
 <ion-content>
   <app-network-notify-banner id="networkNotifyBanner"></app-network-notify-banner>
-  <ion-toolbar>
-    <ion-buttons slot="secondary">
-      <ion-button>
-        <ion-icon slot="icon-only" name="contact"></ion-icon>
-      </ion-button>
-      <ion-button>
-        <ion-icon slot="icon-only" name="search"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-buttons slot="primary">
-      <ion-button color="secondary">
-        <ion-icon slot="icon-only" name="more"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>Default Buttons</ion-title>
-  </ion-toolbar>
+  <ion-card style="height: 90%; overflow: auto">
+    <div id="divConsole" style="margin: 15px" [innerHtml]="sanitizer.bypassSecurityTrustHtml(contentConsole)">
+    </div>
+  </ion-card>
 </ion-content>
