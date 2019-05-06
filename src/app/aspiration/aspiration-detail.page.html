@@ -4,144 +4,165 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>PLANTILLA DE ASPIRACION FOLICULAR</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeDetail()">
+        <ion-icon class="close-button" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-list>
+    <ion-item>
+      <form class="form" [formGroup]="validations_form">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-item *ngIf="!newRegistry" style="margin: 0 auto">Registro {{indx + 1 }} de {{detailsList?.length + 1 }}
+              </ion-item>
+              <ion-item *ngIf="newRegistry" style="margin: 0 auto">Nuevo Registro de {{detailsList?.length + 1 }}
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-6>
+              <label>Donadora</label>
+            </ion-col>
+            <ion-col col-6>
+              <label>Raza</label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-6>
+              <ion-input type="text" formControlName="donor" [ngClass]="{ 'is-invalid': submitted && f.donor.errors }" [(ngModel)]="dataItem.donor"></ion-input>
+              <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+                <div *ngIf="f.donor.errors.required">Campo es requerido</div>
+              </div>
+            </ion-col>
+            <ion-col col-6>
+              <ion-input formControlName="donor_breed" [(ngModel)]="dataItem.donor_breed"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-4>
+              <label>Local</label>
+            </ion-col>
+            <ion-col col-4>
+              <label>Tipo</label>
+            </ion-col>
+            <ion-col col-4>
+              <label>Hora</label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-4>
+              <ion-select placeholder="Local" [(ngModel)]="dataItem.local_id" formControlName="local">
+                <ion-select-option *ngFor="let local of aspiration.locals" [value]="local.id">{{local.name}}
+                </ion-select-option>
+              </ion-select>
+            </ion-col>
+            <ion-col col-4>
+              <ion-select formControlName="type" placeholder="Tipo" [(ngModel)]="dataItem.type">
+                <ion-select-option value="Leche">Leche</ion-select-option>
+                <ion-select-option value="Carne">Carne</ion-select-option>
+              </ion-select>
+            </ion-col>
+            <ion-col col-4>
+              <ion-item>
+                <ion-datetime #datetimePicker formControlName="arrived_time" [(ngModel)]="dataItem.ionDateTime" displayFormat="hh:mmA" pickerFormat="hh:mmA"
+                  cancelText="Cancelar" doneText="Aceptar" (ionChange)="onChangeDatetime(datetimePicker.value)">
+                </ion-datetime>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-6>
+              <label>Toro</label>
+            </ion-col>
+            <ion-col col-6>
+              <label>Raza</label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-6>
+              <ion-input formControlName="bull" [(ngModel)]="dataItem.bull"></ion-input>
+            </ion-col>
+            <ion-col col-6>
+              <ion-input formControlName="bull_breed" [(ngModel)]="dataItem.bull_breed"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-3>
+              <label>GI</label>
+            </ion-col>
+            <ion-col col-3>
+              <label>GII</label>
+            </ion-col>
+            <ion-col col-3>
+              <label>GIII</label>
+            </ion-col>
+            <ion-col col-3>
+              <label>Otros</label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-3>
+              <ion-input type="number" formControlName="gi" [(ngModel)]="dataItem.gi"></ion-input>
+            </ion-col>
+            <ion-col col-3>
+              <ion-input type="number" formControlName="gii" [(ngModel)]="dataItem.gii"></ion-input>
+            </ion-col>
+            <ion-col col-3>
+              <ion-input type="number" formControlName="giii" [(ngModel)]="dataItem.giii"></ion-input>
+            </ion-col>
+            <ion-col col-3>
+              <ion-input type="number" formControlName="others" [(ngModel)]="dataItem.others"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-6>
+              <label>Viables</label>
+            </ion-col>
+            <ion-col col-6>
+              <label>Total</label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-6 class="text-readonly">
+              <label>{{dataItem.gi + dataItem.gii + dataItem.giii + 0 }}</label>
+            </ion-col>
+            <ion-col col-6 class="text-readonly">
+              <label>{{dataItem.gi + dataItem.gii + dataItem.giii + dataItem.others + 0 }}</label>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </ion-item>
+    <ion-item>
+      <ion-grid style="text-align: center;">
+        <ion-row>
+          <ion-col>
+            <ion-button fill="outline" class="fab-button" [disabled]="indx===0 || !validations_form.valid" (click)="backItem()">
+              <ion-icon name="arrow-dropleft-circle"></ion-icon>
+            </ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button [disabled]="!validations_form.valid" style="height: 60px;" (click)="saveItem()">
+              Guardar
+              <ion-icon name="save"></ion-icon>
+            </ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button fill="outline" class="fab-button" [disabled]="!validations_form.valid" (click)="nextItem()">
+              <ion-icon name="arrow-dropright-circle"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button class="fab-button" [disabled]="!validations_form.valid" (click)="nextItem()">
-      <ion-icon style="font-size: 3.2em;" name="arrow-dropright-circle"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
-    <ion-fab-button class="fab-button" [disabled]="indx===0 || !validations_form.valid" (click)="backItem()">
-      <ion-icon style="font-size: 3.2em;" name="arrow-dropleft-circle"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-  <form class="form" [formGroup]="validations_form">
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-item *ngIf="!newRegistry" style="margin: 0 auto">Registro {{indx + 1 }} de {{detailsList?.length + 1 }}
-          </ion-item>
-          <ion-item *ngIf="newRegistry" style="margin: 0 auto">Nuevo Registro de {{detailsList?.length + 1 }}
-          </ion-item>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col col-6>
-          <label>Donadora</label>
-        </ion-col>
-        <ion-col col-6>
-          <label>Raza</label>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col col-6>
-          <ion-input type="text" formControlName="donor" [ngClass]="{ 'is-invalid': submitted && f.donor.errors }"
-            [(ngModel)]="dataItem.donor"></ion-input>
-          <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
-            <div *ngIf="f.donor.errors.required">Campo es requerido</div>
-          </div>
-        </ion-col>
-        <ion-col col-6>
-          <ion-input formControlName="donor_breed" [(ngModel)]="dataItem.donor_breed"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col col-4>
-          <label>Local</label>
-        </ion-col>
-        <ion-col col-4>
-          <label>Tipo</label>
-        </ion-col>
-        <ion-col col-4>
-          <label>Hora</label>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col col-4>
-          <ion-select placeholder="Local" [(ngModel)]="dataItem.local_id" formControlName="local">
-            <ion-select-option *ngFor="let local of aspiration.locals" [value]="local.id">{{local.name}}
-            </ion-select-option>
-          </ion-select>
-        </ion-col>
-        <ion-col col-4>
-          <ion-select formControlName="type" placeholder="Tipo" [(ngModel)]="dataItem.type">
-            <ion-select-option value="Leche">Leche</ion-select-option>
-            <ion-select-option value="Carne">Carne</ion-select-option>
-          </ion-select>
-        </ion-col>
-        <ion-col col-4>
-          <ion-item>
-            <ion-datetime #datetimePicker formControlName="arrived_time" [(ngModel)]="dataItem.ionDateTime"
-              displayFormat="hh:mmA" pickerFormat="hh:mmA" cancelText="Cancelar" doneText="Aceptar"
-              (ionChange)="onChangeDatetime(datetimePicker.value)">
-            </ion-datetime>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col col-6>
-          <label>Toro</label>
-        </ion-col>
-        <ion-col col-6>
-          <label>Raza</label>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col col-6>
-          <ion-input formControlName="bull" [(ngModel)]="dataItem.bull"></ion-input>
-        </ion-col>
-        <ion-col col-6>
-          <ion-input formControlName="bull_breed" [(ngModel)]="dataItem.bull_breed"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col col-3>
-          <label>GI</label>
-        </ion-col>
-        <ion-col col-3>
-          <label>GII</label>
-        </ion-col>
-        <ion-col col-3>
-          <label>GIII</label>
-        </ion-col>
-        <ion-col col-3>
-          <label>Otros</label>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col col-3>
-          <ion-input type="number" formControlName="gi" [(ngModel)]="dataItem.gi"></ion-input>
-        </ion-col>
-        <ion-col col-3>
-          <ion-input type="number" formControlName="gii" [(ngModel)]="dataItem.gii"></ion-input>
-        </ion-col>
-        <ion-col col-3>
-          <ion-input type="number" formControlName="giii" [(ngModel)]="dataItem.giii"></ion-input>
-        </ion-col>
-        <ion-col col-3>
-          <ion-input type="number" formControlName="others" [(ngModel)]="dataItem.others"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col col-6>
-          <label>Viables</label>
-        </ion-col>
-        <ion-col col-6>
-          <label>Total</label>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col col-6 class="text-readonly">
-          <label>{{dataItem.gi + dataItem.gii + dataItem.giii + 0 }}</label>
-        </ion-col>
-        <ion-col col-6 class="text-readonly">
-          <label>{{dataItem.gi + dataItem.gii + dataItem.giii + dataItem.others + 0 }}</label>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </form>
+    </ion-item>
+  </ion-list>>
+
+
 </ion-content>
