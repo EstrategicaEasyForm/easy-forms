@@ -56,7 +56,7 @@ export class AspirationPage implements OnInit {
 
   ngOnInit() {
     const detail = this.ordersService.getDetailApiParam();
-    this.aspirationObjOri = detail.aspiration;
+    this.aspirationObjOri = detail.aspirationApi;
     this.aspiration = Object.assign({}, this.aspirationObjOri);
 
     this.parent = detail.parent;
@@ -123,13 +123,13 @@ export class AspirationPage implements OnInit {
       this.ordersService.getDetailsApiStorage().then((detailsApi) => {
         if (detailsApi)
           for (let detail of detailsApi) {
-            if (detail.aspiration && detail.aspiration.id === this.aspiration.id) {
+            if (detail.aspirationApi && detail.aspirationApi.id === this.aspiration.id) {
               this.aspiration.stateSync = 'U';
-              detail.aspiration = this.aspiration;
+              detail.aspirationApi = this.aspiration;
             }
           }
         this.ordersService.setDetailsApiStorage(detailsApi);
-        this.detailItem.aspiration = this.aspiration;
+        this.detailItem.aspirationApi = this.aspiration;
         this.showMessage('Registro modificado');
       });
     }
@@ -154,12 +154,13 @@ export class AspirationPage implements OnInit {
     this.ordersService.getDetailsApiStorage().then((detailsApi) => {
       if (detailsApi) {
         for (let detail of detailsApi) {
-          if (detail.aspiration && detail.aspiration.id === this.aspiration.id) {
+          if (detail.aspirationApi && detail.aspirationApi.id === this.aspiration.id) {
             this.aspiration.stateSync = 'U';
-            detail.aspiration = this.aspiration;
+            detail.aspirationApi = this.aspiration;
           }
         }
         this.ordersService.setDetailsApiStorage(detailsApi);
+		this.detailItem.aspirationApi = this.aspiration;
         this.showMessage('Aspiración Finalizada');
         this.location.back();
       }

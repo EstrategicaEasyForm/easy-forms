@@ -277,7 +277,7 @@ export class AgendaPage implements OnInit {
           break;
         case "2":
           this.ordersService.setDetailApiParam({
-            aspiration: detailApi.aspiration,
+            aspirationApi: detailApi.aspirationApi,
             parent: this,
             detailItem: detailApi,
             order: detailApi.order,

@@ -55,7 +55,7 @@ query orders {
         }
         url_signing
       }
-      aspiration {
+      aspirationApi {
         id
         order_detail_id
         synchronized_receivers
@@ -80,8 +80,7 @@ query orders {
         }
         details {
           id
-          local_id
-          aspiration_id
+          local_id 
           donor
           donor_breed
           arrived_time
@@ -100,61 +99,7 @@ query orders {
           }
         }
       }
-      production {
-        id
-        order_detail_id
-        pipes
-        lot_oil
-        opu_date
-        civ_date
-        civ_lot
-        civ_responsible
-        medium_sof_o_c4
-        f1_o_c4_date
-        f1_o_c4_lot
-        f1_o_c4_responsible
-        f2_o_c5_date
-        f2_o_c5_lot
-        f2_o_c5_responsible
-        te_date
-        te_lot
-        te_responsible
-        vit_o_froz_date
-        vit_o_froz_lot
-        vit_o_froz_responsible
-        fiv_date
-        fiv_lot
-        fiv_responsible
-        percoll_date
-        percoll_lot
-        percoll_responsible
-        heparina_date
-        heparina_lot
-        heparina_responsible
-        comments
-        state
-        date
-        arrived_time
-        arrived_temperature
-        details {
-          id
-          production_id
-          aspiration_detail_id
-          production_summary_id
-          civ
-          cleavage
-          prevision
-          bi
-          bl
-          bx
-          bn
-          be
-          vitrified
-          frozen
-          lost
-        }
-      }
-      transfer {
+      transferApi {
         id
         order_detail_id
         received_by
@@ -184,7 +129,7 @@ query orders {
           discard
         }
       }
-      diagnostic {
+      diagnosticApi {
         id
         order_detail_id
         received_by
@@ -199,10 +144,10 @@ query orders {
           dx1
         }
       }
-      sexage {
+      sexageApi {
         id
       }
-      delivery {
+      deliveryApi {
         id
       }
     }
@@ -311,7 +256,8 @@ export class OrdersService {
               "searcher" : data.searcher,
               "state" : data.state,
               "synchronized_receivers" : data.synchronized_receivers,
-              "transport_type" : data.transport_type
+              "transport_type" : data.transport_type,
+			  "user_id_updated" : data.user_id_updated			  
             }
           }
         });
@@ -343,6 +289,7 @@ export class OrdersService {
             "state" : aspiration.state,
             "synchronized_receivers" : aspiration.synchronized_receivers,
             "transport_type" : aspiration.transport_type,
+			"user_id_updated" : aspiration.user_id_updated,
             "details" : {
               "create" : data.details.create,
               "update" : data.details.update
