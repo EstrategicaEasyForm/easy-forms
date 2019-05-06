@@ -30,6 +30,7 @@ export class SyncronizationPage {
   }
 
   ionViewWillEnter() {
+    this.contentConsole = "";
     this.initSync();
   }
   async initSync() {
@@ -40,7 +41,7 @@ export class SyncronizationPage {
         {
           text : 'Cancelar',
           handler : () => {
-            console.log("Cancelar");
+            this.contentConsole = "<h4 style='color: #AFAF06'>La sincronización se ha cancelado</h4>";
           }
         },
         {
@@ -49,7 +50,8 @@ export class SyncronizationPage {
             this.syncAspiration();
           }
         }
-      ]
+      ],
+      backdropDismiss : false
     });
     await alert.present();
   }
@@ -79,10 +81,10 @@ export class SyncronizationPage {
               //if (elementDetail.id == '1') {
               //  elementDetail.stateSync = 'C';
               //}
-              if (detail.id == '2') {
-                detail.stateSync = 'U';
-                detail.donor = "NN";
-              }
+              //if (detail.id == '2') {
+              //  detail.stateSync = 'U';
+              //  detail.donor = "NN";
+              //}
               if (detail.stateSync && (detail.stateSync == 'C' || detail.stateSync == 'U')) {
                 boolDetails = true;
               }
