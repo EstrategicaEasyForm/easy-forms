@@ -10,6 +10,7 @@ import { ComponentsModule } from '../components.module';
 import { IonicModule } from '@ionic/angular';
 
 import { AgendaPage } from './agenda.page';
+import { SignatureDrawPadPageModule } from '../signature-draw-pad/signature-draw-pad.module';
 
 const routes: Routes = [
   {
@@ -25,6 +26,7 @@ const routes: Routes = [
     IonicModule,
     FontAwesomeModule,
     ComponentsModule,
+    SignatureDrawPadPageModule,
     RouterModule.forChild(routes)
   ],
   declarations: [AgendaPage]

@@ -1,14 +1,49 @@
-.dayCalendar {
-    text-align: center;
+.filter-datetime-str {
+    flex: 10px;
     margin-top: 14px;
 }
-
-.text-align-center {
-    text-align: center;
+ion-datetime {
+    border: solid 1px black;
+    min-width: calc(35%);
 }
-
-.item-length {
-    margin-top: 14px;
+.reset-filters {
+    padding-top: 0;
+    margin-bottom: 15px;
+}
+.filter-registry {
+    margin-top: 17px;
     margin-left: 5px;
-    text-align: left;
+    flex: 132px;
+}
+.filter-datetime {
+    flex: 60px;
+}
+.cart-col {
+    flex: 0.1;
+}
+.cart-fa-icon {
+    font-size: 46px;
+}
+.cart-fa-name {
+    font-size: 2.1rem;
+    margin: -12px 0px 0px 46px;
+}
+.card-item-field { 
+    margin-left: 18px;
+}
+ion-card-content {
+    margin-top: -31px;
+}
+.filter-button {
+    font-size: 28px;
+}
+.logo-icon {
+    width: 308px;
+    height: 177px;
+}
+.logo-icon-small {
+    width: 87px;
+    height: auto;
+    padding: 0;
+    margin-left: 10px;
 }

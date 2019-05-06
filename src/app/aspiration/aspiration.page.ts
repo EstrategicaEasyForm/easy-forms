@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { OrdersService } from '../orders.service';
 import { ViewChild } from '@angular/core';
-import { LoadingController, ToastController, ModalController } from '@ionic/angular';
+import { LoadingController, ToastController, ModalController, AlertController, Platform } from '@ionic/angular';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { SignatureDrawPadPage } from '../signature-draw-pad/signature-draw-pad.page';
-import { AspirationDetailModal } from './aspiration-detail.modal';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { cordova } from '@ionic-native/core';
 
 @Component({
   selector: 'app-aspiration',
@@ -15,48 +18,27 @@ import { AspirationDetailModal } from './aspiration-detail.modal';
 export class AspirationPage implements OnInit {
 
   aspiration: any;
+  detailItem: any;
+  parent: any;
+  aspirationObjOri: any;
   order: any;
   agenda: any;
   signatureImage: any;
+  showTakePhoto = false;
+  photoImage: any;
+  mbControlPanel: number = 1;
 
-  // Aspiration form template
-  action: string;
-  ajustList: number = 0;
-  dataItem: any;
-  itemIndex: any;
-  backButton: boolean = false;
-  nextButton: boolean = false;
-  indx: number = 0;
-
-
-  //detail fields
-  item: any = {};
-  donor: string;
-  donor_breed: string;
-  local: any;
-  type: any;
-  arrived_time: string;
-  bull: string;
-  bull_breed: string;
-  gi: number;
-  gii: number;
-  giii: number;
-  others: number;
+  // Optional parameters to pass to the swiper instance. See http://idangero.us/swiper/api/ for valid options.
+  slideAspirationOpts = {
+    initialSlide: 1
+  };
 
   //validations_form = new FormGroup({
   validations_form = this.formBuilder.group({
-    donor: ['', Validators.required],
-    arrived_temperature: ['', Validators.required],
-    donor_breed: ['', Validators.required],
-    local: ['', Validators.required],
-    type: ['', Validators.required],
-    arrived_time: ['', Validators.required],
-    bull: ['', Validators.required],
-    bull_breed: ['', Validators.required],
-    gi: ['', Validators.required],
-    gii: ['', Validators.required],
-    giii: ['', Validators.required],
-    others: ['', Validators.required]
+    medium_opu: ['', Validators.required],
+    medium_lot_opu: ['', Validators.required],
+    searcher: ['', Validators.required],
+    aspirator: ['', Validators.required]
   });
 
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
@@ -65,158 +47,175 @@ export class AspirationPage implements OnInit {
     public formBuilder: FormBuilder,
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
-    public modalCtrl: ModalController) {
+    public modalCtrl: ModalController,
+    public location: Location,
+    public router: Router,
+    public alertController: AlertController,
+    public camera: Camera,
+    public platform: Platform) {
   }
 
   ngOnInit() {
     const detail = this.ordersService.getDetailApiParam();
-    this.aspiration = detail.aspiration;
+    this.aspirationObjOri = detail.aspiration;
+    this.aspiration = Object.assign({}, this.aspirationObjOri);
+
+    this.parent = detail.parent;
     this.order = detail.order;
-    this.agenda = detail.agendas ? detail.agendas[0] : {};
+    this.detailItem = detail.detailItem;
+    this.agenda = detail.agenda;
+    if (cordova && typeof cordova !== 'undefined') {
+      this.showTakePhoto = true;
+    }
   }
 
   // convenience getter for easy access to form fields
   get f() { return this.validations_form.controls; }
 
-  newItem() {
-    this.dataItem = {
-      idAnimal: '',
-      chapeta: '',
-      diagnostico: '',
-      apta: true,
-      sincronizada: true,
-      encargado: '',
-      observaciones: ''
-    };
-    this.ajustList = 1;
-    this.action === 'new';
-    this.indx = this.order.itemList.length;
-
-    this.validations_form.reset({
-      idAnimal: '',
-      chapeta: '',
-      diagnostico: '',
-      apta: '',
-      sincronizada: '',
-      encargado: '',
-      observaciones: ''
-    });
-  }
-
-  nextItem() {
-    if (this.validations_form.valid) {
-      if (this.action === 'new') {
-        this.order.itemList.push(this.dataItem);
-        this.showMessage('Registro agregado');
-        this.newItem();
-      }
-      if (this.action === 'update') {
-        let list = [];
-        for (let item of this.order.itemList) {
-          list.push(item.idAnimal === this.dataItem.idAnimal ? this.dataItem : item);
-        }
-        this.order.itemList = list;
-        this.showMessage('Registro modificado');
-
-        if (this.indx === this.order.itemList.length - 1) {
-          this.newItem();
-        }
-        else {
-          this.indx++;
-          this.dataItem = this.order.itemList[this.indx];
-        }
-      }
-
-      //this.parentPage.refresItemList(this.order);
-    }
-  }
-
-  backItem() {
-    if (this.validations_form.valid) {
-      if (this.action === 'new') {
-        this.order.itemList.push(this.dataItem);
-        this.ajustList = 0;
-        this.showMessage('Registro agregado');
-      }
-      if (this.action === 'update') {
-        let list = [];
-        for (let item of this.order.itemList) {
-          list.push(item.idAnimal === this.dataItem.idAnimal ? this.dataItem : item);
-        }
-        this.order.itemList = list;
-
-        this.showMessage('Registro modificado');
-      }
-
-      //this.parentPage.refresItemList(this.order);
-    }
-
-    this.indx--;
-    this.dataItem = this.order.itemList[this.indx];
-    this.action = 'update';
-  }
-
   validation_messages = {
-    'idAnimal': [
-      { type: 'required', message: 'Código requerido.' }
+    'medium_opu': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'medium_lot_opu': [
+      { type: 'required', message: 'Campo requerido.' }
     ]
   };
 
-  ionViewWillLeave() {
-
-    if (this.validations_form.valid) {
-      if (this.action === 'new') {
-        this.order.itemList.push(this.dataItem);
-        this.ajustList = 0;
-        this.showMessage('Registro agregado');
-      }
-      if (this.action === 'update') {
-        let list = [];
-        for (let item of this.order.itemList) {
-          list.push(item.idAnimal === this.dataItem.idAnimal ? this.dataItem : item);
-        }
-        this.order.itemList = list;
-        this.showMessage('Registro modificado');
-      }
-    }
-
-    // this.parentPage.refresItemList(this.order);
+  openAspirationDetail(indx) {
+    this.ordersService.setDetailApiParam({
+      aspiration: this.aspiration,
+      detailApiId: indx,
+      parentPage: this
+    });
+    this.router.navigate(['aspiration-detail']);
   }
 
-  async openAspirationModal(indx) {
-    const _self = this;
-    this.ordersService.setDetailApiParam(this.aspiration.details);
-    const modalPage = await this.modalCtrl.create({
-      component: AspirationDetailModal,
-      componentProps: { value: indx }
-    });
-
-    modalPage.onDidDismiss().then(({data}) => {
-      if (data) {
-        _self.aspiration.details = data;
-        //this.localStorage.updateServices(this.order);
-      }
-    });
-
-    return await modalPage.present();
+  reloadDetailsList(detailsList) {
+    this.aspiration.details = detailsList;
   }
 
   async openSignatureModel() {
-    var data = { message : 'hello world' };
     const modalPage = await this.modalCtrl.create({
-      component: SignatureDrawPadPage
+      component: SignatureDrawPadPage,
+      cssClass: "modal-signature"
     });
-    
-    modalPage.onDidDismiss().then(({data}) => {
+
+    modalPage.onDidDismiss().then(({ data }) => {
       if (data) {
         this.aspiration.signatureImage = data.signatureImage;
-        //this.localStorage.updateServices(this.order);
+        this.showMessage('Captura realizada exitósamente');
+        this.saveAspiration();
       }
     });
 
     return await modalPage.present();
   }
-  
+
+  openPdfViewer() {
+    this.ordersService.setDetailApiParam({
+      aspiration: this.aspiration,
+      order: this.order
+    });
+    this.router.navigate(['pdf-viewer-aspiration']);
+  }
+
+  saveAspiration() {
+    if (!this.equalsAspiration(this.aspirationObjOri, this.aspiration)) {
+      this.ordersService.getDetailsApiStorage().then((detailsApi) => {
+        if (detailsApi)
+          for (let detail of detailsApi) {
+            if (detail.aspiration && detail.aspiration.id === this.aspiration.id) {
+              this.aspiration.stateSync = 'U';
+              detail.aspiration = this.aspiration;
+            }
+          }
+        this.ordersService.setDetailsApiStorage(detailsApi);
+        this.detailItem.aspiration = this.aspiration;
+        this.showMessage('Registro modificado');
+      });
+    }
+  }
+
+  equalsAspiration(aspirationObjOri: any, aspiration: any) {
+    return aspirationObjOri.medium_opu === aspiration.medium_opu &&
+      aspirationObjOri.medium_lot_opu === aspiration.medium_lot_opu &&
+      aspirationObjOri.searcher === aspiration.searcher &&
+      aspirationObjOri.aspirator === aspiration.aspirator &&
+      aspirationObjOri.photoImage === aspiration.photoImage &&
+      aspirationObjOri.signatureImage === aspiration.signatureImage &&
+      aspirationObjOri.comments === aspiration.comments &&
+      aspirationObjOri.identification_number === aspiration.identification_number &&
+      aspirationObjOri.receiver_name === aspiration.receiver_name &&
+      aspirationObjOri.transport_type === aspiration.transport_type &&
+      aspirationObjOri.arrived_temperature === aspiration.arrived_temperature;
+  }
+
+  finalizeAspiration() {
+    this.aspiration.state = 2;
+    this.ordersService.getDetailsApiStorage().then((detailsApi) => {
+      if (detailsApi) {
+        for (let detail of detailsApi) {
+          if (detail.aspiration && detail.aspiration.id === this.aspiration.id) {
+            this.aspiration.stateSync = 'U';
+            detail.aspiration = this.aspiration;
+          }
+        }
+        this.ordersService.setDetailsApiStorage(detailsApi);
+        this.showMessage('Aspiración Finalizada');
+        this.location.back();
+      }
+    });
+  }
+
+  async presentAlertConfirm() {
+    const alert = await this.alertController.create({
+      header: 'Finalizar Aspiración!',
+      message: 'Confirma que desa finalizar <strong>la aspiración</strong>!!!',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+
+          }
+        }, {
+          text: 'Aceptar',
+          handler: () => {
+            this.finalizeAspiration();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  openCamera() {
+    const options: CameraOptions = {
+      quality: 100,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.PNG,
+      mediaType: this.camera.MediaType.PICTURE
+    };
+
+    this.camera.getPicture(options).then((imageData) => {
+      // imageData is either a base64 encoded string or a file URI
+      // If it's base64 (DATA_URL):
+      this.aspiration.photoImage = 'data:image/png;base64,' + imageData;
+      this.showMessage('Captura realizada exitósamente');
+      this.saveAspiration();
+    }, (err) => {
+      // Handle error
+      if (err === 'cordova_not_available') {
+        this.showMessage('No se reconoce un dispositivo de cámara');
+      }
+      else {
+        this.showMessage(err);
+      }
+    });
+  }
+
   async showMessage(message: string) {
     const toast = await this.toastCtrl.create({
       message: message,

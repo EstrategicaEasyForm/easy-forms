@@ -1,28 +1,27 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
-
 import { IonicModule } from '@ionic/angular';
-
-import { DeliveryPage } from './delivery.page';
 import { ComponentsModule } from '../components.module';
+import { AspirationDetailPage } from './aspiration-detail.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: DeliveryPage
+    component: AspirationDetailPage
   }
 ];
 
 @NgModule({
   imports: [
     CommonModule,
+    IonicModule.forRoot(),
+    ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'}),
     FormsModule,
-    IonicModule,
     ComponentsModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [DeliveryPage]
+  declarations: [AspirationDetailPage]
 })
-export class DeliveryPageModule {}
+export class AspirationDetailPageModule {}

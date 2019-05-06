@@ -5,13 +5,12 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { ProductionPage } from './production.page';
-import { ComponentsModule } from '../components.module';
+import { PdfViewerAspirationPage } from './pdf-viewer-aspiration.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: ProductionPage
+    component: PdfViewerAspirationPage
   }
 ];
 
@@ -20,9 +19,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    ComponentsModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ProductionPage]
+  declarations: [PdfViewerAspirationPage]
 })
-export class ProductionPageModule {}
+export class PdfViewerAspirationPageModule {}

@@ -9,13 +9,13 @@
 
 <ion-content>
 
-  <ion-fab vertical="center" horizontal="end" slot="fixed">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button class="fab-button" [disabled]="!validations_form.valid" (click)="nextItem()">
       <ion-icon style="font-size: 3.2em;" name="arrow-dropright-circle"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-  <ion-fab vertical="center" horizontal="start" slot="fixed">
-    <ion-fab-button class="fab-button" [disabled]="indx===0" (click)="backItem()">
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button class="fab-button" [disabled]="indx===0 || !validations_form.valid" (click)="backItem()">
       <ion-icon style="font-size: 3.2em;" name="arrow-dropleft-circle"></ion-icon>
     </ion-fab-button>
   </ion-fab>
@@ -23,7 +23,10 @@
     <ion-grid>
       <ion-row>
         <ion-col>
-          <ion-item style="margin: 0 auto">Registro {{indx + 1 }} de {{detailsList?.length + ajustList }} </ion-item>
+          <ion-item *ngIf="!newRegistry" style="margin: 0 auto">Registro {{indx + 1 }} de {{detailsList?.length + 1 }}
+          </ion-item>
+          <ion-item *ngIf="newRegistry" style="margin: 0 auto">Nuevo Registro de {{detailsList?.length + 1 }}
+          </ion-item>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -36,7 +39,8 @@
       </ion-row>
       <ion-row>
         <ion-col col-6>
-          <ion-input type="text" formControlName="donor" [ngClass]="{ 'is-invalid': submitted && f.donor.errors }" [(ngModel)]="dataItem.donor"></ion-input>
+          <ion-input type="text" formControlName="donor" [ngClass]="{ 'is-invalid': submitted && f.donor.errors }"
+            [(ngModel)]="dataItem.donor"></ion-input>
           <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
             <div *ngIf="f.donor.errors.required">Campo es requerido</div>
           </div>
@@ -58,18 +62,24 @@
       </ion-row>
       <ion-row>
         <ion-col col-4>
-          <ion-select placeholder="Local" [(ngModel)]="dataItem.local" formControlName="local">
-            <!--ion-select-option *ngFor="local of order.client.locals" [value]="local.id">{{local.name}}</ion-select-option-->
+          <ion-select placeholder="Local" [(ngModel)]="dataItem.local_id" formControlName="local">
+            <ion-select-option *ngFor="let local of aspiration.locals" [value]="local.id">{{local.name}}
+            </ion-select-option>
           </ion-select>
         </ion-col>
         <ion-col col-4>
-            <ion-select placeholder="Tipo" [(ngModel)]="dataItem.type">
-                <ion-select-option value="Leche">Leche</ion-select-option>
-                <ion-select-option value="Carne">Carne</ion-select-option>
-              </ion-select>
+          <ion-select formControlName="type" placeholder="Tipo" [(ngModel)]="dataItem.type">
+            <ion-select-option value="Leche">Leche</ion-select-option>
+            <ion-select-option value="Carne">Carne</ion-select-option>
+          </ion-select>
         </ion-col>
         <ion-col col-4>
-          <ion-input formControlName="arrived_time" [(ngModel)]="dataItem.arrived_time"></ion-input>
+          <ion-item>
+            <ion-datetime #datetimePicker formControlName="arrived_time" [(ngModel)]="dataItem.ionDateTime"
+              displayFormat="hh:mmA" pickerFormat="hh:mmA" cancelText="Cancelar" doneText="Aceptar"
+              (ionChange)="onChangeDatetime(datetimePicker.value)">
+            </ion-datetime>
+          </ion-item>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -104,16 +114,16 @@
       </ion-row>
       <ion-row>
         <ion-col col-3>
-          <ion-input formControlName="gi" [(ngModel)]="dataItem.gi"></ion-input>
+          <ion-input type="number" formControlName="gi" [(ngModel)]="dataItem.gi"></ion-input>
         </ion-col>
         <ion-col col-3>
-          <ion-input formControlName="gii" [(ngModel)]="dataItem.gii"></ion-input>
+          <ion-input type="number" formControlName="gii" [(ngModel)]="dataItem.gii"></ion-input>
         </ion-col>
         <ion-col col-3>
-          <ion-input formControlName="giii" [(ngModel)]="dataItem.giii"></ion-input>
+          <ion-input type="number" formControlName="giii" [(ngModel)]="dataItem.giii"></ion-input>
         </ion-col>
         <ion-col col-3>
-          <ion-input formControlName="others" [(ngModel)]="dataItem.others"></ion-input>
+          <ion-input type="number" formControlName="others" [(ngModel)]="dataItem.others"></ion-input>
         </ion-col>
       </ion-row>
       <ion-row>
