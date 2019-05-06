@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingController, ToastController } from '@ionic/angular';
+import { LoadingController, ToastController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { OrdersService } from '../orders.service';
 import { ViewChild } from '@angular/core';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 import { UsersService } from '../users.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-syncronization',
@@ -13,47 +14,101 @@ import { UsersService } from '../users.service';
 })
 export class SyncronizationPage {
 
+  loading : any;
+  contentConsole : string = "";
+
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
   constructor(
     public ordersService: OrdersService,
     public router: Router,
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
-    public userService : UsersService) {
+    public userService : UsersService,
+    public alertController : AlertController,
+    private sanitizer : DomSanitizer) {
 
   }
 
   ionViewWillEnter() {
+    this.initSync();
+  }
+  async initSync() {
+    const alert = await this.alertController.create({
+      header : 'Confirmación',
+      message : '¿Está seguro de iniciar la sincronización de datos?',
+      buttons : [
+        {
+          text : 'Cancelar',
+          handler : () => {
+            console.log("Cancelar");
+          }
+        },
+        {
+          text : 'Confirmar',
+          handler : () => {
+            this.syncAspiration();
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async syncAspiration () {
+    const _self = this;
+    _self.loading = await this.loadingCtrl.create({
+      message: 'Por favor espere'
+    });
+    await _self.loading.present();
+    var countAspirations : number = 0;
+    var totalAspirations : number = 0;
+    var boolAspiration : boolean = false;
+    var boolDetails : boolean = false;
     this.ordersService.getDetailsApiStorage().then((data) => {
       if (data) {
         data.forEach(element => {
           if (element.aspiration) {
-            //Update aspiration
             //if (element.aspiration.id == '1') {
             //  element.aspiration.stateSync = 'U';
             //  element.aspiration.comments = "Sin comentarios";
             //}
             if (element.aspiration.stateSync && element.aspiration.stateSync == 'U') {
-              this.ordersService.updateAspiration(element.aspiration)
-                  .subscribe(({ data }) => {
-                    if (data.updateAspiration) {
-                      //console.log(data.updateAspiration);
-                    }
-                  });
+              boolAspiration = true;
+            }
+            element.aspiration.details.forEach(detail => {
+              //if (elementDetail.id == '1') {
+              //  elementDetail.stateSync = 'C';
+              //}
+              if (detail.id == '2') {
+                detail.stateSync = 'U';
+                detail.donor = "NN";
+              }
+              if (detail.stateSync && (detail.stateSync == 'C' || detail.stateSync == 'U')) {
+                boolDetails = true;
+              }
+            });
+            if (boolAspiration == true || boolDetails == true) {
+              totalAspirations = totalAspirations + 1;
+            }
+            boolAspiration = false;
+            boolDetails= false;
+          }
+        });
+        data.forEach(element => {
+          if (element.aspiration) {
+            boolAspiration = false;
+            boolDetails= false;
+            //Update aspiration
+            if (element.aspiration.stateSync && element.aspiration.stateSync == 'U') {
+              boolAspiration = true;
             }
             //Update details from aspiration
             var details : any = {};
             var creates : any = [];
             var updates : any = [];
             element.aspiration.details.forEach(elementDetail => {
-              //if (elementDetail.id == '1') {
-              //  elementDetail.stateSync = 'C';
-              //}
-              //if (elementDetail.id == '2') {
-              //  elementDetail.stateSync = 'U';
-              //  elementDetail.donor = "NN";
-              //}
               if (elementDetail.stateSync && elementDetail.stateSync == 'U') {
+                boolDetails = true;
                 var elementUpdate : any = {};
                 elementUpdate['id'] = elementDetail.id;
                 elementUpdate['local_id'] = elementDetail.local_id;
@@ -71,6 +126,7 @@ export class SyncronizationPage {
                 updates.push(elementUpdate);
               } 
               if (elementDetail.stateSync && elementDetail.stateSync == 'C') {
+                boolDetails = true;
                 var elementCreate : any = {};
                 elementCreate['local_id'] = elementDetail.local_id;
                 elementCreate['donor'] = elementDetail.donor;
@@ -94,38 +150,75 @@ export class SyncronizationPage {
             if (updates.length > 0) {
               details['update'] = updates;
             }
-            if (Object.getOwnPropertyNames(details).length > 0) {
-              var dataDetails : any = {};
-              dataDetails['id'] = element.aspiration.id;
-              dataDetails['details'] = details;
-              this.ordersService.updateAspirationDetails(dataDetails)
+            if (boolAspiration == true && boolDetails == false) {
+              _self.contentConsole = _self.contentConsole 
+                + "<h4 style='color: green'>Inicia actualización del aspirador " 
+                + element.aspiration.aspirator + "</h4>";
+              this.ordersService.updateAspiration(element.aspiration)
                   .subscribe(({ data }) => {
-                    //console.log("Update detail " + data);
+                    countAspirations = countAspirations + 1;
+                    if (data.updateAspiration) {
+                      _self.contentConsole = _self.contentConsole 
+                        + "<h4 style='color: green'>Se actualizó correctamente el aspirador " 
+                        + element.aspiration.aspirator + "</h4>";
+                    } else {
+                      _self.contentConsole = _self.contentConsole 
+                        + "<h4 style='color: red'>Ocurrió un error actualizando el aspirador " 
+                        + element.aspiration.aspirator + "</h4>";
+                    }
+                    if (totalAspirations == countAspirations) {
+                      this.retriveAgenda();
+                    }
                   });
+            } else {
+              if (Object.getOwnPropertyNames(details).length > 0) {
+                var dataDetails : any = {};
+                dataDetails['details'] = details;
+                _self.contentConsole = _self.contentConsole 
+                  + "<h4 style='color: green'>Inicia actualización de los detalles del aspirador " 
+                  + element.aspiration.aspirator + "</h4>";
+                this.ordersService.updateAspirationDetails(element.aspiration, dataDetails)
+                    .subscribe(({ data }) => {
+                      countAspirations = countAspirations + 1;
+                      if (data.updateAspiration) {
+                        _self.contentConsole = _self.contentConsole 
+                          + "<h4 style='color: green'>Se actualizó correctamente los detalles del aspirador " 
+                          + element.aspiration.aspirator + "</h4>";
+                      } else {
+                        _self.contentConsole = _self.contentConsole 
+                          + "<h4 style='color: red'>Ocurrio un error actualizando los detalles del aspirador " 
+                          + element.aspiration.aspirator + "</h4>";
+                      }
+                      if (totalAspirations == countAspirations) {
+                        this.retriveAgenda();
+                      }
+                    });
+              }
             }
           }
         });
       }
-      this.retriveAgenda();
+      if (totalAspirations == 0) {
+        this.retriveAgenda();
+      }
     });
   }
 
   async retriveAgenda() {
     const _self = this;
-    const loading = await this.loadingCtrl.create({
-      message: 'Por favor espere'
-    });
-    await loading.present();
-
+    _self.contentConsole = _self.contentConsole 
+      + "<h4 style='color: green'>Inicia descarga de la agenda</h4>";
     const onSuccess = function (detailsApi) {
-      loading.dismiss();
+      _self.loading.dismiss();
       _self.ordersService.setDetailsApiStorage(detailsApi);
-      _self.router.navigate(['tabs/agenda', {
-        message: "Sincronización realizada exitosamente!!"
-      }]);
+      //_self.router.navigate(['tabs/agenda', {
+      //  message: "Sincronización realizada exitosamente!!"
+      //}]);
+      _self.contentConsole = _self.contentConsole + "<h4 style='color: green'>La descarga de la agenda se ejecutó correctamente</h2>";
     }
     const onError = function (error) {
-      loading.dismiss();
+      _self.loading.dismiss();
+      _self.contentConsole = _self.contentConsole + "<h4 style='color: red'>La descarga de la agenda falló</h2>";
       if (typeof error === 'string') {
         _self.showMessage(error);
       }

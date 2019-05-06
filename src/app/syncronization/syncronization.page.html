@@ -22,4 +22,8 @@
     </ion-buttons>
     <ion-title>Default Buttons</ion-title>
   </ion-toolbar>
+  <ion-card style="height: 80%; overflow: auto">
+    <div id="divConsole" style="margin: 15px" [innerHtml]="sanitizer.bypassSecurityTrustHtml(contentConsole)">
+    </div>
+  </ion-card>
 </ion-content>
