@@ -139,7 +139,13 @@ ion-input {
 @media screen and (min-width: 1024px) { .card-page-2 { width: 929px; } }
 @media screen and (min-width: 1124px) { .card-page-2 { width: 1022px; } }
 @media screen and (min-width: 1300px) { .card-page-2 { width: 1190px; } }
-@media screen and (min-width: 1400px) { .card-page-2 { width: 1298px; } }									 
+@media screen and (min-width: 1400px) { .card-page-2 { width: 1298px; } }
+@media screen and (min-width: 1500px) { .card-page-2 { width: 1391px; } }
+@media screen and (min-width: 1620px) { .card-page-2 { width: 1485px; } }
+@media screen and (min-width: 1720px) { .card-page-2 { width: 1685px; } }
+@media screen and (min-width: 1920px) { .card-page-2 { width: 1700px; } }
+
+
 
 .card-page-2 {
     ion-card-content {
