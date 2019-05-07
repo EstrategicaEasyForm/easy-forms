@@ -33,9 +33,9 @@
         </ion-row>
       </ion-grid>
     </ion-item>
-    <ion-item *ngIf="mbControlPanel===1">
+    <ion-item *ngIf="mbControlPanel===1"  class="card-page-1">
       <form [formGroup]="validations_form">
-        <ion-card class="card-page-1">
+        <ion-card>
           <ion-card-header class="ibox-title">
             <h5 class="white-color">Orden de Producción</h5>
           </ion-card-header>
@@ -128,9 +128,9 @@
             <ion-icon name="create"></ion-icon>
           </ion-button>
         </ion-item>
-        <ion-item>
+        <ion-item class="card-page-2">
           <form class="form" [formGroup]="validations_form">
-            <ion-card class="card-page-2">
+            <ion-card>
               <ion-card-header class="ibox-title">
                 <h5 class="white-color">Plantilla Aspiración Folicular</h5>
               </ion-card-header>
