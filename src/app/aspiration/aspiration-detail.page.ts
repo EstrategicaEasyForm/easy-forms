@@ -3,6 +3,7 @@ import { OrdersService } from '../orders.service';
 import { ToastController } from '@ionic/angular';
 import { FormBuilder, Validators } from '@angular/forms';
 import * as moment from 'moment-timezone';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-aspiration-detail-page',
@@ -42,7 +43,8 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
   constructor(
     public ordersService: OrdersService,
     public formBuilder: FormBuilder,
-    public toastCtrl: ToastController) {
+    public toastCtrl: ToastController,
+    public location: Location) {
 
   }
 
@@ -56,8 +58,8 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
 
     for (let detail of this.detailsList) {
       if (detail.arrived_time) {
-        const minute = Number(detail.arrived_time.split(':')[1].substr(0,2));
-        const pm = detail.arrived_time.split(':')[1].substr(2,2) === 'PM' ? 12 : 0;
+        const minute = Number(detail.arrived_time.split(':')[1].substr(0, 2));
+        const pm = detail.arrived_time.split(':')[1].substr(2, 2) === 'PM' ? 12 : 0;
         const hour = Number(detail.arrived_time.split(':')[0]) + pm;
         let time = moment().set({ hour: hour, minute: minute });
         detail.ionDateTime = time.format();
@@ -113,27 +115,37 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
     });
   }
 
+  saveItem() {
+    if (!this.validations_form.valid) return;
+    if (this.action === 'update') {
+      const dataObjOri = this.detailsList[this.indx];
+      if (!this.equalsDetailsAspiration(dataObjOri, this.dataItem)) {
+        let list = [];
+        this.dataItem.stateSync = this.dataItem.stateSync || 'U';
+        for (let item of this.detailsList) {
+          list.push(item.id === this.dataItem.id ? Object.assign({}, this.dataItem) : item);
+        }
+        this.detailsList = list;
+        this.parentPage.saveAspiration();
+        this.showMessage('Registro modificado');
+      }
+    }
+    else {
+      this.dataItem.id = new Date().getTime();
+      this.detailsList.push(this.dataItem);
+      this.parentPage.saveAspiration();
+      this.showMessage('Registro agregado');
+    } 
+  }
+
   nextItem() {
     if (this.validations_form.valid) {
       if (this.action === 'new') {
-        this.detailsList.push(this.dataItem);
-        this.showMessage('Registro agregado');
+        this.saveItem();
         this.newItem();
       }
       else if (this.action === 'update') {
-
-        const dataObjOri = this.detailsList[this.indx];
-
-        if (!this.equalsDetailsAspiration(dataObjOri, this.dataItem)) {
-          let list = [];
-          this.dataItem.stateSync = this.dataItem.stateSync || 'U';
-          for (let item of this.detailsList) {
-            list.push(item.id === this.dataItem.id ? this.dataItem : item);
-          }
-          this.detailsList = list;
-          this.showMessage('Registro modificado');
-        }
-
+        this.saveItem();
         if (this.indx === this.detailsList.length - 1) {
           this.newItem();
         }
@@ -142,29 +154,13 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
           this.dataItem = Object.assign({}, this.detailsList[this.indx]);
         }
       }
-      //this.ionModalWillDismiss();
     }
   }
 
   backItem() {
+    if (this.indx === 0) return;
     if (this.validations_form.valid) {
-      if (this.action === 'new') {
-        this.detailsList.push(this.dataItem);
-        this.showMessage('Registro agregado');
-      }
-      else if (this.action === 'update') {
-
-        const dataObjOri = this.detailsList[this.indx];
-        if (!this.equalsDetailsAspiration(dataObjOri, this.dataItem)) {
-          let list = [];
-          this.dataItem.stateSync = this.dataItem.stateSync || 'U';
-          for (let item of this.detailsList) {
-            list.push(item.id === this.dataItem.id ? this.dataItem : item);
-          }
-          this.detailsList = list;
-          this.showMessage('Registro modificado');
-        }
-      }
+      this.saveItem();
       this.indx--;
       this.dataItem = this.detailsList[this.indx];
       this.action = 'update';
@@ -178,9 +174,7 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
     }
   }
 
-
   equalsDetailsAspiration(dataObjOri: any, dataItem: any) {
-
     return dataObjOri.donor === dataItem.donor &&
       dataObjOri.donor_breed === dataItem.donor_breed &&
       dataObjOri.local_id === dataItem.local_id &&
@@ -193,12 +187,6 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
       dataObjOri.giii === dataItem.giii &&
       dataObjOri.others === dataItem.others;
   }
-
-  validation_messages = {
-    'idAnimal': [
-      { type: 'required', message: 'Código requerido.' }
-    ]
-  };
 
   ionViewWillLeave() {
 
@@ -228,6 +216,10 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
 
   onChangeDatetime($datetime) {
     this.dataItem.arrived_time = moment($datetime).format('hh:mmA');
+  }
+
+  closeDetail() {
+    this.location.back();
   }
 
   async showMessage(message: string) {

@@ -55,6 +55,9 @@ ion-textarea{
 .fab-button {
     background-color: transparent;
     color: #488aff !important;
+    font-size: 33px;
+    height: 51px;
+    width: 109px;
 }
 h5 {
     font-weight: bold;
@@ -102,91 +105,57 @@ ion-input {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 688px;
-}
-@media screen and (max-width: 600px) {
-    .card-page-1 {
-        width: 100%;
+    max-width: 730px;
+    ion-card {
+        width: calc(100vw - 100px);
+        max-width: 680px;
     }
 }
-@media screen and (min-width: 600px) { .card-page-1 { margin-left: 0px; width: 631px; }}
-
-@media screen and (min-width: 630px) { .card-page-1 { margin-left: 6px; width: 631px; } }
-@media screen and (min-width: 660px) { .card-page-1 { margin-left: 12px; width: 630px; } }
-@media screen and (min-width: 690px) { .card-page-1 { margin-left: 6px; width: 618px; } }
-@media screen and (min-width: 720px) { .card-page-1 { margin-left: 13px; width: 627px; } }
-@media screen and (min-width: 750px) { .card-page-1 { margin-left: 30px; width: 664px; } }
-@media screen and (min-width: 780px) { .card-page-1 { margin-left: 36px; width: 669px; } }
-@media screen and (min-width: 810px) { .card-page-1 { margin-left: 40px; width: 688px; } }
-@media screen and (min-width: 840px) { .card-page-1 { margin-left: 46px; width: 708px; } }
-@media screen and (min-width: 870px) { .card-page-1 { margin-left: 52px; width: 721px; } }
-@media screen and (min-width: 900px) { .card-page-1 { margin-left: 58px; width: 741px; } }
-@media screen and (min-width: 1024px) { .card-page-1 { margin-left: 61px; width: 837px; } }
-
-// @media screen and (min-width: 630px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 100%; } }
-// @media screen and (min-width: 660px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 630px; } }
-// @media screen and (min-width: 690px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 590px; } }
-// @media screen and (min-width: 720px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 630px; } }
-// @media screen and (min-width: 750px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 656px; } }
-// @media screen and (min-width: 780px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 695px; } }
-// @media screen and (min-width: 810px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 731px; } }
-// @media screen and (min-width: 840px) { .card-page-2 { .other-fields{ display: flex; } .other-fields-xl{ display: none; } width: 708px; } }
-// @media screen and (min-width: 870px) { .card-page-2 { .other-fields{ display: none; } .other-fields-xl{ display: flex; } width: 721px; } }
-// @media screen and (min-width: 900px) { .card-page-2 { .other-fields{ display: none; } .other-fields-xl{ display: flex; } width: 741px; } }
-// @media screen and (min-width: 1024px) { .card-page-2 { .other-fields{ display: none; } .other-fields-xl{ display: flex; } width: 929px; } }
-
-@media screen and (min-width: 630px) { .card-page-2 { width: 100%; } }
-@media screen and (min-width: 660px) { .card-page-2 { width: 630px; } }
-@media screen and (min-width: 690px) { .card-page-2 { width: 590px; } }
-@media screen and (min-width: 720px) { .card-page-2 { width: 630px; } }
-@media screen and (min-width: 750px) { .card-page-2 { width: 667px; } }
-@media screen and (min-width: 780px) { .card-page-2 { width: 678px; } }
-@media screen and (min-width: 810px) { .card-page-2 { width: 731px; } }
-@media screen and (min-width: 840px) { .card-page-2 { width: 810px; } }
-@media screen and (min-width: 870px) { .card-page-2 { width: 851px; } }
-@media screen and (min-width: 900px) { .card-page-2 { width: 881px; } }
-@media screen and (min-width: 1024px) { .card-page-2 { width: 929px; } }
-
 .card-page-2 {
+    margin-left: auto;
+    margin-right: auto;
+    ion-card {
+        width: calc(100vw - 100px);
+    }
     ion-card-content {
         padding: 0;
     }
-}
-.detail-id {
-    flex: 0 0 calc(calc(0.5 / var(--ion-grid-columns, 12)) * 100%);
-}
-.detail-donor {
-    flex: 0 0 calc(calc(1.5 / var(--ion-grid-columns, 12)) * 100%);
-}
-.detail-donor-breed {
-    flex: 0 0 calc(calc(1.5 / var(--ion-grid-columns, 12)) * 100%);
-}
-.detail-local-name {
-    flex: 0 0 calc(calc(1.8 / var(--ion-grid-columns, 12)) * 100%);
-}
-.detail-type {
-    flex: 0 0 calc(calc(1 / var(--ion-grid-columns, 12)) * 100%);
-}
-.detail-arrived-time {
-    flex: 0 0 calc(calc(1 / var(--ion-grid-columns, 12)) * 100%);
-}
-.detail-bull {
-    flex: 0 0 calc(calc(1 / var(--ion-grid-columns, 12)) * 100%);
-}
-.detail-bull-breed {
-    flex: 0 0 calc(calc(1 / var(--ion-grid-columns, 12)) * 100%);
-}
-.detail-gi {
-    flex: 0 0 calc(calc(0.5 / var(--ion-grid-columns, 12)) * 100%);
-}
-.detail-gii {
-    flex: 0 0 calc(calc(0.5 / var(--ion-grid-columns, 12)) * 100%);
-}
-.detail-giii {
-    flex: 0 0 calc(calc(0.5 / var(--ion-grid-columns, 12)) * 100%);
-}
-.detail-others {
-    flex: 0 0 calc(calc(0.5 / var(--ion-grid-columns, 12)) * 100%);
+    .detail-id {
+        flex: 0 0 calc(calc(0.5 / var(--ion-grid-columns, 12)) * 100%);
+    }
+    .detail-donor {
+        flex: 0 0 calc(calc(1.2 / var(--ion-grid-columns, 12)) * 100%);
+    }
+    .detail-donor-breed {
+        flex: 0 0 calc(calc(1 / var(--ion-grid-columns, 12)) * 100%);
+    }
+    .detail-local-name {
+        flex: 0 0 calc(calc(1.8 / var(--ion-grid-columns, 12)) * 100%);
+    }
+    .detail-type {
+        flex: 0 0 calc(calc(0.6 / var(--ion-grid-columns, 12)) * 100%);
+    }
+    .detail-arrived-time {
+        flex: 0 0 calc(calc(1 / var(--ion-grid-columns, 12)) * 100%);
+    }
+    .detail-bull {
+        flex: 0 0 calc(calc(1 / var(--ion-grid-columns, 12)) * 100%);
+    }
+    .detail-bull-breed {
+        flex: 0 0 calc(calc(1 / var(--ion-grid-columns, 12)) * 100%);
+    }
+    .detail-gi {
+        flex: 0 0 calc(calc(0.3 / var(--ion-grid-columns, 12)) * 100%);
+    }
+    .detail-gii {
+        flex: 0 0 calc(calc(0.3 / var(--ion-grid-columns, 12)) * 100%);
+    }
+    .detail-giii {
+        flex: 0 0 calc(calc(0.3 / var(--ion-grid-columns, 12)) * 100%);
+    }
+    .detail-others {
+        flex: 0 0 calc(calc(0.3 / var(--ion-grid-columns, 12)) * 100%);
+    }
 }
 .card-page-3 {
     display: block;
@@ -230,4 +199,36 @@ ion-input {
 }
 .detail-table-header {
     font-weight: bold;
+}
+.close-button {
+    font-size: 37px;
+}
+.save-button {
+    font-size: 37px;
+    margin-top: -2px;
+}
+.save-button-disabled {
+    opacity: 0.5;
+    font-size: 37px;
+    margin-top: -2px;
+}
+.save-button-page {
+    width: 90px;
+    height: 68px;
+    font-size: 34px;
+    margin-left: 10px;
+}
+.logo-icon-small {
+    width: 87px;
+    height: auto;
+    padding: 0;
+    margin-left: 10px;
+}
+.close-button {
+    width: 87px;
+    height: auto;
+}
+.form-detail {
+    margin-left: auto;
+    margin-right: auto;
 }

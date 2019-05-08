@@ -4,8 +4,10 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-menu-button>
-        <ion-icon class="filter-button" name="save"></ion-icon>
+      <ion-menu-button (click)="saveItem()">
+        <ion-icon color="primary"
+          [ngClass]="{'save-button-disabled':!validations_form.valid,'save-button': validations_form.valid}"
+          name="save"></ion-icon>
       </ion-menu-button>
     </ion-buttons>
     <ion-title>PLANTILLA DE ASPIRACIÓN FOLICULAR</ion-title>
@@ -33,9 +35,9 @@
         </ion-row>
       </ion-grid>
     </ion-item>
-    <ion-item *ngIf="mbControlPanel===1">
+    <ion-item *ngIf="mbControlPanel===1" class="card-page-1">
       <form [formGroup]="validations_form">
-        <ion-card class="card-page-1">
+        <ion-card>
           <ion-card-header class="ibox-title">
             <h5 class="white-color">Orden de Producción</h5>
           </ion-card-header>
@@ -93,9 +95,6 @@
                 </ion-col>
                 <ion-col>
                   <ion-input formControlName="medium_lot_opu" [(ngModel)]="aspiration.medium_lot_opu"></ion-input>
-                  <div class="invalid-feedback">
-                    <div>Campo es requerido</div>
-                  </div>
                 </ion-col>
               </ion-row>
               <ion-row>
@@ -128,116 +127,114 @@
             <ion-icon name="create"></ion-icon>
           </ion-button>
         </ion-item>
-        <ion-item>
-          <form class="form" [formGroup]="validations_form">
-            <ion-card class="card-page-2">
-              <ion-card-header class="ibox-title">
-                <h5 class="white-color">Plantilla Aspiración Fonicular</h5>
-              </ion-card-header>
-              <ion-card-content>
-                <ion-list>
-                  <ion-item>
+        <ion-item class="card-page-2">
+          <ion-card>
+            <ion-card-header class="ibox-title">
+              <h5 class="white-color">Plantilla Aspiración Folicular</h5>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-list>
+                <ion-item>
+                  <ion-grid>
+                    <ion-row class="detail-table-header">
+                      <ion-col class="detail-id">
+                        <ion-label>#</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-donor">
+                        <ion-label>Donadora</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-donor-breed">
+                        <ion-label>Raza</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-local-name">
+                        <ion-label>Local</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-type">
+                        <ion-label>Tipo</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-arrived-time">
+                        <ion-label>Hora</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-bull">
+                        <ion-label>Toro</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-bull-breed">
+                        <ion-label>Raza</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-gi">
+                        <ion-label>Gi</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-gii">
+                        <ion-label>Gii</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-giii">
+                        <ion-label>Giii</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-others">
+                        <ion-label>Otros</ion-label>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-item>
+                <ion-item-sliding *ngFor="let item of aspiration.details; let indx = index">
+                  <ion-item class="item-sliding">
                     <ion-grid>
-                      <ion-row class="detail-table-header">
+                      <ion-row>
                         <ion-col class="detail-id">
-                          <ion-label>#</ion-label>
+                          <ion-label>{{indx + 1}}</ion-label>
                         </ion-col>
                         <ion-col class="detail-donor">
-                          <ion-label>Donadora</ion-label>
+                          <ion-label>{{item.donor }}</ion-label>
                         </ion-col>
                         <ion-col class="detail-donor-breed">
-                          <ion-label>Raza</ion-label>
+                          <ion-label>{{item.donor_breed }}</ion-label>
                         </ion-col>
                         <ion-col class="detail-local-name">
-                          <ion-label>Local</ion-label>
+                          <ion-label>{{item.local?.name }}</ion-label>
                         </ion-col>
                         <ion-col class="detail-type">
-                          <ion-label>Tipo</ion-label>
+                          <ion-label>{{item.type }}</ion-label>
                         </ion-col>
                         <ion-col class="detail-arrived-time">
-                          <ion-label>Hora</ion-label>
+                          <ion-label>{{item.arrived_time }}</ion-label>
                         </ion-col>
                         <ion-col class="detail-bull">
-                          <ion-label>Toro</ion-label>
+                          <ion-label>{{item.bull }}</ion-label>
                         </ion-col>
                         <ion-col class="detail-bull-breed">
-                          <ion-label>Raza</ion-label>
+                          <ion-label>{{item.bull_breed }}</ion-label>
                         </ion-col>
                         <ion-col class="detail-gi">
-                          <ion-label>Gi</ion-label>
+                          <ion-label>{{item.gi }}</ion-label>
                         </ion-col>
                         <ion-col class="detail-gii">
-                          <ion-label>Gii</ion-label>
+                          <ion-label>{{item.gii }}</ion-label>
                         </ion-col>
                         <ion-col class="detail-giii">
-                          <ion-label>Giii</ion-label>
+                          <ion-label>{{item.giii }}</ion-label>
                         </ion-col>
                         <ion-col class="detail-others">
-                          <ion-label>Otros</ion-label>
+                          <ion-label>{{item.others }}</ion-label>
                         </ion-col>
                       </ion-row>
                     </ion-grid>
                   </ion-item>
-                  <ion-item-sliding *ngFor="let item of aspiration.details; let indx = index">
-                    <ion-item class="item-sliding">
-                      <ion-grid>
-                        <ion-row>
-                          <ion-col class="detail-id">
-                            <ion-label>{{indx + 1}}</ion-label>
-                          </ion-col>
-                          <ion-col class="detail-donor">
-                            <ion-label>{{item.donor }}</ion-label>
-                          </ion-col>
-                          <ion-col class="detail-donor-breed">
-                            <ion-label>{{item.donor_breed }}</ion-label>
-                          </ion-col>
-                          <ion-col class="detail-local-name">
-                            <ion-label>{{item.local?.name }}</ion-label>
-                          </ion-col>
-                          <ion-col class="detail-type">
-                            <ion-label>{{item.type }}</ion-label>
-                          </ion-col>
-                          <ion-col class="detail-arrived-time">
-                            <ion-label>{{item.arrived_time }}</ion-label>
-                          </ion-col>
-                          <ion-col class="detail-bull">
-                            <ion-label>{{item.bull }}</ion-label>
-                          </ion-col>
-                          <ion-col class="detail-bull-breed">
-                            <ion-label>{{item.bull_breed }}</ion-label>
-                          </ion-col>
-                          <ion-col class="detail-gi">
-                            <ion-label>{{item.gi }}</ion-label>
-                          </ion-col>
-                          <ion-col class="detail-gii">
-                            <ion-label>{{item.gii }}</ion-label>
-                          </ion-col>
-                          <ion-col class="detail-giii">
-                            <ion-label>{{item.giii }}</ion-label>
-                          </ion-col>
-                          <ion-col class="detail-others">
-                            <ion-label>{{item.others }}</ion-label>
-                          </ion-col>
-                        </ion-row>
-                      </ion-grid>
-                    </ion-item>
-                    <ion-item-options>
-                      <ion-button color="success" icon-start (click)="openAspirationDetail(indx)">
-                        Editar
-                      </ion-button>
-                      <ion-button color="danger" icon-start>
-                        <ion-icon name="trash"></ion-icon>
-                        Borrar
-                      </ion-button>
-                    </ion-item-options>
-                  </ion-item-sliding>
-                  <ion-item *ngIf="aspiration.details.length === 0">
-                    <ion-label>No se encontraron registros</ion-label>
-                  </ion-item>
-                </ion-list>
-              </ion-card-content>
-            </ion-card>
-          </form>
+                  <ion-item-options>
+                    <ion-button color="success" icon-start (click)="openAspirationDetail(indx)">
+                      Editar
+                    </ion-button>
+                    <ion-button color="danger" icon-start>
+                      <ion-icon name="trash"></ion-icon>
+                      Borrar
+                    </ion-button>
+                  </ion-item-options>
+                </ion-item-sliding>
+                <ion-item *ngIf="aspiration.details.length === 0">
+                  <ion-label>No se encontraron registros</ion-label>
+                </ion-item>
+              </ion-list>
+            </ion-card-content>
+          </ion-card>
         </ion-item>
       </ion-list>
     </ion-item>
@@ -284,16 +281,6 @@
                 </ion-row>
                 <ion-row>
                   <ion-col>
-                    <label>Observaciones</label>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <ion-textarea class="comment border-input" [(ngModel)]="aspiration.comments"></ion-textarea>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
                     <ion-button expand="full" (click)="openSignatureModel()">
                       Modificar Firma
                       <ion-icon name="create"></ion-icon>
@@ -301,6 +288,16 @@
                     <div class="signature-image">
                       <img [src]="aspiration.signatureImage" *ngIf="aspiration.signatureImage" />
                     </div>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <label>Observaciones</label>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <ion-textarea class="comment border-input" [(ngModel)]="aspiration.comments"></ion-textarea>
                   </ion-col>
                 </ion-row>
                 <ion-row>
@@ -318,7 +315,7 @@
                   </ion-col>
                 </ion-row>
                 <ion-row *ngIf="showTakePhoto">
-                  <ion-col size="5" class="photo-image">
+                  <ion-col size="5">
                     <div class="photo-image">
                       <img [src]="aspiration.photoImage" *ngIf="aspiration.photoImage" />
                       <img src="assets/imgs/take-photo-icon.png" *ngIf="!aspiration.photoImage" />

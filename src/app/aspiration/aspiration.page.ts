@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { OrdersService } from '../orders.service';
-import { ViewChild } from '@angular/core';
 import { LoadingController, ToastController, ModalController, AlertController, Platform } from '@ionic/angular';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -57,7 +56,7 @@ export class AspirationPage implements OnInit {
 
   ngOnInit() {
     const detail = this.ordersService.getDetailApiParam();
-    this.aspirationObjOri = detail.aspiration;
+    this.aspirationObjOri = detail.aspirationApi;
     this.aspiration = Object.assign({}, this.aspirationObjOri);
 
     this.parent = detail.parent;
@@ -119,48 +118,40 @@ export class AspirationPage implements OnInit {
     this.router.navigate(['pdf-viewer-aspiration']);
   }
 
+  onSave() {
+    this.saveAspiration();
+    this.showMessage('Registro modificado');
+  }
+  
   saveAspiration() {
-    if (!this.equalsAspiration(this.aspirationObjOri, this.aspiration)) {
-      this.ordersService.getDetailsApiStorage().then((detailsApi) => {
-        if (detailsApi)
-          for (let detail of detailsApi) {
-            if (detail.aspiration && detail.aspiration.id === this.aspiration.id) {
+      this.ordersService.getDetailsApiStorage().then((orders) => {
+        if (orders)
+        for(let order of orders) {
+          for (let detail of order.detailsApi) {
+            if (detail.aspirationApi && detail.aspirationApi.id === this.aspiration.id) {
               this.aspiration.stateSync = 'U';
-              detail.aspiration = this.aspiration;
+              detail.aspirationApi = this.aspiration;
             }
           }
-        this.ordersService.setDetailsApiStorage(detailsApi);
-        this.detailItem.aspiration = this.aspiration;
-        this.showMessage('Registro modificado');
+        }
+        this.ordersService.setDetailsApiStorage(orders);
+        this.detailItem.detailObjApi = this.aspiration;
+        
       });
-    }
-  }
-
-  equalsAspiration(aspirationObjOri: any, aspiration: any) {
-    return aspirationObjOri.medium_opu === aspiration.medium_opu &&
-      aspirationObjOri.medium_lot_opu === aspiration.medium_lot_opu &&
-      aspirationObjOri.searcher === aspiration.searcher &&
-      aspirationObjOri.aspirator === aspiration.aspirator &&
-      aspirationObjOri.photoImage === aspiration.photoImage &&
-      aspirationObjOri.signatureImage === aspiration.signatureImage &&
-      aspirationObjOri.comments === aspiration.comments &&
-      aspirationObjOri.identification_number === aspiration.identification_number &&
-      aspirationObjOri.receiver_name === aspiration.receiver_name &&
-      aspirationObjOri.transport_type === aspiration.transport_type &&
-      aspirationObjOri.arrived_temperature === aspiration.arrived_temperature;
   }
 
   finalizeAspiration() {
-    this.aspiration.state = 2;
+    this.aspiration.state = 1;
     this.ordersService.getDetailsApiStorage().then((detailsApi) => {
       if (detailsApi) {
         for (let detail of detailsApi) {
-          if (detail.aspiration && detail.aspiration.id === this.aspiration.id) {
+          if (detail.aspirationApi && detail.aspirationApi.id === this.aspiration.id) {
             this.aspiration.stateSync = 'U';
-            detail.aspiration = this.aspiration;
+            detail.aspirationApi = this.aspiration;
           }
         }
         this.ordersService.setDetailsApiStorage(detailsApi);
+		this.detailItem.aspirationApi = this.aspiration;
         this.showMessage('Aspiración Finalizada');
         this.location.back();
       }
