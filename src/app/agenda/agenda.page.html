@@ -18,11 +18,8 @@
         <ion-item *ngIf="!filter.allDays">
           <ion-icon name="calendar"></ion-icon>
           <ion-label> &nbsp; Seleccione el día </ion-label>
-          <ion-datetime [(ngModel)]="filter.datetime" (ngModelChange)="updateDateTime()" 
-            displayFormat="DD/MMM"
-            pickerFormat="DD MMMM"
-            cancelText = "Cancelar"
-            doneText = "Aceptar"
+          <ion-datetime [(ngModel)]="filter.datetime" (ngModelChange)="updateDateTime()" displayFormat="DD/MMM"
+            pickerFormat="DD MMMM" cancelText="Cancelar" doneText="Aceptar"
             monthNames="Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre"
             monthShortNames="Ene,Feb,Mar,Abr,May,Jun,Jul,Ago,Sep,Oct,Nov,Dic"></ion-datetime>
         </ion-item>
@@ -39,6 +36,10 @@
           </ion-item>
         </div>
         <ion-item>
+            <ion-label>Código de orden </ion-label>
+            <ion-searchbar item-end placeholder="Orden" [(ngModel)]="filter.orderId" (ionChange)="filterItems('orderId')"></ion-searchbar>
+          </ion-item>
+        <ion-item>
           <ion-button class="ion-padding reset-filters" expand="full" fill="outline" shape="round"
             (click)="resetFilter()">
             &nbsp; Reestablecer Filtros
@@ -54,7 +55,7 @@
       <ion-toolbar>
         <ion-buttons slot="end">
           <ion-menu-button>
-            <ion-icon class="filter-button" name="options"></ion-icon>
+            <ion-icon color="primary" class="filter-button" name="options"></ion-icon>
           </ion-menu-button>
         </ion-buttons>
         <img class="logo-icon-small ion-padding" src="assets/imgs/logoInvitroAlfa_968x576.png" />
@@ -102,17 +103,17 @@
         <ion-row>
           <ion-col>
             <ion-card *ngFor="let detailApi of detailsApi" (click)="goToTemplate(detailApi)">
-                <ion-fab vertical="top" horizontal="start" slot="fixed">
-                      <fa-icon class="cart-fa-icon" [icon]="detailApi.templateType.icon"></fa-icon>
-                  </ion-fab>
+              <ion-fab vertical="top" horizontal="start" slot="fixed">
+                <fa-icon class="cart-fa-icon" [icon]="detailApi.templateType.icon"></fa-icon>
+              </ion-fab>
               <ion-card-header>
                 <ion-grid>
                   <ion-row>
                     <ion-col size="7">
-                      <h2 class="cart-fa-name"> {{detailApi.event.name}} </h2>
+                      <h2 class="cart-fa-name"> {{detailApi.templateType.name}} </h2>
                     </ion-col>
                     <ion-col size="5">
-                      <h2>Orden de producción {{detailApi.order.id}}</h2>
+                      <h2>Orden de producción {{detailApi.order?.id}}</h2>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
@@ -120,32 +121,34 @@
               <ion-card-content>
                 <ion-list>
                   <ion-item>
-                    Fecha y hora:
-                    <ion-label class="card-item-field" *ngIf="!detailApi.agendas[0].all_day" item-end>
-                      {{detailApi.agendas[0].start_date}}
-                    </ion-label>
-                    <ion-label class="card-item-field" *ngIf="detailApi.agendas[0].all_day" item-end>
-                      {{detailApi.agendas[0].start_date.split(' ')[0]}} Todo el día</ion-label>
-                  </ion-item>
-                  <ion-item>
                     Nombre cliente:
                     <ion-label class="card-item-field" item-end>{{detailApi.order?.client?.bussiness_name}}</ion-label>
                   </ion-item>
                   <ion-item>
                     Local:
-                    <ion-label class="card-item-field" item-end>{{detailApi.agendas[0]?.name_local}}</ion-label>
+                    <ion-label class="card-item-field" item-end>{{detailApi.local?.name}}</ion-label>
                   </ion-item>
-                  <ion-item>
+                  <ion-item *ngIf="detailApi.agenda">
                     Personal asignado:
-                    <ion-label class="card-item-field" item-end>{{detailApi.agendas[0]?.contact}}</ion-label>
+                    <ion-label class="card-item-field" item-end>{{detailApi.agenda.user?.name}}</ion-label>
                   </ion-item>
                   <ion-item>
                     Observaciones:
-                    <ion-label class="card-item-field" item-end>{{detailApi.agendas[0]?.observation}}</ion-label>
+                    <ion-label class="card-item-field" item-end>{{detailApi.comments}}</ion-label>
+                  </ion-item>
+                  <ion-item *ngIf="detailApi.agenda">
+                    Fecha y hora:
+                    <ion-label class="card-item-field" *ngIf="!detailApi.agenda.all_day" item-end>
+                      {{detailApi.agenda.start_date}}
+                    </ion-label>
+                    <ion-label class="card-item-field" *ngIf="detailApi.agenda.all_day" item-end>
+                      {{detailApi.agenda.start_date.split(' ')[0]}} Todo el día
+                    </ion-label>
                   </ion-item>
                 </ion-list>
               </ion-card-content>
             </ion-card>
+            <ion-item></ion-item>
           </ion-col>
         </ion-row>
       </ion-grid>

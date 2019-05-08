@@ -58,8 +58,8 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
 
     for (let detail of this.detailsList) {
       if (detail.arrived_time) {
-        const minute = Number(detail.arrived_time.split(':')[1].substr(0,2));
-        const pm = detail.arrived_time.split(':')[1].substr(2,2) === 'PM' ? 12 : 0;
+        const minute = Number(detail.arrived_time.split(':')[1].substr(0, 2));
+        const pm = detail.arrived_time.split(':')[1].substr(2, 2) === 'PM' ? 12 : 0;
         const hour = Number(detail.arrived_time.split(':')[0]) + pm;
         let time = moment().set({ hour: hour, minute: minute });
         detail.ionDateTime = time.format();
@@ -115,24 +115,33 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
     });
   }
 
-  saveItem(){
-    const dataObjOri = this.detailsList[this.indx];
-    if (!this.equalsDetailsAspiration(dataObjOri, this.dataItem)) {
-      let list = [];
-      this.dataItem.stateSync = this.dataItem.stateSync || 'U';
-      for (let item of this.detailsList) {
-        list.push(item.id === this.dataItem.id ? this.dataItem : item);
+  saveItem() {
+    if (!this.validations_form.valid) return;
+    if (this.action === 'update') {
+      const dataObjOri = this.detailsList[this.indx];
+      if (!this.equalsDetailsAspiration(dataObjOri, this.dataItem)) {
+        let list = [];
+        this.dataItem.stateSync = this.dataItem.stateSync || 'U';
+        for (let item of this.detailsList) {
+          list.push(item.id === this.dataItem.id ? Object.assign({}, this.dataItem) : item);
+        }
+        this.detailsList = list;
+        this.parentPage.saveAspiration();
+        this.showMessage('Registro modificado');
       }
-      this.detailsList = list;
-      this.showMessage('Registro modificado');
     }
+    else {
+      this.dataItem.id = new Date().getTime();
+      this.detailsList.push(this.dataItem);
+      this.parentPage.saveAspiration();
+      this.showMessage('Registro agregado');
+    } 
   }
 
   nextItem() {
     if (this.validations_form.valid) {
       if (this.action === 'new') {
-        this.detailsList.push(this.dataItem);
-        this.showMessage('Registro agregado');
+        this.saveItem();
         this.newItem();
       }
       else if (this.action === 'update') {
@@ -149,14 +158,9 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
   }
 
   backItem() {
+    if (this.indx === 0) return;
     if (this.validations_form.valid) {
-      if (this.action === 'new') {
-        this.detailsList.push(this.dataItem);
-        this.showMessage('Registro agregado');
-      }
-      else if (this.action === 'update') {
-        this.saveItem();
-      }
+      this.saveItem();
       this.indx--;
       this.dataItem = this.detailsList[this.indx];
       this.action = 'update';
@@ -213,8 +217,8 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
   onChangeDatetime($datetime) {
     this.dataItem.arrived_time = moment($datetime).format('hh:mmA');
   }
-  
-  closeDetail(){
+
+  closeDetail() {
     this.location.back();
   }
 

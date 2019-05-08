@@ -107,7 +107,7 @@ ion-input {
     margin-right: auto;
     max-width: 730px;
     ion-card {
-        width:  92vw;
+        width: calc(100vw - 100px);
         max-width: 680px;
     }
 }
@@ -115,7 +115,7 @@ ion-input {
     margin-left: auto;
     margin-right: auto;
     ion-card {
-        width:  92vw;
+        width: calc(100vw - 100px);
     }
     ion-card-content {
         padding: 0;
@@ -201,10 +201,16 @@ ion-input {
     font-weight: bold;
 }
 .close-button {
-    font-size: 28px;
+    font-size: 37px;
 }
 .save-button {
-    font-size: 28px;
+    font-size: 37px;
+    margin-top: -2px;
+}
+.save-button-disabled {
+    opacity: 0.5;
+    font-size: 37px;
+    margin-top: -2px;
 }
 .save-button-page {
     width: 90px;
@@ -221,4 +227,8 @@ ion-input {
 .close-button {
     width: 87px;
     height: auto;
+}
+.form-detail {
+    margin-left: auto;
+    margin-right: auto;
 }
