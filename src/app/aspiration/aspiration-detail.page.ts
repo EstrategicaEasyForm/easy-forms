@@ -23,7 +23,7 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
   nextButton: boolean = false;
 
   newRegistry: boolean = true;
-  parentPage: any;
+  aspirationPage: any;
 
   //validations_form = new FormGroup({
   validations_form = this.formBuilder.group({
@@ -32,8 +32,8 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
     local: ['', Validators.required],
     type: ['', Validators.required],
     arrived_time: ['', Validators.required],
-    bull: ['', Validators.required],
-    bull_breed: ['', Validators.required],
+    bull: [''],
+    bull_breed: [''],
     gi: ['', Validators.required],
     gii: ['', Validators.required],
     giii: ['', Validators.required],
@@ -52,7 +52,7 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
 
     const dataParam = this.ordersService.getDetailApiParam();
     const detailApiId = dataParam.detailApiId;
-    this.parentPage = dataParam.parentPage;
+    this.aspirationPage = dataParam.aspirationPage;
     this.aspiration = dataParam.aspiration;
     this.detailsList = this.aspiration.details;
 
@@ -97,7 +97,7 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
       gii: '',
       giii: '',
       others: '',
-      stateSync: 'N'
+      stateSync: 'C'
     };
 
     this.action = 'new';
@@ -126,14 +126,14 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
           list.push(item.id === this.dataItem.id ? Object.assign({}, this.dataItem) : item);
         }
         this.detailsList = list;
-        this.parentPage.saveAspiration();
+        this.aspirationPage.saveAspiration();
         this.showMessage('Registro modificado');
       }
     }
     else {
       this.dataItem.id = new Date().getTime();
       this.detailsList.push(this.dataItem);
-      this.parentPage.saveAspiration();
+      this.aspirationPage.saveAspiration();
       this.showMessage('Registro agregado');
     } 
   }
@@ -211,7 +211,7 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.parentPage.reloadDetailsList(this.detailsList);
+    this.aspirationPage.reloadDetailsList(this.detailsList);
   }
 
   onChangeDatetime($datetime) {

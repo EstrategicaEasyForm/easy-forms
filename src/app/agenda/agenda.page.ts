@@ -190,7 +190,7 @@ export class AgendaPage implements OnInit {
   }
 
   async filterItems(filter) {
-    if(filter !=='orderId') {
+    if(filter !=='orderId' && filter !== 'refreshDetails') {
       const loading = await this.loadingCtrl.create({
         message: 'Por favor espere',
         duration: 100
@@ -204,6 +204,11 @@ export class AgendaPage implements OnInit {
         this.filterEmployer(detailApi.agenda) &&
         this.filterTemplate(detailApi.templateType)
     });
+  }
+
+  refreshDetailsOriginal(ordersList){
+    this.detailsApiOriginal = this.setTemplateToDetail(ordersList);
+          this.filterItems('refreshDetails');
   }
 
   filterOrderId(order){
@@ -336,7 +341,7 @@ export class AgendaPage implements OnInit {
         case "2":
           this.ordersService.setDetailApiParam({
             aspirationApi: detailApi.detailObjApi,
-            parent: this,
+            agendaPage: this,
             detailItem: detailApi,
             order: detailApi.order,
             agenda: detailApi.agenda

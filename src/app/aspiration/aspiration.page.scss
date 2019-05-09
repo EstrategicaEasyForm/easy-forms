@@ -97,7 +97,7 @@ h5 {
 }
 ion-input {
     border: solid 1px black;
-    input {
+    .native-input {
         margin-left: 10px;
     }
 }
@@ -231,4 +231,7 @@ ion-input {
 .form-detail {
     margin-left: auto;
     margin-right: auto;
+}
+.grade-celsius {
+    margin-left: -10px;
 }

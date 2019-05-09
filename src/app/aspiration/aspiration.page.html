@@ -4,9 +4,9 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-menu-button (click)="saveItem()">
+      <ion-menu-button autoHide="false" (click)="onSaveButton()">
         <ion-icon color="primary"
-          [ngClass]="{'save-button-disabled':!validations_form.valid,'save-button': validations_form.valid}"
+          [ngClass]="{'save-button-disabled': (!validation_form_order.valid), 'save-button': (validation_form_order.valid  ) }"
           name="save"></ion-icon>
       </ion-menu-button>
     </ion-buttons>
@@ -36,7 +36,7 @@
       </ion-grid>
     </ion-item>
     <ion-item *ngIf="mbControlPanel===1" class="card-page-1">
-      <form [formGroup]="validations_form">
+      <form [formGroup]="validation_form_order">
         <ion-card>
           <ion-card-header class="ibox-title">
             <h5 class="white-color">Orden de Producción</h5>
@@ -59,7 +59,7 @@
                   <label>{{order.client.bussiness_name}}</label>
                 </ion-col>
               </ion-row>
-              <ion-row>
+              <ion-row class="header-row">
                 <ion-col size="4">
                   <label>Local</label>
                 </ion-col>
@@ -81,7 +81,7 @@
                   <label>{{aspiration.synchronized_receivers}}</label>
                 </ion-col>
               </ion-row>
-              <ion-row>
+              <ion-row class="header-row">
                 <ion-col>
                   <label>Medio OPU</label>
                 </ion-col>
@@ -91,13 +91,32 @@
               </ion-row>
               <ion-row>
                 <ion-col>
-                  <ion-input formControlName="medium_opu" [(ngModel)]="aspiration.medium_opu"></ion-input>
+                  <ion-input type="text" formControlName="medium_opu" [(ngModel)]="aspiration.medium_opu"></ion-input>
+                  <div class="validation-errors">
+                    <ng-container *ngFor="let validation of validation_messages.medium_opu">
+                      <div class="error-message"
+                        *ngIf="validation_form_order.get('medium_opu').hasError(validation.type) 
+                      && (validation_form_order.get('medium_opu').dirty || validation_form_order.get('medium_opu').touched)">
+                        {{ validation.message }}
+                      </div>
+                    </ng-container>
+                  </div>
                 </ion-col>
                 <ion-col>
-                  <ion-input formControlName="medium_lot_opu" [(ngModel)]="aspiration.medium_lot_opu"></ion-input>
+                  <ion-input type="text" formControlName="medium_lot_opu" [(ngModel)]="aspiration.medium_lot_opu">
+                  </ion-input>
+                  <div class="validation-errors">
+                    <ng-container *ngFor="let validation of validation_messages.medium_lot_opu">
+                      <div class="error-message"
+                        *ngIf="validation_form_order.get('medium_lot_opu').hasError(validation.type) 
+                        && (validation_form_order.get('medium_lot_opu').dirty || validation_form_order.get('medium_lot_opu').touched)">
+                        {{ validation.message }}
+                      </div>
+                    </ng-container>
+                  </div>
                 </ion-col>
               </ion-row>
-              <ion-row>
+              <ion-row class="header-row">
                 <ion-col>
                   <label>Aspirador</label>
                 </ion-col>
@@ -107,10 +126,28 @@
               </ion-row>
               <ion-row>
                 <ion-col>
-                  <ion-input formControlName="aspirator" [(ngModel)]="aspiration.aspirator"></ion-input>
+                  <ion-input type="text" formControlName="aspirator" [(ngModel)]="aspiration.aspirator"></ion-input>
+                  <div class="validation-errors">
+                    <ng-container *ngFor="let validation of validation_messages.aspirator">
+                      <div class="error-message"
+                        *ngIf="validation_form_order.get('aspirator').hasError(validation.type) 
+                        && (validation_form_order.get('aspirator').dirty || validation_form_order.get('aspirator').touched)">
+                        {{ validation.message }}
+                      </div>
+                    </ng-container>
+                  </div>
                 </ion-col>
                 <ion-col>
-                  <ion-input formControlName="searcher" [(ngModel)]="aspiration.searcher"></ion-input>
+                  <ion-input type="text" formControlName="searcher" [(ngModel)]="aspiration.searcher"></ion-input>
+                  <div class="validation-errors">
+                    <ng-container *ngFor="let validation of validation_messages.searcher">
+                      <div class="error-message"
+                        *ngIf="validation_form_order.get('searcher').hasError(validation.type) 
+                        && (validation_form_order.get('searcher').dirty || validation_form_order.get('searcher').touched)">
+                        {{ validation.message }}
+                      </div>
+                    </ng-container>
+                  </div>
                 </ion-col>
               </ion-row>
             </ion-grid>
@@ -240,99 +277,161 @@
     </ion-item>
     <ion-item *ngIf="mbControlPanel===3">
       <ion-list class="card-page-3">
-        <ion-item>
-          <ion-card>
-            <ion-card-header class="ibox-title">
-              <h5 class="white-color">Datos Generales</h5>
-            </ion-card-header>
-            <ion-card-content>
-              <ion-grid>
-                <ion-row>
-                  <ion-col size="5">
-                    <label>Temperatura de llegada</label>
-                  </ion-col>
-                  <ion-col size="6">
-                    <label>Tipo transporte</label>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col size="5">
-                    <ion-input [(ngModel)]="aspiration.arrived_temperature"></ion-input>
-                  </ion-col>
-                  <ion-col size="6">
-                    <ion-input [(ngModel)]="aspiration.transport_type"></ion-input>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col size="7">
-                    <label>Recibido por</label>
-                  </ion-col>
-                  <ion-col size="4">
-                    <label>Cédula</label>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col size="7">
-                    <ion-input [(ngModel)]="aspiration.receiver_name"></ion-input>
-                  </ion-col>
-                  <ion-col size="4">
-                    <ion-input [(ngModel)]="aspiration.identification_number"></ion-input>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <ion-button expand="full" (click)="openSignatureModel()">
-                      Modificar Firma
-                      <ion-icon name="create"></ion-icon>
-                    </ion-button>
-                    <div class="signature-image">
-                      <img [src]="aspiration.signatureImage" *ngIf="aspiration.signatureImage" />
-                    </div>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <label>Observaciones</label>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <ion-textarea class="comment border-input" [(ngModel)]="aspiration.comments"></ion-textarea>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col size="5">
-                    <ion-button expand="full" [disabled]="!showTakePhoto" (click)="openCamera()">
-                      Generar Foto
-                      <ion-icon name="camera"></ion-icon>
-                    </ion-button>
-                  </ion-col>
-                  <ion-col size="6">
-                    <ion-button expand="full" (click)="openPdfViewer()">
-                      Generar PDF
-                      <ion-icon name="archive"></ion-icon>
-                    </ion-button>
-                  </ion-col>
-                </ion-row>
-                <ion-row *ngIf="showTakePhoto">
-                  <ion-col size="5">
-                    <div class="photo-image">
-                      <img [src]="aspiration.photoImage" *ngIf="aspiration.photoImage" />
-                      <img src="assets/imgs/take-photo-icon.png" *ngIf="!aspiration.photoImage" />
-                    </div>
-                  </ion-col>
-                  <ion-col size="6">
-                    <div class="button-finalize">
-                      <ion-button expand="full" color="success-shade" (click)="presentAlertConfirm()">
-                        Finalizar Aspiración
+        <form [formGroup]="validation_form_general">
+          <ion-item>
+            <ion-card>
+              <ion-card-header class="ibox-title">
+                <h5 class="white-color">Datos Generales</h5>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="5">
+                      <label>Temperatura de llegada</label>
+                    </ion-col>
+                    <ion-col size="6">
+                      <label>Tipo transporte</label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col size="5">
+                      <ion-grid>
+                        <ion-row>
+                          <ion-col size="8" style="margin-left: -9px; margin-top: -9px">
+                            <ion-input type="number" step="any" formControlName="arrived_temperature_number"
+                              [(ngModel)]="aspiration.arrived_temperature_number"
+                              (ionChange)="onChangeArrivedTemperature()">
+                            </ion-input>
+                          </ion-col>
+                          <ion-col size="2" class="ion-text-start">
+                            <h1 class="grade-celsius">°C</h1>
+                          </ion-col>
+                        </ion-row>
+                      </ion-grid>
+                      <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.arrived_temperature_number">
+                          <div class="error-message"
+                            *ngIf="validation_form_general.get('arrived_temperature_number').hasError(validation.type) 
+                            && (validation_form_general.get('arrived_temperature_number').dirty || validation_form_general.get('arrived_temperature_number').touched)">
+                            {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ion-col>
+                    <ion-col size="6">
+                      <ion-input formControlName="transport_type" [(ngModel)]="aspiration.transport_type"></ion-input>
+                      <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.transport_type">
+                          <div class="error-message"
+                            *ngIf="validation_form_general.get('transport_type').hasError(validation.type) 
+                            && (validation_form_general.get('transport_type').dirty || validation_form_general.get('transport_type').touched)">
+                            {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col size="7">
+                      <label>Recibido por</label>
+                    </ion-col>
+                    <ion-col size="4">
+                      <label>Cédula</label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col size="7">
+                      <ion-input type="text" formControlName="receiver_name" [(ngModel)]="aspiration.receiver_name">
+                      </ion-input>
+                      <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.receiver_name">
+                          <div class="error-message"
+                            *ngIf="validation_form_general.get('receiver_name').hasError(validation.type) 
+                            && (validation_form_general.get('receiver_name').dirty || validation_form_general.get('receiver_name').touched)">
+                            {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ion-col>
+                    <ion-col size="4">
+                      <ion-input type="text" formControlName="identification_number"
+                        [(ngModel)]="aspiration.identification_number"></ion-input>
+                      <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.identification_number">
+                          <div class="error-message"
+                            *ngIf="validation_form_general.get('identification_number').hasError(validation.type) 
+                            && (validation_form_general.get('identification_number').dirty || validation_form_general.get('identification_number').touched)">
+                            {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <ion-button expand="full" (click)="openSignatureModel()">
+                        Modificar Firma
+                        <ion-icon name="create"></ion-icon>
                       </ion-button>
-                    </div>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-            </ion-card-content>
-          </ion-card>
-        </ion-item>
+                      <div class="signature-image">
+                        <img [src]="aspiration.signatureImage" *ngIf="aspiration.signatureImage" />
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <label>Observaciones</label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <ion-textarea class="comment border-input" formControlName="comments"
+                        [(ngModel)]="aspiration.comments"></ion-textarea>
+                      <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.comments">
+                          <div class="error-message"
+                            *ngIf="validation_form_general.get('comments').hasError(validation.type) 
+                            && (validation_form_general.get('comments').dirty || validation_form_general.get('comments').touched)">
+                            {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col size="5">
+                      <ion-button expand="full" [disabled]="!showTakePhoto" (click)="openCamera()">
+                        Generar Foto
+                        <ion-icon name="camera"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                    <ion-col size="6">
+                      <ion-button expand="full" (click)="openPdfViewer()">
+                        Generar PDF
+                        <ion-icon name="archive"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row *ngIf="showTakePhoto">
+                    <ion-col size="5">
+                      <div class="photo-image">
+                        <img [src]="aspiration.photoImage" *ngIf="aspiration.photoImage" />
+                        <img src="assets/imgs/take-photo-icon.png" *ngIf="!aspiration.photoImage" />
+                      </div>
+                    </ion-col>
+                    <ion-col size="6">
+                      <div class="button-finalize">
+                        <ion-button expand="full" color="success-shade" (click)="presentAlertConfirm()">
+                          Finalizar Aspiración
+                        </ion-button>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card-content>
+            </ion-card>
+          </ion-item>
+        </form>
       </ion-list>
     </ion-item>
   </ion-list>

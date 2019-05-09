@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrdersService } from '../orders.service';
 import { LoadingController, ToastController, ModalController, AlertController, Platform } from '@ionic/angular';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { SignatureDrawPadPage } from '../signature-draw-pad/signature-draw-pad.page';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -18,7 +18,7 @@ export class AspirationPage implements OnInit {
 
   aspiration: any;
   detailItem: any;
-  parent: any;
+  agendaPage: any;
   aspirationObjOri: any;
   order: any;
   agenda: any;
@@ -32,13 +32,40 @@ export class AspirationPage implements OnInit {
     initialSlide: 1
   };
 
-  //validations_form = new FormGroup({
-  validations_form = this.formBuilder.group({
-    medium_opu: ['', Validators.required],
-    medium_lot_opu: ['', Validators.required],
-    searcher: ['', Validators.required],
-    aspirator: ['', Validators.required]
-  });
+  //validations forms
+  validation_form_order: FormGroup;
+  validation_form_general: FormGroup;
+
+  validation_messages = {
+    'medium_opu': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'medium_lot_opu': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'aspirator': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'searcher': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'arrived_temperature_number': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'receiver_name': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'identification_number': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'transport_type': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'comments': [
+      { type: 'required', message: 'Campo requerido.' }
+    ]
+  };
+
 
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
   constructor(
@@ -52,39 +79,46 @@ export class AspirationPage implements OnInit {
     public alertController: AlertController,
     public camera: Camera,
     public platform: Platform) {
+
   }
 
   ngOnInit() {
+
     const detail = this.ordersService.getDetailApiParam();
     this.aspirationObjOri = detail.aspirationApi;
     this.aspiration = Object.assign({}, this.aspirationObjOri);
-
-    this.parent = detail.parent;
+    this.agendaPage = detail.agendaPage;
     this.order = detail.order;
     this.detailItem = detail.detailItem;
     this.agenda = detail.agenda;
+    this.aspiration.arrived_temperature = this.aspiration.arrived_temperature || '';
+    this.aspiration.arrived_temperature_number = Number(this.aspiration.arrived_temperature.replace('°C', '').replace(',', '.'));
     if (cordova && typeof cordova !== 'undefined') {
       this.showTakePhoto = true;
     }
+
+    this.validation_form_order = this.formBuilder.group({
+      medium_opu: [this.aspiration.medium_opu, Validators.required],
+      medium_lot_opu: [this.aspiration.medium_lot_opu, Validators.required],
+      searcher: [this.aspiration.searcher, Validators.required],
+      aspirator: [this.aspiration.aspirator, Validators.required]
+    });
+
+    this.validation_form_general = this.formBuilder.group({
+      arrived_temperature_number: [this.aspiration.arrived_temperature_number, Validators.required,],
+      transport_type: [this.aspiration.transport_type, Validators.required],
+      receiver_name: [this.aspiration.receiver_name, Validators.required],
+      identification_number: [this.aspiration.identification_number, Validators.required],
+      comments: [this.aspiration.comments, Validators.required]
+    });
+
   }
-
-  // convenience getter for easy access to form fields
-  get f() { return this.validations_form.controls; }
-
-  validation_messages = {
-    'medium_opu': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'medium_lot_opu': [
-      { type: 'required', message: 'Campo requerido.' }
-    ]
-  };
 
   openAspirationDetail(indx) {
     this.ordersService.setDetailApiParam({
       aspiration: this.aspiration,
       detailApiId: indx,
-      parentPage: this
+      aspirationPage: this
     });
     this.router.navigate(['aspiration-detail']);
   }
@@ -118,15 +152,15 @@ export class AspirationPage implements OnInit {
     this.router.navigate(['pdf-viewer-aspiration']);
   }
 
-  onSave() {
+  onSaveButton() {
     this.saveAspiration();
     this.showMessage('Registro modificado');
   }
-  
+
   saveAspiration() {
-      this.ordersService.getDetailsApiStorage().then((orders) => {
-        if (orders)
-        for(let order of orders) {
+    this.ordersService.getDetailsApiStorage().then((ordersList) => {
+      if (ordersList) {
+        for (let order of ordersList) {
           for (let detail of order.detailsApi) {
             if (detail.aspirationApi && detail.aspirationApi.id === this.aspiration.id) {
               this.aspiration.stateSync = 'U';
@@ -134,10 +168,11 @@ export class AspirationPage implements OnInit {
             }
           }
         }
-        this.ordersService.setDetailsApiStorage(orders);
-        this.detailItem.detailObjApi = this.aspiration;
-        
-      });
+      }
+      this.ordersService.setDetailsApiStorage(ordersList);
+      this.detailItem.detailObjApi = this.aspiration;
+      this.agendaPage.refreshDetailsOriginal(ordersList);
+    });
   }
 
   finalizeAspiration() {
@@ -151,7 +186,7 @@ export class AspirationPage implements OnInit {
           }
         }
         this.ordersService.setDetailsApiStorage(detailsApi);
-		this.detailItem.aspirationApi = this.aspiration;
+        this.detailItem.aspirationApi = this.aspiration;
         this.showMessage('Aspiración Finalizada');
         this.location.back();
       }
@@ -205,6 +240,16 @@ export class AspirationPage implements OnInit {
         this.showMessage(err);
       }
     });
+  }
+
+  onChangeArrivedTemperature() {
+    if (this.aspiration.arrived_temperature_number || this.aspiration.arrived_temperature_number === 0) {
+      this.aspiration.arrived_temperature = this.aspiration.arrived_temperature_number + "°C";
+      this.aspiration.arrived_temperature = this.aspiration.arrived_temperature.replace('.', ',');
+    }
+    else {
+      this.aspiration.arrived_temperature = "";
+    }
   }
 
   async showMessage(message: string) {
