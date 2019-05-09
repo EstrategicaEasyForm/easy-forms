@@ -75,19 +75,15 @@ export class SyncronizationPage {
         orders.forEach(order => {
           order.detailsApi.forEach(element => {
             if (element.aspirationApi) {
-              //if (element.aspiration.id == '1') {
-              //  element.aspiration.stateSync = 'U';
-              //  element.aspiration.comments = "Sin comentarios";
+              //if (element.aspirationApi.id == '31') {
+              //  element.aspirationApi.stateSync = 'U';
+              //  element.aspirationApi.comments = "Sin comentarios";
               //}
               if (element.aspirationApi.stateSync && element.aspirationApi.stateSync == 'U') {
-                element.aspirationApi.user_id_updated = this.userService.getUserId();
                 boolAspiration = true;
               }
               element.aspirationApi.details.forEach(detail => {
-                //if (elementDetail.id == '1') {
-                //  elementDetail.stateSync = 'C';
-                //}
-                //if (detail.id == '2') {
+                //if (detail.id == '495') {
                 //  detail.stateSync = 'U';
                 //  detail.donor = "NN";
                 //}
@@ -106,8 +102,6 @@ export class SyncronizationPage {
         orders.forEach(order => {
           order.detailsApi.forEach(element => {
             if (element.aspirationApi) {
-              boolAspiration = false;
-              boolDetails = false;
               //Update aspiration
               if (element.aspirationApi.stateSync && element.aspirationApi.stateSync == 'U') {
                 element.aspirationApi.user_id_updated = this.userService.getUserId();
@@ -162,52 +156,78 @@ export class SyncronizationPage {
                 details['update'] = updates;
               }
               if (boolAspiration == true && boolDetails == false) {
+                element.aspirationApi.user_id_updated = this.userService.getUserId();
                 _self.contentConsole = _self.contentConsole
-                  + "<h4 style='color: green'>Inicia actualización del aspirador "
-                  + element.aspirationApi.aspirator + "</h4>";
+                  + "<h4 style='color: green'>Inicia actualización de la aspiración con orden  "
+                  + order.id + "</h4>";
 
-                  this.aspirationService.updateAspiration(element.aspirationApi)
+                  this.aspirationService.updateOnlyAspiration(element.aspirationApi)
                   .subscribe(({ data }) => {
                     countAspirations = countAspirations + 1;
                     if (data.updateAspiration) {
                       _self.contentConsole = _self.contentConsole
-                        + "<h4 style='color: green'>Se actualizó correctamente el aspirador "
-                        + element.aspirationApi.aspirator + "</h4>";
+                        + "<h4 style='color: green'>Se actualizó correctamente la aspiración con orden "
+                        + order.id + "</h4>";
                     } else {
                       _self.contentConsole = _self.contentConsole
-                        + "<h4 style='color: red'>Ocurrió un error actualizando el aspirador "
-                        + element.aspirationApi.aspirator + "</h4>";
+                        + "<h4 style='color: red'>Ocurrió un error actualizando la aspiración con orden "
+                        + order.id + "</h4>";
                     }
                     if (totalAspirations == countAspirations) {
                       this.retriveAgenda();
                     }
                   });
-              } else {
-                if (Object.getOwnPropertyNames(details).length > 0) {
-                  var dataDetails: any = {};
-                  dataDetails['details'] = details;
-                  _self.contentConsole = _self.contentConsole
-                    + "<h4 style='color: green'>Inicia actualización de los detalles del aspirador "
-                    + element.aspirationApi.aspirator + "</h4>";
+              } else if (boolAspiration == false && boolDetails == true) {
+                element.aspirationApi.user_id_updated = this.userService.getUserId();
+                var dataDetails: any = {};
+                dataDetails['details'] = details;
+                _self.contentConsole = _self.contentConsole
+                  + "<h4 style='color: green'>Inicia actualización de los detalles de la aspiración con orden "
+                  + order.id + "</h4>";
 
-                  this.aspirationService.updateAspirationDetails(element.aspirationApi, dataDetails)
-                    .subscribe(({ data }) => {
-                      countAspirations = countAspirations + 1;
-                      if (data.updateAspiration) {
-                        _self.contentConsole = _self.contentConsole
-                          + "<h4 style='color: green'>Se actualizó correctamente los detalles del aspirador "
-                          + element.aspirationApi.aspirator + "</h4>";
-                      } else {
-                        _self.contentConsole = _self.contentConsole
-                          + "<h4 style='color: red'>Ocurrio un error actualizando los detalles del aspirador "
-                          + element.aspirationApi.aspirator + "</h4>";
-                      }
-                      if (totalAspirations == countAspirations) {
-                        this.retriveAgenda();
-                      }
-                    });
-                }
+                this.aspirationService.updateAspirationDetails(element.aspirationApi, dataDetails)
+                  .subscribe(({ data }) => {
+                    countAspirations = countAspirations + 1;
+                    if (data.updateAspiration) {
+                      _self.contentConsole = _self.contentConsole
+                        + "<h4 style='color: green'>Se actualizó correctamente los detalles de la aspiración con orden "
+                        + order.id + "</h4>";
+                    } else {
+                      _self.contentConsole = _self.contentConsole
+                        + "<h4 style='color: red'>Ocurrio un error actualizando los detalles de la aspiración con orden "
+                        + order.id + "</h4>";
+                    }
+                    if (totalAspirations == countAspirations) {
+                      this.retriveAgenda();
+                    }
+                  });
+              } else if (boolAspiration == true && boolDetails == true) {
+                element.aspirationApi.user_id_updated = this.userService.getUserId();
+                var dataDetails: any = {};
+                dataDetails['details'] = details;
+                _self.contentConsole = _self.contentConsole
+                  + "<h4 style='color: green'>Inicia actualización de toda la aspiración con orden "
+                  + order.id + "</h4>";
+
+                this.aspirationService.updateAllAspiration(element.aspirationApi, dataDetails)
+                  .subscribe(({ data }) => {
+                    countAspirations = countAspirations + 1;
+                    if (data.updateAspiration) {
+                      _self.contentConsole = _self.contentConsole
+                        + "<h4 style='color: green'>Se actualizó correctamente toda la aspiración con orden "
+                        + order.id + "</h4>";
+                    } else {
+                      _self.contentConsole = _self.contentConsole
+                        + "<h4 style='color: red'>Ocurrio un error actualizando toda la aspiración con orden "
+                        + order.id + "</h4>";
+                    }
+                    if (totalAspirations == countAspirations) {
+                      this.retriveAgenda();
+                    }
+                  });
               }
+              boolAspiration = false;
+              boolDetails = false;
             }
           });
         });

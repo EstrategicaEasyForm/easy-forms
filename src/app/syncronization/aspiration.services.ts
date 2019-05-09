@@ -10,7 +10,7 @@ export class AspirationService {
 
   constructor(private apollo: Apollo) { }
 
-  updateAspiration(data: any) {
+  updateOnlyAspiration(data: any) {
     const aspirationMutation = gql`
       mutation updateAspiration($input: UpdateAspirationInput!){
         updateAspiration(input: $input) {
@@ -43,7 +43,7 @@ export class AspirationService {
     });
   }
 
-  updateAspirationDetails(aspiration: any, data: any) {
+  updateAllAspiration(aspiration: any, data: any) {
     const aspirationMutation = gql`
     mutation updateAspiration($input: UpdateAspirationInput!){
       updateAspiration(input: $input) {
@@ -69,6 +69,28 @@ export class AspirationService {
           "state": aspiration.state,
           "synchronized_receivers": aspiration.synchronized_receivers,
           "transport_type": aspiration.transport_type,
+          "user_id_updated": aspiration.user_id_updated,
+          "details": {
+            "create": data.details.create,
+            "update": data.details.update
+          }
+        }
+      }
+    });
+  }
+
+  updateAspirationDetails(aspiration: any, data: any) {
+    const aspirationMutation = gql`
+    mutation updateAspiration($input: UpdateAspirationInput!){
+      updateAspiration(input: $input) {
+        id
+      }
+    }`;
+    return this.apollo.mutate({
+      mutation: aspirationMutation,
+      variables: {
+        "input": {
+          "id": aspiration.id,
           "user_id_updated": aspiration.user_id_updated,
           "details": {
             "create": data.details.create,
