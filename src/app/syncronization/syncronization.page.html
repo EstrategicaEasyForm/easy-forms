@@ -8,7 +8,15 @@
 <ion-content>
   <app-network-notify-banner id="networkNotifyBanner"></app-network-notify-banner>
   <ion-card style="height: 90%; overflow: auto">
-    <div id="divConsole" style="margin: 15px" [innerHtml]="sanitizer.bypassSecurityTrustHtml(contentConsole)">
+    <div id="divConsole" style="margin: 15px">
+      <ion-item *ngFor="let registry of registries" [ngClass]="registry.type">
+        <ion-label item-start>[{{registry.time}}]</ion-label>
+        <ion-label>{{registry.message}}</ion-label>
+        <ion-icon item-end name="arrow-down"></ion-icon>
+        <div *ngIf="registry.details" class="detail">
+          
+        </div>
+      </ion-item>
     </div>
   </ion-card>
 </ion-content>
