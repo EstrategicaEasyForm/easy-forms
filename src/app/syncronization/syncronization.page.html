@@ -9,14 +9,20 @@
   <app-network-notify-banner id="networkNotifyBanner"></app-network-notify-banner>
   <ion-card style="height: 90%; overflow: auto">
     <div id="divConsole" style="margin: 15px">
-      <ion-item *ngFor="let registry of registries" [ngClass]="registry.type">
-        <ion-label item-start>[{{registry.time}}]</ion-label>
-        <ion-label>{{registry.message}}</ion-label>
-        <ion-icon item-end name="arrow-down"></ion-icon>
-        <div *ngIf="registry.details" class="detail">
-          
-        </div>
-      </ion-item>
+      <div *ngFor="let registry of registries">
+        <ion-item [ngClass]="registry.type" class="item-stable">
+          <ion-label item-start class="sizeTime">[{{registry.time}}]</ion-label>
+          <ion-label text-wrap>{{registry.message}}</ion-label>
+          <ion-icon *ngIf="registry.details" item-end [name]="isDeploy(registry) ? 'arrow-up' : 'arrow-down'" 
+            (click)="deploy(registry)" ></ion-icon>
+        </ion-item>
+        <ion-list *ngIf="isDeploy(registry)">
+          <ion-item *ngFor="let detail of registry.details" class="item-accordion">
+            <ion-label item-start class="sizeTime"></ion-label>
+            <ion-label text-wrap>{{detail}}</ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
     </div>
   </ion-card>
 </ion-content>

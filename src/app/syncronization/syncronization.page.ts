@@ -29,16 +29,9 @@ export class SyncronizationPage {
     public userService: UsersService,
     public alertController: AlertController,
     private sanitizer: DomSanitizer,
-    private aspirationService: AspirationService) {
-      
-      this.registries.push({type:'info',message:"Mensaje informativo",time:moment().format('HH:mm')});
-      this.registries.push({type:'warning',message:"Mensaje alerta",time:moment().format('HH:mm')});
-      this.registries.push({type:'error',message:"Mensaje de error",time:moment().format('HH:mm')});
-
-  }
+    private aspirationService: AspirationService) {}
 
   ionViewWillEnter() {
-    this.contentConsole = "";
     this.initSync();
   }
 
@@ -50,7 +43,11 @@ export class SyncronizationPage {
         {
           text: 'Cancelar',
           handler: () => {
-            this.contentConsole = "<h4 style='color: #AFAF06'>La sincronización se ha cancelado</h4>";
+            this.registries.push({
+              type:'warning',
+              message:"La sincronización se ha cancelado",
+              time:moment().format('HH:mm:ss')
+            });
           }
         },
         {
@@ -130,8 +127,8 @@ export class SyncronizationPage {
                   elementUpdate['bull_breed'] = elementDetail.bull_breed;
                   elementUpdate['type'] = elementDetail.type;
                   elementUpdate['gi'] = elementDetail.gi;
-                  elementUpdate['gii'] = elementDetail.gii;
-                  elementUpdate['giii'] = elementDetail.giii;
+                  elementUpdate['gss'] = elementDetail.gss;
+                  elementUpdate['gssi'] = elementDetail.gssi;
                   elementUpdate['others'] = elementDetail.others;
                   elementUpdate['user_id_updated'] = this.userService.getUserId();
                   updates.push(elementUpdate);
@@ -147,8 +144,8 @@ export class SyncronizationPage {
                   elementCreate['bull_breed'] = elementDetail.bull_breed;
                   elementCreate['type'] = elementDetail.type;
                   elementCreate['gi'] = elementDetail.gi;
-                  elementCreate['gii'] = elementDetail.gii;
-                  elementCreate['giii'] = elementDetail.giii;
+                  elementCreate['gss'] = elementDetail.gss;
+                  elementCreate['gssi'] = elementDetail.gssi;
                   elementCreate['others'] = elementDetail.others;
                   elementCreate['user_id_updated'] = this.userService.getUserId();
                   elementCreate['user_id_created'] = this.userService.getUserId();
@@ -163,21 +160,27 @@ export class SyncronizationPage {
               }
               if (boolAspiration == true && boolDetails == false) {
                 element.aspirationApi.user_id_updated = this.userService.getUserId();
-                _self.contentConsole = _self.contentConsole
-                  + "<h4 style='color: green'>Inicia actualización de la aspiración con orden  "
-                  + order.id + "</h4>";
+                  this.registries.push({
+                    type:'info',
+                    message:"Inicia actualización de la aspiración con orden " + order.id,
+                    time:moment().format('HH:mm:ss')
+                  });
 
                   this.aspirationService.updateOnlyAspiration(element.aspirationApi)
                   .subscribe(({ data }) => {
                     countAspirations = countAspirations + 1;
                     if (data.updateAspiration) {
-                      _self.contentConsole = _self.contentConsole
-                        + "<h4 style='color: green'>Se actualizó correctamente la aspiración con orden "
-                        + order.id + "</h4>";
+                        this.registries.push({
+                          type:'info',
+                          message:"Se actualizó correctamente la aspiración con orden " + order.id,
+                          time:moment().format('HH:mm:ss')
+                        });
                     } else {
-                      _self.contentConsole = _self.contentConsole
-                        + "<h4 style='color: red'>Ocurrió un error actualizando la aspiración con orden "
-                        + order.id + "</h4>";
+                      this.registries.push({
+                        type:'error',
+                        message:"Ocurrió un error actualizando la aspiración con orden " + order.id,
+                        time:moment().format('HH:mm:ss')
+                      });
                     }
                     if (totalAspirations == countAspirations) {
                       this.retriveAgenda();
@@ -187,21 +190,27 @@ export class SyncronizationPage {
                 element.aspirationApi.user_id_updated = this.userService.getUserId();
                 var dataDetails: any = {};
                 dataDetails['details'] = details;
-                _self.contentConsole = _self.contentConsole
-                  + "<h4 style='color: green'>Inicia actualización de los detalles de la aspiración con orden "
-                  + order.id + "</h4>";
+                  this.registries.push({
+                    type:'info',
+                    message:"Inicia actualización de los detalles de la aspiración con orden " + order.id,
+                    time:moment().format('HH:mm:ss')
+                  });
 
                 this.aspirationService.updateAspirationDetails(element.aspirationApi, dataDetails)
                   .subscribe(({ data }) => {
                     countAspirations = countAspirations + 1;
                     if (data.updateAspiration) {
-                      _self.contentConsole = _self.contentConsole
-                        + "<h4 style='color: green'>Se actualizó correctamente los detalles de la aspiración con orden "
-                        + order.id + "</h4>";
+                      this.registries.push({
+                        type:'info',
+                        message:"Se actualizó correctamente los detalles de la aspiración con orden " + order.id,
+                        time:moment().format('HH:mm:ss')
+                      });
                     } else {
-                      _self.contentConsole = _self.contentConsole
-                        + "<h4 style='color: red'>Ocurrio un error actualizando los detalles de la aspiración con orden "
-                        + order.id + "</h4>";
+                      this.registries.push({
+                        type:'error',
+                        message:"Ocurrio un error actualizando los detalles de la aspiración con orden " + order.id,
+                        time:moment().format('HH:mm:ss')
+                      });
                     }
                     if (totalAspirations == countAspirations) {
                       this.retriveAgenda();
@@ -211,21 +220,27 @@ export class SyncronizationPage {
                 element.aspirationApi.user_id_updated = this.userService.getUserId();
                 var dataDetails: any = {};
                 dataDetails['details'] = details;
-                _self.contentConsole = _self.contentConsole
-                  + "<h4 style='color: green'>Inicia actualización de toda la aspiración con orden "
-                  + order.id + "</h4>";
+                this.registries.push({
+                  type:'info',
+                  message:"Inicia actualización de toda la aspiración con orden " + order.id,
+                  time:moment().format('HH:mm:ss')
+                });
 
                 this.aspirationService.updateAllAspiration(element.aspirationApi, dataDetails)
                   .subscribe(({ data }) => {
                     countAspirations = countAspirations + 1;
                     if (data.updateAspiration) {
-                      _self.contentConsole = _self.contentConsole
-                        + "<h4 style='color: green'>Se actualizó correctamente toda la aspiración con orden "
-                        + order.id + "</h4>";
+                      this.registries.push({
+                        type:'info',
+                        message:"Se actualizó correctamente toda la aspiración con orden " + order.id,
+                        time:moment().format('HH:mm:ss')
+                      });
                     } else {
-                      _self.contentConsole = _self.contentConsole
-                        + "<h4 style='color: red'>Ocurrio un error actualizando toda la aspiración con orden "
-                        + order.id + "</h4>";
+                      this.registries.push({
+                        type:'error',
+                        message:"Ocurrio un error actualizando toda la aspiración con orden " + order.id,
+                        time:moment().format('HH:mm:ss')
+                      });
                     }
                     if (totalAspirations == countAspirations) {
                       this.retriveAgenda();
@@ -245,8 +260,11 @@ export class SyncronizationPage {
   }
 
   async retriveAgenda() {
-    this.contentConsole = this.contentConsole
-      + "<h4 style='color: green'>Inicia descarga de la agenda</h4>";
+      this.registries.push({
+        type : 'info',
+        message : "Inicia descarga de la agenda",
+        time : moment().format('HH:mm:ss')
+      });
 
     this.ordersService.getDetailsApiQuery().then(detailsApi => {
       this.loading.dismiss();
@@ -254,10 +272,21 @@ export class SyncronizationPage {
       //_self.router.navigate(['tabs/agenda', {
       //  message: "Sincronización realizada exitosamente!!"
       //}]);
-      this.contentConsole = this.contentConsole + "<h4 style='color: green'>La descarga de la agenda se ejecutó correctamente</h2>";
+      this.registries.push({
+        type : 'info',
+        message : "La descarga de la agenda se ejecutó correctamente",
+        time : moment().format('HH:mm:ss'),
+        show : false,
+        details : ["Se ejecuta correctamente la descarga de la agenda"]
+      });
     }).catch(error => {
       this.loading.dismiss();
-      this.contentConsole = this.contentConsole + "<h4 style='color: red'>La descarga de la agenda falló</h2>";
+      this.registries.push({
+        type:'error',
+        message:"La descarga de la agenda falló",
+        show : false,
+        time:moment().format('HH:mm:ss')
+      });
       if (typeof error === 'string') {
         this.showMessage(error);
       }
@@ -272,6 +301,14 @@ export class SyncronizationPage {
       duration: 2000
     });
     toast.present();
+  }
+
+  isDeploy(registry : any) {
+    return registry.show;
+  }
+
+  deploy(registry : any) {
+    registry.show = !registry.show;
   }
 
 }
