@@ -7,7 +7,9 @@
 
     <ion-buttons slot="end">
       <ion-menu-button (click)="saveItem()">
-        <ion-icon color="primary" [ngClass]="{'save-button-disabled':!validations_form.valid,'save-button': validations_form.valid}"  name="save"></ion-icon>
+        <ion-icon color="primary"
+          [ngClass]="{'save-button-disabled':!validation_form.valid,'save-button': validation_form.valid}"
+          name="save"></ion-icon>
       </ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
@@ -16,7 +18,7 @@
 <ion-content>
   <ion-list>
     <ion-item>
-      <form class="form-detail" [formGroup]="validations_form">
+      <form class="form-detail" [formGroup]="validation_form">
         <ion-grid>
           <ion-row>
             <ion-col>
@@ -37,14 +39,26 @@
           </ion-row>
           <ion-row>
             <ion-col col-6>
-              <ion-input type="text" formControlName="donor" [ngClass]="{ 'is-invalid': submitted && f.donor.errors }"
-                [(ngModel)]="dataItem.donor"></ion-input>
-              <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
-                <div *ngIf="f.donor.errors.required">Campo es requerido</div>
+              <ion-input type="text" formControlName="donor" [(ngModel)]="dataItem.donor"></ion-input>
+              <div class="validation-errors">
+                <ng-container *ngFor="let validation of validation_messages.donor">
+                  <div class="error-message" *ngIf="validation_form.get('donor').hasError(validation.type) 
+                      && (validation_form.get('donor').dirty || validation_form.get('donor').touched)">
+                    {{ validation.message }}
+                  </div>
+                </ng-container>
               </div>
             </ion-col>
             <ion-col col-6>
               <ion-input formControlName="donor_breed" [(ngModel)]="dataItem.donor_breed"></ion-input>
+              <div class="validation-errors">
+                <ng-container *ngFor="let validation of validation_messages.donor_breed">
+                  <div class="error-message" *ngIf="validation_form.get('donor_breed').hasError(validation.type) 
+                    && (validation_form.get('donor_breed').dirty || validation_form.get('donor_breed').touched)">
+                    {{ validation.message }}
+                  </div>
+                </ng-container>
+              </div>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -61,10 +75,18 @@
           <ion-row>
             <ion-col col-4>
               <ion-select style="max-width: 100%;" placeholder="Local" [(ngModel)]="dataItem.local_id"
-                formControlName="local">
+                formControlName="local_id">
                 <ion-select-option *ngFor="let local of aspiration.locals" [value]="local.id">{{local.name}}
                 </ion-select-option>
               </ion-select>
+              <div class="validation-errors">
+                <ng-container *ngFor="let validation of validation_messages.local_id">
+                  <div class="error-message" *ngIf="validation_form.get('local_id').hasError(validation.type) 
+                    && (validation_form.get('local_id').dirty || validation_form.get('local_id').touched)">
+                    {{ validation.message }}
+                  </div>
+                </ng-container>
+              </div>
             </ion-col>
             <ion-col col-4>
               <ion-select style="max-width: 100%;" formControlName="type" placeholder="Tipo"
@@ -72,6 +94,14 @@
                 <ion-select-option value="Leche">Leche</ion-select-option>
                 <ion-select-option value="Carne">Carne</ion-select-option>
               </ion-select>
+              <div class="validation-errors">
+                <ng-container *ngFor="let validation of validation_messages.type">
+                  <div class="error-message" *ngIf="validation_form.get('type').hasError(validation.type) 
+                    && (validation_form.get('type').dirty || validation_form.get('type').touched)">
+                    {{ validation.message }}
+                  </div>
+                </ng-container>
+              </div>
             </ion-col>
             <ion-col col-4>
               <ion-item>
@@ -79,6 +109,14 @@
                   displayFormat="hh:mmA" pickerFormat="hh:mmA" cancelText="Cancelar" doneText="Aceptar"
                   (ionChange)="onChangeDatetime(datetimePicker.value)">
                 </ion-datetime>
+                <div class="validation-errors">
+                  <ng-container *ngFor="let validation of validation_messages.arrived_time">
+                    <div class="error-message" *ngIf="validation_form.get('arrived_time').hasError(validation.type) 
+                      && (validation_form.get('arrived_time').dirty || validation_form.get('arrived_time').touched)">
+                      {{ validation.message }}
+                    </div>
+                  </ng-container>
+                </div>
               </ion-item>
             </ion-col>
           </ion-row>
@@ -115,15 +153,47 @@
           <ion-row>
             <ion-col col-3>
               <ion-input type="number" formControlName="gi" [(ngModel)]="dataItem.gi"></ion-input>
+              <div class="validation-errors">
+                <ng-container *ngFor="let validation of validation_messages.gi">
+                  <div class="error-message" *ngIf="validation_form.get('gi').hasError(validation.type) 
+                    && (validation_form.get('gi').dirty || validation_form.get('gi').touched)">
+                    {{ validation.message }}
+                  </div>
+                </ng-container>
+              </div>
             </ion-col>
             <ion-col col-3>
               <ion-input type="number" formControlName="gii" [(ngModel)]="dataItem.gii"></ion-input>
+              <div class="validation-errors">
+                <ng-container *ngFor="let validation of validation_messages.gii">
+                  <div class="error-message" *ngIf="validation_form.get('gii').hasError(validation.type) 
+                    && (validation_form.get('gii').dirty || validation_form.get('gii').touched)">
+                    {{ validation.message }}
+                  </div>
+                </ng-container>
+              </div>
             </ion-col>
             <ion-col col-3>
               <ion-input type="number" formControlName="giii" [(ngModel)]="dataItem.giii"></ion-input>
+              <div class="validation-errors">
+                <ng-container *ngFor="let validation of validation_messages.gii">
+                  <div class="error-message" *ngIf="validation_form.get('gii').hasError(validation.type) 
+                    && (validation_form.get('gii').dirty || validation_form.get('gii').touched)">
+                    {{ validation.message }}
+                  </div>
+                </ng-container>
+              </div>
             </ion-col>
             <ion-col col-3>
               <ion-input type="number" formControlName="others" [(ngModel)]="dataItem.others"></ion-input>
+              <div class="validation-errors">
+                <ng-container *ngFor="let validation of validation_messages.others">
+                  <div class="error-message" *ngIf="validation_form.get('others').hasError(validation.type) 
+                    && (validation_form.get('others').dirty || validation_form.get('others').touched)">
+                    {{ validation.message }}
+                  </div>
+                </ng-container>
+              </div>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -136,10 +206,10 @@
           </ion-row>
           <ion-row>
             <ion-col col-6 class="text-readonly">
-              <label>{{dataItem.gi + dataItem.gii + dataItem.giii + 0 }}</label>
+              <label>{{dataItem.gi + dataItem.gii + dataItem.giii || 0 }}</label>
             </ion-col>
             <ion-col col-6 class="text-readonly">
-              <label>{{dataItem.gi + dataItem.gii + dataItem.giii + dataItem.others + 0 }}</label>
+              <label>{{dataItem.gi + dataItem.gii + dataItem.giii + dataItem.others || 0 }}</label>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -150,22 +220,20 @@
         <ion-row>
           <ion-col>
             <ion-button fill="outline" class="fab-button"
-              [disabled]="indx===0 || (action === 'update' && !validations_form.valid) " (click)="backItem()">
+              [disabled]="indx===0 || (action === 'update' && !validation_form.valid) " (click)="backItemButton()">
               <ion-icon name="arrow-dropleft-circle"></ion-icon>
             </ion-button>
           </ion-col>
           <ion-col>
           </ion-col>
           <ion-col>
-            <ion-button fill="outline" class="fab-button" [disabled]="!validations_form.valid" (click)="nextItem()">
+            <ion-button fill="outline" class="fab-button" [disabled]="!validation_form.valid"
+              (click)="nextItemButton()">
               <ion-icon name="arrow-dropright-circle"></ion-icon>
             </ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
-
     </ion-item>
-  </ion-list>>
-
-
+  </ion-list>
 </ion-content>

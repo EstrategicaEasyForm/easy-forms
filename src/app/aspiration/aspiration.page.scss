@@ -39,6 +39,8 @@
 .text-readonly {
     border: solid 1px black;
     background-color: lightgrey;
+    min-height: 40px;
+    padding-top: 10px;
 }
 ion-col {
     margin: 0 8px;

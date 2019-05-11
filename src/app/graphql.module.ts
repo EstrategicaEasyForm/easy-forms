@@ -5,10 +5,12 @@ import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { onError } from 'apollo-link-error';
 import { HttpHeaders } from '@angular/common/http';
-import { ToastController } from '@ionic/angular';
+import { ToastController, Events } from '@ionic/angular';
 import { UsersService } from './users.service';
+import * as moment from 'moment-timezone';
 
-const uri = 'http://tester.estrategicacomunicaciones.com/graphql'; // <-- add the URL of the GraphQL server here
+// <-- The URL of the GraphQL server 
+const uri = 'http://tester.estrategicacomunicaciones.com/graphql';
 
 @NgModule({
   exports: [ApolloModule, HttpLinkModule],
@@ -20,7 +22,8 @@ export class GraphQLModule {
     public apollo: Apollo,
     public httpLink: HttpLink,
     public toastCtrl: ToastController,
-    public usersService: UsersService) {
+    public usersService: UsersService,
+    public events: Events) {
 
     const http = httpLink.create({ uri });
 
@@ -35,10 +38,15 @@ export class GraphQLModule {
       return {};
     });
     const linkError = onError(({ graphQLErrors, networkError }) => {
-      let toast = this.toastCtrl.create({
-        message: 'No se puede consultar el servicio',
-        duration: 2000
-      });
+      // const toast = this.toastCtrl.create({
+      //   message: 'No se puede consultar el servicio',
+      //   duration: 2000
+      // });
+      
+      const message = 'graphQLErrors';
+      // GraphQl error event	     
+      this.events.publish('graphql:error',{
+        type:'info',message:"Mensaje informativo",time:moment().format('HH:mm')});
     });
 
     apollo.create({

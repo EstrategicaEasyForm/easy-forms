@@ -263,14 +263,14 @@ export class OrdersService {
 
   /* Detail Api Param */
 
-  detailApi: any;
+  dataParam: any;
 
-  setDetailApiParam(detailApi) {
-    this.detailApi = detailApi;
+  setDetailApiParam(dataParam) {
+    this.dataParam = dataParam;
   }
 
   getDetailApiParam() {
-    return this.detailApi;
+    return this.dataParam;
   }
 
 }

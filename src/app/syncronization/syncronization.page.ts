@@ -7,6 +7,7 @@ import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-n
 import { UsersService } from '../users.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AspirationService } from './aspiration.services';
+import * as moment from 'moment-timezone';
 
 @Component({
   selector: 'app-syncronization',
@@ -17,6 +18,7 @@ export class SyncronizationPage {
 
   loading: any;
   contentConsole: string = "";
+  registries: any = [];
 
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
   constructor(
@@ -28,6 +30,10 @@ export class SyncronizationPage {
     public alertController: AlertController,
     private sanitizer: DomSanitizer,
     private aspirationService: AspirationService) {
+      
+      this.registries.push({type:'info',message:"Mensaje informativo",time:moment().format('HH:mm')});
+      this.registries.push({type:'warning',message:"Mensaje alerta",time:moment().format('HH:mm')});
+      this.registries.push({type:'error',message:"Mensaje de error",time:moment().format('HH:mm')});
 
   }
 

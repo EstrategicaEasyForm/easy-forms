@@ -6,7 +6,8 @@
     <ion-buttons slot="end">
       <ion-menu-button autoHide="false" (click)="onSaveButton()">
         <ion-icon color="primary"
-          [ngClass]="{'save-button-disabled': (!validation_form_order.valid), 'save-button': (validation_form_order.valid  ) }"
+          [ngClass]="{'save-button-disabled': (!validation_form_order.valid || !validation_form_general.valid), 
+                      'save-button': (validation_form_order.valid && validation_form_general.valid  ) }"
           name="save"></ion-icon>
       </ion-menu-button>
     </ion-buttons>
