@@ -147,7 +147,8 @@ export class AspirationPage implements OnInit {
   openPdfViewer() {
     this.ordersService.setDetailApiParam({
       aspiration: this.aspiration,
-      order: this.order
+      order: this.order,
+	  local: this.detailItem.local
     });
     this.router.navigate(['pdf-viewer-aspiration']);
   }
