@@ -33,7 +33,14 @@
 .swiper-zoom-container {
     height: 100%;
 }
+ion-select {
+    border: solid 1px black;
+}
 .border-input {
+    border: solid 1px black;
+}
+ion-datetime {
+    width: 100%;
     border: solid 1px black;
 }
 .text-readonly {
