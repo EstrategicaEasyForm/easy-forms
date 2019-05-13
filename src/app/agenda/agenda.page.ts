@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingController, ToastController, IonContent } from '@ionic/angular';
+import { LoadingController, ToastController, IonContent, Events } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { OrdersService } from '../orders.service';
 import { UsersService } from '../users.service';
@@ -19,6 +19,7 @@ export class AgendaPage implements OnInit {
   userId: any;
   filter: any;
   templates = [];
+  newAgenda: boolean = false;
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
   @ViewChild('ion-content') public ionContent: IonContent;
 
@@ -27,18 +28,23 @@ export class AgendaPage implements OnInit {
     public router: Router,
     public usersService: UsersService,
     public loadingCtrl: LoadingController,
-    public toastCtrl: ToastController) {
-    this.resetFilter();
+    public toastCtrl: ToastController,
+    public events: Events) {
+
+    this.initFilters();
+    this.events.subscribe('sync:finish', (registry) => {
+      this.newAgenda = true;
+    });
   }
 
   async ngOnInit() {
     this.usersService.getUserAuthToken().then((userAuth) => {
       this.userId = "" + userAuth.id_user;
-      this.retrivedetailsApi();
+      this.retriveDetailsApi();
     });
   }
 
-  async retrivedetailsApi() {
+  async retriveDetailsApi() {
     const loading = await this.loadingCtrl.create({
       message: 'Por favor espere'
     });
@@ -49,14 +55,14 @@ export class AgendaPage implements OnInit {
         if (ordersList) {
           loading.dismiss();
           this.detailsApiOriginal = this.setTemplateToDetail(ordersList);
-          this.filterItems('');
+          this.initFilters();
         }
         else {
           this.ordersService.getDetailsApiQuery().then((data: any) => {
             loading.dismiss();
             this.ordersService.setDetailsApiStorage(data);
             this.detailsApiOriginal = this.setTemplateToDetail(data);
-            this.filterItems('');
+            this.initFilters();
           }).catch(error => {
             loading.dismiss();
             if (typeof error === 'string') {
@@ -149,7 +155,7 @@ export class AgendaPage implements OnInit {
         this.filter.dayStr = this.formatFilterDate(datetime);
         break;
     }
-    this.filterItems('');
+    this.onItemFilter();
   }
 
   forwardDay() {
@@ -169,7 +175,7 @@ export class AgendaPage implements OnInit {
         this.filter.dayStr = this.formatFilterDate(datetime);
         break;
     }
-    this.filterItems('');
+    this.onItemFilter();
   }
 
   formatFilterDate(datetime) {
@@ -189,30 +195,37 @@ export class AgendaPage implements OnInit {
     return date + ' ' + mount[datetime.month()];
   }
 
-  async filterItems(filter) {
-    if(filter !=='orderId' && filter !== 'refreshDetails') {
-      const loading = await this.loadingCtrl.create({
-        message: 'Por favor espere',
-        duration: 100
-      });
-      await loading.present();
-    }
-  
+  async onItemFilter() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere',
+      duration: 100
+    });
+    await loading.present();
+
+    this.filterItems();
+  }
+
+  async onResetFilter() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere',
+      duration: 100
+    });
+    await loading.present();
+
+    this.filterItems();
+  }
+
+  filterItems() {
     this.detailsApi = this.detailsApiOriginal.filter((detailApi) => {
-      return this.filterOrderId(detailApi.order) && 
+      return this.filterOrderId(detailApi.order) &&
         this.filterDateTime(detailApi.agenda) &&
         this.filterEmployer(detailApi.agenda) &&
         this.filterTemplate(detailApi.templateType)
     });
   }
 
-  refreshDetailsOriginal(ordersList){
-    this.detailsApiOriginal = this.setTemplateToDetail(ordersList);
-          this.filterItems('refreshDetails');
-  }
-
-  filterOrderId(order){
-    if(!this.filter.orderId) return true;
+  filterOrderId(order) {
+    if (!this.filter.orderId) return true;
     return order.id === this.filter.orderId
   }
 
@@ -247,8 +260,8 @@ export class AgendaPage implements OnInit {
     return false;
   }
 
+  initFilters() {
 
-  templatesFilter() {
     this.templates = [
       {
         "id": "1",
@@ -281,24 +294,19 @@ export class AgendaPage implements OnInit {
       },
       {
         "id": "6",
-        "name": "Diagnóstico 2",
-        "icon": ['fas', 'stethoscope'],
-        "style": "color: blue;",
-        "check": true
-      },
-      {
-        "id": "7",
         "name": "Sexaje",
         "icon": ['fas', 'random'],
         "style": "color: red;",
         "check": true
+      },
+      {
+        "id": "7",
+        "name": "Entrega",
+        "icon": ['fas', 'stethoscope'],
+        "style": "color: blue;",
+        "check": true
       }
     ];
-  }
-
-  resetFilter() {
-
-    this.templatesFilter();
 
     this.filter = {
       allDays: true,
@@ -309,13 +317,13 @@ export class AgendaPage implements OnInit {
       allTemplates: true,
       orderId: null
     };
-    this.filterItems('');
+    this.filterItems();
   }
 
   updateDateTime() {
     const datetime = moment(this.filter.datetime);
     this.filter.dayStr = this.formatFilterDate(datetime);
-    this.filterItems('');
+    this.onItemFilter();
   }
 
   async showMessage(message: string) {
@@ -359,7 +367,15 @@ export class AgendaPage implements OnInit {
 
   detailApiRefresh(detailsApi) {
     this.detailsApiOriginal = detailsApi;
-    this.filterItems('');
+    this.filterItems();
+  }
+
+  ionViewWillEnter() {
+    if (this.newAgenda) {
+      //let reload the ordersList data after sync finish event
+      this.retriveDetailsApi();
+      this.newAgenda = false;
+    }
   }
 
   async wait(ms) {

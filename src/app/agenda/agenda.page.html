@@ -9,11 +9,11 @@
       <ion-list>
         <ion-item>
           <ion-label>Sólo mis agendas</ion-label>
-          <ion-toggle item-end [(ngModel)]="filter.mySelf" (ngModelChange)="filterItems()"></ion-toggle>
+          <ion-toggle item-end [(ngModel)]="filter.mySelf" (ngModelChange)="onItemFilter()"></ion-toggle>
         </ion-item>
         <ion-item>
           <ion-label>Todos los dias</ion-label>
-          <ion-toggle item-end [(ngModel)]="filter.allDays" (ngModelChange)="filterItems()"></ion-toggle>
+          <ion-toggle item-end [(ngModel)]="filter.allDays" (ngModelChange)="onItemFilter()"></ion-toggle>
         </ion-item>
         <ion-item *ngIf="!filter.allDays">
           <ion-icon name="calendar"></ion-icon>
@@ -25,23 +25,23 @@
         </ion-item>
         <ion-item>
           <ion-label>Todas las plantillas</ion-label>
-          <ion-toggle item-end [(ngModel)]="filter.allTemplates" (ngModelChange)="filterItems()"></ion-toggle>
+          <ion-toggle item-end [(ngModel)]="filter.allTemplates" (ngModelChange)="onItemFilter()"></ion-toggle>
         </ion-item>
         <div *ngIf="!filter.allTemplates">
           <ion-item *ngFor="let template of templates">
             <fa-icon [icon]="template.icon" item-start></fa-icon>
             <ion-label> &nbsp; {{template.name}}</ion-label>
-            <ion-checkbox item-end checked="true" [(ngModel)]="template.check" (ngModelChange)="filterItems()">
+            <ion-checkbox item-end checked="true" [(ngModel)]="template.check" (ngModelChange)="onItemFilter()">
             </ion-checkbox>
           </ion-item>
         </div>
         <ion-item>
             <ion-label>Código de orden </ion-label>
-            <ion-searchbar item-end placeholder="Orden" [(ngModel)]="filter.orderId" (ionChange)="filterItems('orderId')"></ion-searchbar>
+            <ion-searchbar item-end placeholder="Orden" [(ngModel)]="filter.orderId" (ionChange)="filterItems()"></ion-searchbar>
           </ion-item>
         <ion-item>
           <ion-button class="ion-padding reset-filters" expand="full" fill="outline" shape="round"
-            (click)="resetFilter()">
+            (click)="onResetFilter()">
             &nbsp; Reestablecer Filtros
           </ion-button>
         </ion-item>

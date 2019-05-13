@@ -80,7 +80,7 @@ query orders {
         }
         details {
           id
-          local_id 
+          local_id
           donor
           donor_breed
           arrived_time
@@ -146,9 +146,31 @@ query orders {
       }
       sexageApi {
         id
+        order_detail_id
+        received_by
+        identification_number
+        comments
+        details {
+          id
+          sexage_id
+          diagnostic_detail_id
+          sex
+        }
       }
       deliveryApi {
         id
+        order_detail_id
+        received_by
+        identification_number
+        comments
+        state
+        date
+        details {
+          id
+          delivery_id
+          sexage_detail_id
+          dx2
+        }
       }
     }
     agenda {

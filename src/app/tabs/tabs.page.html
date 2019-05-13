@@ -1,12 +1,10 @@
 <ion-tabs>
 
   <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="agenda">
-      <ion-fab vertical="top" horizontal="end" slot="fixed">
-        <ion-badge color="danger">!</ion-badge>
-      </ion-fab>
+    <ion-tab-button tab="agenda" (click)="newAgenda=false">
       <ion-icon name="paper"></ion-icon>
       <ion-label>Agenda</ion-label>
+      <ion-badge *ngIf="newAgenda" color="danger">!</ion-badge>
     </ion-tab-button>
 
     <ion-tab-button tab="sync">
