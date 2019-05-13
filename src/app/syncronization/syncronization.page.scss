@@ -18,13 +18,16 @@
     max-width: 20% !important;
 }
 .item-accordion {
-    line-height: 38px;
+    height: auto;
+    width : 100%;
     padding-top: 0;
     padding-bottom: 0;
-    transition: 0.5s all linear;
+    transition: all 0.4s ease-out;
   }
 .item-accordion.ng-hide {
-    line-height: 0px;
+    height: 0px;
+    width : 100%;
+    transition: all 0.4s ease-out;
 }
 .item-accordion.ng-hide-add,
 .item-accordion.ng-hide-remove {

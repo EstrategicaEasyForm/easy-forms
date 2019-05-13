@@ -277,7 +277,10 @@ export class SyncronizationPage {
         message : "La descarga de la agenda se ejecutó correctamente",
         time : moment().format('HH:mm:ss'),
         show : false,
-        details : ["Se ejecuta correctamente la descarga de la agenda"]
+        details : [
+          "Se ejecuta correctamente la descarga de la agenda",
+          "Se ejecuta correctamente la descarga de la agenda 2"
+        ]
       });
     }).catch(error => {
       this.loading.dismiss();
