@@ -378,6 +378,11 @@ export class AgendaPage implements OnInit {
     }
   }
 
+  refreshDetailsOriginal(ordersList) {
+    this.detailsApiOriginal = this.setTemplateToDetail(ordersList);
+    this.filterItems();
+  }
+
   async wait(ms) {
     return new Promise(resolve => {
       setTimeout(resolve, ms);

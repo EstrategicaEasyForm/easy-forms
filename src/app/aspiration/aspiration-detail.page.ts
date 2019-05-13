@@ -83,14 +83,14 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
   }
 
   updateItem(detailId) {
-      this.indx = detailId;
-      this.dataItem = this.detailsList[this.indx];
-      this.action = 'update';
-      this.newRegistry = false;
-      //create a copy of the object
-      this.dataItemOri = Object.assign({}, this.dataItem);
-      //initialize the form
-      if(!this.validation_form) {
+    this.indx = detailId;
+    this.dataItem = this.detailsList[this.indx];
+    this.action = 'update';
+    this.newRegistry = false;
+    //create a copy of the object
+    this.dataItemOri = Object.assign({}, this.dataItem);
+    //initialize the form
+    if (!this.validation_form) {
       this.validation_form = this.formBuilder.group({
         donor: [this.dataItem.donor, Validators.required],
         donor_breed: [this.dataItem.donor_breed, Validators.required],
@@ -229,10 +229,10 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
   }
 
   ionViewWillLeave() {
-    if(this.dataItemOri)
-    if (!this.equalsDetailsAspiration(this.dataItemOri, this.dataItem)) {
-      this.dataItem = this.dataItemOri;
-    }
+    if (this.dataItemOri)
+      if (!this.equalsDetailsAspiration(this.dataItemOri, this.dataItem)) {
+        this.dataItem = this.dataItemOri;
+      }
   }
 
   equalsDetailsAspiration(dataObjOri: any, dataItem: any) {
@@ -260,6 +260,16 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
 
   onChangeDatetime($datetime) {
     this.dataItem.arrived_time = moment($datetime).format('hh:mmA');
+  }
+
+  onChangeLocal($localId) {
+    if (this.aspiration.locals) {
+      for (let local of this.aspiration.locals) {
+        if (local.id === $localId) {
+          this.dataItem.local = local;
+        }
+      }
+    }
   }
 
   closeDetail() {
