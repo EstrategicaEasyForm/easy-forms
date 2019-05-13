@@ -272,4 +272,14 @@ export class AspirationPage implements OnInit {
     });
     toast.present();
   }
+  
+  async setControlPanel(mbControlPanel) {
+	this.mbControlPanel = mbControlPanel;
+	const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere',
+	  duration: 200
+    });
+    await loading.present();
+  }
+  
 }

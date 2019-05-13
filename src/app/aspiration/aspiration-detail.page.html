@@ -6,11 +6,9 @@
     <ion-title>PLANTILLA DE ASPIRACION FOLICULAR</ion-title>
 
     <ion-buttons slot="end">
-      <ion-menu-button (click)="saveItem()">
-        <ion-icon color="primary"
-          [ngClass]="{'save-button-disabled':!validation_form.valid,'save-button': validation_form.valid}"
-          name="save"></ion-icon>
-      </ion-menu-button>
+      <ion-button class="save-button" (click)="saveItem()" [disabled]="!validation_form.valid">
+        <ion-icon color="primary" name="save"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -18,7 +16,7 @@
 <ion-content>
   <ion-list>
     <ion-item>
-      <form class="form-detail" [formGroup]="validation_form">
+      <form class="panel-center" [formGroup]="validation_form">
         <ion-grid>
           <ion-row>
             <ion-col>

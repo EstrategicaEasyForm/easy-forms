@@ -4,12 +4,9 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-menu-button autoHide="false" (click)="onSaveButton()">
-        <ion-icon color="primary"
-          [ngClass]="{'save-button-disabled': (!validation_form_order.valid || !validation_form_general.valid), 
-                      'save-button': (validation_form_order.valid && validation_form_general.valid  ) }"
-          name="save"></ion-icon>
-      </ion-menu-button>
+      <ion-button autoHide="false" (click)="onSaveButton()" class="save-button">
+        <ion-icon color="primary" name="save"></ion-icon>
+      </ion-button>
     </ion-buttons>
     <ion-title>PLANTILLA DE ASPIRACIÓN FOLICULAR</ion-title>
   </ion-toolbar>
@@ -21,16 +18,16 @@
     <ion-item>
       <ion-grid>
         <ion-row>
-          <ion-col (click)="mbControlPanel=1"
-            [ngClass]="{'button-panel-enabled': mbControlPanel === 1, 'button-panel-disabled': mbControlPanel !== 1 }">
+          <ion-col (click)="setControlPanel(1)" 
+			[ngClass]="{'button-panel-enabled': mbControlPanel === 1, 'button-panel-disabled': mbControlPanel !== 1 }">
             1. Orden
           </ion-col>
-          <ion-col (click)="mbControlPanel=2"
+          <ion-col (click)="setControlPanel(2)"
             [ngClass]="{'button-panel-enabled': mbControlPanel === 2, 'button-panel-disabled': mbControlPanel !== 2 }">
             2. Plantilla
           </ion-col>
-          <ion-col (click)="mbControlPanel=3"
-            [ngClass]="{ 'button-panel-enabled': mbControlPanel === 3, 'button-panel-disabled': mbControlPanel !== 3 }">
+          <ion-col (click)="setControlPanel(3)"
+            [ngClass]="{'button-panel-enabled': mbControlPanel === 3, 'button-panel-disabled': mbControlPanel !== 3 }">
             3. General
           </ion-col>
         </ion-row>
@@ -40,7 +37,7 @@
       <form [formGroup]="validation_form_order">
         <ion-card>
           <ion-card-header class="ibox-title">
-            <h5 class="white-color">Orden de Producción</h5>
+            <h5>Orden de Producción</h5>
           </ion-card-header>
           <ion-card-content>
             <ion-grid>
@@ -168,7 +165,7 @@
         <ion-item class="card-page-2">
           <ion-card>
             <ion-card-header class="ibox-title">
-              <h5 class="white-color">Plantilla Aspiración Folicular</h5>
+              <h5>Plantilla Aspiración Folicular</h5>
             </ion-card-header>
             <ion-card-content>
               <ion-list>
@@ -282,7 +279,7 @@
           <ion-item>
             <ion-card>
               <ion-card-header class="ibox-title">
-                <h5 class="white-color">Datos Generales</h5>
+                <h5>Datos Generales</h5>
               </ion-card-header>
               <ion-card-content>
                 <ion-grid>
@@ -422,7 +419,8 @@
                     </ion-col>
                     <ion-col size="6">
                       <div class="button-finalize">
-                        <ion-button expand="full" color="success-shade" (click)="presentAlertConfirm()">
+                        <ion-button [disabled]="!validation_form_order.valid || !validation_form_general.valid" expand="full" 
+						color="success-shade" (click)="presentAlertConfirm()">
                           Finalizar Aspiración
                         </ion-button>
                       </div>

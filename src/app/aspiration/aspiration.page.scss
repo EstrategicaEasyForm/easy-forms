@@ -1,37 +1,14 @@
-.slide-zoom {
-    height: 100%;
-}
-.title-icon {
-    font-size: 25px;
-	margin-left: 10px;
-	color: dimgrey
-}
-.label-md {
-    margin: 6px 8px 6px 0 !important;
-}
-.white-color {
-    color: white;
-}
-.add-button {
-    height: 3.3rem;
-	background-color: #1AB394;
-	margin-top: 20px;
-	margin-bottom: 10px;
-}
 .ibox-title {
     background-color: #1AB394;
     border-color: #e7eaec;
     border-image: none;
     border-style: solid solid none;
     border-width: 2px 0 0;
-    color: inherit;
+    color: white;
     margin-bottom: 0;
     padding: 5px 7px 2px;
     text-align: center;
     text-transform: uppercase;
-}
-.swiper-zoom-container {
-    height: 100%;
 }
 ion-select {
     border: solid 1px black;
@@ -129,6 +106,9 @@ ion-input {
     ion-card-content {
         padding: 0;
     }
+	.detail-table-header {
+		font-weight: bold;
+	}
     .detail-id {
         flex: 0 0 calc(calc(0.5 / var(--ion-grid-columns, 12)) * 100%);
     }
@@ -178,13 +158,25 @@ ion-input {
 .button-panel-enabled {
     color: white;
     font-weight: bold;
-    background-color:#1AB394;
+    background-color:#1ABB9C;
     text-align: center;
     padding-top: 12px;
     height: 45px;
     ion-button {
         border: none;
     }
+	&:after {
+		content: " ";
+		width: 0;
+		position: absolute;
+		left: 100%;
+		top: 0;
+		margin: 0;
+		pointer-events: none;
+		border-top: 14px solid transparent;
+		border-bottom: 14px solid transparent;
+		border-left: 11px solid #1ABB9C;
+	}
 }
 .button-panel-disabled {
     color: white;
@@ -196,6 +188,18 @@ ion-input {
     ion-button {
         border: none;
     }
+	&:after {
+		content: " ";
+		width: 0;
+		position: absolute;
+		left: 100%;
+		top: 0;
+		margin: 0;
+		pointer-events: none;
+		border-top: 14px solid transparent;
+		border-bottom: 14px solid transparent;
+		border-left: 11px solid #6fd1bd;
+	}
 }
 .button-finalize {
     min-height: 147px;
@@ -206,41 +210,13 @@ ion-input {
         background-color: #1AB394!important;
     }
 }
-.detail-table-header {
-    font-weight: bold;
-}
-.close-button {
-    font-size: 37px;
-}
 .save-button {
-    font-size: 37px;
-    margin-top: -2px;
-}
-.save-button-disabled {
-    opacity: 0.5;
-    font-size: 37px;
-    margin-top: -2px;
-}
-.save-button-page {
-    width: 90px;
-    height: 68px;
-    font-size: 34px;
-    margin-left: 10px;
-}
-.logo-icon-small {
-    width: 87px;
-    height: auto;
-    padding: 0;
-    margin-left: 10px;
-}
-.close-button {
-    width: 87px;
-    height: auto;
-}
-.form-detail {
-    margin-left: auto;
-    margin-right: auto;
+    font-size: 30px;
 }
 .grade-celsius {
     margin-left: -10px;
+}
+.panel-center {
+	margin-left: auto;
+    margin-right: auto;
 }
