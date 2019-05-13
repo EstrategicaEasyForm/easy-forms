@@ -41,19 +41,43 @@ export class PdfViewerAspirationPage {
 		let _self = this;
 		pdfmake.vfs = pdfFonts.pdfMake.vfs;
 		
-			let logoSrc = 'assets/imgs/logoInvitroAlfa_968x576.png';
-			var docDefinition = {
-				content: [{
-					columns: [
-						[{ text: 'BITCOIN', style: 'header' }, { text: 'Cryptocurrency Payment System', style: 'sub_header' }, { text: 'WEBSITE: https://bitcoin.org/', style: 'url' },
-						]]
-				}],
-				styles: {
-					header: {
-						bold: true,
-						fontSize: 20,
-						alignment: 'right'
-					},
+		var aspirationDetails = [];
+		aspirationDetails.push (['Donadora','Raza','Toro','Raza']);
+		
+		for(var i of [this.aspiration.details.length]) {
+			aspirationDetails.push([i.donor, i.donor_breed, i.bull, i.bull_breed]);
+		}
+		
+		let logoSrc = 'assets/imgs/logoInvitroAlfa_968x576.png';
+		var docDefinition = {
+		content:[
+					{
+						image :'assets/imgs/logoInvitroAlfa_968x576.png',
+						fit: [100, 100],
+						alignment: 'left',
+						pageBreak: 'after',	
+						
+					},{	columns:[
+									[
+										{ text: 'BITCOIN', style: 'header' }, 
+										{ text: 'Cryptocurrency Payment System', style: 'sub_header' }, 
+										{ text: 'WEBSITE: https://bitcoin.org/', style: 'url' },
+									]
+								]
+					},{
+						
+						table: {
+							widths: ['*', 100, 200, '*', '*', '*'],
+							body: aspirationDetails
+						}
+					}
+				],
+		styles: {
+					header:	{
+							bold: true,
+							fontSize: 20,
+							alignment: 'right'
+							},
 					sub_header: {
 						fontSize: 18,
 						alignment: 'right'
@@ -66,10 +90,8 @@ export class PdfViewerAspirationPage {
 				pageSize: 'A4',
 				pageOrientation: 'portrait'
 			};
-
-			//if (this.platform.is('cordova')) {
+			
 				try {
-					//stop the loading component
 					console.log('Iniciando carga de archivo');
 					pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {
 						try {
