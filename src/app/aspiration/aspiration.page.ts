@@ -7,7 +7,7 @@ import { SignatureDrawPadPage } from '../signature-draw-pad/signature-draw-pad.p
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { cordova } from '@ionic-native/core';
+import * as moment from 'moment-timezone';
 
 @Component({
   selector: 'app-aspiration',
@@ -23,7 +23,7 @@ export class AspirationPage implements OnInit {
   order: any;
   agenda: any;
   signatureImage: any;
-  showTakePhoto = false;
+  showTakePhoto = true;
   photoImage: any;
   mbControlPanel: number = 1;
 
@@ -93,9 +93,6 @@ export class AspirationPage implements OnInit {
     this.agenda = detail.agenda;
     this.aspiration.arrived_temperature = this.aspiration.arrived_temperature || '';
     this.aspiration.arrived_temperature_number = Number(this.aspiration.arrived_temperature.replace('°C', '').replace(',', '.'));
-    if (cordova && typeof cordova !== 'undefined') {
-      this.showTakePhoto = true;
-    }
 
     this.validation_form_order = this.formBuilder.group({
       medium_opu: [this.aspiration.medium_opu, Validators.required],
@@ -111,6 +108,21 @@ export class AspirationPage implements OnInit {
       identification_number: [this.aspiration.identification_number, Validators.required],
       comments: [this.aspiration.comments, Validators.required]
     });
+
+    for (let detail of this.aspiration.details) {
+      if (detail.arrived_time) {
+        const minute = Number(detail.arrived_time.split(':')[1].substr(0, 2));
+        const pm = detail.arrived_time.split(':')[1].substr(2, 2) === 'PM' ? 12 : 0;
+        const hour = Number(detail.arrived_time.split(':')[0]) + pm;
+        let time = moment().set({ hour: hour, minute: minute });
+        detail.ionDateTime = time.format();
+        detail.arrived_time = time.format('hh:mmA');
+      }
+      detail.gi = Number(detail.gi) || 0;
+      detail.gii = Number(detail.gii) || 0;
+      detail.giii = Number(detail.giii) || 0;
+      detail.others = Number(detail.others) || 0;
+    }
 
   }
 
@@ -147,7 +159,8 @@ export class AspirationPage implements OnInit {
   openPdfViewer() {
     this.ordersService.setDetailApiParam({
       aspiration: this.aspiration,
-      order: this.order
+      order: this.order,
+	  local: this.detailItem.local
     });
     this.router.navigate(['pdf-viewer-aspiration']);
   }
@@ -259,4 +272,14 @@ export class AspirationPage implements OnInit {
     });
     toast.present();
   }
+  
+  async setControlPanel(mbControlPanel) {
+	this.mbControlPanel = mbControlPanel;
+	const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere',
+	  duration: 200
+    });
+    await loading.present();
+  }
+  
 }

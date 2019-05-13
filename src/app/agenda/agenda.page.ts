@@ -301,7 +301,7 @@ export class AgendaPage implements OnInit {
     this.templatesFilter();
 
     this.filter = {
-      allDays: false,
+      allDays: true,
       dayStr: "Hoy",
       datetime: moment().format(),
       mySelf: false,

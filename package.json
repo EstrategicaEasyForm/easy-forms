@@ -64,6 +64,7 @@
     "html2canvas": "^1.0.0-alpha.12",
     "jspdf": "^1.4.1",
     "moment-timezone": "^0.5.25",
+    "pdfmake": "^0.1.56",
     "rxjs": "^6.4.0",
     "zone.js": "~0.8.29"
   },
