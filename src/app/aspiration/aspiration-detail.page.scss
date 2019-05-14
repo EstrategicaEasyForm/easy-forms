@@ -1,0 +1,54 @@
+ion-select {
+    border: solid 1px black;
+}
+ion-input {
+    border: solid 1px black;
+    .native-input {
+        margin-left: 10px;
+    }
+}
+ion-datetime {
+    width: 100%;
+    border: solid 1px black;
+}
+.border-input {
+    border: solid 1px black;
+}
+.text-readonly {
+    border: solid 1px black;
+    background-color: lightgrey;
+    min-height: 40px;
+    padding-top: 10px;
+}
+ion-col {
+    margin: 0 8px;
+}
+ion-textarea{
+    height: 160px;
+}
+.error-message {
+    color:red
+}
+.fab-button {
+    background-color: transparent;
+    color: #488aff !important;
+    font-size: 33px;
+    height: 51px;
+    width: 109px;
+}
+h5 {
+    font-weight: bold;
+    margin-top: 0.6rem;
+}
+.detailsTable {
+    td {
+        width: 10px;
+    }
+}
+.save-button {
+    font-size: 30px;
+}
+.panel-center {
+	margin-left: auto;
+    margin-right: auto;
+}

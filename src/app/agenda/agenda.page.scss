@@ -1,50 +1,62 @@
-.filter-datetime-str {
-    flex: 10px;
-    margin-top: 14px;
+.menu-filters {
+    ion-item {
+        font-size: 23px;
+    }
+    .input-order {
+        font-size: 23px;
+        margin-left: 10px;
+        text-align: right;
+        margin-right: 18px;
+    }
+    .reset-filters {
+        padding-top: 0;
+        margin-bottom: 15px;
+        font-size: 21px;
+        height: 77px;
+        margin-top: 28px;
+    }
+    .filter-datetime-str {
+        flex: 10px;
+        margin-top: 14px;
+    }
+    ion-datetime {
+        border: solid 1px black;
+        min-width: calc(35%);
+    }
+    .filter-datetime {
+        flex: 60px;
+    }
 }
-ion-datetime {
-    border: solid 1px black;
-    min-width: calc(35%);
+.cart-fa {
+    ion-item {
+        font-size: 23px;
+    }
+    .cart-fa-icon {
+        font-size: 38px;
+        margin-left: 10px;
+    }
+    .cart-fa-name {
+        font-size: 2.1rem;
+        margin: -12px 0px 0px 46px;
+    }
+    .card-item-field { 
+        margin-left: 18px;
+    }
+    ion-card-content {
+        margin-top: -31px;
+    }
 }
-.reset-filters {
-    padding-top: 0;
-    margin-bottom: 15px;
-}
-.filter-registry {
+.filter-registry-label {
     margin-top: 17px;
     margin-left: 5px;
     flex: 132px;
 }
-.filter-datetime {
-    flex: 60px;
-}
-.cart-col {
-    flex: 0.1;
-}
-.cart-fa-icon {
-    font-size: 38px;
-    margin-left: 10px;
-}
-.cart-fa-name {
-    font-size: 2.1rem;
-    margin: -12px 0px 0px 46px;
-}
-.card-item-field { 
-    margin-left: 18px;
-}
-ion-card-content {
-    margin-top: -31px;
+.logo-icon {
+    width: 162px;
+    margin-left: 12px;
+    height: auto;
+    padding: 0;
 }
 .filter-button {
     font-size: 30px;
-}
-.logo-icon {
-    width: 308px;
-    height: 177px;
-}
-.logo-icon-small {
-    width: 87px;
-    height: auto;
-    padding: 0;
-    margin-left: 10px;
 }
