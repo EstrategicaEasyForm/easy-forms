@@ -55,14 +55,14 @@ export class AgendaPage implements OnInit {
         if (ordersList) {
           loading.dismiss();
           this.detailsApiOriginal = this.setTemplateToDetail(ordersList);
-          this.initFilters();
+          this.filterItems();
         }
         else {
           this.ordersService.getDetailsApiQuery().then((data: any) => {
             loading.dismiss();
             this.ordersService.setDetailsApiStorage(data);
             this.detailsApiOriginal = this.setTemplateToDetail(data);
-            this.initFilters();
+            this.filterItems();
           }).catch(error => {
             loading.dismiss();
             if (typeof error === 'string') {
@@ -103,6 +103,7 @@ export class AgendaPage implements OnInit {
     }
     return detailsList;
   }
+  
   retriveDetailOrder(templateType: any, detailObjApitemplate: any, order: any, detailsList: any, local: any) {
     const agendas = this.getAgendasDetail(order.agenda, templateType, local);
     let detailObj: any;
@@ -212,6 +213,7 @@ export class AgendaPage implements OnInit {
     });
     await loading.present();
 
+    this.initFilters();
     this.filterItems();
   }
 
@@ -313,11 +315,9 @@ export class AgendaPage implements OnInit {
       dayStr: "Hoy",
       datetime: moment().format(),
       mySelf: false,
-      toggle: false,
-      allTemplates: true,
+      allTemplates: false,
       orderId: null
     };
-    this.filterItems();
   }
 
   updateDateTime() {

@@ -9,7 +9,7 @@ import { AspirationPage } from './aspiration.page';
 @Component({
   selector: 'app-aspiration-detail-page',
   templateUrl: './aspiration-detail.page.html',
-  styleUrls: ['./aspiration.page.scss'],
+  styleUrls: ['./aspiration-detail.page.scss'],
 })
 export class AspirationDetailPage implements OnInit, OnDestroy {
 

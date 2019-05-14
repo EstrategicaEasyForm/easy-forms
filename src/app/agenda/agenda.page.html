@@ -1,5 +1,5 @@
 <ion-split-pane>
-  <ion-menu side="end">
+  <ion-menu side="end" class="menu-filters">
     <ion-header>
       <ion-toolbar>
         <ion-title>Filtros de búsqueda</ion-title>
@@ -23,61 +23,8 @@
             monthNames="Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre"
             monthShortNames="Ene,Feb,Mar,Abr,May,Jun,Jul,Ago,Sep,Oct,Nov,Dic"></ion-datetime>
         </ion-item>
-        <ion-item>
-          <ion-label>Todas las plantillas</ion-label>
-          <ion-toggle item-end [(ngModel)]="filter.allTemplates" (ngModelChange)="onItemFilter()"></ion-toggle>
-        </ion-item>
-        <div *ngIf="!filter.allTemplates">
-          <ion-item *ngFor="let template of templates">
-            <fa-icon [icon]="template.icon" item-start></fa-icon>
-            <ion-label> &nbsp; {{template.name}}</ion-label>
-            <ion-checkbox item-end checked="true" [(ngModel)]="template.check" (ngModelChange)="onItemFilter()">
-            </ion-checkbox>
-          </ion-item>
-        </div>
-        <ion-item>
-            <ion-label>Código de orden </ion-label>
-            <ion-searchbar item-end placeholder="Orden" [(ngModel)]="filter.orderId" (ionChange)="filterItems()"></ion-searchbar>
-          </ion-item>
-        <ion-item>
-          <ion-button class="ion-padding reset-filters" expand="full" fill="outline" shape="round"
-            (click)="onResetFilter()">
-            &nbsp; Reestablecer Filtros
-          </ion-button>
-        </ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-menu>
-
-
-  <ion-router-outlet main>
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="end">
-          <ion-menu-button>
-            <ion-icon color="primary" class="filter-button" name="options"></ion-icon>
-          </ion-menu-button>
-        </ion-buttons>
-        <img class="logo-icon-small ion-padding" src="assets/imgs/logoInvitroAlfa_968x576.png" />
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content>
-      <app-network-notify-banner id="networkNotifyBanner"></app-network-notify-banner>
-      <ion-card>
-        <ion-grid>
-          <ion-row>
-            <ion-col class="filter-registry" col-10>
-              {{detailsApi.length}} item(s) filtrado(s) de {{detailsApiOriginal.length}} encontrado(s)
-            </ion-col>
-            <ion-col col-1 class="filter-all-days">
-              <ion-item>
-                <ion-label>Solo mías</ion-label>
-                <ion-toggle item-end [(ngModel)]="filter.mySelf" (ngModelChange)="filterItems()"></ion-toggle>
-              </ion-item>
-            </ion-col>
-            <ion-col col-1 class="filter-datetime">
-              <ion-grid>
+        <ion-item *ngIf="!filter.allDays">
+            <ion-grid>
                 <ion-row class="ion-text-center">
                   <ion-col>
                     <ion-button [disabled]="filter.allDays" color="primary" (click)="backDay()">
@@ -95,14 +42,67 @@
                   </ion-col>
                 </ion-row>
               </ion-grid>
+        </ion-item>
+        <ion-item>
+          <ion-label>Todas las planillas</ion-label>
+          <ion-toggle item-end [(ngModel)]="filter.allTemplates" (ngModelChange)="onItemFilter()"></ion-toggle>
+        </ion-item>
+        <div *ngIf="!filter.allTemplates">
+          <ion-item *ngFor="let template of templates">
+            <fa-icon [icon]="template.icon" item-start></fa-icon>
+            <ion-label> &nbsp; {{template.name}}</ion-label>
+            <ion-checkbox item-end checked="true" [(ngModel)]="template.check" (ngModelChange)="onItemFilter()">
+            </ion-checkbox>
+          </ion-item>
+        </div>
+        <ion-item>
+            <ion-label>Código de orden</ion-label>
+            <ion-input class="input-order" placeholder="Código" [(ngModel)]="filter.orderId" (ionChange)="filterItems()"></ion-input>
+          </ion-item>
+        <ion-item>
+          <ion-button class="ion-padding reset-filters" expand="full" fill="outline" shape="round"
+            (click)="onResetFilter()">
+            &nbsp; Reestablecer Filtros
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+
+  <ion-router-outlet main>
+    <ion-header>
+      <ion-toolbar classs="header-page">
+        <ion-buttons slot="end">
+          <ion-menu-button>
+            <ion-icon color="primary" class="filter-button" name="options"></ion-icon>
+          </ion-menu-button>
+        </ion-buttons>
+        <img class="logo-icon" src="assets/imgs/logoInvitroAlfa_968x576.png" />
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <app-network-notify-banner id="networkNotifyBanner"></app-network-notify-banner>
+      <ion-card>
+        <ion-grid>
+          <ion-row>
+            <ion-col class="filter-registry-label" col-10>
+              {{detailsApi.length}} item(s) filtrado(s) de {{detailsApiOriginal.length}} encontrado(s)
             </ion-col>
+            <ion-col col-1 class="filter-all-days">
+              <ion-item>
+                <ion-label>Última sincronización</ion-label>
+              </ion-item>
+            </ion-col>
+            
           </ion-row>
         </ion-grid>
       </ion-card>
       <ion-grid>
         <ion-row>
           <ion-col>
-            <ion-card *ngFor="let detailApi of detailsApi" (click)="goToTemplate(detailApi)">
+            <ion-card class="cart-fa" *ngFor="let detailApi of detailsApi" (click)="goToTemplate(detailApi)">
               <ion-fab vertical="top" horizontal="start" slot="fixed">
                 <fa-icon class="cart-fa-icon" [icon]="detailApi.templateType.icon"></fa-icon>
               </ion-fab>
