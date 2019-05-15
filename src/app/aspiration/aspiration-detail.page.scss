@@ -1,33 +1,71 @@
+ion-col {
+    margin: 0 4px;
+}
+.toolbar-button {
+    font-size: 30px;
+}
+ion-item {
+    --highlight-color-invalid: none;
+    --highlight-color-valid: none;
+    font-size: 23px;
+}
 ion-select {
     border: solid 1px black;
+    font-size: 23px;
+}
+ion-label {
+    font-size: 23px!important;
+    max-width: none;
 }
 ion-input {
     border: solid 1px black;
-    .native-input {
-        margin-left: 10px;
-    }
+    font-size: 23px;
+    padding-left: 10px!important;
 }
 ion-datetime {
     width: 100%;
     border: solid 1px black;
 }
-.border-input {
+ion-textarea{
+    height: 160px;
+    font-size: 23px;
     border: solid 1px black;
 }
 .text-readonly {
     border: solid 1px black;
-    background-color: lightgrey;
+    background-color: #e5e5e5;
     min-height: 40px;
     padding-top: 10px;
 }
+.error-message {
+    color:red;
+    font-size: 23px;
+}
+.ibox-title {
+    background-color: #1AB394;
+    border-color: #e7eaec;
+    border-image: none;
+    border-style: solid solid none;
+    border-width: 2px 0 0;
+    color: white;
+    margin-bottom: 0;
+    padding: 5px 7px 2px;
+    text-align: center;
+    text-transform: uppercase;
+    h5 {
+        font-weight: bold;
+        margin-top: 0.6rem;
+        font-size: 27px;
+    }
+}
+.new-detail-button {
+    font-size: 47px;
+    width: 111px;
+    height: 63px;
+    margin-left: 36px;
+}
 ion-col {
     margin: 0 8px;
-}
-ion-textarea{
-    height: 160px;
-}
-.error-message {
-    color:red
 }
 .fab-button {
     background-color: transparent;
@@ -35,18 +73,6 @@ ion-textarea{
     font-size: 33px;
     height: 51px;
     width: 109px;
-}
-h5 {
-    font-weight: bold;
-    margin-top: 0.6rem;
-}
-.detailsTable {
-    td {
-        width: 10px;
-    }
-}
-.save-button {
-    font-size: 30px;
 }
 .panel-center {
 	margin-left: auto;

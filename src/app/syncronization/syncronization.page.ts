@@ -8,6 +8,7 @@ import { UsersService } from '../users.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AspirationService } from './aspiration.services';
 import * as moment from 'moment-timezone';
+import { Events } from '@ionic/angular';
 
 @Component({
   selector: 'app-syncronization',
@@ -28,7 +29,7 @@ export class SyncronizationPage {
     public toastCtrl: ToastController,
     public userService: UsersService,
     public alertController: AlertController,
-    private sanitizer: DomSanitizer,
+    public eventCtrl: Events,
     private aspirationService: AspirationService) {}
 
   ionViewWillEnter() {
@@ -269,6 +270,7 @@ export class SyncronizationPage {
     this.ordersService.getDetailsApiQuery().then(detailsApi => {
       this.loading.dismiss();
       this.ordersService.setDetailsApiStorage(detailsApi);
+      this.eventCtrl.publish('sync:finish');
       //_self.router.navigate(['tabs/agenda', {
       //  message: "Sincronización realizada exitosamente!!"
       //}]);

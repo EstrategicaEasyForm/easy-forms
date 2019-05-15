@@ -18,30 +18,10 @@
         <ion-item *ngIf="!filter.allDays">
           <ion-icon name="calendar"></ion-icon>
           <ion-label> &nbsp; Seleccione el día </ion-label>
-          <ion-datetime [(ngModel)]="filter.datetime" (ngModelChange)="updateDateTime()" displayFormat="DD/MMM"
-            pickerFormat="DD MMMM" cancelText="Cancelar" doneText="Aceptar"
+          <ion-datetime class="datetime" [(ngModel)]="filter.datetime" (ngModelChange)="updateDateTime()"
+            displayFormat="DD/MMM" pickerFormat="DD MMMM" cancelText="Cancelar" doneText="Aceptar"
             monthNames="Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre"
             monthShortNames="Ene,Feb,Mar,Abr,May,Jun,Jul,Ago,Sep,Oct,Nov,Dic"></ion-datetime>
-        </ion-item>
-        <ion-item *ngIf="!filter.allDays">
-            <ion-grid>
-                <ion-row class="ion-text-center">
-                  <ion-col>
-                    <ion-button [disabled]="filter.allDays" color="primary" (click)="backDay()">
-                      <ion-icon name="skip-backward"></ion-icon>
-                    </ion-button>
-                  </ion-col>
-                  <ion-col class="filter-datetime-str">
-                    <ion-label *ngIf="filter.allDays">{{filter.dayStr}}</ion-label>
-                    <ion-label *ngIf="!filter.allDays" color="primary">{{filter.dayStr}}</ion-label>
-                  </ion-col>
-                  <ion-col>
-                    <ion-button [disabled]="filter.allDays" color="primary" (click)="forwardDay()">
-                      <ion-icon name="skip-forward"></ion-icon>
-                    </ion-button>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
         </ion-item>
         <ion-item>
           <ion-label>Todas las planillas</ion-label>
@@ -56,9 +36,10 @@
           </ion-item>
         </div>
         <ion-item>
-            <ion-label>Código de orden</ion-label>
-            <ion-input class="input-order" placeholder="Código" [(ngModel)]="filter.orderId" (ionChange)="filterItems()"></ion-input>
-          </ion-item>
+          <ion-label>Código de orden</ion-label>
+          <ion-input class="input-order" placeholder="Código" [(ngModel)]="filter.orderId" (ionChange)="filterItems()">
+          </ion-input>
+        </ion-item>
         <ion-item>
           <ion-button class="ion-padding reset-filters" expand="full" fill="outline" shape="round"
             (click)="onResetFilter()">
@@ -88,32 +69,59 @@
         <ion-grid>
           <ion-row>
             <ion-col class="filter-registry-label" col-10>
-              {{detailsApi.length}} item(s) filtrado(s) de {{detailsApiOriginal.length}} encontrado(s)
+              <ion-label>
+                {{detailsApi.length}} item(s) filtrado(s) de {{detailsApiOriginal.length}} encontrado(s)
+              </ion-label>
             </ion-col>
-            <ion-col col-1 class="filter-all-days">
-              <ion-item>
-                <ion-label>Última sincronización</ion-label>
+            <ion-col class="filter-all-days">
+              <ion-item *ngIf="!filter.allDays">
+                <ion-grid>
+                  <ion-row class="ion-text-center">
+                    <ion-col>
+                      <ion-button [disabled]="filter.allDays" color="primary" (click)="backDay()">
+                        <ion-icon name="skip-backward"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                    <ion-col class="filter-datetime-str">
+                      <ion-label *ngIf="filter.allDays">{{filter.dayStr}}</ion-label>
+                      <ion-label *ngIf="!filter.allDays" color="primary">{{filter.dayStr}}</ion-label>
+                    </ion-col>
+                    <ion-col>
+                      <ion-button [disabled]="filter.allDays" color="primary" (click)="forwardDay()">
+                        <ion-icon name="skip-forward"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
               </ion-item>
             </ion-col>
-            
           </ion-row>
         </ion-grid>
       </ion-card>
       <ion-grid>
         <ion-row>
           <ion-col>
-            <ion-card class="cart-fa" *ngFor="let detailApi of detailsApi" (click)="goToTemplate(detailApi)">
+            <ion-card class="card-detail" *ngFor="let detailApi of detailsApi" >
               <ion-fab vertical="top" horizontal="start" slot="fixed">
                 <fa-icon class="cart-fa-icon" [icon]="detailApi.templateType.icon"></fa-icon>
               </ion-fab>
               <ion-card-header>
                 <ion-grid>
-                  <ion-row>
+                  <ion-row class="click-card" (click)="goToTemplate(detailApi)">
                     <ion-col size="7">
                       <h2 class="cart-fa-name"> {{detailApi.templateType.name}} </h2>
                     </ion-col>
                     <ion-col size="5">
                       <h2>Orden de producción {{detailApi.order?.id}}</h2>
+                      <ion-item *ngIf="detailApi.agenda.start_date" class="date-and-time">
+                        Fecha y hora:
+                        <ion-label class="card-item-field" *ngIf="!detailApi.agenda.all_day" item-end>
+                          {{detailApi.agenda.start_date}}
+                        </ion-label>
+                        <ion-label class="card-item-field" *ngIf="detailApi.agenda.all_day" item-end>
+                          {{detailApi.agenda.start_date.split(' ')[0]}} Todo el día
+                        </ion-label>
+                      </ion-item>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
@@ -129,21 +137,11 @@
                     <ion-label class="card-item-field" item-end>{{detailApi.local?.name}}</ion-label>
                   </ion-item>
                   <ion-item *ngIf="detailApi.agenda">
-                    Personal asignado:
-                    <ion-label class="card-item-field" item-end>{{detailApi.agenda.user?.name}}</ion-label>
+                    <ion-label>Personal asignado: {{detailApi.employeesName}}</ion-label>
                   </ion-item>
                   <ion-item>
                     Observaciones:
                     <ion-label class="card-item-field" item-end>{{detailApi.comments}}</ion-label>
-                  </ion-item>
-                  <ion-item *ngIf="detailApi.agenda">
-                    Fecha y hora:
-                    <ion-label class="card-item-field" *ngIf="!detailApi.agenda.all_day" item-end>
-                      {{detailApi.agenda.start_date}}
-                    </ion-label>
-                    <ion-label class="card-item-field" *ngIf="detailApi.agenda.all_day" item-end>
-                      {{detailApi.agenda.start_date.split(' ')[0]}} Todo el día
-                    </ion-label>
                   </ion-item>
                 </ion-list>
               </ion-card-content>
