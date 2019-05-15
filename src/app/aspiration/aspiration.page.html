@@ -34,7 +34,7 @@
           <ion-col (click)="setControlPanel(3)">
             <div
               [ngClass]="{'button-panel-enabled': mbControlPanel === 3, 'button-panel-disabled': mbControlPanel !== 3 }">
-              <ion-label>1.Orden</ion-label>
+              <ion-label>3. General</ion-label>
             </div>
             <ion-badge class="badge-error" *ngIf="!validation_form_general.valid" color="danger">!</ion-badge>
           </ion-col>
@@ -51,40 +51,40 @@
           <ion-card-content>
             <ion-grid style="padding: 18px;">
               <ion-row>
-                <ion-col size="3.6">
+                <ion-col size="4">
                   <ion-label>Orden de producción</ion-label>
                 </ion-col>
-                <ion-col size="8">
+                <ion-col size="7.6">
                   <ion-label>Cliente</ion-label>
                 </ion-col>
               </ion-row>
               <ion-row>
-                <ion-col size="3.6" class="text-readonly">
+                <ion-col size="4" class="text-readonly">
                   <ion-label>{{order.id}}</ion-label>
                 </ion-col>
-                <ion-col size="8" class="text-readonly">
+                <ion-col size="7.6" class="text-readonly">
                   <ion-label>{{order.client.bussiness_name}}</ion-label>
                 </ion-col>
               </ion-row>
               <ion-row>
-                <ion-col size="4.6">
+                <ion-col size="4.3">
                   <ion-label>Local</ion-label>
                 </ion-col>
-                <ion-col size="3">
+                <ion-col size="3.5">
                   <ion-label>Fecha Aspiración</ion-label>
                 </ion-col>
-                <ion-col size="4">
-                  <ion-label>Receptoras Sincronizadas</ion-label>
+                <ion-col size="3.5">
+                  <ion-label>Receptoras Sincr.</ion-label>
                 </ion-col>
               </ion-row>
               <ion-row>
-                <ion-col size="4.6" class="text-readonly">
+                <ion-col size="4.3" class="text-readonly">
                   <ion-label>{{agenda.name_local}}</ion-label>
                 </ion-col>
-                <ion-col size="3" class="text-readonly">
+                <ion-col size="3.5" class="text-readonly">
                   <ion-label>{{aspiration.date}}</ion-label>
                 </ion-col>
-                <ion-col size="4" class="text-readonly">
+                <ion-col size="3.5" class="text-readonly">
                   <ion-label>{{aspiration.synchronized_receivers}}</ion-label>
                 </ion-col>
               </ion-row>
@@ -217,7 +217,7 @@
                         <ion-label>Giii</ion-label>
                       </ion-col>
                       <ion-col class="detail-others">
-                        <ion-label>Otros</ion-label>
+                        <ion-label>Otr</ion-label>
                       </ion-col>
                     </ion-row>
                   </ion-grid>

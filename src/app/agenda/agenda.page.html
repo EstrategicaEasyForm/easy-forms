@@ -111,7 +111,7 @@
                     <ion-col size="7">
                       <h2 class="cart-fa-name"> {{detailApi.templateType.name}} </h2>
                     </ion-col>
-                    <ion-col size="5">
+                    <ion-col size="5" style="margin-top: -30px;">
                       <h2>Orden de producción {{detailApi.order?.id}}</h2>
                       <ion-item *ngIf="detailApi.agenda.start_date" class="date-and-time">
                         Fecha y hora:
@@ -140,8 +140,7 @@
                     <ion-label>Personal asignado: {{detailApi.employeesName}}</ion-label>
                   </ion-item>
                   <ion-item>
-                    Observaciones:
-                    <ion-label class="card-item-field" item-end>{{detailApi.comments}}</ion-label>
+                    <ion-label class="card-item-field" item-end> Observaciones: {{detailApi.comments}}</ion-label>
                   </ion-item>
                 </ion-list>
               </ion-card-content>

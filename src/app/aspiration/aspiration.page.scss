@@ -14,8 +14,9 @@ ion-select {
     font-size: 23px;
 }
 ion-label {
-    font-size: 23px!important;
-    max-width: none;
+    font-size: 23px !important;
+    overflow: visible!important;
+    max-width: none !important;
 }
 ion-input {
     border: solid 1px black;
@@ -71,7 +72,7 @@ ion-textarea{
         margin-right: auto;
     }
     ion-card {
-        width: calc(100vw - 393px);
+      width: calc(100vw - 86px);
     }
 }
 .card-page-details {
@@ -97,52 +98,52 @@ ion-card-content {
     font-weight: bold;
 }
 .detail-id {
-    //flex: 0 0 calc(calc(0.5 / var(--ion-grid-columns, 12)) * 100%);
-    max-width: 61px;
+    max-width: 38px;
+    min-width: 38px;
 }
 .detail-donor {
-    //flex: 0 0 calc(calc(1.2 / var(--ion-grid-columns, 12)) * 100%);
-    max-width: 162px;
+    max-width: 151px;
+    min-width: 151px;
 }
 .detail-donor-breed {
-    //flex: 0 0 calc(calc(1 / var(--ion-grid-columns, 12)) * 100%);
     max-width: 106px;
+    min-width: 106px;
 }
 .detail-local-name {
-    //flex: 0 0 calc(calc(1.8 / var(--ion-grid-columns, 12)) * 100%);
-    max-width: 209px;
+   max-width: 140px;
+    min-width: 140px;
 }
 .detail-type {
-    //flex: 0 0 calc(calc(0.6 / var(--ion-grid-columns, 12)) * 100%);
     max-width: 76px;
+    min-width: 76px;
 }
 .detail-arrived-time {
-    //flex: 0 0 calc(calc(1 / var(--ion-grid-columns, 12)) * 100%);
-    max-width: 92px;
+    max-width: 82px;
+    min-width: 82px;
 }
 .detail-bull {
-    //flex: 0 0 calc(calc(1 / var(--ion-grid-columns, 12)) * 100%);
-    max-width: 127px;
+    max-width: 103px;
+    min-width: 103px;
 }
 .detail-bull-breed {
-    //flex: 0 0 calc(calc(1 / var(--ion-grid-columns, 12)) * 100%);
     max-width: 115px;
+    min-width: 115px;
 }
 .detail-gi {
-    //flex: 0 0 calc(calc(0.3 / var(--ion-grid-columns, 12)) * 100%);
     max-width: 36px;
+	min-width: 36px;
 }
 .detail-gii {
-    //flex: 0 0 calc(calc(0.3 / var(--ion-grid-columns, 12)) * 100%);
     max-width: 43px;
+	min-width: 43px;
 }
 .detail-giii {
-    //flex: 0 0 calc(calc(0.3 / var(--ion-grid-columns, 12)) * 100%);
     max-width: 49px;
+	min-width: 49px;
 }
 .detail-others {
-    //flex: 0 0 calc(calc(0.3 / var(--ion-grid-columns, 12)) * 100%);
-    max-width: 84px;
+    min-width: 45px;
+    max-width: 45px;
 }
 .grade-celsius {
     margin-left: -10px;
@@ -174,7 +175,7 @@ ion-card-content {
 }
 .make-pdf-button {
     font-size: 23px;
-    height: 156px;
+    height: 124px;
     margin-top: 6px;
     button {
         border-radius: 5px;
@@ -243,6 +244,11 @@ ion-card-content {
 	}
 }
 .item-sliding {
-    height: 67px;
+    min-height: 56px;
     margin-top: 14px;
+	ion-label {
+	    white-space: nowrap;
+		overflow: hidden!important;
+		text-overflow: initial;
+	}
 }
