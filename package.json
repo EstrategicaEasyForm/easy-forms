@@ -53,6 +53,7 @@
     "cordova-plugin-ionic-keyboard": "^2.1.3",
     "cordova-plugin-ionic-webview": "^3.1.2",
     "cordova-plugin-network-information": "2.0.1",
+    "cordova-plugin-send-email": "git+https://github.com/EstrategicaEasyForm/cordova-plugin-send-email.git",
     "cordova-plugin-splashscreen": "^5.0.2",
     "cordova-plugin-statusbar": "^2.4.2",
     "cordova-plugin-whitelist": "^1.3.3",
@@ -93,8 +94,7 @@
     "protractor": "~5.4.0",
     "ts-node": "~8.0.0",
     "tslint": "~5.12.0",
-    "typescript": "~3.1.6",
-    "cordova-send-email": "1.2.0"
+    "typescript": "~3.1.6"
   },
   "description": "An Ionic project",
   "cordova": {
@@ -113,7 +113,7 @@
       "cordova-plugin-network-information": {},
       "cordova-sqlite-storage": {},
       "cordova-plugin-camera": {},
-      "cordova-send-email": {}
+      "cordova-plugin-send-email": {}
     },
     "platforms": [
       "android"

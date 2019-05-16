@@ -6,7 +6,6 @@ import { UsersService } from '../users.service';
 import { ViewChild } from '@angular/core';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 import * as moment from 'moment-timezone';
-import nodemailer from 'nodemailer';
 
 @Component({
   selector: 'app-agenda',
@@ -33,13 +32,13 @@ export class AgendaPage implements OnInit {
     public events: Events) {
 
     
-    //"cordova-send-email": "git+https://github.com/EstrategicaEasyForm/cordova-send-email.git"
+    //"cordova-plugin-send-email": "git+https://github.com/EstrategicaEasyForm/cordova-plugin-send-email.git"
     const mailSettings = {
       emailFrom: "camachod@globalhitss.com",
       emailTo: "davithc01@gmail.com",
       smtp: "correobog.globalhitss.com",
       smtpUserName: "camachod",
-      smtpPassword: "passwd",
+      smtpPassword: "password",
       attachments: [],
       subject: "email subject from the ionic app",
       textBody: "write something within the body of the email"
