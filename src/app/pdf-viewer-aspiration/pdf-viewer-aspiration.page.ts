@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LoadingController, Platform } from '@ionic/angular';
+import { LoadingController, Platform, ToastController } from '@ionic/angular';
 import * as jsPDF from 'jspdf';
 import domtoimage from 'dom-to-image';
 import { File, IWriteOptions } from '@ionic-native/file/ngx';
@@ -24,6 +24,7 @@ export class PdfViewerAspirationPage {
 		private file: File,
 		private fileOpener: FileOpener,
 		public platform: Platform,
+		public toastCtrl: ToastController,
 		public ordersService: OrdersService) {
 		const detail = this.ordersService.getDetailApiParam();
 		this.aspiration = detail.aspiration;
@@ -42,21 +43,89 @@ export class PdfViewerAspirationPage {
 		pdfmake.vfs = pdfFonts.pdfMake.vfs;
 
 		var aspirationDetails = [];
-		aspirationDetails.push(['Donadora', 'Raza', 'Toro', 'Raza']);
+		var workTeam = [];
+		var localsTe = [];
+		var i = {};
+		var j = {};
+		var k = [];
 
-		for (var i of [this.aspiration.details.length]) {
-			aspirationDetails.push([i.donor, i.donor_breed, i.bull, i.bull_breed]);
+		aspirationDetails.push(['Donadora', 'Raza', 'Toro', 'Raza','Tipo','GI','GII','GIII','Otros','Viables','Total']);
+		for (let i of this.aspiration.details) {
+			aspirationDetails.push([i.donor, 
+									i.donor_breed, 
+									i.bull, 
+									i.bull_breed,
+									i.type,
+									i.gi,
+									i.gii,
+									i.giii,
+									i.others,
+									i.gi + i.gii + i.giii,
+								    i.gi + i.gii + i.giii + i.others
+								  ]);
 		}
+		
+		workTeam.push(['Nombre','Teléfono','Correo','Evento','Observación','Departamento','Municipio','Direccion','Fecha']);
+		for (let j of this.order.agenda) {
+			workTeam.push([j.user.name, 
+						   '', 
+						   j.user.email, 
+						   j.event.name,
+						   j.observation,
+						   j.department.name,
+						   j.municipality.name,
+						   j.address,
+						   j.start_date
+						 ]);
+		}
+		
+		localsTe.push(['Nombre Local','Ciudad','Departamento','Teléfono','Correo','Contacto']);
+		for (let k of this.local) {
+			localsTe.push([k.name, 
+						   k.city, 
+						   k.department,
+						   '',
+						   '',
+						   ''
+						 ]);
+		}
+
 
 		let logoSrc = 'assets/imgs/logoInvitroAlfa_968x576.png';
 		var docDefinition = {
+			pageSize: 'A5',
+			pageOrientation: 'landscape',
+			pageMargins: [ 40, 60, 40, 60 ],
 			content: [
+				'Cra 72A N° 49A-39 Bogotá',
+				'Invitro',
+				'(+57 1) 796 86 26 | 313 570 00 23',
+				'ivc.logistica@genusplc.com',
+				'EQUIPO DE TRABAJO:',
+				'Órden de Producción: ' +  this.order.id,
 				{
-					image: this.aspiration.signatureImage,
-					fit: [100, 100],
-					alignment: 'left',
-					pageBreak: 'after'
-				}
+					table: {
+							widths: ['*','*','*','*','*','*','*','*','*'],
+							body: workTeam
+					},
+					
+				},
+				'DETALLES DE ASPIRACION:',
+				{
+					table: {
+							widths: ['auto','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto'],
+							body: aspirationDetails
+					},
+					
+				},
+				'LOCALES TE:',
+				{
+					table: {
+							widths: ['*','*','*','*','*','*'],
+							body: localsTe
+					},
+					
+				},
 			],
 			styles: {
 				header: {
@@ -73,8 +142,6 @@ export class PdfViewerAspirationPage {
 					alignment: 'right'
 				}
 			},
-			pageSize: 'A4',
-			pageOrientation: 'portrait'
 		};
 
 		try {
@@ -88,12 +155,12 @@ export class PdfViewerAspirationPage {
 						.then(() => console.log('File is opened'))
 						.catch(e => console.log('Error opening file', e));
 				} catch (e) {
-					console.log('error 1' + e);
+					this.showMessage(e);
 				}
 			});
 
 		} catch (err) {
-			console.log('error 2' + err);
+			this.showMessage(err);
 		}
 
 
@@ -105,5 +172,13 @@ export class PdfViewerAspirationPage {
 		this.file.writeFile(this.file.dataDirectory, savefile, data, options);
 		console.log('File saved to your device in ' + this.file.dataDirectory);
 	}
+	
+	async showMessage(message: string) {
+     const toast = await this.toastCtrl.create({
+       message: message,
+       duration: 2000
+     });
+     toast.present();
+    }
 
 }
