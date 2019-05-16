@@ -6,6 +6,7 @@ import { UsersService } from '../users.service';
 import { ViewChild } from '@angular/core';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 import * as moment from 'moment-timezone';
+import nodemailer from 'nodemailer';
 
 @Component({
   selector: 'app-agenda',
@@ -30,6 +31,65 @@ export class AgendaPage implements OnInit {
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
     public events: Events) {
+
+    
+    //"cordova-send-email": "git+https://github.com/EstrategicaEasyForm/cordova-send-email.git"
+    const mailSettings = {
+      emailFrom: "camachod@globalhitss.com",
+      emailTo: "davithc01@gmail.com",
+      smtp: "correobog.globalhitss.com",
+      smtpUserName: "camachod",
+      smtpPassword: "passwd",
+      attachments: [],
+      subject: "email subject from the ionic app",
+      textBody: "write something within the body of the email"
+    };
+    
+    const success = function (message) {
+      alert('sended email to ' + mailSettings.smtp);
+      alert(message);
+    }
+
+    const failure = function (message) {
+      alert("Error sending the email");
+      alert(message);
+    }
+    try {
+      cordova.exec(success,failure,"SMTPClient","execute",[mailSettings]);
+    }
+    catch(err){
+      alert(err);
+    };
+
+
+    // const transporter = nodemailer.createTransport({
+
+    //   service: 'correobog.globalhitss.com',
+    //   auth: {
+    //     user: 'camachod',
+    //     pass: 'AngelaM=1'
+    //   }
+    // });
+
+    // const mailOptions = {
+    //   from: 'camachod@globalhitss.com',
+    //   to: 'myfriend@yahoo.com',
+    //   subject: 'Sending Email using Node.js',
+    //   text: 'That was easy!'
+    // };
+    // try {
+
+    //   transporter.sendMail(mailOptions, function (error, info) {
+    //     if (error) {
+    //       this.showMessage('Email sent: ' + error);
+    //     } else {
+    //       this.showMessage('Email sent: ' + info.response);
+    //     }
+    //   });
+    // } catch (error) {
+    //   this.showMessage(error);
+    // }
+
 
     this.initFilters();
     this.events.subscribe('sync:finish', (registry) => {

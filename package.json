@@ -93,7 +93,8 @@
     "protractor": "~5.4.0",
     "ts-node": "~8.0.0",
     "tslint": "~5.12.0",
-    "typescript": "~3.1.6"
+    "typescript": "~3.1.6",
+    "cordova-send-email": "1.2.0"
   },
   "description": "An Ionic project",
   "cordova": {
@@ -111,7 +112,8 @@
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-network-information": {},
       "cordova-sqlite-storage": {},
-      "cordova-plugin-camera": {}
+      "cordova-plugin-camera": {},
+      "cordova-send-email": {}
     },
     "platforms": [
       "android"
