@@ -45,7 +45,7 @@ import { Camera } from '@ionic-native/camera/ngx';
     Network,
     NetworkNotifyService,
     Camera,
-	File,
+	  File,
     FileOpener,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

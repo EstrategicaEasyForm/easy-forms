@@ -18,7 +18,8 @@ export class SyncronizationPage {
 
   loading: any;
   contentConsole: string = "";
-  registries: any = [];
+  registriesApiration: any = [];
+  generatePDFs: any = []; 
 
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
   constructor(
@@ -43,7 +44,7 @@ export class SyncronizationPage {
         {
           text: 'Cancelar',
           handler: () => {
-            this.registries.push({
+            this.registriesApiration.push({
               type:'warning',
               message:"La sincronización se ha cancelado",
               time:moment().format('HH:mm:ss')
@@ -96,6 +97,7 @@ export class SyncronizationPage {
               });
               if (boolAspiration == true || boolDetails == true) {
                 totalAspirations = totalAspirations + 1;
+                this.generatePDFs.push(element.aspirationApi);
               }
               boolAspiration = false;
               boolDetails = false;
@@ -160,7 +162,7 @@ export class SyncronizationPage {
               }
               if (boolAspiration == true && boolDetails == false) {
                 element.aspirationApi.user_id_updated = this.userService.getUserId();
-                  this.registries.push({
+                  this.registriesApiration.push({
                     type:'info',
                     message:"Inicia actualización de la aspiración con orden " + order.id,
                     time:moment().format('HH:mm:ss')
@@ -170,13 +172,13 @@ export class SyncronizationPage {
                   .subscribe(({ data }) => {
                     countAspirations = countAspirations + 1;
                     if (data.updateAspiration) {
-                        this.registries.push({
+                        this.registriesApiration.push({
                           type:'info',
                           message:"Se actualizó correctamente la aspiración con orden " + order.id,
                           time:moment().format('HH:mm:ss')
                         });
                     } else {
-                      this.registries.push({
+                      this.registriesApiration.push({
                         type:'error',
                         message:"Ocurrió un error actualizando la aspiración con orden " + order.id,
                         time:moment().format('HH:mm:ss')
@@ -190,7 +192,7 @@ export class SyncronizationPage {
                 element.aspirationApi.user_id_updated = this.userService.getUserId();
                 var dataDetails: any = {};
                 dataDetails['details'] = details;
-                  this.registries.push({
+                  this.registriesApiration.push({
                     type:'info',
                     message:"Inicia actualización de los detalles de la aspiración con orden " + order.id,
                     time:moment().format('HH:mm:ss')
@@ -200,13 +202,13 @@ export class SyncronizationPage {
                   .subscribe(({ data }) => {
                     countAspirations = countAspirations + 1;
                     if (data.updateAspiration) {
-                      this.registries.push({
+                      this.registriesApiration.push({
                         type:'info',
                         message:"Se actualizó correctamente los detalles de la aspiración con orden " + order.id,
                         time:moment().format('HH:mm:ss')
                       });
                     } else {
-                      this.registries.push({
+                      this.registriesApiration.push({
                         type:'error',
                         message:"Ocurrio un error actualizando los detalles de la aspiración con orden " + order.id,
                         time:moment().format('HH:mm:ss')
@@ -220,7 +222,7 @@ export class SyncronizationPage {
                 element.aspirationApi.user_id_updated = this.userService.getUserId();
                 var dataDetails: any = {};
                 dataDetails['details'] = details;
-                this.registries.push({
+                this.registriesApiration.push({
                   type:'info',
                   message:"Inicia actualización de toda la aspiración con orden " + order.id,
                   time:moment().format('HH:mm:ss')
@@ -230,13 +232,13 @@ export class SyncronizationPage {
                   .subscribe(({ data }) => {
                     countAspirations = countAspirations + 1;
                     if (data.updateAspiration) {
-                      this.registries.push({
+                      this.registriesApiration.push({
                         type:'info',
                         message:"Se actualizó correctamente toda la aspiración con orden " + order.id,
                         time:moment().format('HH:mm:ss')
                       });
                     } else {
-                      this.registries.push({
+                      this.registriesApiration.push({
                         type:'error',
                         message:"Ocurrio un error actualizando toda la aspiración con orden " + order.id,
                         time:moment().format('HH:mm:ss')
@@ -259,8 +261,32 @@ export class SyncronizationPage {
     });
   }
 
+  async sendEmail() {
+    var nodemailer = require('nodemailer');
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'estebanesmas2@gmail.com',
+        pass: '920820@doncella'
+      }
+    });
+    var mailOptions = {
+      from: 'estebanesmas2@gmail.com',
+      to: 'felizarazol@unal.edu.co',
+      subject: 'Mensaje de prueba',
+      text: 'Mensaje de prueba'
+    };
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email send: ' + info.response);
+      }
+    });
+  }
+
   async retriveAgenda() {
-      this.registries.push({
+      this.registriesApiration.push({
         type : 'info',
         message : "Inicia descarga de la agenda",
         time : moment().format('HH:mm:ss')
@@ -272,19 +298,15 @@ export class SyncronizationPage {
       //_self.router.navigate(['tabs/agenda', {
       //  message: "Sincronización realizada exitosamente!!"
       //}]);
-      this.registries.push({
+      this.registriesApiration.push({
         type : 'info',
         message : "La descarga de la agenda se ejecutó correctamente",
         time : moment().format('HH:mm:ss'),
         show : false,
-        details : [
-          "Se ejecuta correctamente la descarga de la agenda",
-          "Se ejecuta correctamente la descarga de la agenda 2"
-        ]
       });
     }).catch(error => {
       this.loading.dismiss();
-      this.registries.push({
+      this.registriesApiration.push({
         type:'error',
         message:"La descarga de la agenda falló",
         show : false,
@@ -295,7 +317,7 @@ export class SyncronizationPage {
       }
       else this.showMessage('No se puede consultar la lista de agendas');
     });
-
+    this.sendEmail();
   }
 
   async showMessage(message: string) {
