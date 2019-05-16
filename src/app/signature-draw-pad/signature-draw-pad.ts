@@ -65,12 +65,14 @@ export class SignatureDrawPad {
 		try {
 			const modalDom: any = document.getElementsByClassName('modal-signature')[0].getElementsByClassName('modal-wrapper')[0];
 			modalDom.style.height = "400px";
+			modalDom.style.width = "calc(100vw - 100px)";
 		} catch (e) { }
 	}
 
 	public initSignaturePad(options: IOptions) {
 		this.canvas = document.querySelector("canvas");
-		this.canvas.width = 600;
+		//this.canvas.width = 600;
+		this.canvas.width = 1340;
 		this.canvas.height = 250;
 		this.velocityFilterWeight = options.velocityFilterWeight || 1;
 		this.minWidth = options.minWidth || 0.5;

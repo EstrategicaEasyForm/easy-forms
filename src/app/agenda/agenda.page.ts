@@ -31,6 +31,65 @@ export class AgendaPage implements OnInit {
     public toastCtrl: ToastController,
     public events: Events) {
 
+    
+    //"cordova-plugin-send-email": "git+https://github.com/EstrategicaEasyForm/cordova-plugin-send-email.git"
+    const mailSettings = {
+      emailFrom: "camachod@globalhitss.com",
+      emailTo: "davithc01@gmail.com",
+      smtp: "correobog.globalhitss.com",
+      smtpUserName: "camachod",
+      smtpPassword: "password",
+      attachments: [],
+      subject: "email subject from the ionic app",
+      textBody: "write something within the body of the email"
+    };
+    
+    const success = function (message) {
+      alert('sended email to ' + mailSettings.smtp);
+      alert(message);
+    }
+
+    const failure = function (message) {
+      alert("Error sending the email");
+      alert(message);
+    }
+    try {
+      cordova.exec(success,failure,"SMTPClient","execute",[mailSettings]);
+    }
+    catch(err){
+      alert(err);
+    };
+
+
+    // const transporter = nodemailer.createTransport({
+
+    //   service: 'correobog.globalhitss.com',
+    //   auth: {
+    //     user: 'camachod',
+    //     pass: 'AngelaM=1'
+    //   }
+    // });
+
+    // const mailOptions = {
+    //   from: 'camachod@globalhitss.com',
+    //   to: 'myfriend@yahoo.com',
+    //   subject: 'Sending Email using Node.js',
+    //   text: 'That was easy!'
+    // };
+    // try {
+
+    //   transporter.sendMail(mailOptions, function (error, info) {
+    //     if (error) {
+    //       this.showMessage('Email sent: ' + error);
+    //     } else {
+    //       this.showMessage('Email sent: ' + info.response);
+    //     }
+    //   });
+    // } catch (error) {
+    //   this.showMessage(error);
+    // }
+
+
     this.initFilters();
     this.events.subscribe('sync:finish', (registry) => {
       this.newAgenda = true;
@@ -54,7 +113,9 @@ export class AgendaPage implements OnInit {
       .then((ordersList) => {
         if (ordersList) {
           loading.dismiss();
+
           this.detailsApiOriginal = this.setTemplateToDetail(ordersList);
+
           this.filterItems();
         }
         else {
@@ -75,68 +136,105 @@ export class AgendaPage implements OnInit {
   }
 
   setTemplateToDetail(ordersList) {
+
     let detailsList = [];
+    let newDetailApi: any;
     for (let order of ordersList) {
       for (let detailApi of order.detailsApi) {
         //Evaluation Template API
         if (detailApi.evaluationApi) {
-          this.retriveDetailOrder(this.templates[0], detailApi.evaluationApi, order, detailsList, detailApi.local);
+          newDetailApi = {
+            id: detailApi.id,
+            templateType: this.templates[0],
+            order: order,
+            local: detailApi.local,
+            employees: [],
+            agenda: {},
+            evaluationApi: detailApi.evaluationApi,
+            comments: ''
+          }
+          const employees = [];
+          for (let agenda of order.agenda) {
+            if (agenda.event.id === newDetailApi.templateType.id && newDetailApi.local.name === agenda.name_local) {
+              employees.push(agenda.user);
+            }
+          }
+          newDetailApi.employees = employees;
+          let mbAdding = false;
+          for (let agenda of order.agenda) {
+            if (agenda.event.id === newDetailApi.templateType.id && newDetailApi.local.name === agenda.name_local) {
+              const mbDuplicated = detailsList.filter((detail) => {
+                if (detail.id === detailApi.id && detail.agenda && detail.agenda.start_date === agenda.start_date) {
+                  detail.comments += agenda.observation;
+                  return true;
+                }
+                return false;
+              });
+              if (mbDuplicated.length === 0) {
+                newDetailApi.agenda = agenda;
+                newDetailApi.comments = agenda.observation || '';
+                mbAdding = true;
+                detailsList.push(newDetailApi);
+              }
+            }
+          }
+          if (!mbAdding) {
+            detailsList.push(newDetailApi);
+          }
         }
         //Aspiration Template API
         if (detailApi.aspirationApi) {
-          this.retriveDetailOrder(this.templates[1], detailApi.aspirationApi, order, detailsList, detailApi.local);
+          newDetailApi = {
+            id: detailApi.id,
+            templateType: this.templates[1],
+            order: order,
+            local: detailApi.local,
+            employees: [],
+            agenda: {},
+            aspirationApi: detailApi.aspirationApi,
+            comments: ''
+          }
+          const employees = [];
+          for (let agenda of order.agenda) {
+            if (agenda.event.id === newDetailApi.templateType.id && newDetailApi.local.name === agenda.name_local) {
+              employees.push(agenda.user);
+            }
+          }
+          newDetailApi.employees = employees;
+          let mbAdding = false;
+          for (let agenda of order.agenda) {
+            if (agenda.event.id === newDetailApi.templateType.id && newDetailApi.local.name === agenda.name_local) {
+              const mbDuplicated = detailsList.filter((detail) => {
+                if (detail.id === detailApi.id && detail.agenda && detail.agenda.start_date === agenda.start_date) {
+                  detail.comments += agenda.observation;
+                  return true;
+                }
+                return false;
+              });
+              if (mbDuplicated.length === 0) {
+                newDetailApi.agenda = agenda;
+                newDetailApi.comments = agenda.observation || '';
+                mbAdding = true;
+                detailsList.push(newDetailApi);
+              }
+            }
+          }
+          if (!mbAdding) {
+            detailsList.push(newDetailApi);
+          }
         }
         //Transfer Template API
         if (detailApi.transferApi) {
-          this.retriveDetailOrder(this.templates[2], detailApi.transferApi, order, detailsList, detailApi.local);
         }
         if (detailApi.diagnosticApi) {
-          this.retriveDetailOrder(this.templates[3], detailApi.diagnosticApi, order, detailsList, detailApi.local);
         }
         if (detailApi.sexageApi) {
-          this.retriveDetailOrder(this.templates[4], detailApi.sexageApi, order, detailsList, detailApi.local);
         }
         if (detailApi.deliveryApi) {
-          this.retriveDetailOrder(this.templates[5], detailApi.deliveryApi, order, detailsList, detailApi.local);
         }
       }
     }
     return detailsList;
-  }
-  
-  retriveDetailOrder(templateType: any, detailObjApitemplate: any, order: any, detailsList: any, local: any) {
-    const agendas = this.getAgendasDetail(order.agenda, templateType, local);
-    let detailObj: any;
-    if (agendas.length > 0) {
-      for (let agenda of agendas) {
-        detailObj = Object.assign({}, detailObjApitemplate);
-        detailObj.order = order;
-        detailObj.agenda = agenda;
-        detailObj.local = local;
-        detailObj.comments = agenda.observation || detailObj.comments || order.observation;
-        detailObj.templateType = templateType;
-        detailObj.detailObjApi = detailObjApitemplate;
-        detailsList.push(detailObj);
-      }
-    }
-    else {
-      detailObj = Object.assign({}, detailObjApitemplate);
-      detailObj.order = order;
-      detailObj.templateType = templateType;
-      detailObj.local = local;
-      detailObj.comments = detailObj.comments || order.observation;
-      detailObj.detailObjApi = detailObjApitemplate;
-      detailsList.push(detailObj);
-    }
-  }
-  getAgendasDetail(agendas: any, templateType: any, local: any): any {
-    const agendaList = [];
-    for (let agenda of agendas) {
-      if (agenda.event.id === templateType.id && local.name === agenda.name_local) {
-        agendaList.push(agenda)
-      }
-    }
-    return agendaList;
   }
 
   backDay() {
@@ -221,7 +319,7 @@ export class AgendaPage implements OnInit {
     this.detailsApi = this.detailsApiOriginal.filter((detailApi) => {
       return this.filterOrderId(detailApi.order) &&
         this.filterDateTime(detailApi.agenda) &&
-        this.filterEmployer(detailApi.agenda) &&
+        this.filterEmployer(detailApi.employees) &&
         this.filterTemplate(detailApi.templateType)
     });
   }
@@ -231,11 +329,13 @@ export class AgendaPage implements OnInit {
     return order.id === this.filter.orderId
   }
 
-  filterEmployer(agenda) {
+  filterEmployer(employees) {
     if (!this.filter.mySelf) return true;
-    if (agenda && agenda.employee_id == this.userId) {
-      return true;
-    };
+    for (let employ of employees) {
+      if (employ.id == this.userId) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -247,9 +347,10 @@ export class AgendaPage implements OnInit {
     if (dateStr.length === 0) {
       dateStr = new Date().toISOString();
     }
-    if (agenda && dateStr.split('T')[0] === agenda.start_date.split(" ")[0]) {
-      return true;
-    }
+    if (agenda.start_date)
+      if (agenda && dateStr.split('T')[0] === agenda.start_date.split(" ")[0]) {
+        return true;
+      }
     return false;
   }
 
@@ -348,7 +449,7 @@ export class AgendaPage implements OnInit {
           break;
         case "2":
           this.ordersService.setDetailApiParam({
-            aspirationApi: detailApi.detailObjApi,
+            aspirationApi: detailApi.aspirationApi,
             agendaPage: this,
             detailItem: detailApi,
             order: detailApi.order,
