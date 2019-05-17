@@ -159,15 +159,16 @@ export class AspirationPage implements OnInit {
   }
 
   openPdfViewer() {
+    const _self = this;
     this.pdfMakeAspiration.makePdf({
       aspiration: this.aspiration,
       order: this.order,
       local: this.detailItem.local
     },function(pdfObj, error){
       if(error){
-        this.showMessage('No se puede generar el pdf ' + error);
+        _self.showMessage('No se puede generar el pdf ' + error);
       }
-    }, { watermark: true });
+    }, { watermark: true, open: true });
   }
 
   onSaveButton() {

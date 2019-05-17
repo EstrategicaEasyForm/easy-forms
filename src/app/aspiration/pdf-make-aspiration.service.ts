@@ -88,7 +88,7 @@ export class PdfMakeAspirationService {
 
 		//let logoSrc = 'assets/imgs/logoInvitroAlfa_968x576.png';
 		//let logoSrc = 'file:///android_asset/imgs/logoInvitroAlfa_968x576.png';
-		
+
 		var docDefinition = {
 			pageSize: 'A5',
 			pageOrientation: 'landscape',
@@ -147,34 +147,32 @@ export class PdfMakeAspirationService {
 		};
 
 		try {
-			console.log('Iniciando carga de archivo');
 			pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {
 				try {
 					let utf8 = new Uint8Array(buffer);
 					let binaryArray = utf8.buffer;
-					const filename = "InvitroAspiracion_" + this.order.id + "_" + moment().format('YYYYMMDD_HHmm')+ ".pdf";
+					const filename = "InvitroAspiracion_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
 					_self.saveToDevice(binaryArray, filename);
 
 
-					if(options && options.open) {
+					if (options && options.open) {
 						_self.fileOpener.open(_self.file.dataDirectory + filename, 'application/pdf')
-						.then(() => console.log('File is opened'))
-						.catch(e => console.log('Error opening file', e));
+							.then(() => callback(null,'File is opened'))
+							.catch(e => callback(null,'Error opening file ' + e));
 					}
 					//Retorna el codigo binario del archivo pdf generado
-					callback({binaryArray: binaryArray, filename: filename}, null);
-					
+					else {
+						callback({ binaryArray: binaryArray, filename: filename }, null);
+					}
+
 				} catch (e) {
-					this.showMessage(e);
 					callback(null, e);
 				}
 			});
 
 		} catch (err) {
-			this.showMessage(err);
 			callback(null, err);
 		}
-
 	}
 	saveToDevice(data: any, savefile: any) {
 		let options: IWriteOptions = { replace: true };
@@ -182,13 +180,4 @@ export class PdfMakeAspirationService {
 		this.file.writeFile(this.file.dataDirectory, savefile, data, options);
 		console.log('File saved to your device in ' + this.file.dataDirectory);
 	}
-
-	async showMessage(message: string) {
-		const toast = await this.toastCtrl.create({
-			message: message,
-			duration: 2000
-		});
-		toast.present();
-	}
-
 }
