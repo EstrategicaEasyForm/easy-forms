@@ -5,10 +5,9 @@ import { OrdersService } from '../orders.service';
 import { ViewChild } from '@angular/core';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 import { UsersService } from '../users.service';
-import { DomSanitizer } from '@angular/platform-browser';
 import { AspirationService } from './aspiration.services';
 import * as moment from 'moment-timezone';
-import { Events } from '@ionic/angular';
+import { Events, Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-syncronization',
@@ -18,9 +17,7 @@ import { Events } from '@ionic/angular';
 export class SyncronizationPage {
 
   loading: any;
-  contentConsole: string = "";
-  registriesApiration: any = [];
-  generatePDFs: any = []; 
+  registriesApiration: any;
 
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
   constructor(
@@ -31,9 +28,15 @@ export class SyncronizationPage {
     public userService: UsersService,
     public alertController: AlertController,
     public eventCtrl: Events,
-    private aspirationService: AspirationService) {}
+    private platform: Platform,
+    private aspirationService: AspirationService) {
+      this.eventCtrl.subscribe('publish.aspiration.log', (elementPush) => {
+        this.registriesApiration.push(elementPush);
+      });
+    }
 
   ionViewWillEnter() {
+    this.registriesApiration = [];
     this.initSync();
   }
 
@@ -70,220 +73,44 @@ export class SyncronizationPage {
       message: 'Por favor espere'
     });
     await _self.loading.present();
-    var countAspirations: number = 0;
-    var totalAspirations: number = 0;
-    var boolAspiration: boolean = false;
-    var boolDetails: boolean = false;
     this.ordersService.getDetailsApiStorage().then((orders) => {
-      if (orders) {
-
-        orders.forEach(order => {
-          order.detailsApi.forEach(element => {
-            if (element.aspirationApi) {
-              //if (element.aspirationApi.id == '31') {
-              //  element.aspirationApi.stateSync = 'U';
-              //  element.aspirationApi.comments = "Sin comentarios";
-              //}
-              if (element.aspirationApi.stateSync && element.aspirationApi.stateSync == 'U') {
-                boolAspiration = true;
-              }
-              element.aspirationApi.details.forEach(detail => {
-                //if (detail.id == '495') {
-                //  detail.stateSync = 'U';
-                //  detail.donor = "NN";
-                //}
-                if (detail.stateSync && (detail.stateSync == 'C' || detail.stateSync == 'U')) {
-                  boolDetails = true;
-                }
-              });
-              if (boolAspiration == true || boolDetails == true) {
-                totalAspirations = totalAspirations + 1;
-                this.generatePDFs.push(element.aspirationApi);
-              }
-              boolAspiration = false;
-              boolDetails = false;
-            }
-          });
-        });
-        orders.forEach(order => {
-          order.detailsApi.forEach(element => {
-            if (element.aspirationApi) {
-              //Update aspiration
-              if (element.aspirationApi.stateSync && element.aspirationApi.stateSync == 'U') {
-                element.aspirationApi.user_id_updated = this.userService.getUserId();
-                boolAspiration = true;
-              }
-              //Update details from aspiration
-              var details: any = {};
-              var creates: any = [];
-              var updates: any = [];
-              element.aspirationApi.details.forEach(elementDetail => {
-                if (elementDetail.stateSync && elementDetail.stateSync == 'U') {
-                  boolDetails = true;
-                  var elementUpdate: any = {};
-                  elementUpdate['id'] = elementDetail.id;
-                  elementUpdate['local_id'] = elementDetail.local_id;
-                  elementUpdate['donor'] = elementDetail.donor;
-                  elementUpdate['donor_breed'] = elementDetail.donor_breed;
-                  elementUpdate['arrived_time'] = elementDetail.arrived_time;
-                  elementUpdate['bull'] = elementDetail.bull;
-                  elementUpdate['bull_breed'] = elementDetail.bull_breed;
-                  elementUpdate['type'] = elementDetail.type;
-                  elementUpdate['gi'] = elementDetail.gi;
-                  elementUpdate['gss'] = elementDetail.gss;
-                  elementUpdate['gssi'] = elementDetail.gssi;
-                  elementUpdate['others'] = elementDetail.others;
-                  elementUpdate['user_id_updated'] = this.userService.getUserId();
-                  updates.push(elementUpdate);
-                }
-                if (elementDetail.stateSync && elementDetail.stateSync == 'C') {
-                  boolDetails = true;
-                  var elementCreate: any = {};
-                  elementCreate['local_id'] = elementDetail.local_id;
-                  elementCreate['donor'] = elementDetail.donor;
-                  elementCreate['donor_breed'] = elementDetail.donor_breed;
-                  elementCreate['arrived_time'] = elementDetail.arrived_time;
-                  elementCreate['bull'] = elementDetail.bull;
-                  elementCreate['bull_breed'] = elementDetail.bull_breed;
-                  elementCreate['type'] = elementDetail.type;
-                  elementCreate['gi'] = elementDetail.gi;
-                  elementCreate['gss'] = elementDetail.gss;
-                  elementCreate['gssi'] = elementDetail.gssi;
-                  elementCreate['others'] = elementDetail.others;
-                  elementCreate['user_id_updated'] = this.userService.getUserId();
-                  elementCreate['user_id_created'] = this.userService.getUserId();
-                  creates.push(elementCreate);
-                }
-              });
-              if (creates.length > 0) {
-                details['create'] = creates;
-              }
-              if (updates.length > 0) {
-                details['update'] = updates;
-              }
-              if (boolAspiration == true && boolDetails == false) {
-                element.aspirationApi.user_id_updated = this.userService.getUserId();
-                  this.registriesApiration.push({
-                    type:'info',
-                    message:"Inicia actualización de la aspiración con orden " + order.id,
-                    time:moment().format('HH:mm:ss')
-                  });
-
-                  this.aspirationService.updateOnlyAspiration(element.aspirationApi)
-                  .subscribe(({ data }) => {
-                    countAspirations = countAspirations + 1;
-                    if (data.updateAspiration) {
-                        this.registriesApiration.push({
-                          type:'info',
-                          message:"Se actualizó correctamente la aspiración con orden " + order.id,
-                          time:moment().format('HH:mm:ss')
-                        });
-                    } else {
-                      this.registriesApiration.push({
-                        type:'error',
-                        message:"Ocurrió un error actualizando la aspiración con orden " + order.id,
-                        time:moment().format('HH:mm:ss')
-                      });
-                    }
-                    if (totalAspirations == countAspirations) {
-                      this.retriveAgenda();
-                    }
-                  });
-              } else if (boolAspiration == false && boolDetails == true) {
-                element.aspirationApi.user_id_updated = this.userService.getUserId();
-                var dataDetails: any = {};
-                dataDetails['details'] = details;
-                  this.registriesApiration.push({
-                    type:'info',
-                    message:"Inicia actualización de los detalles de la aspiración con orden " + order.id,
-                    time:moment().format('HH:mm:ss')
-                  });
-
-                this.aspirationService.updateAspirationDetails(element.aspirationApi, dataDetails)
-                  .subscribe(({ data }) => {
-                    countAspirations = countAspirations + 1;
-                    if (data.updateAspiration) {
-                      this.registriesApiration.push({
-                        type:'info',
-                        message:"Se actualizó correctamente los detalles de la aspiración con orden " + order.id,
-                        time:moment().format('HH:mm:ss')
-                      });
-                    } else {
-                      this.registriesApiration.push({
-                        type:'error',
-                        message:"Ocurrio un error actualizando los detalles de la aspiración con orden " + order.id,
-                        time:moment().format('HH:mm:ss')
-                      });
-                    }
-                    if (totalAspirations == countAspirations) {
-                      this.retriveAgenda();
-                    }
-                  });
-              } else if (boolAspiration == true && boolDetails == true) {
-                element.aspirationApi.user_id_updated = this.userService.getUserId();
-                var dataDetails: any = {};
-                dataDetails['details'] = details;
-                this.registriesApiration.push({
-                  type:'info',
-                  message:"Inicia actualización de toda la aspiración con orden " + order.id,
-                  time:moment().format('HH:mm:ss')
-                });
-
-                this.aspirationService.updateAllAspiration(element.aspirationApi, dataDetails)
-                  .subscribe(({ data }) => {
-                    countAspirations = countAspirations + 1;
-                    if (data.updateAspiration) {
-                      this.registriesApiration.push({
-                        type:'info',
-                        message:"Se actualizó correctamente toda la aspiración con orden " + order.id,
-                        time:moment().format('HH:mm:ss')
-                      });
-                    } else {
-                      this.registriesApiration.push({
-                        type:'error',
-                        message:"Ocurrio un error actualizando toda la aspiración con orden " + order.id,
-                        time:moment().format('HH:mm:ss')
-                      });
-                    }
-                    if (totalAspirations == countAspirations) {
-                      this.retriveAgenda();
-                    }
-                  });
-              }
-              boolAspiration = false;
-              boolDetails = false;
-            }
-          });
-        });
-      }
-      if (totalAspirations == 0) {
+      var resultAspiration = this.aspirationService.processAspiration(orders);
+      if (resultAspiration) {
         this.retriveAgenda();
       }
     });
   }
 
   async sendEmail() {
-    var nodemailer = require('nodemailer');
-    var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'estebanesmas2@gmail.com',
-        pass: '920820@doncella'
+    if (this.platform.is("android")) {
+      //"cordova-plugin-send-email": "git+https://github.com/EstrategicaEasyForm/cordova-plugin-send-email.git"
+      const mailSettings = {
+        emailFrom: "camachod@globalhitss.com",
+        emailTo: "felizarazol@unal.edu.co",
+        smtp: "correobog.globalhitss.com",
+        smtpUserName: "camachod",
+        smtpPassword: "password",
+        attachments: [],
+        subject: "email subject from the ionic app",
+        textBody: "write something within the body of the email"
+      };
+      
+      const success = function (message) {
+        alert('sended email to ' + mailSettings.smtp);
+        alert(message);
       }
-    });
-    var mailOptions = {
-      from: 'estebanesmas2@gmail.com',
-      to: 'felizarazol@unal.edu.co',
-      subject: 'Mensaje de prueba',
-      text: 'Mensaje de prueba'
-    };
-    transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email send: ' + info.response);
+
+      const failure = function (message) {
+        alert("Error sending the email");
+        alert(message);
       }
-    });
+      try {
+        cordova.exec(success,failure,"SMTPClient","execute",[mailSettings]);
+      }
+      catch(err){
+        alert(err);
+      };
+    }
   }
 
   async retriveAgenda() {

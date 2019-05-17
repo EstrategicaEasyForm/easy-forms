@@ -113,7 +113,8 @@
       "cordova-plugin-network-information": {},
       "cordova-sqlite-storage": {},
       "cordova-plugin-camera": {},
-      "cordova-plugin-send-email": {}
+      "cordova-plugin-send-email": {},
+      "cordova-send-email": {}
     },
     "platforms": [
       "android"
