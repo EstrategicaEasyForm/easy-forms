@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import * as moment from 'moment-timezone';
+import { PdfMakeAspirationService } from './pdf-make-aspiration.service';
 
 @Component({
   selector: 'app-aspiration',
@@ -78,7 +79,8 @@ export class AspirationPage implements OnInit {
     public router: Router,
     public alertController: AlertController,
     public camera: Camera,
-    public platform: Platform) {
+    public platform: Platform,
+    public pdfMakeAspiration: PdfMakeAspirationService) {
 
   }
 
@@ -157,12 +159,16 @@ export class AspirationPage implements OnInit {
   }
 
   openPdfViewer() {
-    this.ordersService.setDetailApiParam({
+    const _self = this;
+    this.pdfMakeAspiration.makePdf({
       aspiration: this.aspiration,
       order: this.order,
-	  local: this.detailItem.local
-    });
-    this.router.navigate(['pdf-viewer-aspiration']);
+      local: this.detailItem.local
+    },function(pdfObj, error){
+      if(error){
+        _self.showMessage('No se puede generar el pdf ' + error);
+      }
+    }, { watermark: true, open: true });
   }
 
   onSaveButton() {
@@ -272,14 +278,14 @@ export class AspirationPage implements OnInit {
     });
     toast.present();
   }
-  
+
   async setControlPanel(mbControlPanel) {
-	this.mbControlPanel = mbControlPanel;
-	const loading = await this.loadingCtrl.create({
+    this.mbControlPanel = mbControlPanel;
+    const loading = await this.loadingCtrl.create({
       message: 'Por favor espere',
-	  duration: 200
+      duration: 200
     });
     await loading.present();
   }
-  
+
 }

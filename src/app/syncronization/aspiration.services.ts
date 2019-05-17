@@ -109,7 +109,6 @@ export class AspirationService {
             }
             if (boolAspiration == true && boolDetails == false) {
               element.aspirationApi.user_id_updated = this.userService.getUserId();
-              console.log("Inicia actualización de la aspiración con orden " + order.id);
                 this.event.publish('publish.aspiration.log', {
                   type:'info',
                   message:"Inicia actualización de la aspiración con orden " + order.id,
