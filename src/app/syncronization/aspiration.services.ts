@@ -3,7 +3,8 @@ import { Apollo } from 'apollo-angular';
 import { Injectable } from '@angular/core';
 import { UsersService } from '../users.service';
 import * as moment from 'moment-timezone';
-import { Events } from '@ionic/angular';
+import { Events, Platform } from '@ionic/angular';
+import { PdfViewerAspirationPage } from '../pdf-viewer-aspiration/pdf-viewer-aspiration.page';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,9 @@ export class AspirationService {
 
   constructor(private apollo: Apollo,
     public userService : UsersService,
-    public event : Events) { }
+    public event : Events,
+    private platform : Platform,
+    private pfdAspiration : PdfViewerAspirationPage) { }
 
   processAspiration(orders) {
     var countAspirations: number = 0;
@@ -132,7 +135,7 @@ export class AspirationService {
                     });
                   }
                   if (totalAspirations == countAspirations) {
-                    return true;
+                    return this.sendEmail();
                   }
                 });
             } else if (boolAspiration == false && boolDetails == true) {
@@ -162,7 +165,7 @@ export class AspirationService {
                     });
                   }
                   if (totalAspirations == countAspirations) {
-                    return true;
+                    return this.sendEmail();
                   }
                 });
             } else if (boolAspiration == true && boolDetails == true) {
@@ -192,7 +195,7 @@ export class AspirationService {
                     });
                   }
                   if (totalAspirations == countAspirations) {
-                    return true;
+                    return this.sendEmail();
                   }
                 });
             }
@@ -296,5 +299,41 @@ export class AspirationService {
         }
       }
     });
+  }
+
+  async sendEmail() {
+    if (this.platform.is("android")) {
+      this.generatePDFs.forEach(pdf => {
+        //Generate PDF file here
+        
+        //"cordova-plugin-send-email": "git+https://github.com/EstrategicaEasyForm/cordova-plugin-send-email.git"
+        const mailSettings = {
+          emailFrom: "camachod@globalhitss.com",
+          emailTo: "felizarazol@unal.edu.co",
+          smtp: "correobog.globalhitss.com",
+          smtpUserName: "camachod",
+          smtpPassword: "password",
+          attachments: [],
+          subject: "email subject from the ionic app",
+          textBody: "write something within the body of the email"
+        };
+        
+        const success = function (message) {
+          alert('sended email to ' + mailSettings.smtp);
+          alert(message);
+        }
+
+        const failure = function (message) {
+          alert("Error sending the email");
+          alert(message);
+        }
+        try {
+          cordova.exec(success,failure,"SMTPClient","execute",[mailSettings]);
+        }
+        catch(err){
+          alert(err);
+        };
+      });
+    }
   }
 }

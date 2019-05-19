@@ -7,7 +7,7 @@ import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-n
 import { UsersService } from '../users.service';
 import { AspirationService } from './aspiration.services';
 import * as moment from 'moment-timezone';
-import { Events, Platform } from '@ionic/angular';
+import { Events } from '@ionic/angular';
 
 @Component({
   selector: 'app-syncronization',
@@ -28,10 +28,13 @@ export class SyncronizationPage {
     public userService: UsersService,
     public alertController: AlertController,
     public eventCtrl: Events,
-    private platform: Platform,
     private aspirationService: AspirationService) {
       this.eventCtrl.subscribe('publish.aspiration.log', (elementPush) => {
         this.registriesApiration.push(elementPush);
+      });
+      this.eventCtrl.subscribe('graphql:error', (elementPush) => {
+        this.registriesApiration.push(elementPush);
+        this.loading.dismiss();
       });
     }
 
@@ -86,38 +89,6 @@ export class SyncronizationPage {
     //});
   }
 
-  async sendEmail() {
-    if (this.platform.is("android")) {
-      //"cordova-plugin-send-email": "git+https://github.com/EstrategicaEasyForm/cordova-plugin-send-email.git"
-      const mailSettings = {
-        emailFrom: "camachod@globalhitss.com",
-        emailTo: "felizarazol@unal.edu.co",
-        smtp: "correobog.globalhitss.com",
-        smtpUserName: "camachod",
-        smtpPassword: "password",
-        attachments: [],
-        subject: "email subject from the ionic app",
-        textBody: "write something within the body of the email"
-      };
-      
-      const success = function (message) {
-        alert('sended email to ' + mailSettings.smtp);
-        alert(message);
-      }
-
-      const failure = function (message) {
-        alert("Error sending the email");
-        alert(message);
-      }
-      try {
-        cordova.exec(success,failure,"SMTPClient","execute",[mailSettings]);
-      }
-      catch(err){
-        alert(err);
-      };
-    }
-  }
-
   async retriveAgenda() {
       this.registriesApiration.push({
         type : 'info',
@@ -151,7 +122,6 @@ export class SyncronizationPage {
       }
       else this.showMessage('No se puede consultar la lista de agendas');
     });
-    this.sendEmail();
   }
 
   async showMessage(message: string) {

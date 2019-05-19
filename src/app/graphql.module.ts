@@ -46,7 +46,9 @@ export class GraphQLModule {
       const message = 'graphQLErrors';
       // GraphQl error event	     
       this.events.publish('graphql:error',{
-        type:'info',message:"Mensaje informativo",time:moment().format('HH:mm:ss')});
+        type:'info',
+        message:"Mensaje informativo",
+        time:moment().format('HH:mm:ss')});
     });
 
     apollo.create({
