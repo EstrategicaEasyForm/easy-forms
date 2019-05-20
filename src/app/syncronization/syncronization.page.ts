@@ -99,7 +99,7 @@ export class SyncronizationPage {
     this.ordersService.getDetailsApiQuery().then(detailsApi => {
       this.loading.dismiss();
       this.ordersService.setDetailsApiStorage(detailsApi);
-      this.eventCtrl.publish('sync:finish');
+      this.eventCtrl.publish('sync:finish'); 
       //_self.router.navigate(['tabs/agenda', {
       //  message: "Sincronización realizada exitosamente!!"
       //}]);

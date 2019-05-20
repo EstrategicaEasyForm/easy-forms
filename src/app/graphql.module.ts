@@ -8,6 +8,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { ToastController, Events } from '@ionic/angular';
 import { UsersService } from './users.service';
 import * as moment from 'moment-timezone';
+import ApolloLinkTimeout from 'apollo-link-timeout';
 
 // <-- The URL of the GraphQL server 
 const uri = 'http://tester.estrategicacomunicaciones.com/graphql';
@@ -50,9 +51,10 @@ export class GraphQLModule {
         message:"Mensaje informativo",
         time:moment().format('HH:mm:ss')});
     });
+    const timeoutLink = new ApolloLinkTimeout(10000); // 10 second timeout
 
     apollo.create({
-      link: linkError.concat(authToken).concat(http),
+      link: linkError.concat(timeoutLink).concat(authToken).concat(http),
       // other options like cache
       cache: new InMemoryCache(),
     });
