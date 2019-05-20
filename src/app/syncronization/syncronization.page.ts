@@ -30,7 +30,14 @@ export class SyncronizationPage {
     public userService: UsersService,
     public alertController: AlertController,
     public eventCtrl: Events,
-    private aspirationService: AspirationService) {}
+    private aspirationService: AspirationService) {
+
+      this.eventCtrl.subscribe('graphql:error', (registry) => {
+				if(this.loading) this.loading.dismiss();
+        this.registries.push(registry);
+			});
+
+    }
 
   ionViewWillEnter() {
     this.initSync();
@@ -83,6 +90,7 @@ export class SyncronizationPage {
               //  element.aspirationApi.stateSync = 'U';
               //  element.aspirationApi.comments = "Sin comentarios";
               //}
+              element.aspirationApi.stateSync = 'U';
               if (element.aspirationApi.stateSync && element.aspirationApi.stateSync == 'U') {
                 boolAspiration = true;
               }
@@ -270,7 +278,7 @@ export class SyncronizationPage {
     this.ordersService.getDetailsApiQuery().then(detailsApi => {
       this.loading.dismiss();
       this.ordersService.setDetailsApiStorage(detailsApi);
-      this.eventCtrl.publish('sync:finish');
+      this.eventCtrl.publish('sync:finish'); 
       //_self.router.navigate(['tabs/agenda', {
       //  message: "Sincronización realizada exitosamente!!"
       //}]);
