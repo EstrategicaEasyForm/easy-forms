@@ -31,36 +31,6 @@ export class AgendaPage implements OnInit {
     public toastCtrl: ToastController,
     public events: Events) {
 
-    
-    //"cordova-plugin-send-email": "git+https://github.com/EstrategicaEasyForm/cordova-plugin-send-email.git"
-    // const mailSettings = {
-    //   emailFrom: "camachod@globalhitss.com",
-    //   emailTo: "davithc01@gmail.com",
-    //   smtp: "correobog.globalhitss.com",
-    //   smtpUserName: "camachod",
-    //   smtpPassword: "password",
-    //   attachments: [],
-    //   subject: "email subject from the ionic app",
-    //   textBody: "write something within the body of the email"
-    // };
-    
-    // const success = function (message) {
-    //   alert('sended email to ' + mailSettings.smtp);
-    //   alert(message);
-    // }
-
-    // const failure = function (message) {
-    //   alert("Error sending the email");
-    //   alert(message);
-    // }
-    // try {
-    //   cordova.exec(success,failure,"SMTPClient","execute",[mailSettings]);
-    // }
-    // catch(err){
-    //   alert(err);
-    // };
-
-
     // const transporter = nodemailer.createTransport({
 
     //   service: 'correobog.globalhitss.com',

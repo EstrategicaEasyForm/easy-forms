@@ -1,14 +1,214 @@
 import gql from 'graphql-tag';
 import { Apollo } from 'apollo-angular';
 import { Injectable } from '@angular/core';
-
+import { UsersService } from '../users.service';
+import * as moment from 'moment-timezone';
+import { Events, Platform } from '@ionic/angular';
+import { PdfViewerAspirationPage } from '../pdf-viewer-aspiration/pdf-viewer-aspiration.page';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AspirationService {
 
-  constructor(private apollo: Apollo) { }
+  generatePDFs: any = [];
+
+  constructor(private apollo: Apollo,
+    public userService : UsersService,
+    public event : Events,
+    private platform : Platform,
+    private pfdAspiration : PdfViewerAspirationPage) { }
+
+  processAspiration(orders) {
+    var countAspirations: number = 0;
+    var totalAspirations: number = 0;
+    var boolAspiration: boolean = false;
+    var boolDetails: boolean = false;
+    if (orders) {
+      console.log(orders);
+      orders.forEach(order => {
+        order.detailsApi.forEach(element => {
+          if (element.aspirationApi) {
+            if (element.aspirationApi.id == '31') {
+              element.aspirationApi.stateSync = 'U';
+              element.aspirationApi.comments = "Sin comentarios";
+            }
+            if (element.aspirationApi.stateSync && element.aspirationApi.stateSync == 'U') {
+              boolAspiration = true;
+            }
+            element.aspirationApi.details.forEach(detail => {
+              //if (detail.id == '495') {
+              //  detail.stateSync = 'U';
+              //  detail.donor = "NN";
+              //}
+              if (detail.stateSync && (detail.stateSync == 'C' || detail.stateSync == 'U')) {
+                boolDetails = true;
+              }
+            });
+            if (boolAspiration == true || boolDetails == true) {
+              totalAspirations = totalAspirations + 1;
+              this.generatePDFs.push(element.aspirationApi);
+            }
+            boolAspiration = false;
+            boolDetails = false;
+          }
+        });
+      });
+      orders.forEach(order => {
+        order.detailsApi.forEach(element => {
+          if (element.aspirationApi) {
+            //Update aspiration
+            if (element.aspirationApi.stateSync && element.aspirationApi.stateSync == 'U') {
+              element.aspirationApi.user_id_updated = this.userService.getUserId();
+              boolAspiration = true;
+            }
+            //Update details from aspiration
+            var details: any = {};
+            var creates: any = [];
+            var updates: any = [];
+            element.aspirationApi.details.forEach(elementDetail => {
+              if (elementDetail.stateSync && elementDetail.stateSync == 'U') {
+                boolDetails = true;
+                var elementUpdate: any = {};
+                elementUpdate['id'] = elementDetail.id;
+                elementUpdate['local_id'] = elementDetail.local_id;
+                elementUpdate['donor'] = elementDetail.donor;
+                elementUpdate['donor_breed'] = elementDetail.donor_breed;
+                elementUpdate['arrived_time'] = elementDetail.arrived_time;
+                elementUpdate['bull'] = elementDetail.bull;
+                elementUpdate['bull_breed'] = elementDetail.bull_breed;
+                elementUpdate['type'] = elementDetail.type;
+                elementUpdate['gi'] = elementDetail.gi;
+                elementUpdate['gss'] = elementDetail.gss;
+                elementUpdate['gssi'] = elementDetail.gssi;
+                elementUpdate['others'] = elementDetail.others;
+                elementUpdate['user_id_updated'] = this.userService.getUserId();
+                updates.push(elementUpdate);
+              }
+              if (elementDetail.stateSync && elementDetail.stateSync == 'C') {
+                boolDetails = true;
+                var elementCreate: any = {};
+                elementCreate['local_id'] = elementDetail.local_id;
+                elementCreate['donor'] = elementDetail.donor;
+                elementCreate['donor_breed'] = elementDetail.donor_breed;
+                elementCreate['arrived_time'] = elementDetail.arrived_time;
+                elementCreate['bull'] = elementDetail.bull;
+                elementCreate['bull_breed'] = elementDetail.bull_breed;
+                elementCreate['type'] = elementDetail.type;
+                elementCreate['gi'] = elementDetail.gi;
+                elementCreate['gss'] = elementDetail.gss;
+                elementCreate['gssi'] = elementDetail.gssi;
+                elementCreate['others'] = elementDetail.others;
+                elementCreate['user_id_updated'] = this.userService.getUserId();
+                elementCreate['user_id_created'] = this.userService.getUserId();
+                creates.push(elementCreate);
+              }
+            });
+            if (creates.length > 0) {
+              details['create'] = creates;
+            }
+            if (updates.length > 0) {
+              details['update'] = updates;
+            }
+            if (boolAspiration == true && boolDetails == false) {
+              element.aspirationApi.user_id_updated = this.userService.getUserId();
+                this.event.publish('publish.aspiration.log', {
+                  type:'info',
+                  message:"Inicia actualización de la aspiración con orden " + order.id,
+                  time:moment().format('HH:mm:ss')
+                });
+
+                this.updateOnlyAspiration(element.aspirationApi)
+                .subscribe(({ data }) => {
+                  countAspirations = countAspirations + 1;
+                  if (data.updateAspiration) {
+                    this.event.publish('publish.aspiration.log', {
+                      type:'info',
+                      message:"Se actualizó correctamente la aspiración con orden " + order.id,
+                      time:moment().format('HH:mm:ss')
+                    });
+                  } else {
+                    this.event.publish('publish.aspiration.log', {
+                      type:'error',
+                      message:"Ocurrió un error actualizando la aspiración con orden " + order.id,
+                      time:moment().format('HH:mm:ss')
+                    });
+                  }
+                  if (totalAspirations == countAspirations) {
+                    return this.sendEmail();
+                  }
+                });
+            } else if (boolAspiration == false && boolDetails == true) {
+              element.aspirationApi.user_id_updated = this.userService.getUserId();
+              var dataDetails: any = {};
+              dataDetails['details'] = details;
+              this.event.publish('publish.aspiration.log', {
+                type:'info',
+                message:"Inicia actualización de los detalles de la aspiración con orden " + order.id,
+                time:moment().format('HH:mm:ss')
+              });
+
+              this.updateAspirationDetails(element.aspirationApi, dataDetails)
+                .subscribe(({ data }) => {
+                  countAspirations = countAspirations + 1;
+                  if (data.updateAspiration) {
+                    this.event.publish('publish.aspiration.log', {
+                      type:'info',
+                      message:"Se actualizó correctamente los detalles de la aspiración con orden " + order.id,
+                      time:moment().format('HH:mm:ss')
+                    });
+                  } else {
+                    this.event.publish('publish.aspiration.log', {
+                      type:'error',
+                      message:"Ocurrio un error actualizando los detalles de la aspiración con orden " + order.id,
+                      time:moment().format('HH:mm:ss')
+                    });
+                  }
+                  if (totalAspirations == countAspirations) {
+                    return this.sendEmail();
+                  }
+                });
+            } else if (boolAspiration == true && boolDetails == true) {
+              element.aspirationApi.user_id_updated = this.userService.getUserId();
+              var dataDetails: any = {};
+              dataDetails['details'] = details;
+              this.event.publish('publish.aspiration.log', {
+                type:'info',
+                message:"Inicia actualización de toda la aspiración con orden " + order.id,
+                time:moment().format('HH:mm:ss')
+              });
+
+              this.updateAllAspiration(element.aspirationApi, dataDetails)
+                .subscribe(({ data }) => {
+                  countAspirations = countAspirations + 1;
+                  if (data.updateAspiration) {
+                    this.event.publish('publish.aspiration.log', {
+                      type:'info',
+                      message:"Se actualizó correctamente toda la aspiración con orden " + order.id,
+                      time:moment().format('HH:mm:ss')
+                    });
+                  } else {
+                    this.event.publish('publish.aspiration.log', {
+                      type:'error',
+                      message:"Ocurrio un error actualizando toda la aspiración con orden " + order.id,
+                      time:moment().format('HH:mm:ss')
+                    });
+                  }
+                  if (totalAspirations == countAspirations) {
+                    return this.sendEmail();
+                  }
+                });
+            }
+            boolAspiration = false;
+            boolDetails = false;
+          }
+        });
+      });
+    }
+    if (totalAspirations == 0) {
+      return true;
+    }
+  }
 
   updateOnlyAspiration(data: any) {
     const aspirationMutation = gql`
@@ -99,5 +299,41 @@ export class AspirationService {
         }
       }
     });
+  }
+
+  async sendEmail() {
+    if (this.platform.is("android")) {
+      this.generatePDFs.forEach(pdf => {
+        //Generate PDF file here
+        
+        //"cordova-plugin-send-email": "git+https://github.com/EstrategicaEasyForm/cordova-plugin-send-email.git"
+        const mailSettings = {
+          emailFrom: "camachod@globalhitss.com",
+          emailTo: "felizarazol@unal.edu.co",
+          smtp: "correobog.globalhitss.com",
+          smtpUserName: "camachod",
+          smtpPassword: "password",
+          attachments: [],
+          subject: "email subject from the ionic app",
+          textBody: "write something within the body of the email"
+        };
+        
+        const success = function (message) {
+          alert('sended email to ' + mailSettings.smtp);
+          alert(message);
+        }
+
+        const failure = function (message) {
+          alert("Error sending the email");
+          alert(message);
+        }
+        try {
+          cordova.exec(success,failure,"SMTPClient","execute",[mailSettings]);
+        }
+        catch(err){
+          alert(err);
+        };
+      });
+    }
   }
 }

@@ -15,6 +15,9 @@ ion-label {
     max-width: none!important;
     overflow: visible!important;
     white-space: normal!important;
+    @media screen and (max-width: 720px) {
+        font-size: 19px!important;
+    }
 }
 ion-input {
     border: solid 1px black;
@@ -70,21 +73,26 @@ ion-textarea{
 
 .click-card { 
     border-bottom: solid 1px darkgray;
+    min-height: 46px;
     &:after {
         content: " ";
         width: 0;
         position: absolute;
         left: 100%;
-        top: 10px;
-        margin-left: -32px;
+        top: 9px;
+        margin-left: -30px;
         pointer-events: none;
-        border-top: 36px solid transparent;
-        border-bottom: 36px solid transparent;
+        border-top: 21px solid transparent;
+        border-bottom: 21px solid transparent;
         border-left: 11px solid #6fd1bd;
     }
 }
 ion-card-content {
-    margin-top: -14px;
+    margin-top: 0px;
+}
+ion-card-header {
+    background: -webkit-gradient(linear, 41% 1820%, 1392% 66%, from(white), to(gray));
+    padding-bottom: 0px;
 }
 .filter-registry-label {
     margin-top: 17px;
