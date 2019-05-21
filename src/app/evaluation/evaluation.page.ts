@@ -33,8 +33,9 @@ export class EvaluationPage implements OnInit {
     initialSlide: 1
   };
 	
-	validation_form_order2: FormGroup;
-	//validation_form_general: FormGroup;
+	validation_form_order: FormGroup;
+  //validation_form_general: FormGroup;
+  
 
 	validation_messages = {
     'animal_id': [
@@ -77,20 +78,12 @@ export class EvaluationPage implements OnInit {
     this.detailItem = detail.detailItem;
     this.agenda = detail.agenda;
 
-    this.validation_form_order2 = this.formBuilder.group({
+    this.validation_form_order = this.formBuilder.group({
       animal_id: [this.evaluation.animal_id, Validators.required],
       chapeta: [this.evaluation.chapeta, Validators.required],
       attendant: [this.evaluation.attendant, Validators.required],
       diagnostic: [this.evaluation.diagnostic, Validators.required]
     });
-
-    //this.validation_form_general = this.formBuilder.group({
-    //  arrived_temperature_number: [this.evaluation.arrived_temperature_number, Validators.required,],
-    //  transport_type: [this.evaluation.transport_type, Validators.required],
-    //  receiver_name: [this.evaluation.receiver_name, Validators.required],
-    //  identification_number: [this.evaluation.identification_number, Validators.required],
-    //  comments: [this.evaluation.comments, Validators.required]
-    //});
 
     for (let detail of this.evaluation.details) {
       if (detail.arrived_time) {

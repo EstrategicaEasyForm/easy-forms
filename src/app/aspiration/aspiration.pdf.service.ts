@@ -10,7 +10,7 @@ import * as moment from 'moment-timezone';
 @Injectable({
 	providedIn: 'root'
 })
-export class PdfMakeAspirationService {
+export class AspirationPdfService {
 
 	constructor(
 		public loadingController: LoadingController,
@@ -32,9 +32,8 @@ export class PdfMakeAspirationService {
 	//   watermark: true|false,
 	//	 open: true|false
 	// }
-	async makePdf(data, callback, options) {
+	async makePdf(data, options) {
 
-		let _self = this;
 		pdfmake.vfs = pdfFonts.pdfMake.vfs;
 
 		var aspirationDetails = [];
@@ -146,33 +145,39 @@ export class PdfMakeAspirationService {
 			},
 		};
 
-		try {
-			pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {
-				try {
-					let utf8 = new Uint8Array(buffer);
-					let binaryArray = utf8.buffer;
-					const filename = "InvitroAspiracion_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
-					_self.saveToDevice(binaryArray, filename);
+		const _self = this;
+
+		return new Promise(resolve => {
+			try {
+				pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {
+					try {
+						let utf8 = new Uint8Array(buffer);
+						let binaryArray = utf8.buffer;
+						const filename = "InvitroAspiracion_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
+						_self.saveToDevice(binaryArray, filename);
 
 
-					if (options && options.open) {
-						_self.fileOpener.open(_self.file.dataDirectory + filename, 'application/pdf')
-							.then(() => callback(null,'File is opened'))
-							.catch(e => callback(null,'Error opening file ' + e));
+						if (options && options.open) {
+							_self.fileOpener.open(_self.file.dataDirectory + filename, 'application/pdf')
+								.then(() => resolve({ status: "success", message: "File is opened" }))
+								.catch(e => resolve({ status: "error", error: e }));
+						}
+						//Retorna el codigo binario del archivo pdf generado
+						else {
+							resolve({ status: "success", base64: binaryArray, filename: filename });
+						}
+
+					} catch (e) {
+						const errm = e.message ? e.message : typeof e === 'string' ? e : '';
+						resolve({ status: "error", error: errm });
 					}
-					//Retorna el codigo binario del archivo pdf generado
-					else {
-						callback({ binaryArray: binaryArray, filename: filename }, null);
-					}
+				});
 
-				} catch (e) {
-					callback(null, e);
-				}
-			});
-
-		} catch (err) {
-			callback(null, err);
-		}
+			} catch (err) {
+				const errm = err.message ? err.message : typeof err === 'string' ? err : '';
+				resolve({ status: "error", error: errm });
+			}
+		});
 	}
 	saveToDevice(data: any, savefile: any) {
 		let options: IWriteOptions = { replace: true };

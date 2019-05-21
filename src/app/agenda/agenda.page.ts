@@ -416,7 +416,13 @@ export class AgendaPage implements OnInit {
     if (detailApi.templateType)
       switch (detailApi.templateType.id) {
         case "1":
-          this.ordersService.setDetailApiParam(detailApi);
+          this.ordersService.setDetailApiParam({
+            evaluacionApi: detailApi.evaluacionApi,
+            agendaPage: this,
+            detailItem: detailApi,
+            order: detailApi.order,
+            agenda: detailApi.agenda
+          });
           this.router.navigate(['evaluation']);
           break;
         case "2":

@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import * as moment from 'moment-timezone';
-import { PdfMakeAspirationService } from './pdf-make-aspiration.service';
+import { AspirationPdfService } from './aspiration.pdf.service';
 
 @Component({
   selector: 'app-aspiration',
@@ -80,7 +80,7 @@ export class AspirationPage implements OnInit {
     public alertController: AlertController,
     public camera: Camera,
     public platform: Platform,
-    public pdfMakeAspiration: PdfMakeAspirationService) {
+    public aspirationPdf: AspirationPdfService) {
 
   }
 
@@ -159,16 +159,20 @@ export class AspirationPage implements OnInit {
   }
 
   openPdfViewer() {
-    const _self = this;
-    this.pdfMakeAspiration.makePdf({
+    const data = {
       aspiration: this.aspiration,
       order: this.order,
       local: this.detailItem.local
-    },function(pdfObj, error){
-      if(error){
-        _self.showMessage('No se puede generar el pdf ' + error);
+    };
+    const options = {
+      watermark: true,
+      open: true
+    };
+    this.aspirationPdf.makePdf(data, options).then((pdf:any) => {
+      if(pdf.status === 'error') {
+        this.showMessage(pdf.error);
       }
-    }, { watermark: true, open: true });
+    });
   }
 
   onSaveButton() {
