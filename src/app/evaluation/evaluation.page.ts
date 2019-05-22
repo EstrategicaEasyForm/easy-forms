@@ -16,7 +16,7 @@ import { PdfMakeEvaluationService } from './pdf-make-evaluation.service';
   styleUrls: ['./evaluation.page.scss'],
 })
 export class EvaluationPage implements OnInit {
-	
+
   evaluation: any;
   detailItem: any;
   agendaPage: any;
@@ -32,12 +32,12 @@ export class EvaluationPage implements OnInit {
   slideEvaluationOpts = {
     initialSlide: 1
   };
-	
-	validation_form_order: FormGroup;
-  //validation_form_general: FormGroup;
-  
 
-	validation_messages = {
+  validation_form_order: FormGroup;
+  //validation_form_general: FormGroup;
+
+
+  validation_messages = {
     'animal_id': [
       { type: 'required', message: 'Campo requerido.' }
     ],
@@ -49,13 +49,34 @@ export class EvaluationPage implements OnInit {
     ],
     'diagnostic': [
       { type: 'required', message: 'Campo requerido.' }
+    ],
+    'fit': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'synchronized': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'local_id': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'other_procedures': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'comments': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'receiver_name': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'identification_number': [
+      { type: 'required', message: 'Campo requerido.' }
     ]
   };
-	
-	
+
+
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
   constructor(
-	public ordersService: OrdersService,
+    public ordersService: OrdersService,
     public formBuilder: FormBuilder,
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
@@ -65,7 +86,7 @@ export class EvaluationPage implements OnInit {
     public alertController: AlertController,
     public camera: Camera,
     public platform: Platform,
-    public pdfMakeEvaluation: PdfMakeEvaluationService) { 
+    public pdfMakeEvaluation: PdfMakeEvaluationService) {
   }
 
   ngOnInit() {
@@ -82,26 +103,31 @@ export class EvaluationPage implements OnInit {
       animal_id: [this.evaluation.animal_id, Validators.required],
       chapeta: [this.evaluation.chapeta, Validators.required],
       attendant: [this.evaluation.attendant, Validators.required],
-      diagnostic: [this.evaluation.diagnostic, Validators.required]
+      diagnostic: [this.evaluation.diagnostic, Validators.required],
+      fit: [this.evaluation.fit, Validators.required],
+      synchronized: [this.evaluation.synchronized, Validators.required],
+      local_id: [this.evaluation.local_id, Validators.required],
+      other_procedures : [this.evaluation.other_procedures, Validators.required],
+      comments : [this.evaluation.comments, Validators.required]
     });
 
-    for (let detail of this.evaluation.details) {
-      if (detail.arrived_time) {
-        const minute = Number(detail.arrived_time.split(':')[1].substr(0, 2));
-        const pm = detail.arrived_time.split(':')[1].substr(2, 2) === 'PM' ? 12 : 0;
-        const hour = Number(detail.arrived_time.split(':')[0]) + pm;
-        let time = moment().set({ hour: hour, minute: minute });
-        detail.ionDateTime = time.format();
-        detail.arrived_time = time.format('hh:mmA');
-      }
-      detail.gi = Number(detail.gi) || 0;
-      detail.gii = Number(detail.gii) || 0;
-      detail.giii = Number(detail.giii) || 0;
-      detail.others = Number(detail.others) || 0;
-    }
+    //for (let detail of this.evaluation.details) {
+    //  if (detail.date) {
+    //    const minute = Number(detail.date.split(':')[1].substr(0, 2));
+    //    const pm = detail.date.split(':')[1].substr(2, 2) === 'PM' ? 12 : 0;
+    //    const hour = Number(detail.date.split(':')[0]) + pm;
+    //    let time = moment().set({ hour: hour, minute: minute });
+    //    detail.ionDateTime = time.format();
+    //    detail.date = time.format('hh:mmA');
+    //  }
+    //  detail.gi = Number(detail.gi) || 0;
+    //  detail.gii = Number(detail.gii) || 0;
+    // detail.giii = Number(detail.giii) || 0;
+    //  detail.others = Number(detail.others) || 0;
+    //}
 
   }
-  
+
   openevaluationDetail(indx) {
     this.ordersService.setDetailApiParam({
       evaluation: this.evaluation,
@@ -110,11 +136,11 @@ export class EvaluationPage implements OnInit {
     });
     this.router.navigate(['evaluation-detail']);
   }
-  
+
   reloadDetailsList(detailsList) {
     this.evaluation.details = detailsList;
   }
-  
+
   async openSignatureModel() {
     const modalPage = await this.modalCtrl.create({
       component: SignatureDrawPadPage,
@@ -132,25 +158,25 @@ export class EvaluationPage implements OnInit {
     return await modalPage.present();
   }
 
-  
+
   openPdfViewer() {
     const _self = this;
     this.pdfMakeEvaluation.makePdf({
       evaluation: this.evaluation,
       order: this.order,
       local: this.detailItem.local
-    },function(pdfObj, error){
-      if(error){
+    }, function (pdfObj, error) {
+      if (error) {
         _self.showMessage('No se puede generar el pdf ' + error);
       }
     }, { watermark: true, open: true });
   }
-  
+
   onSaveButton() {
     this.saveevaluation();
     this.showMessage('Registro modificado');
   }
-  
+
   saveevaluation() {
     this.ordersService.getDetailsApiStorage().then((ordersList) => {
       if (ordersList) {
@@ -168,7 +194,7 @@ export class EvaluationPage implements OnInit {
       this.agendaPage.refreshDetailsOriginal(ordersList);
     });
   }
-  
+
   finalizeevaluation() {
     this.evaluation.state = 1;
     this.ordersService.getDetailsApiStorage().then((detailsApi) => {
@@ -186,7 +212,7 @@ export class EvaluationPage implements OnInit {
       }
     });
   }
-  
+
   async presentAlertConfirm() {
     const alert = await this.alertController.create({
       header: 'Finalizar Evaluación!',
@@ -210,7 +236,7 @@ export class EvaluationPage implements OnInit {
 
     await alert.present();
   }
-  
+
   openCamera() {
     const options: CameraOptions = {
       quality: 100,
@@ -235,7 +261,7 @@ export class EvaluationPage implements OnInit {
       }
     });
   }
-  
+
   async showMessage(message: string) {
     const toast = await this.toastCtrl.create({
       message: message,
@@ -243,7 +269,7 @@ export class EvaluationPage implements OnInit {
     });
     toast.present();
   }
-  
+
   async setControlPanel(mbControlPanel) {
     this.mbControlPanel = mbControlPanel;
     const loading = await this.loadingCtrl.create({
