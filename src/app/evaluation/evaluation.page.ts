@@ -18,7 +18,7 @@ import { PdfMakeEvaluationService } from './pdf-make-evaluation.service';
 export class EvaluationPage implements OnInit {
 
   evaluation: any;
-  detailItem: any;
+  detailApi: any;
   agendaPage: any;
   evaluationObjOri: any;
   order: any;
@@ -28,13 +28,8 @@ export class EvaluationPage implements OnInit {
   photoImage: any;
   mbControlPanel: number = 1;
 
-  // Optional parameters to pass to the swiper instance. See http://idangero.us/swiper/api/ for valid options.
-  slideEvaluationOpts = {
-    initialSlide: 1
-  };
-
   validation_form_order: FormGroup;
-  //validation_form_general: FormGroup;
+  validation_form_general: FormGroup;
 
 
   validation_messages = {
@@ -96,7 +91,7 @@ export class EvaluationPage implements OnInit {
     this.evaluation = Object.assign({}, this.evaluationObjOri);
     this.agendaPage = detail.agendaPage;
     this.order = detail.order;
-    this.detailItem = detail.detailItem;
+    this.detailApi = detail.detailApi;
     this.agenda = detail.agenda;
 
     this.validation_form_order = this.formBuilder.group({
@@ -110,6 +105,15 @@ export class EvaluationPage implements OnInit {
       other_procedures : [this.evaluation.other_procedures, Validators.required],
       comments : [this.evaluation.comments, Validators.required]
     });
+
+    this.validation_form_general = this.formBuilder.group({
+      arrived_temperature_number: [this.evaluation.arrived_temperature_number, Validators.required,],
+      transport_type: [this.evaluation.transport_type, Validators.required],
+      receiver_name: [this.evaluation.receiver_name, Validators.required],
+      identification_number: [this.evaluation.identification_number, Validators.required],
+      comments: [this.evaluation.comments, Validators.required]
+    });
+
 
     //for (let detail of this.evaluation.details) {
     //  if (detail.date) {
@@ -164,7 +168,7 @@ export class EvaluationPage implements OnInit {
     this.pdfMakeEvaluation.makePdf({
       evaluation: this.evaluation,
       order: this.order,
-      local: this.detailItem.local
+      local: this.detailApi.local
     }, function (pdfObj, error) {
       if (error) {
         _self.showMessage('No se puede generar el pdf ' + error);
@@ -190,7 +194,7 @@ export class EvaluationPage implements OnInit {
         }
       }
       this.ordersService.setDetailsApiStorage(ordersList);
-      this.detailItem.detailObjApi = this.evaluation;
+      this.detailApi.detailObjApi = this.evaluation;
       this.agendaPage.refreshDetailsOriginal(ordersList);
     });
   }
@@ -206,7 +210,7 @@ export class EvaluationPage implements OnInit {
           }
         }
         this.ordersService.setDetailsApiStorage(detailsApi);
-        this.detailItem.evaluationApi = this.evaluation;
+        this.detailApi.evaluationApi = this.evaluation;
         this.showMessage('Evaluación Finalizada');
         this.location.back();
       }

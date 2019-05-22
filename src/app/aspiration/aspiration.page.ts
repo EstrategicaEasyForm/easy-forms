@@ -18,7 +18,7 @@ import { AspirationPdfService } from './aspiration.pdf.service';
 export class AspirationPage implements OnInit {
 
   aspiration: any;
-  detailItem: any;
+  detailApi: any;
   agendaPage: any;
   aspirationObjOri: any;
   order: any;
@@ -27,11 +27,6 @@ export class AspirationPage implements OnInit {
   showTakePhoto = true;
   photoImage: any;
   mbControlPanel: number = 1;
-
-  // Optional parameters to pass to the swiper instance. See http://idangero.us/swiper/api/ for valid options.
-  slideAspirationOpts = {
-    initialSlide: 1
-  };
 
   //validations forms
   validation_form_order: FormGroup;
@@ -91,7 +86,7 @@ export class AspirationPage implements OnInit {
     this.aspiration = Object.assign({}, this.aspirationObjOri);
     this.agendaPage = detail.agendaPage;
     this.order = detail.order;
-    this.detailItem = detail.detailItem;
+    this.detailApi = detail.detailApi;
     this.agenda = detail.agenda;
     this.aspiration.arrived_temperature = this.aspiration.arrived_temperature || '';
     this.aspiration.arrived_temperature_number = Number(this.aspiration.arrived_temperature.replace('°C', '').replace(',', '.'));
@@ -125,7 +120,6 @@ export class AspirationPage implements OnInit {
       detail.giii = Number(detail.giii) || 0;
       detail.others = Number(detail.others) || 0;
     }
-
   }
 
   openAspirationDetail(indx) {
@@ -162,14 +156,14 @@ export class AspirationPage implements OnInit {
     const data = {
       aspiration: this.aspiration,
       order: this.order,
-      local: this.detailItem.local
+      local: this.detailApi.local
     };
     const options = {
       watermark: true,
       open: true
     };
-    this.aspirationPdf.makePdf(data, options).then((pdf:any) => {
-      if(pdf.status === 'error') {
+    this.aspirationPdf.makePdf(data, options).then((pdf: any) => {
+      if (pdf.status === 'error') {
         this.showMessage(pdf.error);
       }
     });
@@ -193,7 +187,7 @@ export class AspirationPage implements OnInit {
         }
       }
       this.ordersService.setDetailsApiStorage(ordersList);
-      this.detailItem.detailObjApi = this.aspiration;
+      //refresca el objeto en la ventana de agendas.
       this.agendaPage.refreshDetailsOriginal(ordersList);
     });
   }
@@ -209,7 +203,7 @@ export class AspirationPage implements OnInit {
           }
         }
         this.ordersService.setDetailsApiStorage(detailsApi);
-        this.detailItem.aspirationApi = this.aspiration;
+        this.detailApi.aspirationApi = this.aspiration;
         this.showMessage('Aspiración Finalizada');
         this.location.back();
       }

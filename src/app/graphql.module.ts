@@ -43,13 +43,35 @@ export class GraphQLModule {
       //   message: 'No se puede consultar el servicio',
       //   duration: 2000
       // });
-      
-      const message = 'graphQLErrors';
-      // GraphQl error event	     
-      this.events.publish('graphql:error',{
-        type:'info',
-        message:"Mensaje informativo",
-        time:moment().format('HH:mm:ss')});
+
+      let message = '';
+
+      if (networkError) {
+        message = networkError.message;
+        // GraphQl error event	     
+        this.events.publish('graphql:error', {
+          type: 'error',
+          message: message,
+          time: moment().format('HH:mm:ss')
+        });
+      }
+      else if (graphQLErrors) {
+        graphQLErrors.forEach(err => {
+          if (err.extensions.category === 'authentication') {
+            message = 'Usuario o clave incorrectos';
+          }
+          else message = err.message || err.extensions.category;
+
+          // GraphQl error event	     
+          this.events.publish('graphql:error', {
+            type: 'error',
+            message: message,
+            time: moment().format('HH:mm:ss')
+          });
+        });
+      }
+
+
     });
     const timeoutLink = new ApolloLinkTimeout(10000); // 10 second timeout
 

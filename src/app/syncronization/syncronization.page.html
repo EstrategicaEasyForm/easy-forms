@@ -9,7 +9,7 @@
   <app-network-notify-banner id="networkNotifyBanner"></app-network-notify-banner>
   <ion-card style="height: 90%; overflow: auto">
     <div id="divConsole" style="margin: 15px">
-      <div *ngFor="let registry of registriesApiration">
+      <div *ngFor="let registry of logs">
         <ion-item [ngClass]="registry.type" class="item-stable">
           <ion-label item-start class="sizeTime">[{{registry.time}}]</ion-label>
           <ion-label text-wrap>{{registry.message}}</ion-label>
