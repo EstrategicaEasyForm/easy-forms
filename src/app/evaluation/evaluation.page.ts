@@ -283,4 +283,13 @@ export class EvaluationPage implements OnInit {
     await loading.present();
   }
 
+  onChangeLocal($localId) {
+    if (this.evaluation.locals) {
+      for (let local of this.evaluation.locals) {
+        if (local.id === $localId) {
+          this.detailApi.local = local;
+        }
+      }
+    }
+  }
 }

@@ -387,7 +387,7 @@ export class AgendaPage implements OnInit {
       switch (detailApi.templateType.id) {
         case "1":
           this.ordersService.setDetailApiParam({
-            evaluacionApi: detailApi.evaluacionApi,
+            evaluationApi: detailApi.evaluationApi,
             agendaPage: this,
             detailApi: detailApi,
             order: detailApi.order,
