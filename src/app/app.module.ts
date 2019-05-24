@@ -21,6 +21,7 @@ import { ComponentsModule } from './components.module';
 import { SignatureDrawPadPage } from './signature-draw-pad/signature-draw-pad.page';
 import { SignatureDrawPadPageModule } from './signature-draw-pad/signature-draw-pad.module';
 import { AspirationDetailPageModule } from './aspiration/aspiration-detail.module';
+import { EvaluationDetailPageModule } from './evaluation/evaluation-detail.module';
 import { Camera } from '@ionic-native/camera/ngx';
 
 @NgModule({
@@ -38,6 +39,7 @@ import { Camera } from '@ionic-native/camera/ngx';
     ComponentsModule,
     SignatureDrawPadPageModule,
     AspirationDetailPageModule,
+    EvaluationDetailPageModule,
     IonicStorageModule.forRoot()],
   providers: [
     StatusBar,

@@ -11,6 +11,7 @@ const routes: Routes = [
   { path: 'evaluation', loadChildren: './evaluation/evaluation.module#EvaluationPageModule' },
   { path: 'aspiration', loadChildren: './aspiration/aspiration.module#AspirationPageModule' },
   { path: 'aspiration-detail', loadChildren: './aspiration/aspiration-detail.module#AspirationDetailPageModule' },
+  { path: 'evaluation-detail', loadChildren: './evaluation/evaluation-detail.module#EvaluationDetailPageModule' },
   { path: 'transfer', loadChildren: './transfer/transfer.module#TransferPageModule' },
   { path: 'diagnostic', loadChildren: './diagnostic/diagnostic.module#DiagnosticPageModule' },
   { path: 'sexage', loadChildren: './sexage/sexage.module#SexagePageModule' }

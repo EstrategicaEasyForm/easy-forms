@@ -33,28 +33,7 @@ export class EvaluationPage implements OnInit {
 
 
   validation_messages = {
-    'animal_id': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'chapeta': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
     'evaluator': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'diagnostic': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'fit': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'synchronized': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'local_id': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'other_procedures': [
       { type: 'required', message: 'Campo requerido.' }
     ],
     'comments': [
@@ -95,20 +74,10 @@ export class EvaluationPage implements OnInit {
     this.agenda = detail.agenda;
 
     this.validation_form_order = this.formBuilder.group({
-      animal_id: [this.evaluation.animal_id, Validators.required],
-      chapeta: [this.evaluation.chapeta, Validators.required],
-      attendant: [this.evaluation.attendant, Validators.required],
-      diagnostic: [this.evaluation.diagnostic, Validators.required],
-      fit: [this.evaluation.fit, Validators.required],
-      synchronized: [this.evaluation.synchronized, Validators.required],
-      local_id: [this.evaluation.local_id, Validators.required],
-      other_procedures : [this.evaluation.other_procedures, Validators.required],
-      comments : [this.evaluation.comments, Validators.required]
     });
 
     this.validation_form_general = this.formBuilder.group({
-      arrived_temperature_number: [this.evaluation.arrived_temperature_number, Validators.required,],
-      transport_type: [this.evaluation.transport_type, Validators.required],
+      evaluator: [this.evaluation.attendant, Validators.required],
       receiver_name: [this.evaluation.receiver_name, Validators.required],
       identification_number: [this.evaluation.identification_number, Validators.required],
       comments: [this.evaluation.comments, Validators.required]
@@ -132,7 +101,7 @@ export class EvaluationPage implements OnInit {
 
   }
 
-  openevaluationDetail(indx) {
+  openEvaluationDetail(indx) {
     this.ordersService.setDetailApiParam({
       evaluation: this.evaluation,
       detailApiId: indx,
@@ -155,7 +124,7 @@ export class EvaluationPage implements OnInit {
       if (data) {
         this.evaluation.signatureImage = data.signatureImage;
         this.showMessage('Captura realizada exitósamente');
-        this.saveevaluation();
+        this.saveEvaluation();
       }
     });
 
@@ -177,11 +146,11 @@ export class EvaluationPage implements OnInit {
   }
 
   onSaveButton() {
-    this.saveevaluation();
+    this.saveEvaluation();
     this.showMessage('Registro modificado');
   }
 
-  saveevaluation() {
+  saveEvaluation() {
     this.ordersService.getDetailsApiStorage().then((ordersList) => {
       if (ordersList) {
         for (let order of ordersList) {
@@ -254,7 +223,7 @@ export class EvaluationPage implements OnInit {
       // If it's base64 (DATA_URL):
       this.evaluation.photoImage = 'data:image/png;base64,' + imageData;
       this.showMessage('Captura realizada exitósamente');
-      this.saveevaluation();
+      this.saveEvaluation();
     }, (err) => {
       // Handle error
       if (err === 'cordova_not_available') {
