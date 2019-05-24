@@ -154,7 +154,7 @@ export class AspirationPage implements OnInit {
 
   openPdfViewer() {
     const data = {
-      aspiration: this.aspiration,
+      aspirationApi: this.aspiration,
       order: this.order,
       local: this.detailApi.local
     };

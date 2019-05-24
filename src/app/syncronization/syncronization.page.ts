@@ -8,7 +8,7 @@ import { UsersService } from '../users.service';
 import { AspirationService } from './aspiration.services';
 import * as moment from 'moment-timezone';
 import { Events } from '@ionic/angular';
-import { AspirationPdfService } from '../aspiration/aspiration.pdf.service';
+import { SendEmailService } from './send-email.services';
 
 @Component({
   selector: 'app-syncronization',
@@ -16,6 +16,39 @@ import { AspirationPdfService } from '../aspiration/aspiration.pdf.service';
   styleUrls: ['./syncronization.page.scss'],
 })
 export class SyncronizationPage {
+
+  templates = [
+    {
+      "id": "1",
+      "name": "Evaluación de Receptoras",
+      "tag": "evaluationApi"
+    },
+    {
+      "id": "2",
+      "name": "Aspiración Folicular",
+      "tag": "aspirationApi"
+    },
+    {
+      "id": "4",
+      "name": "Transferencia de Embrión",
+      "tag": "transferApi"
+    },
+    {
+      "id": "5",
+      "name": "Diagnóstico",
+      "tag": "diagnosticApi"
+    },
+    {
+      "id": "6",
+      "name": "Sexaje",
+      "tag": "sexageApi"
+    },
+    {
+      "id": "7",
+      "name": "Entrega",
+      "tag": "deliveryApi"
+    }
+  ];
 
   loading: any;
   logs = [];
@@ -31,10 +64,12 @@ export class SyncronizationPage {
     public alertController: AlertController,
     public eventCtrl: Events,
     private aspirationService: AspirationService,
-    public aspirationPdf: AspirationPdfService) {
+    public sendEmail: SendEmailService) {
+
     this.eventCtrl.subscribe('publish.aspiration.log', (elementPush) => {
       this.logs.push(elementPush);
     });
+
     this.eventCtrl.subscribe('graphql:error', (elementPush) => {
       this.logs.push(elementPush);
       this.loading.dismiss();
@@ -81,77 +116,106 @@ export class SyncronizationPage {
         if (orders) {
           orders.forEach(order => {
             order.detailsApi.forEach(detailApi => {
+
               //Api aspiration template
               if (detailApi.aspirationApi) {
                 const infoSync = this.isSyncronized(detailApi.aspirationApi);
-                if(infoSync) {
-                  this.totalTemplates ++;
-                  this.updateAspiration(order, detailApi);
+                if (infoSync) {
+                  this.totalTemplates++;
+                  this.updateWorkSheet(order, detailApi, detailApi.aspirationApi, this.templates[1]);
                 }
               }
             });
           });
         }
-        if(this.totalTemplates === 0){
+        if (this.totalTemplates === 0) {
           this.finishSync();
         }
       });
   }
 
-  isSyncronized(workSheet: any) {
-    if(workSheet.stateSync === 'U') return true;
+  isSyncronized(workSheet: any): boolean {
+    if (workSheet === null) return false;
+    if (workSheet.stateSync === 'U') return true;
     workSheet.details.forEach(detail => {
       if (detail.stateSync === 'U') {
         return true;
       }
-      else if(detail.stateSync === 'C') {
+      else if (detail.stateSync === 'C') {
         return true;
       }
     });
     return false;
   }
 
-  updateAspiration(order, detailApi) {
+  updateWorkSheet(order, detailApi, workSheet, type) {
     this.logs.push({
       type: 'info',
-      message: "Inicia actualización de los detalles de la aspiración con orden " + order.id,
+      message: "Inicia actualización de " + type.name + ". Orden de producción No " + order.id,
       time: moment().format('HH:mm:ss')
     });
 
     this.aspirationService.updateAspiration(order, detailApi, detailApi.aspirationApi)
-      .then((data: any) => {
-        if (data.status === 'error') {
+      .then((response: any) => {
+        if (response.status === 'error') {
           this.logs.push({
             type: 'error',
-            message: data.error,
+            message: response.error,
             time: moment().format('HH:mm:ss')
           });
           this.logs.push({
             type: 'error',
-            message: 'Error sincronizando el servicio de aspiración para la orden de producción ' + order.id,
+            message: 'Error sincronizando el servicio de ' + type.name + '. Orden de producción No ' + order.id,
             time: moment().format('HH:mm:ss')
           });
-
-          this.sendPdfEmail(order, detailApi, detailApi.aspirationApi, data.error);
-
         }
-        else if (data.status === 'sucess') {
+        else if (response.status === 'success') {
           this.logs.push({
-            type: 'info',
-            message: "Se actualizó correctamente la aspiración con orden " + order.id,
+            type: 'success',
+            message: 'Datos de ' + type.name + ' actualizados correctamente para la orden de producción No ' + order.id,
             time: moment().format('HH:mm:ss')
           });
-          this.sendPdfEmail(order, detailApi, detailApi.aspirationApi, null);
         }
-        this.finishSync();
+
+        this.sendEmail.makePdf(order, detailApi, workSheet, type, response).then((pdf) => {
+          if (pdf.status === 'error') {
+            this.logs.push({
+              type: 'error',
+              message: 'Error generando el archivo pdf ' + pdf.filename,
+              time: moment().format('HH:mm:ss')
+            });
+          }
+          else if (pdf.status === 'success') {
+            this.sendEmail.makeEmail(order, detailApi, workSheet, type, response, pdf).then((resp: any) => {
+              if (resp.status === 'success') {
+                this.logs.push({
+                  type: 'info',
+                  message: "Correo automático enviado exitosamente para la orden " + order.id,
+                  details: [
+                    "Adjunto enviado archivo " + pdf.dataDirectory + pdf.filename
+                  ],
+                  time: moment().format('HH:mm:ss')
+                });
+              }
+              else {
+                this.logs.push({
+                  type: 'error',
+                  message: resp.error,
+                  time: moment().format('HH:mm:ss')
+                });
+              }
+            })
+          }
+          this.finishSync();
+        });
       });
   }
 
   finishSync() {
-    this.totalTemplates --;
-    if(this.totalTemplates <= 0) {
+    this.totalTemplates--;
+    if (this.totalTemplates <= 0) {
       this.logs.push({
-        type: 'Info',
+        type: 'info',
         message: 'La sincronización ha finalizado',
         time: moment().format('HH:mm:ss')
       });
@@ -206,92 +270,5 @@ export class SyncronizationPage {
 
   deploy(registry: any) {
     registry.show = !registry.show;
-  }
-
-  sendPdfEmail(order, detailApi, aspiration, errorMutation) {
-    const data = {
-      aspiration: aspiration,
-      order: order,
-      local: detailApi.local
-    };
-    const options = {
-      watermark: false,
-      open: false
-    };
-    this.aspirationPdf.makePdf(data, options).then((pdf: any) => {
-      if (pdf.status === 'error') {
-        this.showMessage(pdf.error);
-        this.logs.push({
-          type: 'error',
-          message: 'Error generando el archivo pdf ' + pdf.filename,
-          time: moment().format('HH:mm:ss')
-        });
-      }
-      else if (pdf.status === 'success') {
-        this.logs.push({
-          type: 'info',
-          message: 'Enviando el archivo ' + pdf.filename,
-          time: moment().format('HH:mm:ss')
-        });
-        this.sendEmail(pdf, order, detailApi, { textBody:'Error realizando la sincronizacion para la orden de trabajo ' + order.id});
-      }
-    });
-  }
-
-  sendEmail(pdf, order, detailApi, optionsEmail) {
-    const _self = this;
-    //"cordova-plugin-send-email": "git+https://github.com/EstrategicaEasyForm/cordova-plugin-send-email.git"
-    const mailSettings = Object.assign({
-      emailFrom: "estrategica.easy.form@gmail.com",
-      smtp: "smtp.gmail.com",
-      smtpUserName: "estrategica.easy.form",
-      smtpPassword: "HqXR8cnnL",
-      emailTo: "davithc01@gmail.com",
-      emailCC: "camachod@globalhitss.com",
-      attachments: [pdf],
-      subject: "email subject from the ionic app",
-      textBody: "write something within the body of the email"
-    },optionsEmail);
-
-    const success = function () {
-      _self.logs.push({
-        type: 'info',
-        message: "Correo automático enviado exitosamente para la orden " + order.id,
-        details: [
-          "Adjunto enviado archivo " + pdf.dataDirectory + pdf.filename
-        ],
-        time: moment().format('HH:mm:ss')
-      });
-    }
-
-    const failure = function (message) {
-      _self.showMessage('Error enviando mensaje');
-      _self.logs.push({
-        type: 'error',
-        message: message,
-        time: moment().format('HH:mm:ss')
-      });
-      _self.logs.push({
-        type: 'error',
-        message: "Error enviando el correo automático para la orden " + order.id,
-        time: moment().format('HH:mm:ss')
-      });
-    }
-    try {
-      cordova.exec(success, failure, "SMTPClient", "execute", [mailSettings]);
-    }
-    catch (err) {
-      this.showMessage('Error enviando correo');
-      this.logs.push({
-        type: 'error',
-        message: err,
-        time: moment().format('HH:mm:ss')
-      });
-      this.logs.push({
-        type: 'error',
-        message: "Error enviando el correo automático para la orden " + order.id,
-        time: moment().format('HH:mm:ss')
-      });
-    };
   }
 }

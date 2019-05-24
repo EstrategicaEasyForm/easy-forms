@@ -428,7 +428,7 @@ export class AspirationService {
         mutation: aspirationMutation,
         variables: Object.assign({ "input": {} }, variables)
       }).subscribe(({ data }) => {
-        resolve({ status: 'sucess', data: data });
+        resolve({ status: 'success', data: data });
       }, (error) => {
         resolve({ status: 'error', error: error });
       });

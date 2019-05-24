@@ -49,7 +49,7 @@ export class AspirationPdfService {
 		var k = [];
 
 		aspirationDetails.push(['Donadora', 'Raza', 'Toro', 'Raza', 'Tipo', 'GI', 'GII', 'GIII', 'Otros', 'Viables', 'Total']);
-		for (let i of data.aspiration.details) {
+		for (let i of data.aspirationApi.details) {
 			aspirationDetails.push([i.donor,
 			i.donor_breed,
 			i.bull,
