@@ -52,7 +52,7 @@ export class SyncronizationPage {
 
   loading: any;
   logs = [];
-  totalTemplates = 0;
+  totalWorkSheets = 0;
 
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
   constructor(
@@ -112,23 +112,39 @@ export class SyncronizationPage {
 
     this.ordersService.getDetailsApiStorage()
       .then((orders) => {
-        this.totalTemplates = 0;
+        this.totalWorkSheets = 0;
         if (orders) {
           orders.forEach(order => {
             order.detailsApi.forEach(detailApi => {
 
+              //Api evaluation template
+              if (detailApi.evaluationApi) {
+                const isSync = this.isSyncronized(detailApi.evaluationApi);
+                if (isSync) {
+                  this.totalWorkSheets++;
+                  this.updateWorkSheet(order, detailApi, detailApi.evaluationApi, this.templates[0]);
+                }
+              }
               //Api aspiration template
               if (detailApi.aspirationApi) {
-                const infoSync = this.isSyncronized(detailApi.aspirationApi);
-                if (infoSync) {
-                  this.totalTemplates++;
+                const isSync = this.isSyncronized(detailApi.aspirationApi);
+                if (isSync) {
+                  this.totalWorkSheets++;
                   this.updateWorkSheet(order, detailApi, detailApi.aspirationApi, this.templates[1]);
+                }
+              }
+              //Api transfer template
+              if (detailApi.transferApi) {
+                const isSync = this.isSyncronized(detailApi.transferApi);
+                if (isSync) {
+                  this.totalWorkSheets++;
+                  this.updateWorkSheet(order, detailApi, detailApi.transferApi, this.templates[2]);
                 }
               }
             });
           });
         }
-        if (this.totalTemplates === 0) {
+        if (this.totalWorkSheets === 0) {
           this.finishSync();
         }
       });
@@ -151,7 +167,7 @@ export class SyncronizationPage {
   updateWorkSheet(order, detailApi, workSheet, type) {
     this.logs.push({
       type: 'info',
-      message: "Inicia actualización de " + type.name + ". Orden de producción No " + order.id,
+      message: "Inicia actualización de la planilla " + type.name + ". Orden de producción No " + order.id,
       time: moment().format('HH:mm:ss')
     });
 
@@ -165,14 +181,14 @@ export class SyncronizationPage {
           });
           this.logs.push({
             type: 'error',
-            message: 'Error sincronizando el servicio de ' + type.name + '. Orden de producción No ' + order.id,
+            message: 'Error sincronizando la planilla ' + type.name + '. Orden de producción No ' + order.id,
             time: moment().format('HH:mm:ss')
           });
         }
         else if (response.status === 'success') {
           this.logs.push({
             type: 'success',
-            message: 'Datos de ' + type.name + ' actualizados correctamente para la orden de producción No ' + order.id,
+            message: 'La planilla ' + type.name + ' fué actualizada correctamente para la orden de producción No ' + order.id,
             time: moment().format('HH:mm:ss')
           });
         }
@@ -212,8 +228,8 @@ export class SyncronizationPage {
   }
 
   finishSync() {
-    this.totalTemplates--;
-    if (this.totalTemplates <= 0) {
+    this.totalWorkSheets--;
+    if (this.totalWorkSheets <= 0) {
       this.logs.push({
         type: 'info',
         message: 'La sincronización ha finalizado',

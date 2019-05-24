@@ -20,12 +20,20 @@ export class SendEmailService {
     };
     dataPdf[type.tag] = workSheet;
 
+    //adding watermark only if was error in grapqh mutation services
     const optionsPdf = {
       watermark: response.status !== 'success',
       open: false
     };
 
-    return await this.aspirationPdf.makePdf(dataPdf, optionsPdf).then((pdf: any) => { return pdf; });
+    let workSheetPdf;
+    //if(type.id==="1") workSheetPdf = this.evaluationPdf;
+    if(type.id==="2") workSheetPdf = this.aspirationPdf;
+    //if(type.id==="3") workSheetPdf = this.transferPdf;
+    //if(type.id==="4") workSheetPdf = this.diagnosticPdf;
+    //if(type.id==="5") workSheetPdf = this.sexagePdf;
+    //if(type.id==="6") workSheetPdf = this.deliveryPdf;
+    return workSheetPdf.makePdf(dataPdf, optionsPdf);
   }
 
   makeEmail(order, detailApi, workSheet, type, response, pdf) {
@@ -44,7 +52,7 @@ export class SendEmailService {
         smtpPassword: "HqXR8cnnL",
         emailTo: "davithc01@gmail.com",
         emailCC: "camachod@globalhitss.com",
-        attachments: [pdf.file],
+        attachments: [pdf.filename],
         dataDirectory: pdf.dataDirectory,
         subject: "Planilla de " + type.name + " Invitro - Orden de trabajo No " + order.id,
         textBody: textBody
@@ -59,8 +67,8 @@ export class SendEmailService {
       }
 
       try {
-        //"cordova-plugin-send-email"
-        //"git+https://github.com/EstrategicaEasyForm/cordova-plugin-send-email.git"
+        //"Sendding Email and PDF attached with cordova-plugin-send-email"
+        // "https://github.com/EstrategicaEasyForm/cordova-plugin-send-email.git"
         cordova.exec(success, failure, "SMTPClient", "execute", [mailSettings]);
       }
       catch (err) {
