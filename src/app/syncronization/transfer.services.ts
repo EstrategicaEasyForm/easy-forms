@@ -8,7 +8,7 @@ import { Events, Platform } from '@ionic/angular';
 @Injectable({
   providedIn: 'root'
 })
-export class AspirationService {
+export class TransferService {
 
   generatePDFs: any = [];
 
@@ -17,7 +17,7 @@ export class AspirationService {
     public event: Events,
     private platform: Platform) { }
 
-  updateAspiration(aspiration: any) {
+    updateTransfer(aspiration: any) {
     const aspirationMutation = gql`
       mutation updateAspiration($input: UpdateAspirationInput!){
         updateAspiration(input: $input) {

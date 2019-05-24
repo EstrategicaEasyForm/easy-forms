@@ -23,7 +23,7 @@ export class SendEmailService {
     //adding watermark only if was error in grapqh mutation services
     const optionsPdf = {
       watermark: response.status !== 'success',
-      open: false
+      open: true
     };
 
     let workSheetPdf;
@@ -63,7 +63,7 @@ export class SendEmailService {
       }
       
       const failure = function (message) {
-        resolve({status:"error"});
+        resolve({status:"error", error:message});
       }
 
       try {

@@ -9,6 +9,7 @@ import { AspirationService } from './aspiration.services';
 import * as moment from 'moment-timezone';
 import { Events } from '@ionic/angular';
 import { SendEmailService } from './send-email.services';
+import { TransferService } from './transfer.services';
 
 @Component({
   selector: 'app-syncronization',
@@ -64,6 +65,7 @@ export class SyncronizationPage {
     public alertController: AlertController,
     public eventCtrl: Events,
     private aspirationService: AspirationService,
+    private transferService: TransferService,
     public sendEmail: SendEmailService) {
 
     this.eventCtrl.subscribe('publish.aspiration.log', (elementPush) => {
@@ -171,8 +173,15 @@ export class SyncronizationPage {
       time: moment().format('HH:mm:ss')
     });
 
-    this.aspirationService.updateAspiration(order, detailApi, detailApi.aspirationApi)
-      .then((response: any) => {
+    let updateWorkSheetFunction;
+    //if(type.id==="1") updateWorkSheetFunction = this.evaluationService.updateEvaluation(detailApi.evaluationApi);
+    if(type.id==="2") updateWorkSheetFunction = this.aspirationService.updateAspiration(detailApi.aspirationApi);
+    if(type.id==="3") updateWorkSheetFunction = this.transferService.updateTransfer(detailApi.transferApi);
+    //if(type.id==="4") updateWorkSheetFunction = this.diagnosticService.updatediagnostic(detailApi.diagnosticApi);
+    //if(type.id==="5") updateWorkSheetFunction = this.sexageService.updatesexage(detailApi.sexageApi);
+    //if(type.id==="6") updateWorkSheetFunction = this.deliveryService.updatedelivery(detailApi.deliveryApi);
+      
+    updateWorkSheetFunction.then((response: any) => {
         if (response.status === 'error') {
           this.logs.push({
             type: 'error',
