@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AspirationPdfService } from '../aspiration/aspiration.pdf.service';
 import { Resolver } from 'dns';
+import { DiagnosticPdfService } from '../diagnostic/diagnostic.pdf.service';
+import { SexagePdfService } from '../sexage/sexage.pdf.service';
+import { DeliveryPdfService } from '../delivery/delivery.pdf.service';
+import { TransferPdfService } from '../transfer/transfer.pdf.service';
+import { PdfMakeEvaluationService } from '../evaluation/pdf-make-evaluation.service';
 
 
 @Injectable({
@@ -8,7 +13,13 @@ import { Resolver } from 'dns';
 })
 export class SendEmailService {
 
-  constructor(public aspirationPdf: AspirationPdfService) {
+  constructor(
+    public evaluationPdf: PdfMakeEvaluationService,
+    public aspirationPdf: AspirationPdfService,
+    public transferPdf: TransferPdfService,
+    public diagnosticPdf: DiagnosticPdfService,
+    public sexagePdf: SexagePdfService,
+    public deliveryPdf: DeliveryPdfService) {
 
   }
 
@@ -27,12 +38,12 @@ export class SendEmailService {
     };
 
     let workSheetPdf;
-    //if(type.id==="1") workSheetPdf = this.evaluationPdf;
+    if(type.id==="1") workSheetPdf = this.evaluationPdf;
     if (type.id === "2") workSheetPdf = this.aspirationPdf;
-    //if(type.id==="3") workSheetPdf = this.transferPdf;
-    //if(type.id==="4") workSheetPdf = this.diagnosticPdf;
-    //if(type.id==="5") workSheetPdf = this.sexagePdf;
-    //if(type.id==="6") workSheetPdf = this.deliveryPdf;
+    if(type.id==="3") workSheetPdf = this.transferPdf;
+    if(type.id==="4") workSheetPdf = this.diagnosticPdf;
+    if(type.id==="5") workSheetPdf = this.sexagePdf;
+    if(type.id==="6") workSheetPdf = this.deliveryPdf;
     return workSheetPdf.makePdf(dataPdf, optionsPdf);
   }
 

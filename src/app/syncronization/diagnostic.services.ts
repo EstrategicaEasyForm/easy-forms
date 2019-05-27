@@ -21,7 +21,11 @@ export class DiagnosticService {
     const diagnosticMutation = gql`
       mutation updateDiagnostic($input: UpdateDiagnosticInput!){
         updateDiagnostic(input: $input) {
-          id
+          id,
+          details {
+            id,
+            dx1
+          }
         }
       }`;
 
@@ -37,9 +41,10 @@ export class DiagnosticService {
           "received_by": diagnostic.received_by,
           "comments": diagnostic.comments,
           "identification_number": diagnostic.identification_number,
-          "state": diagnostic.state
+          "state": diagnostic.state,
+          'user_id_updated': this.userService.getUserId()
         }
-      });
+      }); 
     }
     const create = [];
     const update = [];
@@ -47,17 +52,9 @@ export class DiagnosticService {
       if (detail.stateSync === 'U') {
         update.push({
           'id': detail.id,
+          'transfer_detail_id': detail.transfer_detail_id,
           'dx1': detail.dx1,
-          //'user_id_updated': this.userService.getUserId()
-        });
-      }
-      else if (detail.stateSync === 'C') {
-        update.push({
-          'dx1': diagnostic.dx1,
-          'diagnostic_id': diagnostic.diagnostic_id,
-          'transfer_detail_id': diagnostic.transfer_detail_id,
-          //'user_id_updated': this.userService.getUserId(),
-          //'user_id_created': this.userService.getUserId(),
+          'user_id_updated': this.userService.getUserId()
         });
       }
     });
