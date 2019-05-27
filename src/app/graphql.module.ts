@@ -39,11 +39,6 @@ export class GraphQLModule {
       return {};
     });
     const linkError = onError(({ graphQLErrors, networkError }) => {
-      // const toast = this.toastCtrl.create({
-      //   message: 'No se puede consultar el servicio',
-      //   duration: 2000
-      // });
-
       let message = '';
 
       if (networkError) {
@@ -79,6 +74,14 @@ export class GraphQLModule {
       link: linkError.concat(timeoutLink).concat(authToken).concat(http),
       // other options like cache
       cache: new InMemoryCache(),
+      defaultOptions: {
+        watchQuery: {
+          fetchPolicy: 'no-cache'
+        },
+        query: {
+          fetchPolicy: 'no-cache'
+        }
+      }
     });
   }
 }

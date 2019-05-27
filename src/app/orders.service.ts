@@ -143,6 +143,20 @@ query orders {
           transfer_detail_id
           dx1
         }
+        detailsTransfer {
+          id
+          receiver
+          embryo
+          embryo_class
+          donor
+          donor_breed
+          bull
+          bull_breed
+          corpus_luteum
+          transferor
+          comments
+          dx1
+        }
       }
       sexageApi {
         id
@@ -246,6 +260,57 @@ query orders {
   providedIn: 'root'
 })
 export class OrdersService {
+
+  templates = [
+    {
+      "id": "1",
+      "name": "Evaluación Receptoras",
+      "tag": "evaluationApi",
+      "icon": ['fas', 'search'],
+      "style": { 'color': "yellow" },
+      "color": "yellow"
+    },
+    {
+      "id": "2",
+      "name": "Aspiración Folicular",
+      "tag": "aspirationApi",
+      "icon": ['fas', 'eye-dropper'],
+      "style": { 'color': "blue" },
+      "color": "red"
+    },
+    {
+      "id": "3",
+      "name": "Transferencia Embrión",
+      "tag": "transferApi",
+      "icon": ['fas', 'magic'],
+      "style": { 'color': "red" },
+      "color": "red"
+    },
+    {
+      "id": "4",
+      "name": "Diagnóstico",
+      "tag": "diagnosticApi",
+      "icon": ['fas', 'stethoscope'],
+      "style": "color: black;",
+      "color": "red"
+    },
+    {
+      "id": "5",
+      "name": "Sexaje",
+      "tag": "sexageApi",
+      "icon": ['fas', 'random'],
+      "style": "color: red;",
+      "color": "red"
+    },
+    {
+      "id": "6",
+      "name": "Entrega",
+      "tag": "deliveryApi",
+      "icon": ['fas', 'stethoscope'],
+      "style": "color: blue;",
+      "color": "red"
+    }
+  ];
 
   constructor(
     private apollo: Apollo,

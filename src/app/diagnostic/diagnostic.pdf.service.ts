@@ -12,7 +12,7 @@ import { ImageSrc } from '../imageSrc';
 @Injectable({
 	providedIn: 'root'
 })
-export class AspirationPdfService {
+export class DiagnosticPdfService {
 
 	constructor(
 		public loadingController: LoadingController,
@@ -28,7 +28,7 @@ export class AspirationPdfService {
 
 	// params: 
 	// data: {
-	//		aspiration: any,
+	//		diagnostic: any,
 	//		order: any,
 	//		local: any
 	// }
@@ -41,16 +41,16 @@ export class AspirationPdfService {
 
 		pdfmake.vfs = pdfFonts.pdfMake.vfs;
 
-		var aspirationDetails = [];
+		var diagnosticDetails = [];
 		var workTeam = [];
 		var localsTe = [];
 		var i = {};
 		var j = {};
 		var k = [];
 
-		aspirationDetails.push(['Donadora', 'Raza', 'Toro', 'Raza', 'Tipo', 'GI', 'GII', 'GIII', 'Otros', 'Viables', 'Total']);
-		for (let i of data.aspirationApi.details) {
-			aspirationDetails.push([i.donor,
+		diagnosticDetails.push(['Donadora', 'Raza', 'Toro', 'Raza', 'Tipo', 'GI', 'GII', 'GIII', 'Otros', 'Viables', 'Total']);
+		for (let i of data.diagnosticApi.details) {
+			diagnosticDetails.push([i.donor,
 			i.donor_breed,
 			i.bull,
 			i.bull_breed,
@@ -116,7 +116,7 @@ export class AspirationPdfService {
 				{
 					table: {
 						widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-						body: aspirationDetails
+						body: diagnosticDetails
 					},
 
 				},
@@ -149,10 +149,8 @@ export class AspirationPdfService {
 		const _self = this;
 
 		return new Promise(resolve => {
-			
-			const dataDirectory = this.file.dataDirectory;
+			const dataDirectory = _self.file.dataDirectory;
 			const filename = "InvitroAspiracion_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
-
 			try {
 				pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {
 					try {
@@ -168,7 +166,8 @@ export class AspirationPdfService {
 						}
 						//Retorna el codigo binario del archivo pdf generado
 						else {
-							resolve({ status: "success", filename: filename, dataDirectory: dataDirectory });
+							const base64 = JSON.stringify(Array.from(new Int16Array(binaryArray)))
+							resolve({ status: "success", base64: base64, filename: filename, dataDirectory: dataDirectory });
 						}
 
 					} catch (e) {

@@ -23,12 +23,12 @@ export class SendEmailService {
     //adding watermark only if was error in grapqh mutation services
     const optionsPdf = {
       watermark: response.status !== 'success',
-      open: true
+      open: false
     };
 
     let workSheetPdf;
     //if(type.id==="1") workSheetPdf = this.evaluationPdf;
-    if(type.id==="2") workSheetPdf = this.aspirationPdf;
+    if (type.id === "2") workSheetPdf = this.aspirationPdf;
     //if(type.id==="3") workSheetPdf = this.transferPdf;
     //if(type.id==="4") workSheetPdf = this.diagnosticPdf;
     //if(type.id==="5") workSheetPdf = this.sexagePdf;
@@ -57,13 +57,13 @@ export class SendEmailService {
         subject: "Planilla de " + type.name + " Invitro - Orden de trabajo No " + order.id,
         textBody: textBody
       };
-      
-      const success = function () {
-        resolve({status:"success"});
+
+      const success = function (message) {
+        resolve({ status: "success", message: message });
       }
-      
+
       const failure = function (message) {
-        resolve({status:"error", error:message});
+        resolve({ status: "error", error: message });
       }
 
       try {
@@ -72,7 +72,7 @@ export class SendEmailService {
         cordova.exec(success, failure, "SMTPClient", "execute", [mailSettings]);
       }
       catch (err) {
-        resolve({status:"error", error: err});
+        resolve({ status: "error", error: err });
       };
     });
   }

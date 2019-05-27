@@ -9,12 +9,15 @@ const routes: Routes = [
   { path: 'syncronization', loadChildren: './syncronization/syncronization.module#SyncronizationPageModule' },
   { path: 'more', loadChildren: './more/more.module#MorePageModule' },
   { path: 'evaluation', loadChildren: './evaluation/evaluation.module#EvaluationPageModule' },
+  { path: 'evaluation-detail', loadChildren: './evaluation/evaluation-detail.module#EvaluationDetailPageModule' },
   { path: 'aspiration', loadChildren: './aspiration/aspiration.module#AspirationPageModule' },
   { path: 'aspiration-detail', loadChildren: './aspiration/aspiration-detail.module#AspirationDetailPageModule' },
-  { path: 'evaluation-detail', loadChildren: './evaluation/evaluation-detail.module#EvaluationDetailPageModule' },
   { path: 'transfer', loadChildren: './transfer/transfer.module#TransferPageModule' },
+  //{ path: 'transfer-detail', loadChildren: './transfer/transfer-detail.module#TransferDetailPageModule' },
   { path: 'diagnostic', loadChildren: './diagnostic/diagnostic.module#DiagnosticPageModule' },
-  { path: 'sexage', loadChildren: './sexage/sexage.module#SexagePageModule' }
+  { path: 'diagnostic-detail', loadChildren: './diagnostic/diagnostic-detail.module#DiagnosticDetailPageModule' },
+  { path: 'sexage', loadChildren: './sexage/sexage.module#SexagePageModule' },
+  { path: 'delivery', loadChildren: './delivery/delivery.module#DeliveryPageModule' }
 
 ];
 
