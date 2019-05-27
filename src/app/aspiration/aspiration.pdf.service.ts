@@ -90,23 +90,30 @@ export class AspirationPdfService {
 		}
 
 		const docDefinition = {
-			pageSize: 'A5',
+			pageSize: 'A4',
+			watermark: { text: 'Borrador', color: 'blue', opacity: 0.6, bold: true, italics: false },
 			pageOrientation: 'landscape',
 			pageMargins: [40, 60, 40, 60],
 			content: [
-				'Cra 72A N° 49A-39 Bogotá',
-				'Invitro',
-				'(+57 1) 796 86 26 | 313 570 00 23',
-				'ivc.logistica@genusplc.com',
-				'EQUIPO DE TRABAJO:',
-				'Órden de Producción: ' + data.order.id,
 				{
-					image: this.imageSrc.logoSrcBase64,
-					width: 150,
-					height: 150,
+					columns: [
+						{
+							image: this.imageSrc.logoSrcBase64,
+							width: 150,
+							height: 150,
+						},
+						{
+							fontSize : 12,
+							alignment : 'right',
+							text: 'Cra 72A N° 49A-39 Bogotá \n\ Invitro \n\ (+57 1) 796 86 26 | 313 570 00 23 \n\ ivc.logistica@genusplc.com \n\ Órden de Producción: ' + data.order.id
+						},
+					]
 				},
+					{text: 'EQUIPO DE TRABAJO', alignment: 'left', fontSize:15, bold: true},
 				{
 					table: {
+						fontSize : 10,
+						alignment : 'center',
 						widths: ['*', '*', '*', '*', '*', '*', '*', '*', '*'],
 						body: workTeam
 					},
@@ -149,7 +156,7 @@ export class AspirationPdfService {
 		const _self = this;
 
 		return new Promise(resolve => {
-			
+
 			const dataDirectory = this.file.dataDirectory;
 			const filename = "InvitroAspiracion_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
 
