@@ -8,6 +8,7 @@ import { OrdersService } from '../orders.service';
 import * as moment from 'moment-timezone';
 import { HttpClient } from '@angular/common/http';
 import { ImageSrc } from '../imageSrc';
+import { url } from 'inspector';
 
 @Injectable({
 	providedIn: 'root'
@@ -43,7 +44,7 @@ export class AspirationPdfService {
 
 		var aspirationDetails = [];
 		var workTeam = [];
-		var localsTe = [];
+		var localsTe = {};
 		var i = {};
 		var j = {};
 		var k = [];
@@ -64,34 +65,28 @@ export class AspirationPdfService {
 			]);
 		}
 
-		workTeam.push(['Nombre', 'Teléfono', 'Correo', 'Evento', 'Observación', 'Departamento', 'Municipio', 'Direccion', 'Fecha']);
+		workTeam.push(['Nombre', 'Correo', 'Evento', 'Observación', 'Departamento', 'Municipio', 'Fecha']);
 		for (let j of data.order.agenda) {
 			workTeam.push([j.user.name,
-				'',
 			j.user.email,
 			j.event.name,
 			j.observation,
 			j.department.name,
 			j.municipality.name,
-			j.address,
 			j.start_date
 			]);
 		}
 
-		localsTe.push(['Nombre Local', 'Ciudad', 'Departamento', 'Teléfono', 'Correo', 'Contacto']);
-		for (let k of data.local) {
-			localsTe.push([k.name,
-			k.city,
-			k.department,
-				'',
-				'',
-				''
-			]);
-		}
+		//localsTe.(['Nombre Local', 'Ciudad', 'Departamento', 'Teléfono', 'Correo', 'Contacto']);
+		/*for (let k of data.local) {
+			k.name = data.local.name,
+			k.city = data.local.city,
+			k.department = data.local.department
+		}*/
 
 		const docDefinition = {
 			pageSize: 'A4',
-			watermark: { text: 'Borrador', color: 'blue', opacity: 0.6, bold: true, italics: false },
+			watermark: { text: 'Borrador', color: 'blue', opacity: 0.5, bold: true, italics: false },
 			pageOrientation: 'landscape',
 			pageMargins: [40, 60, 40, 60],
 			content: [
@@ -99,27 +94,65 @@ export class AspirationPdfService {
 					columns: [
 						{
 							image: this.imageSrc.logoSrcBase64,
-							width: 150,
-							height: 150,
+							width: 120,
+							height: 80,
 						},
 						{
-							fontSize : 12,
-							alignment : 'right',
-							text: 'Cra 72A N° 49A-39 Bogotá \n\ Invitro \n\ (+57 1) 796 86 26 | 313 570 00 23 \n\ ivc.logistica@genusplc.com \n\ Órden de Producción: ' + data.order.id
+							fontSize: 12,
+							alignment: 'right',
+							bold: true,
+							text: 'Cra 72A N° 49A-39 Bogotá \n\ Invitro \n\ (+57 1) 796 86 26 | 313 570 00 23 \n\ ivc.logistica@genusplc.com \n\ '
 						},
 					]
 				},
-					{text: 'EQUIPO DE TRABAJO', alignment: 'left', fontSize:15, bold: true},
+				{ text: '\n\ ÓRDEN DE PRODUCCIÓN: ' + data.order.id, bold: true, fontSize: 18, alignment: 'left' },
+				{ text: '\n\n\ DATOS:', bold: true, fontSize: 15, alignment: 'left' },
+				{ text: '\n\n\ ' },
 				{
-					table: {
-						fontSize : 10,
-						alignment : 'center',
-						widths: ['*', '*', '*', '*', '*', '*', '*', '*', '*'],
-						body: workTeam
-					},
+					columns: [
+						[
+							{ text: 'Fecha:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.date, fontSize: 12, alignment: 'left' },
+							{ text: '\n\ N° Identificación:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client_id, fontSize: 12, alignment: 'left' },
+							{ text: '\n\ Razon Social:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.bussiness_name, fontSize: 12, alignment: 'left' },
+							{ text: '\n\ Departamento:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.departmentOne.name, fontSize: 12, alignment: 'left' },
+							{ text: '\n\ Ciudad:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.citiesOne.name, fontSize: 12, alignment: 'left' }
+						], [
+							{ text: 'Correo Electrónico:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.email, fontSize: 12, alignment: 'left' },
+							{ text: '\n\ Contacto:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.contact, fontSize: 12, alignment: 'left' },
+							{ text: '\n\ Cargo:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.position, fontSize: 12, alignment: 'left' },
+							{ text: '\n\ Dirección:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.address, fontSize: 12, alignment: 'left' },
+							{ text: '\n\ Teléfono:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.cellphone, fontSize: 12, alignment: 'left' }
 
+						]
+					]
 				},
-				'DETALLES DE ASPIRACION:',
+				{ text: '\n\n\ INFORMACIÓN DEL EVENTO:', bold: true, fontSize: 15, alignment: 'left' },
+				{ text: '\n\n\ EQUIPO DE TRABAJO: \n\n', bold: true, fontSize: 15, alignment: 'left' },
+				{
+					columns: [
+						{
+							width: '*', text: ''
+						},
+						{
+							width: 'auto',
+							table: {
+								fontSize: 9,
+								widths: [100, 140, 60, 120, 80, 60, 60],
+								body: workTeam,
+							},
+							layout: {
+								fillColor: function (rowIndex, node, columnIndex) {
+									return (rowIndex % 2 === 0) ? '#CCCCCC' : null;
+								}
+							}
+						},
+						{
+							width: '*', text: ''
+						},
+					]
+				},
+				{ text: '\n\n\n\ DETALLES DE ASPIRACION:', alignment: 'left', fontSize: 15, bold: true },
+				{ text: '\n\n\ ' },
 				{
 					table: {
 						widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
@@ -127,28 +160,44 @@ export class AspirationPdfService {
 					},
 
 				},
-				'LOCALES TE:',
+				/*'LOCALES TE:',
 				{
 					table: {
 						widths: ['*', '*', '*', '*', '*', '*'],
 						body: localsTe
 					},
-
+				
+				},*/
+				{
+					image: data.aspirationApi.signatureImage,
+					width: 150,
+					height: 150,
+				},
+				{
+					image: data.aspirationApi.photoImage,
+					width: 150,
+					height: 150,
 				},
 			],
 			styles: {
 				header: {
 					bold: true,
-					fontSize: 20,
-					alignment: 'right'
+					fontSize: 18,
+					alignment: 'left'
 				},
 				sub_header: {
-					fontSize: 18,
+					bold: true,
+					fontSize: 15,
+					alignment: 'left'
+				},
+				sub_header2: {
+					bold: true,
+					fontSize: 12,
 					alignment: 'right'
 				},
-				url: {
-					fontSize: 16,
-					alignment: 'right'
+				defaultStyle: {
+					fontSize: 12,
+					alignment: 'left'
 				}
 			},
 		};
