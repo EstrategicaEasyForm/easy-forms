@@ -106,18 +106,21 @@ query orders {
         comments
         state
         date
-        details {
+        synchronizeds {
           id
-          transfer_id
-          production_detail_id
-          evaluation_detail_id
-          receiver
-          embryo
+          animal_id
+          chapeta
+        }
+        details_view {
+          id
           embryo_class
+          donor
+          donor_breed
+          bull
+          bull_breed
+          receiver
           corpus_luteum
-          transferor
           comments
-          attendant
           local_id
           local {
             id
@@ -125,6 +128,12 @@ query orders {
             city
             department
           }
+          transfer_id
+          production_detail_id
+          evaluation_detail_id
+          embryo
+          transferor
+          attendant
           discard
         }
       }
@@ -349,7 +358,7 @@ export class OrdersService {
       "id": "6",
       "name": "Entrega",
       "tag": "deliveryApi",
-      "icon": ['fas', 'stethoscope'],
+      "icon": ['fas', 'truck'],
       "style": "color: blue;",
       "color": "red"
     }

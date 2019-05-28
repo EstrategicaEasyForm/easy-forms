@@ -73,13 +73,13 @@ ion-textarea{
 
 .click-card { 
     border-bottom: solid 1px darkgray;
-    min-height: 46px;
+    min-height: 80px;
     &:after {
         content: " ";
         width: 0;
         position: absolute;
         left: 100%;
-        top: 9px;
+        top: 29px;
         margin-left: -30px;
         pointer-events: none;
         border-top: 21px solid transparent;
@@ -93,6 +93,9 @@ ion-card-content {
 ion-card-header {
     background: -webkit-gradient(linear, 41% 1820%, 1392% 66%, from(white), to(gray));
     padding-bottom: 0px;
+	h3 {
+	   font-weight: bold;
+	}
 }
 .filter-registry-label {
     margin-top: 17px;
