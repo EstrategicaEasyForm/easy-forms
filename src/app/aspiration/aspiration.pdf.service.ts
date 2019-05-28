@@ -105,29 +105,29 @@ export class AspirationPdfService {
 						},
 					]
 				},
-				{ text: '\n\ ÓRDEN DE PRODUCCIÓN: ' + data.order.id, styles: 'header' },
-				{ text: '\n\n\ DATOS:', styles: 'sub_header' },
+				{ text: '\n\ ÓRDEN DE PRODUCCIÓN: ' + data.order.id, bold: true, fontSize: 18, alignment: 'left' },
+				{ text: '\n\n\ DATOS:', bold: true, fontSize: 15, alignment: 'left' },
 				{ text: '\n\n\ ' },
 				{
 					columns: [
 						[
-							{ text: 'Fecha:', styles: 'sub_header2' }, { text: data.order.date, styles: 'sub_header2' },
-							{ text: '\n\ N° Identificación:', styles: 'sub_header2' }, { text: data.order.client_id, styles: 'sub_header2' },
-							{ text: '\n\ Razon Social:', styles: 'sub_header2' }, { text: data.order.client.bussiness_name, styles: 'sub_header2' },
-							{ text: '\n\ Departamento:', styles: 'sub_header2' }, { text: data.order.client.departmentOne.name, styles: 'sub_header2' },
-							{ text: '\n\ Ciudad:', styles: 'sub_header2' }, { text: data.order.client.citiesOne.name, styles: 'sub_header2' }
+							{ text: 'Fecha:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.date, fontSize: 12, alignment: 'left' },
+							{ text: '\n\ N° Identificación:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client_id, fontSize: 12, alignment: 'left' },
+							{ text: '\n\ Razon Social:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.bussiness_name, fontSize: 12, alignment: 'left' },
+							{ text: '\n\ Departamento:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.departmentOne.name, fontSize: 12, alignment: 'left' },
+							{ text: '\n\ Ciudad:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.citiesOne.name, fontSize: 12, alignment: 'left' }
 						], [
-							{ text: 'Correo Electrónico:', styles: 'sub_header2' }, { text: data.order.client.email, styles: 'sub_header2' },
-							{ text: '\n\ Contacto:', styles: 'sub_header2' }, { text: data.order.client.contact, styles: 'sub_header2' },
-							{ text: '\n\ Cargo:', styles: 'sub_header2' }, { text: data.order.client.position, styles: 'sub_header2' },
-							{ text: '\n\ Dirección:', styles: 'sub_header2' }, { text: data.order.client.address, styles: 'sub_header2' },
-							{ text: '\n\ Teléfono:', styles: 'sub_header2' }, { text: data.order.client.cellphone, styles: 'sub_header2' }
+							{ text: 'Correo Electrónico:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.email, fontSize: 12, alignment: 'left' },
+							{ text: '\n\ Contacto:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.contact, fontSize: 12, alignment: 'left' },
+							{ text: '\n\ Cargo:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.position, fontSize: 12, alignment: 'left' },
+							{ text: '\n\ Dirección:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.address, fontSize: 12, alignment: 'left' },
+							{ text: '\n\ Teléfono:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.cellphone, fontSize: 12, alignment: 'left' }
 
 						]
 					]
 				},
-				{ text: '\n\n\ INFORMACIÓN DEL EVENTO:', styles: 'header' },
-				{ text: '\n\n\ EQUIPO DE TRABAJO: \n\n', styles: 'sub_header' },
+				{ text: '\n\n\ INFORMACIÓN DEL EVENTO:', bold: true, fontSize: 15, alignment: 'left' },
+				{ text: '\n\n\ EQUIPO DE TRABAJO: \n\n', bold: true, fontSize: 15, alignment: 'left' },
 				{
 					columns: [
 						{
@@ -152,6 +152,7 @@ export class AspirationPdfService {
 					]
 				},
 				{ text: '\n\n\n\ DETALLES DE ASPIRACION:', alignment: 'left', fontSize: 15, bold: true },
+				{ text: '\n\n\ ' },
 				{
 					table: {
 						widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
