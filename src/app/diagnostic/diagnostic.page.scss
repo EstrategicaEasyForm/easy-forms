@@ -105,40 +105,40 @@ ion-card-content {
     min-width: 38px;
 }
 .detail-receiver {
-    max-width: 141px;
-    min-width: 141px;
+    max-width: 113px;
+    min-width: 113px;
 }
 .detail-embryo {
-    max-width: 106px;
-    min-width: 106px;
+    max-width: 97px;
+    min-width: 97px;
 }
 .detail-embryo_class {
-    max-width: 106px;
-    min-width: 106px;
+    max-width: 101px;
+    min-width: 101px;
 }
 .detail-donor {
-    max-width: 151px;
-    min-width: 151px;
+    max-width: 116px;
+    min-width: 116px;
 }
-.detail-donor-breed {
-    max-width: 106px;
-    min-width: 106px;
+.detail-donor_breed {
+    max-width: 94px;
+    min-width: 94px;
 }
 .detail-bull {
-    max-width: 103px;
-    min-width: 103px;
+    max-width: 111px;
+    min-width: 111px;
 }
-.detail-bull-breed {
-    max-width: 115px;
-    min-width: 115px;
+.detail-bull_breed {
+    max-width: 90px;
+    min-width: 90px;
 }
 .detail-corpus_luteum {
-    max-width: 36px;
-	min-width: 36px;
+    max-width: 84px;
+	min-width: 84px;
 }
 .detail-transferor {
-    max-width: 43px;
-	min-width: 43px;
+    max-width: 160px;
+	min-width: 160px;
 }
 .detail-dx1 {
     max-width: 49px;
@@ -152,8 +152,10 @@ ion-card-content {
 }
 .photo-image {
     border: solid 1px grey;
-    padding: 32px;
+    padding: 16px;
     background-color: rgba(80, 80, 80, 0.02);
+	opacity: 0.35;
+    filter: alpha(opacity=35);
     img {
         transform: translate3d(0px, 0px, 0px) scale(1) !important;
     }

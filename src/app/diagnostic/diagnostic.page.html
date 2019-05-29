@@ -91,8 +91,9 @@
           <ion-label item-start style="margin: 0 auto"> Registros encontratos {{diagnostic.details?.length }}
           </ion-label>
           <ion-item item-end>
-            <ion-label>Nuevo registro </ion-label>
+            <ion-label>Editar Diagnóstico </ion-label>
             <ion-button class="new-detail-button" shape="round" fill="outline" expand="block"
+			  [disabled]="diagnostic.details.length === 0"
               (click)="openDiagnosticDetail()">
               <ion-icon name="create"></ion-icon>
             </ion-button>
@@ -122,14 +123,12 @@
                       </ion-col>
                       <ion-col class="detail-donor">
                         <ion-label>Donadora</ion-label>
-                        <span>(RGD/Nombre)</span>
                       </ion-col>
                       <ion-col class="detail-donor_breed">
                         <ion-label>Raza</ion-label>
                       </ion-col>
                       <ion-col class="detail-bull">
                         <ion-label>Toro</ion-label>
-                        (RGD/Nombre)
                       </ion-col>
                       <ion-col class="detail-bull-breed">
                         <ion-label>Raza</ion-label>
