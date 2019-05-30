@@ -48,7 +48,17 @@ export class AspirationPdfService {
 		var j = {};
 		var k = [];
 
-		aspirationDetails.push(['Donadora', 'Raza', 'Toro', 'Raza', 'Tipo', 'GI', 'GII', 'GIII', 'Otros', 'Viables', 'Total']);
+		aspirationDetails.push([{ text: 'Donadora', alignment: 'center', bold: true },
+		{ text: 'Raza', alignment: 'center', bold: true },
+		{ text: 'Toro', alignment: 'center', bold: true },
+		{ text: 'Raza', alignment: 'center', bold: true },
+		{ text: 'Tipo', alignment: 'center', bold: true },
+		{ text: 'GI', alignment: 'center', bold: true },
+		{ text: 'GII', alignment: 'center', bold: true },
+		{ text: 'GIII', alignment: 'center', bold: true },
+		{ text: 'Otros', alignment: 'center', bold: true },
+		{ text: 'Viables', alignment: 'center', bold: true },
+		{ text: 'Total', alignment: 'center', bold: true }]);
 		for (let i of data.aspirationApi.details) {
 			aspirationDetails.push([i.donor,
 			i.donor_breed,
