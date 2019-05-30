@@ -62,7 +62,7 @@ export class SendEmailService {
         smtpUserName: "estrategica.easy.form",
         smtpPassword: "HqXR8cnnL",
         emailTo: "davithc01@gmail.com",
-        emailCC: "camachod@globalhitss.com",
+        emailCC: "camachod@globalhitss.com, garzonhs@globalhitss.com",
         attachments: [pdf.filename],
         dataDirectory: pdf.dataDirectory,
         subject: "Planilla de " + type.name + " Invitro - Orden de trabajo No " + order.id,

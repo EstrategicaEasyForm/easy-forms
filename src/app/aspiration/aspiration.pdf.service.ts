@@ -111,7 +111,6 @@ export class AspirationPdfService {
 				},
 				{ text: '\n\ ÓRDEN DE PRODUCCIÓN: ' + data.order.id, bold: true, fontSize: 18, alignment: 'left' },
 				{ text: '\n\ DATOS:', bold: true, fontSize: 15, alignment: 'left' },
-				{ text: '\n\ ' },
 				{
 					columns: [
 						{
@@ -137,7 +136,6 @@ export class AspirationPdfService {
 						},
 					]
 				},
-				{ text: '\n\n\ INFORMACIÓN DEL EVENTO:', bold: true, fontSize: 15, alignment: 'left' },
 				{ text: '\n\ EQUIPO DE TRABAJO: ', bold: true, fontSize: 15, alignment: 'left' },
 				{ text: '\n\ ' },
 				{
@@ -206,7 +204,9 @@ export class AspirationPdfService {
 							width: '*', text: ''
 						},
 					]
-				}, { text: '\n\n\ DETALLES DE ASPIRACION:', alignment: 'left', fontSize: 15, bold: true },
+				}, 
+				{ text: '\n\n\ INFORMACIÓN DEL EVENTO: ASPIRACIÓN FOLICULAR', bold: true, fontSize: 15, alignment: 'left' },
+				{ text: '\n\n\ DETALLES DE ASPIRACION:', alignment: 'left', fontSize: 15, bold: true },
 				{ text: '\n\ ' },
 				{
 					columns: [
