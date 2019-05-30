@@ -327,7 +327,7 @@
                         </ng-container>
                       </div>
                     </ion-col>
-                    <ion-col size="6.8">
+                    <ion-col size="6.7">
                       <ion-input formControlName="transport_type" [(ngModel)]="aspiration.transport_type"></ion-input>
                       <div>
                         <ng-container *ngFor="let validation of validation_messages.transport_type">
@@ -377,13 +377,22 @@
                     </ion-col>
                   </ion-row>
                   <ion-row>
-                    <ion-col>
+                    <ion-col size="12">
                       <ion-button class="signature-pad-button" expand="full" (click)="openSignatureModel()">
                         Modificar Firma
                         <ion-icon name="create"></ion-icon>
                       </ion-button>
-                      <img class="signature-image" [src]="aspiration.signatureImage"
-                        *ngIf="aspiration.signatureImage" />
+                      <img *ngIf="aspiration.signatureImage" class="signature-image" [src]="aspiration.signatureImage"/>
+					  <div *ngIf="!aspiration.signatureImage" class="signature-image-underline"></div>
+					  <div>
+                        <ng-container *ngFor="let validation of validation_messages.signatureImage">
+                          <div class="error-message"
+                            *ngIf="validation_form_general.get('signatureImage').hasError(validation.type) 
+                            && (validation_form_general.get('signatureImage').dirty || validation_form_general.get('signatureImage').touched)">
+                            {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
                     </ion-col>
                   </ion-row>
                   <ion-row>
@@ -415,20 +424,21 @@
                             Generar Foto
                             <ion-icon name="camera"></ion-icon>
                           </ion-button>
+						  <div class="error-message" *ngIf="!aspiration.photoImage"> Campo requerido. </div>
                           <div class="photo-image">
                             <img [src]="aspiration.photoImage" *ngIf="aspiration.photoImage" />
-                            <img src="assets/imgs/take-photo-icon.png" *ngIf="!aspiration.photoImage" />
+                            <img src="assets/imgs/noPhotoAvailable.jpg" *ngIf="!aspiration.photoImage" />
                           </div>
                         </ion-col>
                         <ion-col size="1"></ion-col>
                         <ion-col size="6">
-                          <ion-button [disabled]="!validation_form_order.valid || !validation_form_general.valid" 
+                          <ion-button [disabled]="!aspiration.signatureImage || !validation_form_order.valid || !validation_form_general.valid" 
                             class="make-pdf-button" expand="full" (click)="openPdfViewer()">
                             Generar PDF
                             <ion-icon name="archive"></ion-icon>
                           </ion-button>
                           <ion-button class="button-finalize"
-                            [disabled]="!validation_form_order.valid || !validation_form_general.valid" expand="full"
+                            [disabled]="!aspiration.signatureImage || !validation_form_order.valid || !validation_form_general.valid" expand="full"
                             color="success-shade" (click)="presentAlertConfirm()">
                             Finalizar Aspiración
                           </ion-button>

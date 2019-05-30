@@ -42,6 +42,8 @@ export class AspirationPdfService {
 
 		pdfmake.vfs = pdfFonts.pdfMake.vfs;
 
+		const photoImage = data.aspirationApi.photoImage || this.imageSrc.imagePhotoDefault;
+		
 		var aspirationDetails = [];
 		var workTeam = [];
 		var i = {};
@@ -87,9 +89,8 @@ export class AspirationPdfService {
 		}
 
 
-		const docDefinition = {
+		let docDefinition = {
 			pageSize: 'A4',
-			watermark: { text: 'Borrador', color: 'gray', opacity: 0.3, bold: true, italics: false },
 			pageMargins: [40, 60, 40, 60],
 			pageOrientation: 'landscape',
 			content: [
@@ -259,7 +260,7 @@ export class AspirationPdfService {
 							width: '*', text: ''
 						},
 						{
-							image: data.aspirationApi.photoImage,
+							image: photoImage,
 							width: 300,
 							height: 300,
 						},
@@ -288,6 +289,10 @@ export class AspirationPdfService {
 			},
 		};
 
+		if(options.watermark) {
+			docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.3, bold: true, italics: false }});
+		}
+		
 		const _self = this;
 
 		return new Promise(resolve => {
