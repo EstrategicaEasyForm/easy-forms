@@ -118,6 +118,30 @@ export class SyncronizationPage {
                   this.updateWorkSheet(order, detailApi, detailApi.transferApi, this.ordersService.templates[2]);
                 }
               }
+			  //Api diagnostic template
+              if (detailApi.diagnosticApi) {
+                const isSync = this.isSyncronized(detailApi.diagnosticApi);
+                if (isSync) {
+                  this.totalWorkSheets++;
+                  this.updateWorkSheet(order, detailApi, detailApi.diagnosticApi, this.ordersService.templates[3]);
+                }
+              }
+			  //Api sexage template
+              if (detailApi.sexageApi) {
+                const isSync = this.isSyncronized(detailApi.sexageApi);
+                if (isSync) {
+                  this.totalWorkSheets++;
+                  this.updateWorkSheet(order, detailApi, detailApi.sexageApi, this.ordersService.templates[4]);
+                }
+              }
+			  //Api delivery template
+              if (detailApi.deliveryApi) {
+                const isSync = this.isSyncronized(detailApi.deliveryApi);
+                if (isSync) {
+                  this.totalWorkSheets++;
+                  this.updateWorkSheet(order, detailApi, detailApi.deliveryApi, this.ordersService.templates[5]);
+                }
+              }
             });
           });
         }
@@ -130,6 +154,7 @@ export class SyncronizationPage {
   isSyncronized(workSheet: any): boolean {
     if (workSheet === null) return false;
     if (workSheet.stateSync === 'U') return true;
+	if(workSheet.details)
     workSheet.details.forEach(detail => {
       if (detail.stateSync === 'U') {
         return true;

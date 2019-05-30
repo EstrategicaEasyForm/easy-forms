@@ -44,12 +44,21 @@ export class AspirationPdfService {
 
 		var aspirationDetails = [];
 		var workTeam = [];
-		var localsTe = {};
 		var i = {};
 		var j = {};
 		var k = [];
 
-		aspirationDetails.push(['Donadora', 'Raza', 'Toro', 'Raza', 'Tipo', 'GI', 'GII', 'GIII', 'Otros', 'Viables', 'Total']);
+		aspirationDetails.push([{ text: 'Donadora', alignment: 'center', bold: true },
+		{ text: 'Raza', alignment: 'center', bold: true },
+		{ text: 'Toro', alignment: 'center', bold: true },
+		{ text: 'Raza', alignment: 'center', bold: true },
+		{ text: 'Tipo', alignment: 'center', bold: true },
+		{ text: 'GI', alignment: 'center', bold: true },
+		{ text: 'GII', alignment: 'center', bold: true },
+		{ text: 'GIII', alignment: 'center', bold: true },
+		{ text: 'Otros', alignment: 'center', bold: true },
+		{ text: 'Viables', alignment: 'center', bold: true },
+		{ text: 'Total', alignment: 'center', bold: true }]);
 		for (let i of data.aspirationApi.details) {
 			aspirationDetails.push([i.donor,
 			i.donor_breed,
@@ -77,18 +86,12 @@ export class AspirationPdfService {
 			]);
 		}
 
-		//localsTe.(['Nombre Local', 'Ciudad', 'Departamento', 'Teléfono', 'Correo', 'Contacto']);
-		/*for (let k of data.local) {
-			k.name = data.local.name,
-			k.city = data.local.city,
-			k.department = data.local.department
-		}*/
 
 		const docDefinition = {
 			pageSize: 'A4',
-			watermark: { text: 'Borrador', color: 'blue', opacity: 0.5, bold: true, italics: false },
-			pageOrientation: 'landscape',
+			watermark: { text: 'Borrador', color: 'gray', opacity: 0.3, bold: true, italics: false },
 			pageMargins: [40, 60, 40, 60],
+			pageOrientation: 'landscape',
 			content: [
 				{
 					columns: [
@@ -106,28 +109,36 @@ export class AspirationPdfService {
 					]
 				},
 				{ text: '\n\ ÓRDEN DE PRODUCCIÓN: ' + data.order.id, bold: true, fontSize: 18, alignment: 'left' },
-				{ text: '\n\n\ DATOS:', bold: true, fontSize: 15, alignment: 'left' },
-				{ text: '\n\n\ ' },
+				{ text: '\n\ DATOS:', bold: true, fontSize: 15, alignment: 'left' },
+				{ text: '\n\ ' },
 				{
 					columns: [
-						[
-							{ text: 'Fecha:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.date, fontSize: 12, alignment: 'left' },
-							{ text: '\n\ N° Identificación:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client_id, fontSize: 12, alignment: 'left' },
-							{ text: '\n\ Razon Social:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.bussiness_name, fontSize: 12, alignment: 'left' },
-							{ text: '\n\ Departamento:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.departmentOne.name, fontSize: 12, alignment: 'left' },
-							{ text: '\n\ Ciudad:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.citiesOne.name, fontSize: 12, alignment: 'left' }
-						], [
-							{ text: 'Correo Electrónico:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.email, fontSize: 12, alignment: 'left' },
-							{ text: '\n\ Contacto:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.contact, fontSize: 12, alignment: 'left' },
-							{ text: '\n\ Cargo:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.position, fontSize: 12, alignment: 'left' },
-							{ text: '\n\ Dirección:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.address, fontSize: 12, alignment: 'left' },
-							{ text: '\n\ Teléfono:', bold: true, fontSize: 12, alignment: 'right' }, { text: data.order.client.cellphone, fontSize: 12, alignment: 'left' }
-
-						]
+						{
+							width: '*', text: ''
+						},
+						{
+							width: 'auto',
+							table: {
+								fontSize: 12,
+								widths: ['*', '*', '*', '*'],
+								body: [
+									[{ text: 'Fecha:', alignment: 'right' }, data.order.date, { text: 'Correo Electrónico:', alignment: 'right' }, { text: data.order.client.email, alignment: 'left' }],
+									[{ text: 'N° Identificación:', alignment: 'right' }, data.order.client_id, { text: 'Contacto:', alignment: 'right' }, { text: data.order.client.contact, alignment: 'left' }],
+									[{ text: 'Razon Social:', alignment: 'right' }, data.order.client.bussiness_name, { text: 'Cargo:', alignment: 'right' }, { text: data.order.client.position, alignment: 'left' }],
+									[{ text: 'Departamento:', alignment: 'right' }, data.order.client.departmentOne.name, { text: 'Dirección:', alignment: 'right' }, { text: data.order.client.address, alignment: 'left' }],
+									[{ text: 'Ciudad:', alignment: 'right' }, data.order.client.citiesOne.name, { text: 'Teléfono:', alignment: 'right' }, { text: data.order.client.cellphone, alignment: 'left' }],
+								]
+							},
+							layout: 'noBorders'
+						},
+						{
+							width: '*', text: ''
+						},
 					]
 				},
 				{ text: '\n\n\ INFORMACIÓN DEL EVENTO:', bold: true, fontSize: 15, alignment: 'left' },
-				{ text: '\n\n\ EQUIPO DE TRABAJO: \n\n', bold: true, fontSize: 15, alignment: 'left' },
+				{ text: '\n\ EQUIPO DE TRABAJO: ', bold: true, fontSize: 15, alignment: 'left' },
+				{ text: '\n\ ' },
 				{
 					columns: [
 						{
@@ -137,12 +148,14 @@ export class AspirationPdfService {
 							width: 'auto',
 							table: {
 								fontSize: 9,
+								headerRows: 1,
 								widths: [100, 140, 60, 120, 80, 60, 60],
-								body: workTeam,
+								header: { alignment: 'center', bold: true },
+								body: workTeam
 							},
 							layout: {
 								fillColor: function (rowIndex, node, columnIndex) {
-									return (rowIndex % 2 === 0) ? '#CCCCCC' : null;
+									return (rowIndex === 0) ? '#b9d2e8' : null;
 								}
 							}
 						},
@@ -151,39 +164,116 @@ export class AspirationPdfService {
 						},
 					]
 				},
-				{ text: '\n\n\n\ DETALLES DE ASPIRACION:', alignment: 'left', fontSize: 15, bold: true },
+				{ text: '\n\n\ LOCALES TE:', alignment: 'left', fontSize: 15, bold: true },
+				{ text: '\n\ ' },
+				{
+					columns: [
+						{
+							width: '*', text: ''
+						},
+						{
+							width: 'auto',
+							table: {
+								fontSize: 12,
+								widths: [120, 'auto', 'auto', 'auto', 120, 120],
+								body: [
+									[
+										{ text: 'Nombre Local', alignment: 'center', bold: true },
+										{ text: 'Ciudad', alignment: 'center', bold: true },
+										{ text: 'Departamento', alignment: 'center', bold: true },
+										{ text: 'Teléfono', alignment: 'center', bold: true },
+										{ text: 'Correo', alignment: 'center', bold: true },
+										{ text: 'Contacto', alignment: 'center', bold: true }
+									],
+									[
+										{ text: data.local.name, alignment: 'left' },
+										{ text: data.local.city, alignment: 'left' },
+										{ text: data.local.department, alignment: 'left' },
+										{ text: data.order.client.cellphone, alignment: 'left' },
+										{ text: data.order.client.email, alignment: 'left' },
+										{ text: data.order.client.contact, alignment: 'left' }
+									],
+								],
+							},
+							layout: {
+								fillColor: function (rowIndex, node, columnIndex) {
+									return (rowIndex === 0) ? '#b9d2e8' : null;
+								}
+							}
+						},
+						{
+							width: '*', text: ''
+						},
+					]
+				}, { text: '\n\n\ DETALLES DE ASPIRACION:', alignment: 'left', fontSize: 15, bold: true },
+				{ text: '\n\ ' },
+				{
+					columns: [
+						{
+							width: '*', text: ''
+						},
+						{
+							width: 'auto',
+							table: {
+								headerRows: 1,
+								alignment: 'center',
+								fontSize: 9,
+								widths: [100, 100, 100, 100, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+								body: aspirationDetails,
+							},
+							layout: {
+								fillColor: function (rowIndex, node, columnIndex) {
+									return (rowIndex === 0) ? '#b9d2e8' : null;
+								}
+							}
+						},
+						{
+							width: '*', text: ''
+						},
+					]
+				},
+				{ text: '\n\n\ NOMBRE Y FIRMA DEL ENCARGADO', alignment: 'center', pageBreak: 'before', fontSize: 18, bold: true },
 				{ text: '\n\n\ ' },
 				{
-					table: {
-						widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-						body: aspirationDetails
-					},
-
+					columns: [
+						{
+							width: '*', text: ''
+						},
+						{
+							image: data.aspirationApi.signatureImage,
+							width: 700,
+							height: 300,
+						},
+						{
+							width: '*', text: ''
+						},
+					],
 				},
-				/*'LOCALES TE:',
+				{ text: data.aspirationApi.receiver_name, alignment: 'center', fontSize: 15, bold: true },
+				{ text: data.aspirationApi.identification_number, alignment: 'center', fontSize: 15, bold: true },
+				{ text: '\n\n\ FOTO EVIDENCIA DEL EVENTO', alignment: 'center', pageBreak: 'before', fontSize: 18, bold: true },
+				{ text: '\n\n\ ' },
 				{
-					table: {
-						widths: ['*', '*', '*', '*', '*', '*'],
-						body: localsTe
-					},
-				
-				},*/
-				{
-					image: data.aspirationApi.signatureImage,
-					width: 150,
-					height: 150,
-				},
-				{
-					image: data.aspirationApi.photoImage,
-					width: 150,
-					height: 150,
+					columns: [
+						{
+							width: '*', text: ''
+						},
+						{
+							image: data.aspirationApi.photoImage,
+							width: 300,
+							height: 300,
+						},
+						{
+							width: '*', text: ''
+						},
+					]
 				},
 			],
 			styles: {
 				header: {
 					bold: true,
-					fontSize: 18,
-					alignment: 'left'
+					fontSize: 10,
+					alignment: 'center'
 				},
 				sub_header: {
 					bold: true,
@@ -195,10 +285,6 @@ export class AspirationPdfService {
 					fontSize: 12,
 					alignment: 'right'
 				},
-				defaultStyle: {
-					fontSize: 12,
-					alignment: 'left'
-				}
 			},
 		};
 

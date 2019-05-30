@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import * as moment from 'moment-timezone';
-import { PdfMakeEvaluationService } from './pdf-make-evaluation.service';
+import { EvaluationPdfService } from './evaluation.pdf.service';
 
 @Component({
   selector: 'app-evaluation',
@@ -60,7 +60,7 @@ export class EvaluationPage implements OnInit {
     public alertController: AlertController,
     public camera: Camera,
     public platform: Platform,
-    public pdfMakeEvaluation: PdfMakeEvaluationService) {
+    public pdfMakeEvaluation: EvaluationPdfService) {
   }
 
   ngOnInit() {

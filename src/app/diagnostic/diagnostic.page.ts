@@ -72,35 +72,47 @@ export class DiagnosticPage implements OnInit {
     this.order = detail.order;
     this.detailApi = detail.detailApi;
     this.agenda = detail.agenda;
+	
+	let detailsTmp;
 
-    for(let dt of this.diagnostic.details) {
-      for(let dtDiag of this.diagnostic.detailsDiagnostic) {
-        if(dt.transfer_detail_id === dtDiag.id) {
-          dt.transferData = dtDiag;
-        }
-      }
-    }
+	//Si el objeto details es diferente al objeto detailsDiagnostic se rearma la lista para incluir todos los detalles de detailsDiagnostic.
+	if(this.diagnostic.details.length !== this.diagnostic.detailsDiagnostic.length) {
+		const newDetails = [];
+		for(let dtDiag of this.diagnostic.detailsDiagnostic) {
+			detailsTmp = null;
+			for(let details of this.diagnostic.details) {
+				if(dtDiag.transfer_detail_id == details.transfer_detail_id) {
+					detailsTmp = details;
+				}
+			}
+			if(detailsTmp) {
+				newDetails.push({
+				  "id": detailsTmp.id,
+                  "diagnostic_id": this.diagnostic.id,
+                  "transfer_detail_id": detailsTmp.transfer_detail_id,
+                  "dx1": detailsTmp.dx1,
+				  "transferData" : dtDiag
+                });
+			}
+			else {
+				newDetails.push({
+				  "id": -1,
+                  "diagnostic_id": this.diagnostic.id,
+                  "transfer_detail_id": dtDiag.transfer_detail_id,
+                  "dx1": "",
+				  "transferData" : dtDiag
+                });
+			}
+		}
+		//se modifica la lista
+		this.diagnostic.details = newDetails;
+	}
     
     this.validation_form_general = this.formBuilder.group({
       receiver_name: [this.diagnostic.receiver_name, Validators.required],
       identification_number: [this.diagnostic.identification_number, Validators.required],
       comments: [this.diagnostic.comments, Validators.required]
     });
-
-    for (let detail of this.diagnostic.details) {
-      if (detail.arrived_time) {
-        const minute = Number(detail.arrived_time.split(':')[1].substr(0, 2));
-        const pm = detail.arrived_time.split(':')[1].substr(2, 2) === 'PM' ? 12 : 0;
-        const hour = Number(detail.arrived_time.split(':')[0]) + pm;
-        let time = moment().set({ hour: hour, minute: minute });
-        detail.ionDateTime = time.format();
-        detail.arrived_time = time.format('hh:mmA');
-      }
-      detail.gi = Number(detail.gi) || 0;
-      detail.gii = Number(detail.gii) || 0;
-      detail.giii = Number(detail.giii) || 0;
-      detail.others = Number(detail.others) || 0;
-    }
   }
 
   openDiagnosticDetail(indx) {

@@ -5,7 +5,7 @@ import { DiagnosticPdfService } from '../diagnostic/diagnostic.pdf.service';
 import { SexagePdfService } from '../sexage/sexage.pdf.service';
 import { DeliveryPdfService } from '../delivery/delivery.pdf.service';
 import { TransferPdfService } from '../transfer/transfer.pdf.service';
-import { PdfMakeEvaluationService } from '../evaluation/pdf-make-evaluation.service';
+import { EvaluationPdfService } from '../evaluation/evaluation.pdf.service';
 
 
 @Injectable({
@@ -14,7 +14,7 @@ import { PdfMakeEvaluationService } from '../evaluation/pdf-make-evaluation.serv
 export class SendEmailService {
 
   constructor(
-    public evaluationPdf: PdfMakeEvaluationService,
+    public evaluationPdf: EvaluationPdfService,
     public aspirationPdf: AspirationPdfService,
     public transferPdf: TransferPdfService,
     public diagnosticPdf: DiagnosticPdfService,
@@ -39,7 +39,7 @@ export class SendEmailService {
 
     let workSheetPdf;
     if(type.id==="1") workSheetPdf = this.evaluationPdf;
-    if (type.id === "2") workSheetPdf = this.aspirationPdf;
+    if(type.id==="2") workSheetPdf = this.aspirationPdf;
     if(type.id==="3") workSheetPdf = this.transferPdf;
     if(type.id==="4") workSheetPdf = this.diagnosticPdf;
     if(type.id==="5") workSheetPdf = this.sexagePdf;
@@ -53,8 +53,8 @@ export class SendEmailService {
 
       let textBody = 'Buen día, <br/> Adjunto se encuentra la planilla de ' + type.name + ' asociada con la order de produccion No ' + order.id + ', realizada en el local ' + detailApi.local.name;
 
-      if (response.status === 'success') {
-        textBody += ' <br/> <h3 style="color: red"> Ha ocurrido un error al realizar la sincronizacion de esta planilla. <br/> Por favor, pongase en contacto con el administrador del sistema. </h3>';
+      if (response.status === 'error') {
+        textBody += ' <br/> <h3 style="color: red"> Ha ocurrido un error al realizar la sincronizacion de esta planilla. <br/> Por favor, pongase en contacto con el administrador del sistema. </h3><br/><ul><li>response.error</ul><br/>';
       }
       const mailSettings = {
         emailFrom: "estrategica.easy.form@gmail.com",

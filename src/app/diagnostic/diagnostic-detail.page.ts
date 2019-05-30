@@ -25,34 +25,7 @@ export class DiagnosticDetailPage implements OnInit, OnDestroy {
   validation_form: FormGroup;
 
   validation_messages = {
-    'donor': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'donor_breed': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'local_id': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'type': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'arrived_time': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'receiver_name': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'gi': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'gii': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'giii': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'others': [
+    'dx1': [
       { type: 'required', message: 'Campo requerido.' }
     ]
   };
@@ -69,7 +42,7 @@ export class DiagnosticDetailPage implements OnInit, OnDestroy {
   ngOnInit() {
 
     const dataParam = this.ordersService.getDetailApiParam();
-    const detailApiId = dataParam.detailApiId;
+    let detailApiId = dataParam.detailApiId;
     this.diagnosticPage = dataParam.diagnosticPage;
     this.diagnostic = this.diagnosticPage.diagnostic;
     this.detailsList = this.diagnosticPage.diagnostic.details;
@@ -78,7 +51,8 @@ export class DiagnosticDetailPage implements OnInit, OnDestroy {
       this.updateItem(detailApiId);
     }
     else {
-      this.newItem();
+	  detailApiId = 0;
+      this.updateItem(detailApiId);
     }
   }
 
@@ -92,32 +66,12 @@ export class DiagnosticDetailPage implements OnInit, OnDestroy {
     //initialize the form
     if (!this.validation_form) {
       this.validation_form = this.formBuilder.group({
-        donor: [this.dataItem.donor, Validators.required],
-        donor_breed: [this.dataItem.donor_breed, Validators.required],
-        local_id: [this.dataItem.local_id, Validators.required],
-        type: [this.dataItem.type, Validators.required],
-        arrived_time: [this.dataItem.ionDateTime, Validators.required],
-        bull: [this.dataItem.bull],
-        bull_breed: [this.dataItem.bull_breed],
-        gi: [this.dataItem.gi, Validators.required],
-        gii: [this.dataItem.gii, Validators.required],
-        giii: [this.dataItem.giii, Validators.required],
-        others: [this.dataItem.others, Validators.required]
+        dx1: [this.dataItem.dx1, Validators.required]
       });
     }
     else {
       this.validation_form.reset({
-        donor: this.dataItem.donor,
-        donor_breed: this.dataItem.donor_breed,
-        local_id: this.dataItem.local_id,
-        type: this.dataItem.type,
-        arrived_time: this.dataItem.arrived_time,
-        bull: this.dataItem.bull,
-        bull_breed: this.dataItem.bull_breed,
-        gi: this.dataItem.gi,
-        gii: this.dataItem.gii,
-        giii: this.dataItem.giii,
-        others: this.dataItem.others
+        dx1: this.dataItem.dx1
       });
     }
   }
@@ -134,32 +88,12 @@ export class DiagnosticDetailPage implements OnInit, OnDestroy {
 
     if (!this.validation_form) {
       this.validation_form = this.formBuilder.group({
-        donor: ['', Validators.required],
-        donor_breed: ['', Validators.required],
-        local_id: ['', Validators.required],
-        type: ['', Validators.required],
-        arrived_time: ['', Validators.required],
-        bull: [''],
-        bull_breed: [''],
-        gi: ['', Validators.required],
-        gii: ['', Validators.required],
-        giii: ['', Validators.required],
-        others: ['', Validators.required]
+        dx1: ['', Validators.required]
       });
     }
     else {
       this.validation_form.reset({
-        donor: '',
-        donor_breed: '',
-        local_id: '',
-        type: '',
-        arrived_time: '',
-        bull: '',
-        bull_breed: '',
-        gi: '',
-        gii: '',
-        giii: '',
-        others: ''
+        dx1: ''
       });
     }
   }
@@ -184,21 +118,12 @@ export class DiagnosticDetailPage implements OnInit, OnDestroy {
 
   nextItemButton() {
     if (this.validation_form.valid) {
-      if (this.action === 'new') {
-        this.saveItem();
-        this.newItem();
-        this.dataItemOri = Object.assign({}, this.dataItem);
-      }
-      else if (this.action === 'update') {
+      if (this.action === 'update') {
         if (!this.equalsDetailsDiagnostic(this.dataItemOri, this.dataItem)) {
           this.saveItem();
           this.dataItemOri = Object.assign({}, this.dataItem);
         }
-        if (this.indx === this.detailsList.length - 1) {
-          this.newItem();
-          this.dataItemOri = Object.assign({}, this.dataItem);
-        }
-        else {
+        if (this.indx < this.detailsList.length - 1) {
           this.indx++;
           this.dataItem = this.detailsList[this.indx];
           this.dataItemOri = Object.assign({}, this.dataItem);
@@ -236,17 +161,7 @@ export class DiagnosticDetailPage implements OnInit, OnDestroy {
   }
 
   equalsDetailsDiagnostic(dataObjOri: any, dataItem: any) {
-    return dataObjOri.donor === dataItem.donor &&
-      dataObjOri.donor_breed === dataItem.donor_breed &&
-      dataObjOri.local_id === dataItem.local_id &&
-      dataObjOri.type === dataItem.type &&
-      dataObjOri.arrived_time === dataItem.arrived_time &&
-      dataObjOri.bull === dataItem.bull &&
-      dataObjOri.bull_breed === dataItem.bull_breed &&
-      dataObjOri.gi === dataItem.gi &&
-      dataObjOri.gii === dataItem.gii &&
-      dataObjOri.giii === dataItem.giii &&
-      dataObjOri.others === dataItem.others;
+    return dataObjOri.dx1 === dataItem.dx1;
   }
 
   ngOnDestroy(): void {
@@ -254,20 +169,6 @@ export class DiagnosticDetailPage implements OnInit, OnDestroy {
     if (dataObjOri) {
       if (!this.equalsDetailsDiagnostic(dataObjOri, this.dataItem)) {
         //TODO: confirmation to exit
-      }
-    }
-  }
-
-  onChangeDatetime($datetime) {
-    this.dataItem.arrived_time = moment($datetime).format('hh:mmA');
-  }
-
-  onChangeLocal($localId) {
-    if (this.diagnostic.locals) {
-      for (let local of this.diagnostic.locals) {
-        if (local.id === $localId) {
-          this.dataItem.local = local;
-        }
       }
     }
   }
