@@ -319,7 +319,7 @@ export class AspirationPdfService {
 							}
 						})
 						.catch( (error) => {
-							const errm = e.message ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
+							const errm = error.message ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
 							resolve({ status: "error", error: errm, filename: filename });
 						});
 						
