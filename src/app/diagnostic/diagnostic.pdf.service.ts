@@ -9,6 +9,7 @@ import * as moment from 'moment-timezone';
 import { HttpClient } from '@angular/common/http';
 import { ImageSrc } from '../imageSrc';
 
+
 @Injectable({
 	providedIn: 'root'
 })
@@ -22,9 +23,8 @@ export class DiagnosticPdfService {
 		public toastCtrl: ToastController,
 		public ordersService: OrdersService,
 		public http: HttpClient,
-		public imageSrc: ImageSrc) {
-
-	}
+		public imageSrc: ImageSrc
+	) { }
 
 	// params: 
 	// data: {
@@ -41,116 +41,287 @@ export class DiagnosticPdfService {
 
 		pdfmake.vfs = pdfFonts.pdfMake.vfs;
 
+		const photoImage = data.diagnosticApi.photoImage || this.imageSrc.imagePhotoDefault;
+
 		var diagnosticDetails = [];
 		var workTeam = [];
-		var localsTe = [];
-		var i = {};
-		var j = {};
-		var k = [];
 
-		diagnosticDetails.push(['Donadora', 'Raza', 'Toro', 'Raza', 'Tipo', 'GI', 'GII', 'GIII', 'Otros', 'Viables', 'Total']);
+		diagnosticDetails.push([
+			{ text: 'Receptora', alignment: 'center', bold: true },
+			{ text: 'Embrión', alignment: 'center', bold: true },
+			{ text: 'Clasif. Embrión', alignment: 'center', bold: true },
+			{ text: 'Donadora', alignment: 'center', bold: true },
+			{ text: 'Raza', alignment: 'center', bold: true },
+			{ text: 'Toro', alignment: 'center', bold: true },
+			{ text: 'Raza', alignment: 'center', bold: true },
+			{ text: 'Cuerpo Luteo', alignment: 'center', bold: true },
+			{ text: 'Transferidor', alignment: 'center', bold: true },
+			{ text: 'DX1', alignment: 'center', bold: true }
+		]);
 		for (let i of data.diagnosticApi.details) {
-			diagnosticDetails.push([i.donor,
-			i.donor_breed,
-			i.bull,
-			i.bull_breed,
-			i.type,
-			i.gi,
-			i.gii,
-			i.giii,
-			i.others,
-			i.gi + i.gii + i.giii,
-			i.gi + i.gii + i.giii + i.others
+			diagnosticDetails.push([
+				i.transferData.receiver,
+				i.transferData.embryo,
+				i.transferData.embryo_class,
+				i.transferData.donor,
+				i.transferData.donor_breed,
+				i.transferData.bull,
+				i.transferData.bull_breed,
+				i.transferData.corpus_luteum,
+				i.transferData.transferor,
+				i.dx1
 			]);
 		}
 
-		workTeam.push(['Nombre', 'Teléfono', 'Correo', 'Evento', 'Observación', 'Departamento', 'Municipio', 'Direccion', 'Fecha']);
+		workTeam.push(['Nombre',
+			{ text: 'Correo', alignment: 'center', bold: true },
+			{ text: 'Evento', alignment: 'center', bold: true },
+			{ text: 'Observación', alignment: 'center', bold: true },
+			{ text: 'Departamento', alignment: 'center', bold: true },
+			{ text: 'Municipio', alignment: 'center', bold: true },
+			{ text: 'Fecha', alignment: 'center', bold: true }]);
 		for (let j of data.order.agenda) {
-			workTeam.push([j.user.name,
-				'',
-			j.user.email,
-			j.event.name,
-			j.observation,
-			j.department.name,
-			j.municipality.name,
-			j.address,
-			j.start_date
+			workTeam.push([
+				j.user.name,
+				j.user.email,
+				j.event.name,
+				j.observation,
+				j.department.name,
+				j.municipality.name,
+				j.start_date
 			]);
 		}
 
-		localsTe.push(['Nombre Local', 'Ciudad', 'Departamento', 'Teléfono', 'Correo', 'Contacto']);
-		for (let k of data.local) {
-			localsTe.push([k.name,
-			k.city,
-			k.department,
-				'',
-				'',
-				''
-			]);
-		}
-
-		const docDefinition = {
-			pageSize: 'A5',
-			pageOrientation: 'landscape',
+		let docDefinition = {
+			pageSize: 'A4',
 			pageMargins: [40, 60, 40, 60],
+			pageOrientation: 'landscape',
 			content: [
-				'Cra 72A N° 49A-39 Bogotá',
-				'Invitro',
-				'(+57 1) 796 86 26 | 313 570 00 23',
-				'ivc.logistica@genusplc.com',
-				'EQUIPO DE TRABAJO:',
-				'Órden de Producción: ' + data.order.id,
 				{
-					image: this.imageSrc.logoSrcBase64,
-					width: 150,
-					height: 150,
+					columns: [
+						{
+							image: this.imageSrc.logoSrcBase64,
+							width: 120,
+							height: 80,
+						},
+						{
+							fontSize: 12,
+							alignment: 'right',
+							bold: true,
+							text: 'Cra 72A N° 49A-39 Bogotá \n\ Invitro \n\ (+57 1) 796 86 26 | 313 570 00 23 \n\ ivc.logistica@genusplc.com \n\ '
+						},
+					]
 				},
+				{ text: '\n\ ÓRDEN DE PRODUCCIÓN: ' + data.order.id, bold: true, fontSize: 18, alignment: 'left' },
+				{ text: '\n\ DATOS:', bold: true, fontSize: 15, alignment: 'left' },
 				{
-					table: {
-						widths: ['*', '*', '*', '*', '*', '*', '*', '*', '*'],
-						body: workTeam
-					},
-
+					columns: [
+						{
+							width: '*', text: ''
+						},
+						{
+							width: 'auto',
+							table: {
+								fontSize: 12,
+								widths: ['*', '*', '*', '*'],
+								body: [
+										[	{ text: 'Fecha:', alignment: 'right', bold: true }, 
+											data.order.date, 
+											{ text: 'Correo Electrónico:', alignment: 'right', bold: true }, 
+											{ text: data.order.client.email, alignment: 'left' }
+										],
+										[	{ text: 'N° Identificación:', alignment: 'right', bold: true }, 	
+											data.order.client_id, 
+											{ text: 'Contacto:', alignment: 'right', bold: true }, 
+											{ text: data.order.client.contact, alignment: 'left' }
+										],
+										[	{ text: 'Razon Social:', alignment: 'right', bold: true }, 
+											data.order.client.bussiness_name, 
+											{ text: 'Cargo:', alignment: 'right', bold: true }, 
+											{ text: data.order.client.position, alignment: 'left' }
+										],
+										[	{ text: 'Departamento:', alignment: 'right', bold: true }, 
+											data.order.client.departmentOne.name, 
+											{ text: 'Dirección:', alignment: 'right', bold: true }, 
+											{ text: data.order.client.address, alignment: 'left' }
+										],
+										[	{ text: 'Ciudad:', alignment: 'right', bold: true }, 
+											data.order.client.citiesOne.name, 
+											{ text: 'Teléfono:', alignment: 'right', bold: true }, 
+											{ text: data.order.client.cellphone, alignment: 'left' }
+										],
+								]
+							},
+							layout: 'noBorders'
+						},
+						{
+							width: '*', text: ''
+						},
+					]
 				},
-				'DETALLES DE ASPIRACION:',
+				{ text: '\n\ EQUIPO DE TRABAJO: ', bold: true, fontSize: 15, alignment: 'left' },
+				{ text: '\n\ ' },
 				{
-					table: {
-						widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-						body: diagnosticDetails
-					},
-
+					columns: [
+						{
+							width: '*', text: ''
+						},
+						{
+							width: 'auto',
+							table: {
+								fontSize: 9,
+								headerRows: 1,
+								widths: [100, 140, 60, 120, 80, 60, 60],
+								body: workTeam
+							},
+							layout: {
+								fillColor: function (rowIndex, node, columnIndex) {
+									return (rowIndex === 0) ? '#b9d2e8' : null;
+								}
+							}
+						},
+						{
+							width: '*', text: ''
+						},
+					]
 				},
-				'LOCALES TE:',
+				{ text: '\n\n\ LOCALES TE:', alignment: 'left', fontSize: 15, bold: true },
+				{ text: '\n\ ' },
 				{
-					table: {
-						widths: ['*', '*', '*', '*', '*', '*'],
-						body: localsTe
-					},
-
+					columns: [
+						{
+							width: '*', text: ''
+						},
+						{
+							width: 'auto',
+							table: {
+								fontSize: 12,
+								widths: [120, 'auto', 'auto', 'auto', 120, 120],
+								body: [
+									[
+										{ text: 'Nombre Local', alignment: 'center', bold: true },
+										{ text: 'Ciudad', alignment: 'center', bold: true },
+										{ text: 'Departamento', alignment: 'center', bold: true },
+										{ text: 'Teléfono', alignment: 'center', bold: true },
+										{ text: 'Correo', alignment: 'center', bold: true },
+										{ text: 'Contacto', alignment: 'center', bold: true }
+									],
+									[
+										{ text: data.local.name, alignment: 'left' },
+										{ text: data.local.city, alignment: 'left' },
+										{ text: data.local.department, alignment: 'left' },
+										{ text: data.order.client.cellphone, alignment: 'left' },
+										{ text: data.order.client.email, alignment: 'left' },
+										{ text: data.order.client.contact, alignment: 'left' }
+									],
+								],
+							},
+							layout: {
+								fillColor: function (rowIndex, node, columnIndex) {
+									return (rowIndex === 0) ? '#b9d2e8' : null;
+								}
+							}
+						},
+						{
+							width: '*', text: ''
+						},
+					]
+				},
+				{ text: '\n\n\ INFORMACIÓN DEL EVENTO: DIAGNÓSTICO DX1', bold: true, fontSize: 15, alignment: 'left' },
+				{ text: '\n\n\ DETALLES DE DIAGNÓSTICO:', alignment: 'left', fontSize: 15, bold: true },
+				{ text: '\n\ ' },
+				{
+					columns: [
+						{
+							width: '*', text: ''
+						},
+						{
+							width: 'auto',
+							table: {
+								headerRows: 1,
+								alignment: 'center',
+								fontSize: 9,
+								widths: [80, 80, 80, 80, 80, 80, 120, 120,100,'auto'],
+								body: diagnosticDetails,
+							},
+							layout: {
+								fillColor: function (rowIndex, node, columnIndex) {
+									return (rowIndex === 0) ? '#b9d2e8' : null;
+								}
+							}
+						},
+						{
+							width: '*', text: ''
+						},
+					]
+				},
+				{ text: '\n\n\ NOMBRE Y FIRMA DEL ENCARGADO', alignment: 'center', pageBreak: 'before', fontSize: 18, bold: true },
+				{ text: '\n\n\ ' },
+				{
+					columns: [
+						{
+							width: '*', text: ''
+						},
+						{
+							image: data.diagnosticApi.signatureImage,
+							width: 700,
+							height: 300,
+						},
+						{
+							width: '*', text: ''
+						},
+					],
+				},
+				{ text: data.diagnosticApi.receiver_name, alignment: 'center', fontSize: 15, bold: true },
+				{ text: data.diagnosticApi.identification_number, alignment: 'center', fontSize: 15, bold: true },
+				{ text: '\n\n\ FOTO EVIDENCIA DEL EVENTO', alignment: 'center', pageBreak: 'before', fontSize: 18, bold: true },
+				{ text: '\n\n\ ' },
+				{
+					columns: [
+						{
+							width: '*', text: ''
+						},
+						{
+							image: photoImage,
+							width: 300,
+							height: 300,
+						},
+						{
+							width: '*', text: ''
+						},
+					]
 				},
 			],
 			styles: {
 				header: {
 					bold: true,
-					fontSize: 20,
-					alignment: 'right'
+					fontSize: 10,
+					alignment: 'center'
 				},
 				sub_header: {
-					fontSize: 18,
+					bold: true,
+					fontSize: 15,
+					alignment: 'left'
+				},
+				sub_header2: {
+					bold: true,
+					fontSize: 12,
 					alignment: 'right'
 				},
-				url: {
-					fontSize: 16,
-					alignment: 'right'
-				}
 			},
 		};
+
+		if (options.watermark) {
+			docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.3, bold: true, italics: false } });
+		}
 
 		const _self = this;
 
 		return new Promise(resolve => {
-			const dataDirectory = _self.file.dataDirectory;
-			const filename = "InvitroAspiracion_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
+
+			const dataDirectory = this.file.dataDirectory;
+			const filename = "InvitroDiagnostico_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
+
 			try {
 				pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {
 					try {
@@ -166,18 +337,18 @@ export class DiagnosticPdfService {
 						}
 						//Retorna el codigo binario del archivo pdf generado
 						else {
-							const base64 = JSON.stringify(Array.from(new Int16Array(binaryArray)))
-							resolve({ status: "success", base64: base64, filename: filename, dataDirectory: dataDirectory });
+
+							resolve({ status: "success", filename: filename, dataDirectory: dataDirectory });
 						}
 
 					} catch (e) {
-						const errm = e.message ? e.message : typeof e === 'string' ? e : '';
+						const errm = e.message ? e.message : typeof e === 'string' ? e : JSON.stringify(e);
 						resolve({ status: "error", error: errm, filename: filename });
 					}
 				});
 
 			} catch (err) {
-				const errm = err.message ? err.message : typeof err === 'string' ? err : '';
+				const errm = err.message ? err.message : typeof err === 'string' ? err : JSON.stringify(err);
 				resolve({ status: "error", error: errm, filename: filename });
 			}
 		});
@@ -190,3 +361,4 @@ export class DiagnosticPdfService {
 		console.log('File saved to your device in ' + this.file.dataDirectory);
 	}
 }
+
