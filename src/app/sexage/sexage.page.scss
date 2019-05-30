@@ -1,0 +1,265 @@
+ion-col {
+    margin: 0 4px;
+}
+.toolbar-button {
+    font-size: 30px;
+}
+ion-item {
+    --highlight-color-invalid: none;
+    --highlight-color-valid: none;
+    font-size: 23px;
+}
+ion-select {
+    border: solid 1px black;
+    font-size: 23px;
+}
+ion-label {
+    font-size: 23px !important;
+    overflow: visible!important;
+    max-width: none !important;
+}
+ion-input {
+    border: solid 1px black;
+    font-size: 23px;
+    padding-left: 10px!important;
+}
+ion-datetime {
+    width: 100%;
+    border: solid 1px black;
+}
+ion-textarea{
+    height: 160px;
+    font-size: 23px;
+    border: solid 1px black;
+}
+.text-readonly {
+    border: solid 1px black;
+    background-color: #e5e5e5;
+    min-height: 40px;
+    padding-top: 10px;
+}
+.error-message {
+    color:red;
+    font-size: 23px;
+}
+.ibox-title {
+    background-color: #1AB394;
+    border-color: #e7eaec;
+    border-image: none;
+    border-style: solid solid none;
+    border-width: 2px 0 0;
+    color: white;
+    margin-bottom: 0;
+    padding: 5px 7px 2px;
+    text-align: center;
+    text-transform: uppercase;
+    h5 {
+        font-weight: bold;
+        margin-top: 0.6rem;
+        font-size: 27px;
+    }
+}
+.new-detail-button {
+    font-size: 47px;
+    width: 111px;
+    height: 63px;
+    margin-left: 36px;
+}
+.card-page-order {
+    display: block;
+    form {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    ion-card {
+      width: calc(100vw - 86px);
+    }
+}
+.card-page-details {
+    margin-left: auto;
+    margin-right: auto;
+    ion-card {
+        width: calc(100vw - 94px);
+    }
+}
+.card-page-general {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    ion-card {
+        text-align: left;
+        width: 100%;
+    }
+}
+ion-card-content {
+    padding: 0;
+}
+.detail-table-header {
+    font-weight: bold;
+}
+.detail-id {
+    max-width: 38px;
+    min-width: 38px;
+}
+.detail-donor {
+    max-width: 151px;
+    min-width: 151px;
+}
+.detail-donor-breed {
+    max-width: 106px;
+    min-width: 106px;
+}
+.detail-local-name {
+   max-width: 140px;
+    min-width: 140px;
+}
+.detail-type {
+    max-width: 76px;
+    min-width: 76px;
+}
+.detail-arrived-time {
+    max-width: 82px;
+    min-width: 82px;
+}
+.detail-bull {
+    max-width: 103px;
+    min-width: 103px;
+}
+.detail-bull-breed {
+    max-width: 115px;
+    min-width: 115px;
+}
+.detail-gi {
+    max-width: 36px;
+	min-width: 36px;
+}
+.detail-gii {
+    max-width: 43px;
+	min-width: 43px;
+}
+.detail-giii {
+    max-width: 49px;
+	min-width: 49px;
+}
+.detail-others {
+    min-width: 45px;
+    max-width: 45px;
+}
+.grade-celsius {
+    margin-left: -10px;
+}
+.signature-image {
+    transform: translate3d(0px, 0px, 0px) scale(1) !important;
+    border: solid 1px grey; 
+    min-height: 180px;
+	min-width: 90%;
+}
+.signature-image-underline {
+    transform: translate3d(0px, 0px, 0px) scale(1) !important;
+    border: solid 1px grey; 
+    min-height: 180px;
+	min-width: 90%;
+}
+.photo-image {
+    border: solid 1px grey;
+    padding: 16px;
+    background-color: rgba(80, 80, 80, 0.02);
+	opacity: 0.35;
+    filter: alpha(opacity=35);
+	img {
+        transform: translate3d(0px, 0px, 0px) scale(1) !important;
+		width: 302px;
+    }
+}
+.comment {
+    height: 107px;
+    margin-top: -4px;
+    padding-left: 13px;
+}
+.take-photo-button {
+    font-size: 23px;
+    font-weight: bold;
+}
+.signature-pad-button {
+    font-size: 23px;
+    font-weight: bold;
+}
+.make-pdf-button {
+    font-size: 23px;
+    height: 124px;
+    margin-top: 6px;
+    button {
+        border-radius: 5px;
+    }
+}
+.button-finalize {
+    font-size: 30px;
+    background-color: #1AB394 !important;
+    position: absolute;
+    bottom: 50px;
+}
+.badge-error {
+    font-size: 32px;
+    position: absolute;
+    top: -3px;
+    width: 40px;
+    right: 16px;
+}
+.buttn-small {
+    font-size: 21px;
+}
+.button-panel-enabled {
+    color: white;
+    font-weight: bold;
+    background-color:#1ABB9C;
+    text-align: center;
+    padding-top: 12px;
+    height: 45px;
+    ion-button {
+        border: none;
+    }
+	&:after {
+        content: " ";
+        width: 0;
+        position: absolute;
+        left: 100%;
+        top: 5px;
+        margin-left: -5px;
+        pointer-events: none;
+        border-top: 14px solid transparent;
+        border-bottom: 14px solid transparent;
+        border-left: 11px solid #1ABB9C;
+	}
+}
+.button-panel-disabled {
+    color: white;
+    font-weight: bold;
+    background-color: #6fd1bd;
+    text-align: center;
+    padding-top: 12px;
+    height: 45px;
+    ion-button {
+        border: none;
+    }
+	&:after {
+        content: " ";
+        width: 0;
+        position: absolute;
+        left: 100%;
+        top: 5px;
+        margin-left: -5px;
+        pointer-events: none;
+        border-top: 14px solid transparent;
+        border-bottom: 14px solid transparent;
+        border-left: 11px solid #6fd1bd;
+	}
+}
+.item-sliding {
+    min-height: 56px;
+    margin-top: 14px;
+	ion-label {
+	    white-space: nowrap;
+		overflow: hidden!important;
+		text-overflow: initial;
+	}
+}

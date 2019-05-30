@@ -63,7 +63,7 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content>
+    <ion-content *ngIf="detailsApiOriginal && detailsApi">
       <app-network-notify-banner id="networkNotifyBanner"></app-network-notify-banner>
       <ion-card>
         <ion-grid>

@@ -92,10 +92,10 @@ export class AspirationService {
     });
 
     if (create.length > 0 || update.length > 0) {
-      let details = { "details": {} };
-      if (create.length > 0) details = Object.assign(details, { "create": create });
-      if (update.length > 0) details = Object.assign(details, { "update": update });
-      variables = Object.assign(variables, details);
+      let details = {};
+      if (create.length > 0) details.create = create;
+	  if (update.length > 0) update.create = update;
+      variables.input.details = details;
     }
     else if (aspiration.stateSync !== 'U') {
       //Si no se reflejan cambios en el elemento o sus detalles, se resuelve la promesa

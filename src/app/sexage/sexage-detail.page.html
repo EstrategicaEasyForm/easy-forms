@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button class="toolbar-button"></ion-back-button>
     </ion-buttons>
-    <ion-title>PLANILLA DE ASPIRACIÓN FOLICULAR</ion-title>
+    <ion-title>PLANILLA DE SEXAGE</ion-title>
 
     <ion-buttons slot="end">
       <ion-button class="toolbar-button" (click)="saveItem()" [disabled]="!validation_form.valid">
@@ -73,7 +73,7 @@
             <ion-col col-4>
               <ion-select #localIds style="max-width: 100%;" placeholder="Local" [(ngModel)]="dataItem.local_id" formControlName="local_id"
                 (ionChange)="onChangeLocal(localIds.value)">
-                <ion-select-option *ngFor="let local of aspiration.locals" [value]="local.id">{{local.name}}
+                <ion-select-option *ngFor="let local of sexage.locals" [value]="local.id">{{local.name}}
                 </ion-select-option>
               </ion-select>
               <div class="validation-errors">

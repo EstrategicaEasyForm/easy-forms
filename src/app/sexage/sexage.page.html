@@ -1,9 +1,457 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>sexage</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button class="toolbar-button"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button autoHide="false" (click)="onSaveButton()" class="toolbar-button">
+        <ion-icon color="primary" name="save"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>PLANILLA DE SEXAGE</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding class="app">
   <app-network-notify-banner id="networkNotifyBanner"></app-network-notify-banner>
+  <ion-list>
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col (click)="setControlPanel(1)">
+            <div
+              [ngClass]="{'button-panel-enabled': mbControlPanel === 1, 'button-panel-disabled': mbControlPanel !== 1 }">
+              <ion-label>1.Orden</ion-label>
+            </div>
+            <ion-badge class="badge-error" *ngIf="!validation_form_order.valid" color="danger">!</ion-badge>
+          </ion-col>
+          <ion-col (click)="setControlPanel(2)">
+            <div
+              [ngClass]="{'button-panel-enabled': mbControlPanel === 2, 'button-panel-disabled': mbControlPanel !== 2 }">
+              <ion-label>2. Planilla</ion-label>
+            </div>
+          </ion-col>
+          <ion-col (click)="setControlPanel(3)">
+            <div
+              [ngClass]="{'button-panel-enabled': mbControlPanel === 3, 'button-panel-disabled': mbControlPanel !== 3 }">
+              <ion-label>3. General</ion-label>
+            </div>
+            <ion-badge class="badge-error" *ngIf="!validation_form_general.valid" color="danger">!</ion-badge>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+
+    <ion-item *ngIf="mbControlPanel===1" class="card-page-order">
+      <form [formGroup]="validation_form_order">
+        <ion-card>
+          <ion-card-header class="ibox-title">
+            <h5>Orden de Producción</h5>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid style="padding: 18px;">
+              <ion-row>
+                <ion-col size="4">
+                  <ion-label>Orden de producción</ion-label>
+                </ion-col>
+                <ion-col size="7.6">
+                  <ion-label>Cliente</ion-label>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="4" class="text-readonly">
+                  <ion-label>{{order.id}}</ion-label>
+                </ion-col>
+                <ion-col size="7.8" class="text-readonly">
+                  <ion-label>{{order.client.bussiness_name}}</ion-label>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="4.3">
+                  <ion-label>Local</ion-label>
+                </ion-col>
+                <ion-col size="3.5">
+                  <ion-label>Fecha Aspiración</ion-label>
+                </ion-col>
+                <ion-col size="3.9">
+                  <ion-label>Receptoras Sincr.</ion-label>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="4.3" class="text-readonly">
+                  <ion-label>{{agenda.name_local}}</ion-label>
+                </ion-col>
+                <ion-col size="3.5" class="text-readonly">
+                  <ion-label>{{sexage.date}}</ion-label>
+                </ion-col>
+                <ion-col size="3.9" class="text-readonly">
+                  <ion-label>{{sexage.synchronized_receivers}}</ion-label>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-label>Medio OPU</ion-label>
+                </ion-col>
+                <ion-col>
+                  <ion-label>Lote medio OPU</ion-label>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-input type="text" formControlName="medium_opu" [(ngModel)]="sexage.medium_opu"></ion-input>
+                  <ng-container *ngFor="let validation of validation_messages.medium_opu">
+                    <div class="error-message"
+                      *ngIf="validation_form_order.get('medium_opu').hasError(validation.type) 
+                      && (validation_form_order.get('medium_opu').dirty || validation_form_order.get('medium_opu').touched)">
+                      {{ validation.message }}
+                    </div>
+                  </ng-container>
+                </ion-col>
+                <ion-col>
+                  <ion-input type="text" formControlName="medium_lot_opu" [(ngModel)]="sexage.medium_lot_opu">
+                  </ion-input>
+                  <div>
+                    <ng-container *ngFor="let validation of validation_messages.medium_lot_opu">
+                      <div class="error-message"
+                        *ngIf="validation_form_order.get('medium_lot_opu').hasError(validation.type) 
+                        && (validation_form_order.get('medium_lot_opu').dirty || validation_form_order.get('medium_lot_opu').touched)">
+                        {{ validation.message }}
+                      </div>
+                    </ng-container>
+                  </div>
+                </ion-col>
+              </ion-row>
+              <ion-row class="header-row">
+                <ion-col>
+                  <ion-label>Aspirador</ion-label>
+                </ion-col>
+                <ion-col>
+                  <ion-label>Buscador</ion-label>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-input type="text" formControlName="aspirator" [(ngModel)]="sexage.aspirator"></ion-input>
+                  <div>
+                    <ng-container *ngFor="let validation of validation_messages.aspirator">
+                      <div class="error-message"
+                        *ngIf="validation_form_order.get('aspirator').hasError(validation.type) 
+                        && (validation_form_order.get('aspirator').dirty || validation_form_order.get('aspirator').touched)">
+                        {{ validation.message }}
+                      </div>
+                    </ng-container>
+                  </div>
+                </ion-col>
+                <ion-col>
+                  <ion-input type="text" formControlName="searcher" [(ngModel)]="sexage.searcher"></ion-input>
+                  <div>
+                    <ng-container *ngFor="let validation of validation_messages.searcher">
+                      <div class="error-message"
+                        *ngIf="validation_form_order.get('searcher').hasError(validation.type) 
+                        && (validation_form_order.get('searcher').dirty || validation_form_order.get('searcher').touched)">
+                        {{ validation.message }}
+                      </div>
+                    </ng-container>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </form>
+    </ion-item>
+    <ion-item *ngIf="mbControlPanel===2">
+      <ion-list>
+        <ion-item>
+          <ion-label item-start style="margin: 0 auto"> Registros encontratos {{sexage.details?.length }}
+          </ion-label>
+          <ion-item item-end>
+            <ion-label>Nuevo registro </ion-label>
+            <ion-button class="new-detail-button" shape="round" fill="outline" expand="block"
+              (click)="openSexageDetail()">
+              <ion-icon name="create"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-item>
+        <ion-item class="card-page-details">
+          <ion-card>
+            <ion-card-header class="ibox-title">
+              <h5>Planilla Aspiración Folicular</h5>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-list>
+                <ion-item>
+                  <ion-grid>
+                    <ion-row class="detail-table-header">
+                      <ion-col class="detail-id">
+                        <ion-label>#</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-donor">
+                        <ion-label>Donadora</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-donor-breed">
+                        <ion-label>Raza</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-local-name">
+                        <ion-label>Local</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-type">
+                        <ion-label>Tipo</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-arrived-time">
+                        <ion-label>Hora</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-bull">
+                        <ion-label>Toro</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-bull-breed">
+                        <ion-label>Raza</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-gi">
+                        <ion-label>Gi</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-gii">
+                        <ion-label>Gii</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-giii">
+                        <ion-label>Giii</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-others">
+                        <ion-label>Otr</ion-label>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-item>
+                <ion-item-sliding *ngFor="let item of sexage.details; let indx = index">
+                  <ion-item>
+                    <ion-grid class="item-sliding">
+                      <ion-row>
+                        <ion-col class="detail-id">
+                          <ion-label>{{indx + 1}}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-donor">
+                          <ion-label>{{item.donor }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-donor-breed">
+                          <ion-label>{{item.donor_breed }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-local-name">
+                          <ion-label>{{item.local?.name }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-type">
+                          <ion-label>{{item.type }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-arrived-time">
+                          <ion-label>{{item.arrived_time }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-bull">
+                          <ion-label>{{item.bull }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-bull-breed">
+                          <ion-label>{{item.bull_breed }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-gi">
+                          <ion-label>{{item.gi }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-gii">
+                          <ion-label>{{item.gii }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-giii">
+                          <ion-label>{{item.giii }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-others">
+                          <ion-label>{{item.others }}</ion-label>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </ion-item>
+                  <ion-item-options>
+                    <ion-button color="success" icon-start (click)="openSexageDetail(indx)">
+                      Editar
+                    </ion-button>
+                    <ion-button color="danger" icon-start [disabled]="item.stateSync !== 'C'">
+                      <ion-icon name="trash"></ion-icon>
+                      Borrar
+                    </ion-button>
+                  </ion-item-options>
+                </ion-item-sliding>
+                <ion-item *ngIf="sexage.details.length === 0">
+                  <ion-label>No se encontraron registros</ion-label>
+                </ion-item>
+              </ion-list>
+            </ion-card-content>
+          </ion-card>
+        </ion-item>
+      </ion-list>
+    </ion-item>
+    <ion-item *ngIf="mbControlPanel===3">
+      <ion-list class="card-page-general">
+        <form [formGroup]="validation_form_general">
+          <ion-item>
+            <ion-card>
+              <ion-card-header class="ibox-title">
+                <h5>Datos Generales</h5>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="5">
+                      <ion-label>Temperatura de llegada</ion-label>
+                    </ion-col>
+                    <ion-col size="6">
+                      <ion-label>Tipo transporte</ion-label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col size="5">
+                      <ion-grid>
+                        <ion-row>
+                          <ion-col size="10.8" style="margin-left: -9px; margin-top: -9px">
+                            <ion-input type="number" step="any" formControlName="arrived_temperature_number"
+                              [(ngModel)]="sexage.arrived_temperature_number"
+                              (ionChange)="onChangeArrivedTemperature()">
+                            </ion-input>
+                          </ion-col>
+                          <ion-col size="1" class="ion-text-start">
+                            <h1 class="grade-celsius">°C</h1>
+                          </ion-col>
+                        </ion-row>
+                      </ion-grid>
+                      <div>
+                        <ng-container *ngFor="let validation of validation_messages.arrived_temperature_number">
+                          <div class="error-message"
+                            *ngIf="validation_form_general.get('arrived_temperature_number').hasError(validation.type) 
+                            && (validation_form_general.get('arrived_temperature_number').dirty || validation_form_general.get('arrived_temperature_number').touched)">
+                            {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ion-col>
+                    <ion-col size="6.7">
+                      <ion-input formControlName="transport_type" [(ngModel)]="sexage.transport_type"></ion-input>
+                      <div>
+                        <ng-container *ngFor="let validation of validation_messages.transport_type">
+                          <div class="error-message"
+                            *ngIf="validation_form_general.get('transport_type').hasError(validation.type) 
+                            && (validation_form_general.get('transport_type').dirty || validation_form_general.get('transport_type').touched)">
+                            {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col size="7">
+                      <ion-label>Nombre del encargado</ion-label>
+                    </ion-col>
+                    <ion-col size="4.7">
+                      <ion-label>Cédula</ion-label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col size="7">
+                      <ion-input type="text" formControlName="receiver_name" [(ngModel)]="sexage.receiver_name">
+                      </ion-input>
+                      <div>
+                        <ng-container *ngFor="let validation of validation_messages.receiver_name">
+                          <div class="error-message"
+                            *ngIf="validation_form_general.get('receiver_name').hasError(validation.type) 
+                            && (validation_form_general.get('receiver_name').dirty || validation_form_general.get('receiver_name').touched)">
+                            {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ion-col>
+                    <ion-col size="4.7">
+                      <ion-input type="text" formControlName="identification_number"
+                        [(ngModel)]="sexage.identification_number"></ion-input>
+                      <div>
+                        <ng-container *ngFor="let validation of validation_messages.identification_number">
+                          <div class="error-message"
+                            *ngIf="validation_form_general.get('identification_number').hasError(validation.type) 
+                            && (validation_form_general.get('identification_number').dirty || validation_form_general.get('identification_number').touched)">
+                            {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col size="12">
+                      <ion-button class="signature-pad-button" expand="full" (click)="openSignatureModel()">
+                        Modificar Firma
+                        <ion-icon name="create"></ion-icon>
+                      </ion-button>
+                      <img *ngIf="sexage.signatureImage" class="signature-image" [src]="sexage.signatureImage"/>
+					  <div *ngIf="!sexage.signatureImage" class="signature-image-underline"></div>
+					  <div>
+                        <ng-container *ngFor="let validation of validation_messages.signatureImage">
+                          <div class="error-message"
+                            *ngIf="validation_form_general.get('signatureImage').hasError(validation.type) 
+                            && (validation_form_general.get('signatureImage').dirty || validation_form_general.get('signatureImage').touched)">
+                            {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <ion-label>Observaciones</ion-label>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <ion-textarea class="comment" formControlName="comments" [(ngModel)]="sexage.comments">
+                      </ion-textarea>
+                      <div>
+                        <ng-container *ngFor="let validation of validation_messages.comments">
+                          <div class="error-message"
+                            *ngIf="validation_form_general.get('comments').hasError(validation.type) 
+                            && (validation_form_general.get('comments').dirty || validation_form_general.get('comments').touched)">
+                            {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-grid>
+                      <ion-row>
+                        <ion-col size="4">
+                          <ion-button class="take-photo-button" expand="full" [disabled]="!showTakePhoto"
+                            (click)="openCamera()">
+                            Generar Foto
+                            <ion-icon name="camera"></ion-icon>
+                          </ion-button>
+						  <div class="error-message" *ngIf="!sexage.photoImage"> Campo requerido. </div>
+                          <div class="photo-image">
+                            <img [src]="sexage.photoImage" *ngIf="sexage.photoImage" />
+                            <img src="assets/imgs/noPhotoAvailable.jpg" *ngIf="!sexage.photoImage" />
+                          </div>
+                        </ion-col>
+                        <ion-col size="1"></ion-col>
+                        <ion-col size="6">
+                          <ion-button [disabled]="!sexage.signatureImage || !validation_form_order.valid || !validation_form_general.valid" 
+                            class="make-pdf-button" expand="full" (click)="openPdfViewer()">
+                            Generar PDF
+                            <ion-icon name="archive"></ion-icon>
+                          </ion-button>
+                          <ion-button class="button-finalize"
+                            [disabled]="!sexage.signatureImage || !validation_form_order.valid || !validation_form_general.valid" expand="full"
+                            color="success-shade" (click)="presentAlertConfirm()">
+                            Finalizar Aspiración
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </ion-row>
+                </ion-grid>
+              </ion-card-content>
+            </ion-card>
+          </ion-item>
+        </form>
+      </ion-list>
+    </ion-item>
+  </ion-list>
 </ion-content>
