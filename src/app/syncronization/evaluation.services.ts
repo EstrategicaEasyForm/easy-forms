@@ -34,20 +34,10 @@ export class EvaluationService {
       variables = Object.assign(variables, {
         "input": {
           "id": evaluation.id,
-          "arrived_temperature": evaluation.arrived_temperature,
-          "aspirator": evaluation.aspirator,
           "comments": evaluation.comments,
-          //"date": evaluation.date,
-          "identification_number": evaluation.identification_number,
-          "medium_lot_miv": evaluation.medium_lot_miv,
-          "medium_lot_opu": evaluation.medium_lot_opu,
-          "medium_opu": evaluation.medium_opu,
-          "received_by": evaluation.received_by,
-          "receiver_name": evaluation.receiver_name,
-          "searcher": evaluation.searcher,
+          //"identification_number": evaluation.identification_number,
+          //"received_by": evaluation.received_by,
           "state": evaluation.state,
-          "synchronized_receivers": evaluation.synchronized_receivers,
-          "transport_type": evaluation.transport_type,
           "user_id_updated": this.userService.getUserId()
         }
       });
@@ -59,32 +49,26 @@ export class EvaluationService {
         update.push({
           'id': detail.id,
           'local_id': detail.local_id,
-          'donor': detail.donor,
-          'donor_breed': detail.donor_breed,
-          'arrived_time': detail.arrived_time,
-          'bull': detail.bull,
-          'bull_breed': detail.bull_breed,
-          'type': detail.type,
-          'gi': detail.gi,
-          'gss': detail.gss,
-          'gssi': detail.gssi,
-          'others': detail.others,
+          'animal_id': detail.animal_id,
+          'chapeta': detail.chapeta,
+          'fit': detail.fit,
+          'synchronized': detail.synchronized,
+		  'other_procedures': detail.other_procedures,
+		  'comments': detail.comments,
+		  'diagnostic': detail.diagnostic,
           'user_id_updated': this.userService.getUserId()
         });
       }
       else if (detail.stateSync === 'C') {
         create.push({
-          'local_id': evaluation.local_id,
-          'donor': evaluation.donor,
-          'donor_breed': evaluation.donor_breed,
-          'arrived_time': evaluation.arrived_time,
-          'bull': evaluation.bull,
-          'bull_breed': evaluation.bull_breed,
-          'type': evaluation.type,
-          'gi': evaluation.gi,
-          'gss': evaluation.gss,
-          'gssi': evaluation.gssi,
-          'others': evaluation.others,
+          'local_id': detail.local_id,
+          'animal_id': detail.animal_id,
+          'chapeta': detail.chapeta,
+          'fit': detail.fit,
+          'synchronized': detail.synchronized,
+		  'diagnostic': detail.diagnostic,
+		  'other_procedures': detail.other_procedures,
+		  'comments': detail.comments,
           'user_id_updated': this.userService.getUserId(),
           'user_id_created': this.userService.getUserId(),
         });

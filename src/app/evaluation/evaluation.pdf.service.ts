@@ -40,6 +40,8 @@ export class EvaluationPdfService {
 	async makePdf(data, options) {
 
 		pdfmake.vfs = pdfFonts.pdfMake.vfs;
+		
+		const photoImage = data.evaluationApi.photoImage || this.imageSrc.imagePhotoDefault;
 
 		var evaluationDetails = [];
 		var workTeam = [];
@@ -61,7 +63,7 @@ export class EvaluationPdfService {
 			i.chapeta,
 			i.fit,
 			i.synchronized,
-			i.local,
+			i.local.name,
 			i.diagnostic
 			]);
 		}
@@ -84,9 +86,8 @@ export class EvaluationPdfService {
 			]);
 		}
 
-		const docDefinition = {
+		let docDefinition = {
 			pageSize: 'A4',
-			watermark: { text: 'Borrador', color: 'gray', opacity: 0.3, bold: true, italics: false },
 			pageMargins: [40, 60, 40, 60],
 			pageOrientation: 'landscape',
 			content: [
@@ -256,7 +257,7 @@ export class EvaluationPdfService {
 							width: '*', text: ''
 						},
 						{
-							image: data.evaluationApi.photoImage,
+							image: photoImage,
 							width: 300,
 							height: 300,
 						},
@@ -284,6 +285,10 @@ export class EvaluationPdfService {
 				},
 			},
 		};
+		
+		if(options.watermark) {
+			docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.3, bold: true, italics: false }});
+		}
 
 		const _self = this;
 
@@ -311,13 +316,13 @@ export class EvaluationPdfService {
 						}
 
 					} catch (e) {
-						const errm = e.message ? e.message : typeof e === 'string' ? e : '';
+						const errm = e.message ? e.message : typeof e === 'string' ? e : JSON.stringify(e);
 						resolve({ status: "error", error: errm, filename: filename });
 					}
 				});
 
 			} catch (err) {
-				const errm = err.message ? err.message : typeof err === 'string' ? err : '';
+				const errm = err.message ? err.message : typeof err === 'string' ? err : JSON.stringify(err);
 				resolve({ status: "error", error: errm, filename: filename });
 			}
 		});

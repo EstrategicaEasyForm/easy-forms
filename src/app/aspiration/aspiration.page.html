@@ -424,7 +424,6 @@
                             Generar Foto
                             <ion-icon name="camera"></ion-icon>
                           </ion-button>
-						  <div class="error-message" *ngIf="!aspiration.photoImage"> Campo requerido. </div>
                           <div class="photo-image">
                             <img [src]="aspiration.photoImage" *ngIf="aspiration.photoImage" />
                             <img src="assets/imgs/noPhotoAvailable.jpg" *ngIf="!aspiration.photoImage" />

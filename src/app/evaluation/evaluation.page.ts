@@ -39,7 +39,7 @@ export class EvaluationPage implements OnInit {
     'comments': [
       { type: 'required', message: 'Campo requerido.' }
     ],
-    'receiver_name': [
+    'received_by': [
       { type: 'required', message: 'Campo requerido.' }
     ],
     'identification_number': [
@@ -78,7 +78,7 @@ export class EvaluationPage implements OnInit {
 
     this.validation_form_general = this.formBuilder.group({
       //evaluator: [this.evaluation.attendant, Validators.required],
-      receiver_name: [this.evaluation.receiver_name, Validators.required],
+      received_by: [this.evaluation.received_by, Validators.required],
       identification_number: [this.evaluation.identification_number, Validators.required],
       comments: [this.evaluation.comments, Validators.required]
     });

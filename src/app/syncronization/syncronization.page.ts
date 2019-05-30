@@ -196,7 +196,7 @@ export class SyncronizationPage {
         }
         else if (response.status === 'success') {
           this.logs.push({
-            type: 'success',
+            type: 'info',
             message: 'La planilla ' + type.name + ' fué actualizada correctamente para la orden de producción No ' + order.id,
             time: moment().format('HH:mm:ss')
           });
@@ -219,10 +219,9 @@ export class SyncronizationPage {
             //if(detailApi.state === "1") {
               this.logs.push({
                 type: 'info',
-                message: 'Inicia envío de correo para la planilla ' + type.name,
+                message: 'Inicia envío de correo para la planilla de ' + type.name,
                 details: [
-                  "Archivo adjunto " + pdf.filename,
-                  "Directorio: " + pdf.dataDirectory
+                  "Archivo adjunto " + pdf.filename
                 ],
                 time: moment().format('HH:mm:ss')
               });
@@ -232,7 +231,7 @@ export class SyncronizationPage {
                     type: 'info',
                     message: "Correo automático enviado a @nnn",
                     details: [
-                      resp.message
+                      "Archivo adjunto " + pdf.filename
                     ],
                     time: moment().format('HH:mm:ss')
                   });

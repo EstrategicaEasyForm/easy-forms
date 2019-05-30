@@ -209,13 +209,13 @@
                   </ion-row>
                   <ion-row>
                     <ion-col size="7">
-                      <ion-input type="text" formControlName="receiver_name" [(ngModel)]="evaluation.receiver_name">
+                      <ion-input type="text" formControlName="received_by" [(ngModel)]="evaluation.received_by">
                       </ion-input>
                       <div>
-                        <ng-container *ngFor="let validation of validation_messages.receiver_name">
+                        <ng-container *ngFor="let validation of validation_messages.received_by">
                           <div class="error-message"
-                            *ngIf="validation_form_general.get('receiver_name').hasError(validation.type) 
-                            && (validation_form_general.get('receiver_name').dirty || validation_form_general.get('receiver_name').touched)">
+                            *ngIf="validation_form_general.get('received_by').hasError(validation.type) 
+                            && (validation_form_general.get('received_by').dirty || validation_form_general.get('received_by').touched)">
                             {{ validation.message }}
                           </div>
                         </ng-container>

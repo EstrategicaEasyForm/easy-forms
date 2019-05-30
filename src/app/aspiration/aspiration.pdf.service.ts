@@ -319,13 +319,13 @@ export class AspirationPdfService {
 						}
 
 					} catch (e) {
-						const errm = e.message ? e.message : typeof e === 'string' ? e : '';
+						const errm = e.message ? e.message : typeof e === 'string' ? e : JSON.stringify(e);
 						resolve({ status: "error", error: errm, filename: filename });
 					}
 				});
 
 			} catch (err) {
-				const errm = err.message ? err.message : typeof err === 'string' ? err : '';
+				const errm = err.message ? err.message : typeof err === 'string' ? err : JSON.stringify(err);
 				resolve({ status: "error", error: errm, filename: filename });
 			}
 		});
