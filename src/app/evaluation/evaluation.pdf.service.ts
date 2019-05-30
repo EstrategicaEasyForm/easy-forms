@@ -59,7 +59,7 @@ export class EvaluationPdfService {
 		]);
 		for (let i of data.evaluationApi.details) {
 			evaluationDetails.push([
-			i.id_animal,
+			i.animal_id,
 			i.chapeta,
 			i.fit,
 			i.synchronized,
