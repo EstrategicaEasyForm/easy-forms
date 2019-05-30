@@ -76,10 +76,10 @@
               </ion-row>
               <ion-row>
                 <ion-col size="4.3" class="text-readonly">
-                  <ion-label>{{agenda.name_local}}</ion-label>
+                  <ion-label>{{detailApi.local?.name}}</ion-label>
                 </ion-col>
                 <ion-col size="3.5" class="text-readonly">
-                  <ion-label>{{transferApi.local.city}}</ion-label>
+                  <ion-label>{{detailApi.local?.city}}</ion-label>
                 </ion-col>
                 <ion-col size="3.5" class="text-readonly">
                   <ion-label>{{order.date}}</ion-label>
@@ -94,7 +94,7 @@
       <ion-list>
         <ion-item>
           <ion-label item-start style="margin: 0 auto"> 
-            Registros encontrados {{transfer.details?.length }}
+            Registros encontrados {{transferObjOri.details_view?.length }}
           </ion-label>
           <ion-item item-end>
               <ion-label>Nuevo registro </ion-label>
@@ -147,7 +147,7 @@
                         </ion-row>
                     </ion-grid>
                   </ion-item>
-                  <ion-item-sliding *ngFor="let item of transfer.details; let indx = index">
+                  <ion-item-sliding *ngFor="let item of transferApi.details_view; let indx = index">
                       <ion-item>
                         <ion-grid class="item-sliding">
                           <ion-row>
@@ -158,16 +158,16 @@
                                 <ion-label>{{item.embryo_class }}</ion-label>
                               </ion-col>
                               <ion-col class="detail-donor-breed">
-                                <ion-label>{{item.donor_breed }}</ion-label>
+                                <ion-label>{{item.donor }}</ion-label>
                               </ion-col>
                               <ion-col class="detail-local-name">
-                                <ion-label>{{item.local?.name }}</ion-label>
+                                <ion-label>{{item.donor_breed }}</ion-label>
                               </ion-col>
                               <ion-col class="detail-type">
-                                <ion-label>{{item.type }}</ion-label>
+                                <ion-label>{{item.bull_breed }}</ion-label>
                               </ion-col>
                               <ion-col class="detail-arrived-time">
-                                <ion-label>{{item.arrived_time }}</ion-label>
+                                <ion-label>{{item.bull }}</ion-label>
                               </ion-col>
                               <ion-col class="detail-bull">
                                 <ion-label>{{item.receiver }}</ion-label>
@@ -176,7 +176,7 @@
                                 <ion-label>{{item.corpus_luteum }}</ion-label>
                               </ion-col>
                               <ion-col class="detail-gi">
-                                <ion-label>{{item.gi }}</ion-label>
+                                <ion-label>{{item.transferor }}</ion-label>
                               </ion-col>
                               <ion-col class="detail-gii">
                                 <ion-label>{{item.comments }}</ion-label>
@@ -194,7 +194,7 @@
                         </ion-button>
                       </ion-item-options>
                   </ion-item-sliding>
-                  <ion-item *ngIf="transfer.details.length === 0">
+                  <ion-item *ngIf="transferApi.details_view.length === 0">
                     <ion-label>No se encontraron registros</ion-label>
                   </ion-item>
                 </ion-list>  
@@ -223,25 +223,92 @@
                   </ion-row>
                   <ion-row>
                     <ion-col size="5">
-                      <ion-input type="text" formControlName="receiver_name" [(ngModel)]="transferApi.receiver_name">
+                      <ion-input type="text" formControlName="received_by" [(ngModel)]="transferApi.received_by">
                       </ion-input>
+                      <div>
+                        <ng-container *ngFor="let validation of validation_messages.received_by">
+                          <div class="error-message"
+                            *ngIf="validation_form_general.get('received_by').hasError(validation.type) 
+                            && (validation_form_general.get('received_by').dirty || validation_form_general.get('received_by').touched)">
+                            {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
                     </ion-col>
                     <ion-col size="5">
-                      <ion-input type="text" formControlName="receiver_id" [(ngModel)]="transferApi.receiver_id">
+                      <ion-input type="text" formControlName="identification_number" [(ngModel)]="transferApi.identification_number">
                       </ion-input>
+                      <div>
+                        <ng-container *ngFor="let validation of validation_messages.identification_number">
+                          <div class="error-message"
+                            *ngIf="validation_form_general.get('identification_number').hasError(validation.type) 
+                            && (validation_form_general.get('identification_number').dirty || validation_form_general.get('identification_number').touched)">
+                            {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
                     </ion-col>
                   </ion-row>
                   <ion-row>
-                    <ion-col size="10">
+                    <ion-col>
+                      <ion-button class="signature-pad-button" expand="full" (click)="openSignatureModel()">
+                        Modificar Firma
+                        <ion-icon name="create"></ion-icon>
+                      </ion-button>
+                      <img class="signature-image" [src]="transfer.signatureImage"
+                        *ngIf="transfer.signatureImage" />
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col size="12">
                       <ion-label>Observaciones</ion-label>
                     </ion-col>
                   </ion-row>
                   <ion-row>
-                    <ion-col size="10">
-                      <ion-input type="text" formControlName="receiver_comments" [(ngModel)]="transferApi.comments">
-                      </ion-input>
-                    </ion-col>
-                  </ion-row>
+                      <ion-col>
+                        <ion-textarea class="comment" formControlName="comments" [(ngModel)]="transfer.comments">
+                        </ion-textarea>
+                        <div>
+                          <ng-container *ngFor="let validation of validation_messages.comments">
+                            <div class="error-message"
+                              *ngIf="validation_form_general.get('comments').hasError(validation.type) 
+                              && (validation_form_general.get('comments').dirty || validation_form_general.get('comments').touched)">
+                              {{ validation.message }}
+                            </div>
+                          </ng-container>
+                        </div>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-grid>
+                        <ion-row>
+                          <ion-col size="4">
+                            <ion-button class="take-photo-button" expand="full" [disabled]="!showTakePhoto"
+                              (click)="openCamera()">
+                              Generar Foto
+                              <ion-icon name="camera"></ion-icon>
+                            </ion-button>
+                            <div class="photo-image">
+                              <img [src]="transfer.photoImage" *ngIf="transfer.photoImage" />
+                              <img src="assets/imgs/take-photo-icon.png" *ngIf="!transfer.photoImage" />
+                            </div>
+                          </ion-col>
+                          <ion-col size="1"></ion-col>
+                          <ion-col size="6">
+                            <ion-button [disabled]="!validation_form_order.valid || !validation_form_general.valid" 
+                              class="make-pdf-button" expand="full" (click)="openPdfViewer()">
+                              Generar PDF
+                              <ion-icon name="archive"></ion-icon>
+                            </ion-button>
+                            <ion-button class="button-finalize"
+                              [disabled]="!validation_form_order.valid || !validation_form_general.valid" expand="full"
+                              color="success-shade" (click)="presentAlertConfirm()">
+                              Finalizar Aspiración
+                            </ion-button>
+                          </ion-col>
+                        </ion-row>
+                      </ion-grid>
+                    </ion-row>
                 </ion-grid>
               </ion-card-content>
             </ion-card>

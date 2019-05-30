@@ -18,6 +18,7 @@ export class TransferPage implements OnInit {
 
   transfer: any;
   transferApi: any;
+  detailApi: any;
   agendaPage: any;
   transferObjOri: any;
   order: any;
@@ -26,6 +27,27 @@ export class TransferPage implements OnInit {
   showTakePhoto = true;
   photoImage: any;
   mbControlPanel: number = 1;
+
+  validation_messages = {
+    'medium_opu': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'medium_lot_opu': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'aspirator': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'received_by': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'identification_number': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'comments': [
+      { type: 'required', message: 'Campo requerido.' }
+    ]
+  };
 
   //validations forms
   validation_form_order: FormGroup;
@@ -48,35 +70,19 @@ export class TransferPage implements OnInit {
     this.transferObjOri = detail.transferApi;
     this.transfer = Object.assign({}, this.transferObjOri);
     this.agendaPage = detail.agendaPage;
+    this.detailApi = detail.detailApi;
     this.order = detail.order;
-    this.transferApi = detail.detailApi;
-    console.log(this.transfer.details);
+    this.transferApi = detail.transferApi;
     this.agenda = detail.agenda;
+    console.log(detail);
 
     this.validation_form_order = this.formBuilder.group({});
 
-    // this.validation_form_general = this.formBuilder.group({
-    //   arrived_temperature_number: [this.aspiration.arrived_temperature_number, Validators.required,],
-    //   transport_type: [this.aspiration.transport_type, Validators.required],
-    //   receiver_name: [this.aspiration.receiver_name, Validators.required],
-    //   identification_number: [this.aspiration.identification_number, Validators.required],
-    //   comments: [this.aspiration.comments, Validators.required]
-    // });
-
-    // for (let detail of this.aspiration.details) {
-    //   if (detail.arrived_time) {
-    //     const minute = Number(detail.arrived_time.split(':')[1].substr(0, 2));
-    //     const pm = detail.arrived_time.split(':')[1].substr(2, 2) === 'PM' ? 12 : 0;
-    //     const hour = Number(detail.arrived_time.split(':')[0]) + pm;
-    //     let time = moment().set({ hour: hour, minute: minute });
-    //     detail.ionDateTime = time.format();
-    //     detail.arrived_time = time.format('hh:mmA');
-    //   }
-    //   detail.gi = Number(detail.gi) || 0;
-    //   detail.gii = Number(detail.gii) || 0;
-    //   detail.giii = Number(detail.giii) || 0;
-    //   detail.others = Number(detail.others) || 0;
-    // }
+    this.validation_form_general = this.formBuilder.group({
+      received_by: [this.transfer.received_by, Validators.required],
+      identification_number: [this.transfer.identification_number, Validators.required],
+      comments: [this.transfer.comments, Validators.required]
+    });
   }
 
   openTransferDetail(indx) {
@@ -90,6 +96,23 @@ export class TransferPage implements OnInit {
 
   reloadDetailsList(detailsList) {
     this.transfer.details = detailsList;
+  }
+
+  async openSignatureModel() {
+    const modalPage = await this.modalCtrl.create({
+      component: SignatureDrawPadPage,
+      cssClass: "modal-signature"
+    });
+
+    modalPage.onDidDismiss().then(({ data }) => {
+      if (data) {
+        this.transfer.signatureImage = data.signatureImage;
+        this.showMessage('Captura realizada exitósamente');
+        this.saveTransfer();
+      }
+    });
+
+    return await modalPage.present();
   }
 
   onSaveButton() {

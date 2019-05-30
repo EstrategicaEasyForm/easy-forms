@@ -19,6 +19,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
   indx: number;
   action: string;
   detailsList: any;
+  detailApi: any;
   dataItem: any;
   dataItemOri: any;
   newRegistry: boolean;
@@ -26,34 +27,25 @@ export class TransferDetailPage implements OnInit, OnDestroy {
   checkRecept: boolean;
 
   validation_messages = {
-    'donor_breed': [
+    'embryo_class': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'synchronizeds': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'recept': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
+    'corpus_luteum': [
       { type: 'required', message: 'Campo requerido.' }
     ],
     'local_id': [
       { type: 'required', message: 'Campo requerido.' }
     ],
-    'type': [
+    'transferor': [
       { type: 'required', message: 'Campo requerido.' }
     ],
-    'arrived_time': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'receiver_name': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'gi': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'gii': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'giii': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'others': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'recept': [
+    'comments': [
       { type: 'required', message: 'Campo requerido.' }
     ]
   };
@@ -68,9 +60,12 @@ export class TransferDetailPage implements OnInit, OnDestroy {
   ngOnInit() {
     const dataParam = this.ordersService.getDetailApiParam();
     const detailApiId = dataParam.detailApiId;
+    this.detailApi = dataParam.transferPage.detailApi;
     this.transferPage = dataParam.transferPage;
     this.transfer = this.transferPage.transfer;
-    this.detailsList = this.transferPage.transfer.details;
+    this.detailsList = this.transferPage.transferApi.details_view;
+    console.log(dataParam);
+    console.log(this.detailApi);
     this.checkRecept = true;
 
     if (detailApiId >= 0) {
@@ -91,32 +86,24 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     //initialize the form
     if (!this.validation_form) {
       this.validation_form = this.formBuilder.group({
-        donor_breed: [this.dataItem.donor_breed, Validators.required],
-        local_id: [this.dataItem.local_id, Validators.required],
+        embryo_class: [this.dataItem.embryo_class, Validators.required],
+        synchronizeds: [this.dataItem.synchronizeds, Validators.required],
+        recept: [this.dataItem.recept, Validators.required],
         corpus_luteum: [this.dataItem.corpus_luteum, Validators.required],
-        arrived_time: [this.dataItem.ionDateTime, Validators.required],
-        bull: [this.dataItem.bull],
-        bull_breed: [this.dataItem.bull_breed],
-        gi: [this.dataItem.gi, Validators.required],
-        gii: [this.dataItem.gii, Validators.required],
-        giii: [this.dataItem.giii, Validators.required],
-        others: [this.dataItem.others, Validators.required],
-        recept: []
+        local_id: [this.dataItem.local_id, Validators.required],
+        transferor: [this.dataItem.transferor, Validators.required],
+        comments: [this.dataItem.comments, Validators.required]
       });
     }
     else {
       this.validation_form.reset({
-        donor: this.dataItem.donor,
-        donor_breed: this.dataItem.donor_breed,
+        embryo_class: this.dataItem.embryo_class,
+        synchronizeds: this.dataItem.synchronizeds,
+        recept: this.dataItem.recept,
+        corpus_luteum: this.dataItem.corpus_luteum,
         local_id: this.dataItem.local_id,
-        type: this.dataItem.type,
-        arrived_time: this.dataItem.arrived_time,
-        bull: this.dataItem.bull,
-        bull_breed: this.dataItem.bull_breed,
-        gi: this.dataItem.gi,
-        gii: this.dataItem.gii,
-        giii: this.dataItem.giii,
-        others: this.dataItem.others
+        transferor: this.dataItem.transferor,
+        comments: this.dataItem.comments
       });
     }
   }
@@ -133,37 +120,34 @@ export class TransferDetailPage implements OnInit, OnDestroy {
 
     if (!this.validation_form) {
       this.validation_form = this.formBuilder.group({
-        donor: ['', Validators.required],
-        donor_breed: ['', Validators.required],
+        embryo_class: ['', Validators.required],
+        synchronizeds: ['', Validators.required],
+        recept: ['', Validators.required],
+        corpus_luteum: ['', Validators.required],
         local_id: ['', Validators.required],
-        type: ['', Validators.required],
-        arrived_time: ['', Validators.required],
-        bull: [''],
-        bull_breed: [''],
-        gi: ['', Validators.required],
-        gii: ['', Validators.required],
-        giii: ['', Validators.required],
-        others: ['', Validators.required]
+        transferor: ['', Validators.required],
+        comments: ['', Validators.required]
       });
     }
     else {
       this.validation_form.reset({
-        donor: '',
-        donor_breed: '',
+        embryo_class: '',
+        synchronizeds: '',
+        recept: '',
+        corpus_luteum: '',
         local_id: '',
-        type: '',
-        arrived_time: '',
-        bull: '',
-        bull_breed: '',
-        gi: '',
-        gii: '',
-        giii: '',
-        others: ''
+        transferor: '',
+        comments: ''
       });
     }
   }
 
   saveItem() {
+    if (this.checkRecept) {
+      this.dataItem.receiver = null;
+    } else {
+      this.dataItem.evaluation_detail_id = null;
+    }
     if (this.action === 'update') {
       this.dataItem.stateSync = this.dataItem.stateSync || 'U';
       this.transferPage.saveTransfer();

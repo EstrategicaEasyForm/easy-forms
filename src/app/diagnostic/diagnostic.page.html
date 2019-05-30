@@ -66,18 +66,18 @@
                 </ion-col>
               </ion-row>
               <ion-row>
-                <ion-col size="5">
+                <ion-col size="6.6">
                   <ion-label>Local</ion-label>
                 </ion-col>
-                <ion-col size="6">
+                <ion-col size="5">
                   <ion-label>Fecha Diagnóstico</ion-label>
                 </ion-col>
               </ion-row>
               <ion-row>
-                <ion-col size="5" class="text-readonly">
-                  <ion-label>{{agenda?.name_local}}</ion-label>
+                <ion-col size="6.6" class="text-readonly">
+                  <ion-label>{{detailApi?.local?.name}}</ion-label>
                 </ion-col>
-                <ion-col size="6" class="text-readonly">
+                <ion-col size="5" class="text-readonly">
                   <ion-label>{{diagnostic.date}}</ion-label>
                 </ion-col>
               </ion-row>
@@ -118,22 +118,25 @@
                         <ion-label>Embrión</ion-label>
                       </ion-col>
                       <ion-col class="detail-embryo_class">
-                        <ion-label>Clasificación del embrión</ion-label>
+                        <ion-label>Clasif.</ion-label>embrión
                       </ion-col>
                       <ion-col class="detail-donor">
-                        <ion-label>Donadora (RGD/Nombre)</ion-label>
+                        <ion-label>Donadora</ion-label>
+                        <span>(RGD/Nombre)</span>
                       </ion-col>
                       <ion-col class="detail-donor_breed">
                         <ion-label>Raza</ion-label>
                       </ion-col>
                       <ion-col class="detail-bull">
-                        <ion-label>Toro (RGD/Nombre)</ion-label>
+                        <ion-label>Toro</ion-label>
+                        (RGD/Nombre)
                       </ion-col>
                       <ion-col class="detail-bull-breed">
                         <ion-label>Raza</ion-label>
                       </ion-col>
                       <ion-col class="detail-corpus_luteum">
-                        <ion-label>Cuerpo Luteo</ion-label>
+                        <ion-label>Cuerpo</ion-label>
+                        Luteo
                       </ion-col>
                       <ion-col class="detail-transferor">
                         <ion-label>Transferidor</ion-label>
@@ -151,38 +154,35 @@
                         <ion-col class="detail-id">
                           <ion-label>{{indx + 1}}</ion-label>
                         </ion-col>
+                        <ion-col class="detail-receiver">
+                          <ion-label>{{item.transferData?.receiver }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-embryo">
+                          <ion-label>{{item.transferData?.embryo }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-embryo_class">
+                          <ion-label>{{item.transferData?.embryo_class }}</ion-label>
+                        </ion-col>
                         <ion-col class="detail-donor">
-                          <ion-label>{{item.donor }}</ion-label>
+                          <ion-label>{{item.transferData?.donor }}</ion-label>
                         </ion-col>
                         <ion-col class="detail-donor-breed">
-                          <ion-label>{{item.donor_breed }}</ion-label>
-                        </ion-col>
-                        <ion-col class="detail-local-name">
-                          <ion-label>{{item.local?.name }}</ion-label>
-                        </ion-col>
-                        <ion-col class="detail-type">
-                          <ion-label>{{item.type }}</ion-label>
-                        </ion-col>
-                        <ion-col class="detail-arrived-time">
-                          <ion-label>{{item.arrived_time }}</ion-label>
+                          <ion-label>{{item.transferData?.donor_breed }}</ion-label>
                         </ion-col>
                         <ion-col class="detail-bull">
-                          <ion-label>{{item.bull }}</ion-label>
+                          <ion-label>{{item.transferData?.bull }}</ion-label>
                         </ion-col>
                         <ion-col class="detail-bull-breed">
-                          <ion-label>{{item.bull_breed }}</ion-label>
+                          <ion-label>{{item.transferData?.bull_breed }}</ion-label>
                         </ion-col>
-                        <ion-col class="detail-gi">
-                          <ion-label>{{item.gi }}</ion-label>
+                        <ion-col class="detail-corpus_luteum">
+                          <ion-label>{{item.transferData?.corpus_luteum }}</ion-label>
                         </ion-col>
-                        <ion-col class="detail-gii">
-                          <ion-label>{{item.gii }}</ion-label>
+                        <ion-col class="detail-transferor">
+                          <ion-label>{{item.transferData?.transferor }}</ion-label>
                         </ion-col>
-                        <ion-col class="detail-giii">
-                          <ion-label>{{item.giii }}</ion-label>
-                        </ion-col>
-                        <ion-col class="detail-others">
-                          <ion-label>{{item.others }}</ion-label>
+                        <ion-col class="detail-dx1">
+                          <ion-label>{{item.dx1 }}</ion-label>
                         </ion-col>
                       </ion-row>
                     </ion-grid>
@@ -216,52 +216,6 @@
               </ion-card-header>
               <ion-card-content>
                 <ion-grid>
-                  <ion-row>
-                    <ion-col size="5">
-                      <ion-label>Temperatura de llegada</ion-label>
-                    </ion-col>
-                    <ion-col size="6">
-                      <ion-label>Tipo transporte</ion-label>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col size="5">
-                      <ion-grid>
-                        <ion-row>
-                          <ion-col size="10.8" style="margin-left: -9px; margin-top: -9px">
-                            <ion-input type="number" step="any" formControlName="arrived_temperature_number"
-                              [(ngModel)]="diagnostic.arrived_temperature_number"
-                              (ionChange)="onChangeArrivedTemperature()">
-                            </ion-input>
-                          </ion-col>
-                          <ion-col size="1" class="ion-text-start">
-                            <h1 class="grade-celsius">°C</h1>
-                          </ion-col>
-                        </ion-row>
-                      </ion-grid>
-                      <div>
-                        <ng-container *ngFor="let validation of validation_messages.arrived_temperature_number">
-                          <div class="error-message"
-                            *ngIf="validation_form_general.get('arrived_temperature_number').hasError(validation.type) 
-                            && (validation_form_general.get('arrived_temperature_number').dirty || validation_form_general.get('arrived_temperature_number').touched)">
-                            {{ validation.message }}
-                          </div>
-                        </ng-container>
-                      </div>
-                    </ion-col>
-                    <ion-col size="6">
-                      <ion-input formControlName="transport_type" [(ngModel)]="diagnostic.transport_type"></ion-input>
-                      <div>
-                        <ng-container *ngFor="let validation of validation_messages.transport_type">
-                          <div class="error-message"
-                            *ngIf="validation_form_general.get('transport_type').hasError(validation.type) 
-                            && (validation_form_general.get('transport_type').dirty || validation_form_general.get('transport_type').touched)">
-                            {{ validation.message }}
-                          </div>
-                        </ng-container>
-                      </div>
-                    </ion-col>
-                  </ion-row>
                   <ion-row>
                     <ion-col size="7">
                       <ion-label>Nombre del encargado</ion-label>

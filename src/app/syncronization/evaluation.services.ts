@@ -8,7 +8,7 @@ import { Events, Platform } from '@ionic/angular';
 @Injectable({
   providedIn: 'root'
 })
-export class AspirationService {
+export class EvaluationService {
 
   generatePDFs: any = [];
 
@@ -17,44 +17,44 @@ export class AspirationService {
     public event: Events,
     private platform: Platform) { }
 
-  updateAspiration(aspiration: any) {
-    const aspirationMutation = gql`
-      mutation updateAspiration($input: UpdateAspirationInput!){
-        updateAspiration(input: $input) {
+  updateEvaluation(evaluation: any) {
+    const evaluationMutation = gql`
+      mutation updateEvaluation($input: UpdateEvaluationInput!){
+        updateEvaluation(input: $input) {
           id
         }
       }`;
 
     let variables = {
       "input": {
-        "id": aspiration.id
+        "id": evaluation.id
       }
     };
-    if (aspiration.stateSync === 'U') {
+    if (evaluation.stateSync === 'U') {
       variables = Object.assign(variables, {
         "input": {
-          "id": aspiration.id,
-          "arrived_temperature": aspiration.arrived_temperature,
-          "aspirator": aspiration.aspirator,
-          "comments": aspiration.comments,
-          //"date": aspiration.date,
-          "identification_number": aspiration.identification_number,
-          "medium_lot_miv": aspiration.medium_lot_miv,
-          "medium_lot_opu": aspiration.medium_lot_opu,
-          "medium_opu": aspiration.medium_opu,
-          "received_by": aspiration.received_by,
-          "receiver_name": aspiration.receiver_name,
-          "searcher": aspiration.searcher,
-          "state": aspiration.state,
-          "synchronized_receivers": aspiration.synchronized_receivers,
-          "transport_type": aspiration.transport_type,
+          "id": evaluation.id,
+          "arrived_temperature": evaluation.arrived_temperature,
+          "aspirator": evaluation.aspirator,
+          "comments": evaluation.comments,
+          //"date": evaluation.date,
+          "identification_number": evaluation.identification_number,
+          "medium_lot_miv": evaluation.medium_lot_miv,
+          "medium_lot_opu": evaluation.medium_lot_opu,
+          "medium_opu": evaluation.medium_opu,
+          "received_by": evaluation.received_by,
+          "receiver_name": evaluation.receiver_name,
+          "searcher": evaluation.searcher,
+          "state": evaluation.state,
+          "synchronized_receivers": evaluation.synchronized_receivers,
+          "transport_type": evaluation.transport_type,
           "user_id_updated": this.userService.getUserId()
         }
       });
     }
     const create = [];
     const update = [];
-    aspiration.details.forEach(detail => {
+    evaluation.details.forEach(detail => {
       if (detail.stateSync === 'U') {
         update.push({
           'id': detail.id,
@@ -74,17 +74,17 @@ export class AspirationService {
       }
       else if (detail.stateSync === 'C') {
         create.push({
-          'local_id': aspiration.local_id,
-          'donor': aspiration.donor,
-          'donor_breed': aspiration.donor_breed,
-          'arrived_time': aspiration.arrived_time,
-          'bull': aspiration.bull,
-          'bull_breed': aspiration.bull_breed,
-          'type': aspiration.type,
-          'gi': aspiration.gi,
-          'gss': aspiration.gss,
-          'gssi': aspiration.gssi,
-          'others': aspiration.others,
+          'local_id': evaluation.local_id,
+          'donor': evaluation.donor,
+          'donor_breed': evaluation.donor_breed,
+          'arrived_time': evaluation.arrived_time,
+          'bull': evaluation.bull,
+          'bull_breed': evaluation.bull_breed,
+          'type': evaluation.type,
+          'gi': evaluation.gi,
+          'gss': evaluation.gss,
+          'gssi': evaluation.gssi,
+          'others': evaluation.others,
           'user_id_updated': this.userService.getUserId(),
           'user_id_created': this.userService.getUserId(),
         });
@@ -97,7 +97,7 @@ export class AspirationService {
       if (update.length > 0) details = Object.assign(details, { "update": update });
       variables = Object.assign(variables, details);
     }
-    else if (aspiration.stateSync !== 'U') {
+    else if (evaluation.stateSync !== 'U') {
       //Si no se reflejan cambios en el elemento o sus detalles, se resuelve la promesa
       return new Promise(resolve => {
         resolve({ status: 'no_change' });
@@ -107,7 +107,7 @@ export class AspirationService {
     //se resuelve la promesa despues de obtener respuesta de la mutacion
     return new Promise(resolve => {
       this.apollo.mutate({
-        mutation: aspirationMutation,
+        mutation: evaluationMutation,
         variables: Object.assign({ "input": {} }, variables)
       }).subscribe(({ data }) => {
         resolve({ status: 'success', data: data });

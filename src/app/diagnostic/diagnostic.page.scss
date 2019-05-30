@@ -37,6 +37,9 @@ ion-textarea{
     background-color: #e5e5e5;
     min-height: 40px;
     padding-top: 10px;
+    ion-label {
+        min-height: 34px;
+    }
 }
 .error-message {
     color:red;
@@ -102,8 +105,8 @@ ion-card-content {
     min-width: 38px;
 }
 .detail-receiver {
-    max-width: 151px;
-    min-width: 151px;
+    max-width: 141px;
+    min-width: 141px;
 }
 .detail-embryo {
     max-width: 106px;

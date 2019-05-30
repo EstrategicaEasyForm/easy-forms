@@ -53,7 +53,6 @@ query orders {
             department
           }
         }
-        url_signing
       }
       aspirationApi {
         id
@@ -107,18 +106,21 @@ query orders {
         comments
         state
         date
-        details {
+        synchronizeds {
           id
-          transfer_id
-          production_detail_id
-          evaluation_detail_id
-          receiver
-          embryo
+          animal_id
+          chapeta
+        }
+        details_view {
+          id
           embryo_class
+          donor
+          donor_breed
+          bull
+          bull_breed
+          receiver
           corpus_luteum
-          transferor
           comments
-          attendant
           local_id
           local {
             id
@@ -126,6 +128,12 @@ query orders {
             city
             department
           }
+          transfer_id
+          production_detail_id
+          evaluation_detail_id
+          embryo
+          transferor
+          attendant
           discard
         }
       }
@@ -143,8 +151,9 @@ query orders {
           transfer_detail_id
           dx1
         }
-        detailsTransfer {
+        detailsDiagnostic {
           id
+          transfer_detail_id
           receiver
           embryo
           embryo_class
@@ -164,15 +173,38 @@ query orders {
         received_by
         identification_number
         comments
+        apply_diagnostic {
+          apply_diagnostic
+        }
         details {
           id
           sexage_id
           diagnostic_detail_id
           sex
         }
+        detailsSexage {
+          id
+          transfer_detail_id
+          receiver
+          embryo
+          embryo_class
+          donor
+          donor_breed
+          bull
+          bull_breed
+          corpus_luteum
+          transferor
+          comments
+          dx1
+          sex
+        }
       }
       deliveryApi {
         id
+        apply_delivery {
+          apply_diagnostic
+          apply_sexage
+        }
         order_detail_id
         received_by
         identification_number
@@ -183,6 +215,25 @@ query orders {
           id
           delivery_id
           sexage_detail_id
+          dx2
+        }
+        detailsDelivery {
+          id
+          diagnostic_id
+          detail_diagnostic_id
+          transfer_detail_id
+          receiver
+          embryo
+          embryo_class
+          donor
+          donor_breed
+          bull
+          bull_breed
+          corpus_luteum
+          transferor
+          comments
+          dx1
+          sex
           dx2
         }
       }
@@ -254,7 +305,8 @@ query orders {
       }
     }
   }
-}`;
+}
+`;
 
 @Injectable({
   providedIn: 'root'
@@ -306,7 +358,7 @@ export class OrdersService {
       "id": "6",
       "name": "Entrega",
       "tag": "deliveryApi",
-      "icon": ['fas', 'stethoscope'],
+      "icon": ['fas', 'truck'],
       "style": "color: blue;",
       "color": "red"
     }

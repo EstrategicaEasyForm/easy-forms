@@ -72,12 +72,16 @@ export class DiagnosticPage implements OnInit {
     this.order = detail.order;
     this.detailApi = detail.detailApi;
     this.agenda = detail.agenda;
-    this.diagnostic.arrived_temperature = this.diagnostic.arrived_temperature || '';
-    this.diagnostic.arrived_temperature_number = Number(this.diagnostic.arrived_temperature.replace('°C', '').replace(',', '.'));
 
+    for(let dt of this.diagnostic.details) {
+      for(let dtDiag of this.diagnostic.detailsDiagnostic) {
+        if(dt.transfer_detail_id === dtDiag.id) {
+          dt.transferData = dtDiag;
+        }
+      }
+    }
+    
     this.validation_form_general = this.formBuilder.group({
-      arrived_temperature_number: [this.diagnostic.arrived_temperature_number, Validators.required,],
-      transport_type: [this.diagnostic.transport_type, Validators.required],
       receiver_name: [this.diagnostic.receiver_name, Validators.required],
       identification_number: [this.diagnostic.identification_number, Validators.required],
       comments: [this.diagnostic.comments, Validators.required]

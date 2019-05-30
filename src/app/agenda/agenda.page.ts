@@ -99,9 +99,11 @@ export class AgendaPage implements OnInit {
         if (detailApi.diagnosticApi) {
           this.newDetailApiCard(order, detailApi, detailApi.diagnosticApi, this.ordersService.templates[3]);
         }
+        //SexageApi Template API
         if (detailApi.sexageApi) {
           this.newDetailApiCard(order, detailApi, detailApi.sexageApi, this.ordersService.templates[4]);
         }
+        //DeliveryApi Template API
         if (detailApi.deliveryApi) {
           this.newDetailApiCard(order, detailApi, detailApi.deliveryApi, this.ordersService.templates[5]);
         }

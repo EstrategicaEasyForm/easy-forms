@@ -113,7 +113,7 @@
                     </ion-col>
                     <ion-col size="5" style="margin-top: -30px;">
                       <h2>Orden de producción {{detailApi.order?.id}}</h2>
-                      <ion-item *ngIf="detailApi.agenda.start_date" class="date-and-time">
+                      <h3 *ngIf="detailApi.agenda.start_date" class="date-and-time">
                         Fecha y hora:
                         <ion-label class="card-item-field" *ngIf="!detailApi.agenda.all_day" item-end>
                           {{detailApi.agenda.start_date}}
@@ -121,7 +121,7 @@
                         <ion-label class="card-item-field" *ngIf="detailApi.agenda.all_day" item-end>
                           {{detailApi.agenda.start_date.split(' ')[0]}} Todo el día
                         </ion-label>
-                      </ion-item>
+                      </h3>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
