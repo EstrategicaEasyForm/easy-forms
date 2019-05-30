@@ -60,7 +60,7 @@ export class EvaluationPage implements OnInit {
     public alertController: AlertController,
     public camera: Camera,
     public platform: Platform,
-    public pdfMakeEvaluation: EvaluationPdfService) {
+    public evaluationPdf: EvaluationPdfService) {
   }
 
   ngOnInit() {
@@ -77,7 +77,7 @@ export class EvaluationPage implements OnInit {
     });
 
     this.validation_form_general = this.formBuilder.group({
-      evaluator: [this.evaluation.attendant, Validators.required],
+      //evaluator: [this.evaluation.attendant, Validators.required],
       receiver_name: [this.evaluation.receiver_name, Validators.required],
       identification_number: [this.evaluation.identification_number, Validators.required],
       comments: [this.evaluation.comments, Validators.required]
@@ -133,16 +133,20 @@ export class EvaluationPage implements OnInit {
 
 
   openPdfViewer() {
-    const _self = this;
-    this.pdfMakeEvaluation.makePdf({
-      evaluation: this.evaluation,
+    const data = {
+      evaluationApi: this.evaluation,
       order: this.order,
       local: this.detailApi.local
-    }, function (pdfObj, error) {
-      if (error) {
-        _self.showMessage('No se puede generar el pdf ' + error);
+    };
+    const options = {
+      watermark: true,
+      open: true
+    };
+    this.evaluationPdf.makePdf(data, options).then((pdf: any) => {
+      if (pdf.status === 'error') {
+        this.showMessage(pdf.error);
       }
-    }, { watermark: true, open: true });
+    });
   }
 
   onSaveButton() {
