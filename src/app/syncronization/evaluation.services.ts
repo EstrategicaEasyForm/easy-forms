@@ -76,10 +76,10 @@ export class EvaluationService {
     });
 
     if (create.length > 0 || update.length > 0) {
-      let details = {};
+      let details: any = {};
       if (create.length > 0) details.create = create;
-	  if (update.length > 0) update.create = update;
-      variables.input.details = details;
+	  if (update.length > 0) details.update = update;
+      variables.input['details'] = details;
     }
     else if (evaluation.stateSync !== 'U') {
       //Si no se reflejan cambios en el elemento o sus detalles, se resuelve la promesa
