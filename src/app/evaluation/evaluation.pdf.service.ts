@@ -40,7 +40,7 @@ export class EvaluationPdfService {
 	async makePdf(data, options) {
 
 		pdfmake.vfs = pdfFonts.pdfMake.vfs;
-		
+
 		const photoImage = data.evaluationApi.photoImage || this.imageSrc.imagePhotoDefault;
 
 		var evaluationDetails = [];
@@ -50,16 +50,17 @@ export class EvaluationPdfService {
 		var j = {};
 		var k = [];
 
-		evaluationDetails.push([{ text: 'Id. Animal', alignment: 'center', bold: true },
-		{ text: 'Chapeta', alignment: 'center', bold: true },
-		{ text: 'Apta', alignment: 'center', bold: true },
-		{ text: 'Sincronizada', alignment: 'center', bold: true },
-		{ text: 'Local', alignment: 'center', bold: true },
-		{ text: 'Diagnóstico', alignment: 'center', bold: true }
+		evaluationDetails.push([
+			{ text: 'Id. Animal', alignment: 'center', bold: true },
+			{ text: 'Chapeta', alignment: 'center', bold: true },
+			{ text: 'Apta', alignment: 'center', bold: true },
+			{ text: 'Sincronizada', alignment: 'center', bold: true },
+			{ text: 'Local', alignment: 'center', bold: true },
+			{ text: 'Diagnóstico', alignment: 'center', bold: true }
 		]);
 		for (let i of data.evaluationApi.details) {
 			evaluationDetails.push([
-			i.animal_id,
+			i.id_animal,
 			i.chapeta,
 			i.fit,
 			i.synchronized,
@@ -216,7 +217,7 @@ export class EvaluationPdfService {
 								headerRows: 1,
 								alignment: 'center',
 								fontSize: 9,
-								widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+								widths: ['auto', 100, 'auto', 'auto', 120, 120],
 								body: evaluationDetails,
 							},
 							layout: {
@@ -285,7 +286,7 @@ export class EvaluationPdfService {
 				},
 			},
 		};
-		
+
 		if(options.watermark) {
 			docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.3, bold: true, italics: false }});
 		}
