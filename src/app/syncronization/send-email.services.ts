@@ -5,7 +5,7 @@ import { DiagnosticPdfService } from '../diagnostic/diagnostic.pdf.service';
 import { SexagePdfService } from '../sexage/sexage.pdf.service';
 import { DeliveryPdfService } from '../delivery/delivery.pdf.service';
 import { TransferPdfService } from '../transfer/transfer.pdf.service';
-import { PdfMakeEvaluationService } from '../evaluation/pdf-make-evaluation.service';
+import { EvaluationPdfService } from '../evaluation/evaluation.pdf.service';
 
 
 @Injectable({
@@ -14,7 +14,7 @@ import { PdfMakeEvaluationService } from '../evaluation/pdf-make-evaluation.serv
 export class SendEmailService {
 
   constructor(
-    public evaluationPdf: PdfMakeEvaluationService,
+    public evaluationPdf: EvaluationPdfService,
     public aspirationPdf: AspirationPdfService,
     public transferPdf: TransferPdfService,
     public diagnosticPdf: DiagnosticPdfService,

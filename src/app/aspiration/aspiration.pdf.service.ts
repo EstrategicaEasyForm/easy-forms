@@ -48,7 +48,7 @@ export class AspirationPdfService {
 		var j = {};
 		var k = [];
 
-		aspirationDetails.push([{ text: 'Donadora', bold: true }, 'Raza', 'Toro', 'Raza', 'Tipo', 'GI', 'GII', 'GIII', 'Otros', 'Viables', 'Total']);
+		aspirationDetails.push(['Donadora', 'Raza', 'Toro', 'Raza', 'Tipo', 'GI', 'GII', 'GIII', 'Otros', 'Viables', 'Total']);
 		for (let i of data.aspirationApi.details) {
 			aspirationDetails.push([i.donor,
 			i.donor_breed,
@@ -240,6 +240,7 @@ export class AspirationPdfService {
 					],
 				},
 				{ text: data.aspirationApi.receiver_name, alignment: 'center', fontSize: 15, bold: true },
+				{ text: data.aspirationApi.identification_number, alignment: 'center', fontSize: 15, bold: true },
 				{ text: '\n\n\ FOTO EVIDENCIA DEL EVENTO', alignment: 'center', pageBreak: 'before', fontSize: 18, bold: true },
 				{ text: '\n\n\ ' },
 				{

@@ -6,11 +6,14 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { LoadingController, Platform, ToastController } from '@ionic/angular';
 import { OrdersService } from '../orders.service';
 import * as moment from 'moment-timezone';
+import { HttpClient } from '@angular/common/http';
+import { ImageSrc } from '../imageSrc';
+import { url } from 'inspector';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class PdfMakeEvaluationService {
+export class EvaluationPdfService {
 
 	constructor(
 		public loadingController: LoadingController,
@@ -18,7 +21,9 @@ export class PdfMakeEvaluationService {
 		private fileOpener: FileOpener,
 		public platform: Platform,
 		public toastCtrl: ToastController,
-		public ordersService: OrdersService
+		public ordersService: OrdersService,
+		public http: HttpClient,
+		public imageSrc: ImageSrc
 	) { }
 
 	// params: 
@@ -32,7 +37,7 @@ export class PdfMakeEvaluationService {
 	//   watermark: true|false,
 	//	 open: true|false
 	// }
-	async makePdf(data, callback, options) {
+	async makePdf(data, options) {
 
 		let _self = this;
 		pdfmake.vfs = pdfFonts.pdfMake.vfs;
@@ -44,52 +49,31 @@ export class PdfMakeEvaluationService {
 		var j = {};
 		var k = [];
 
-		EvaluationDetails.push(['Donadora', 'Raza', 'Toro', 'Raza', 'Tipo', 'GI', 'GII', 'GIII', 'Otros', 'Viables', 'Total']);
+		EvaluationDetails.push(['Id. Animal', 'Chapeta', 'Apta', 'Sincronizada', 'Local', 'Diagnóstico']);
 		for (let i of data.Evaluation.details) {
 			EvaluationDetails.push([i.donor,
-			i.donor_breed,
-			i.bull,
-			i.bull_breed,
-			i.type,
-			i.gi,
-			i.gii,
-			i.giii,
-			i.others,
-			i.gi + i.gii + i.giii,
-			i.gi + i.gii + i.giii + i.others
+			i.id_animal,
+			i.chapeta,
+			i.fit,
+			i.synchronized,
+			i.local,
+			i.diagnostic
 			]);
 		}
 
-		workTeam.push(['Nombre', 'Teléfono', 'Correo', 'Evento', 'Observación', 'Departamento', 'Municipio', 'Direccion', 'Fecha']);
+		workTeam.push(['Nombre', 'Correo', 'Evento', 'Observación', 'Departamento', 'Municipio', 'Fecha']);
 		for (let j of data.order.agenda) {
 			workTeam.push([j.user.name,
-				'',
 			j.user.email,
 			j.event.name,
 			j.observation,
 			j.department.name,
 			j.municipality.name,
-			j.address,
 			j.start_date
 			]);
 		}
 
-		localsTe.push(['Nombre Local', 'Ciudad', 'Departamento', 'Teléfono', 'Correo', 'Contacto']);
-		for (let k of data.local) {
-			localsTe.push([k.name,
-			k.city,
-			k.department,
-				'',
-				'',
-				''
-			]);
-		}
-
-
-		//let logoSrc = 'assets/imgs/logoInvitroAlfa_968x576.png';
-		//let logoSrc = 'file:///android_asset/imgs/logoInvitroAlfa_968x576.png';
-
-		var docDefinition = {
+		const docDefinition = {
 			pageSize: 'A5',
 			pageOrientation: 'landscape',
 			pageMargins: [40, 60, 40, 60],
@@ -157,8 +141,8 @@ export class PdfMakeEvaluationService {
 
 					if (options && options.open) {
 						_self.fileOpener.open(_self.file.dataDirectory + filename, 'application/pdf')
-							.then(() => callback(null,'File is opened'))
-							.catch(e => callback(null,'Error opening file ' + e));
+							.then(() => callback(null, 'File is opened'))
+							.catch(e => callback(null, 'Error opening file ' + e));
 					}
 					//Retorna el codigo binario del archivo pdf generado
 					else {
