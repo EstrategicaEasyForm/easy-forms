@@ -17,44 +17,45 @@ export class TransferService {
     public event: Events,
     private platform: Platform) { }
 
-    updateTransfer(aspiration: any) {
-    const aspirationMutation = gql`
-      mutation updateAspiration($input: UpdateAspirationInput!){
-        updateAspiration(input: $input) {
+    updateTransfer(transfer: any) {
+    const transferMutation = gql`
+      mutation updateTransfer($input: UpdateTransferInput!){
+        updateTransfer(input: $input) {
           id
         }
       }`;
 
     let variables = {
       "input": {
-        "id": aspiration.id
+        "id": transfer.id
       }
     };
-    if (aspiration.stateSync === 'U') {
+    if (transfer.stateSync === 'U') {
       variables = Object.assign(variables, {
         "input": {
-          "id": aspiration.id,
-          "arrived_temperature": aspiration.arrived_temperature,
-          "aspirator": aspiration.aspirator,
-          "comments": aspiration.comments,
-          //"date": aspiration.date,
-          "identification_number": aspiration.identification_number,
-          "medium_lot_miv": aspiration.medium_lot_miv,
-          "medium_lot_opu": aspiration.medium_lot_opu,
-          "medium_opu": aspiration.medium_opu,
-          "received_by": aspiration.received_by,
-          "receiver_name": aspiration.receiver_name,
-          "searcher": aspiration.searcher,
-          "state": aspiration.state,
-          "synchronized_receivers": aspiration.synchronized_receivers,
-          "transport_type": aspiration.transport_type,
+          "id": transfer.id,
+          "arrived_temperature": transfer.arrived_temperature,
+          "aspirator": transfer.aspirator,
+          "comments": transfer.comments,
+          //"date": transfer.date,
+          "identification_number": transfer.identification_number,
+          "medium_lot_miv": transfer.medium_lot_miv,
+          "medium_lot_opu": transfer.medium_lot_opu,
+          "medium_opu": transfer.medium_opu,
+          "received_by": transfer.received_by,
+          "receiver_name": transfer.receiver_name,
+          "searcher": transfer.searcher,
+          "state": transfer.state,
+          "synchronized_receivers": transfer.synchronized_receivers,
+          "transport_type": transfer.transport_type,
           "user_id_updated": this.userService.getUserId()
         }
       });
     }
     const create = [];
     const update = [];
-    aspiration.details.forEach(detail => {
+	if(transfer.details)
+    transfer.details.forEach(detail => {
       if (detail.stateSync === 'U') {
         update.push({
           'id': detail.id,
@@ -74,17 +75,17 @@ export class TransferService {
       }
       else if (detail.stateSync === 'C') {
         update.push({
-          'local_id': aspiration.local_id,
-          'donor': aspiration.donor,
-          'donor_breed': aspiration.donor_breed,
-          'arrived_time': aspiration.arrived_time,
-          'bull': aspiration.bull,
-          'bull_breed': aspiration.bull_breed,
-          'type': aspiration.type,
-          'gi': aspiration.gi,
-          'gss': aspiration.gss,
-          'gssi': aspiration.gssi,
-          'others': aspiration.others,
+          'local_id': transfer.local_id,
+          'donor': transfer.donor,
+          'donor_breed': transfer.donor_breed,
+          'arrived_time': transfer.arrived_time,
+          'bull': transfer.bull,
+          'bull_breed': transfer.bull_breed,
+          'type': transfer.type,
+          'gi': transfer.gi,
+          'gss': transfer.gss,
+          'gssi': transfer.gssi,
+          'others': transfer.others,
           'user_id_updated': this.userService.getUserId(),
           'user_id_created': this.userService.getUserId(),
         });
@@ -97,7 +98,7 @@ export class TransferService {
       if (update.length > 0) details = Object.assign(details, { "update": update });
       variables = Object.assign(variables, details);
     }
-    else if (aspiration.stateSync !== 'U') {
+    else if (transfer.stateSync !== 'U') {
       //Si no se reflejan cambios en el elemento o sus detalles, se resuelve la promesa
       return new Promise(resolve => {
         resolve({ status: 'no_change' });
@@ -107,7 +108,7 @@ export class TransferService {
     //se resuelve la promesa despues de obtener respuesta de la mutacion
     return new Promise(resolve => {
       this.apollo.mutate({
-        mutation: aspirationMutation,
+        mutation: transferMutation,
         variables: Object.assign({ "input": {} }, variables)
       }).subscribe(({ data }) => {
         resolve({ status: 'success', data: data });

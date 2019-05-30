@@ -41,7 +41,7 @@ export class DiagnosticPdfService {
 
 		pdfmake.vfs = pdfFonts.pdfMake.vfs;
 
-		const photoImage = data.aspirationApi.photoImage || this.imageSrc.imagePhotoDefault;
+		const photoImage = data.diagnosticApi.photoImage || this.imageSrc.imagePhotoDefault;
 
 		var diagnosticDetails = [];
 		var workTeam = [];
@@ -91,7 +91,7 @@ export class DiagnosticPdfService {
 		// 	]);
 		// }
 
-		const docDefinition = {
+		let docDefinition = {
 			pageSize: 'A5',
 			pageOrientation: 'landscape',
 			pageMargins: [40, 60, 40, 60],
@@ -147,7 +147,11 @@ export class DiagnosticPdfService {
 				}
 			},
 		};
-
+		
+		if(options.watermark) {
+			docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.3, bold: true, italics: false }});
+		}
+	
 		const _self = this;
 
 		return new Promise(resolve => {

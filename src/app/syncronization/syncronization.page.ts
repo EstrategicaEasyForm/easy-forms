@@ -54,7 +54,7 @@ export class SyncronizationPage {
   }
 
   async ionViewWillEnter() {
-    const alert = await this.alertController.create({
+	const alert = await this.alertController.create({
       header: 'Confirmación',
       message: '¿Está seguro de iniciar la sincronización de datos?',
       buttons: [
@@ -81,6 +81,9 @@ export class SyncronizationPage {
   }
 
   async initSync() {
+	//Clear console
+	this.logs = [];
+    
     const _self = this;
     _self.loading = await this.loadingCtrl.create({
       message: 'Por favor espere'
@@ -185,12 +188,10 @@ export class SyncronizationPage {
         if (response.status === 'error') {
           this.logs.push({
             type: 'error',
-            message: response.error,
-            time: moment().format('HH:mm:ss')
-          });
-          this.logs.push({
-            type: 'error',
             message: 'Error sincronizando la planilla ' + type.name + '. Orden de producción No ' + order.id,
+			details: [
+				response.error
+			],
             time: moment().format('HH:mm:ss')
           });
         }

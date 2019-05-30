@@ -68,7 +68,7 @@ export class GraphQLModule {
 
 
     });
-    const timeoutLink = new ApolloLinkTimeout(10000); // 10 second timeout
+    const timeoutLink = new ApolloLinkTimeout(30000); // 30 second timeout
 
     apollo.create({
       link: linkError.concat(timeoutLink).concat(authToken).concat(http),
