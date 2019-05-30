@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import * as moment from 'moment-timezone';
+import { TransferPdfService } from './transfer.pdf.service';
 
 @Component({
   selector: 'app-transfer',
@@ -63,7 +64,8 @@ export class TransferPage implements OnInit {
     public router: Router,
     public alertController: AlertController,
     public camera: Camera,
-    public platform: Platform) { }
+    public platform: Platform,
+    public transferPdf: TransferPdfService) { }
 
   ngOnInit() {
     const detail = this.ordersService.getDetailApiParam();
@@ -104,6 +106,8 @@ export class TransferPage implements OnInit {
       cssClass: "modal-signature"
     });
 
+
+
     modalPage.onDidDismiss().then(({ data }) => {
       if (data) {
         this.transfer.signatureImage = data.signatureImage;
@@ -113,6 +117,23 @@ export class TransferPage implements OnInit {
     });
 
     return await modalPage.present();
+  }
+
+  openPdfViewer() {
+    const data = {
+      transferApi: this.transfer,
+      order: this.order,
+      local: this.detailApi.local
+    };
+    const options = {
+      watermark: true,
+      open: true
+    };
+    this.transferPdf.makePdf(data, options).then((pdf: any) => {
+      if (pdf.status === 'error') {
+        this.showMessage(pdf.error);
+      }
+    });
   }
 
   onSaveButton() {

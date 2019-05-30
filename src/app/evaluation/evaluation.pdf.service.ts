@@ -134,7 +134,6 @@ export class EvaluationPdfService {
 						},
 					]
 				},
-				{ text: '\n\n\ INFORMACIÓN DEL EVENTO:', bold: true, fontSize: 15, alignment: 'left' },
 				{ text: '\n\ EQUIPO DE TRABAJO: ', bold: true, fontSize: 15, alignment: 'left' },
 				{ text: '\n\ ' },
 				{
@@ -203,7 +202,9 @@ export class EvaluationPdfService {
 							width: '*', text: ''
 						},
 					]
-				}, { text: '\n\n\ DETALLES DE EVALUACIÓN:', alignment: 'left', fontSize: 15, bold: true },
+				}, 
+				{ text: '\n\n\ INFORMACIÓN DEL EVENTO: EVALUACIÓN DE RECEPTORAS', bold: true, fontSize: 15, alignment: 'left' },
+				{ text: '\n\n\ DETALLES DE EVALUACIÓN:', alignment: 'left', fontSize: 15, bold: true },
 				{ text: '\n\ ' },
 				{
 					columns: [
