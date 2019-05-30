@@ -109,7 +109,6 @@ export class EvaluationPdfService {
 				},
 				{ text: '\n\ ÓRDEN DE PRODUCCIÓN: ' + data.order.id, bold: true, fontSize: 18, alignment: 'left' },
 				{ text: '\n\ DATOS:', bold: true, fontSize: 15, alignment: 'left' },
-				{ text: '\n\ ' },
 				{
 					columns: [
 						{
