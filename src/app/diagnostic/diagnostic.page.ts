@@ -32,7 +32,7 @@ export class DiagnosticPage implements OnInit {
   validation_form_general: FormGroup;
 
   validation_messages = {
-    'receiver_name': [
+    'received_by': [
       { type: 'required', message: 'Campo requerido.' }
     ],
     'identification_number': [
@@ -72,44 +72,44 @@ export class DiagnosticPage implements OnInit {
     this.order = detail.order;
     this.detailApi = detail.detailApi;
     this.agenda = detail.agenda;
-	
-	let detailsTmp;
 
-	//Si el objeto details es diferente al objeto detailsDiagnostic se rearma la lista para incluir todos los detalles de detailsDiagnostic.
-	if(this.diagnostic.details.length !== this.diagnostic.detailsDiagnostic.length) {
-		const newDetails = [];
-		for(let dtDiag of this.diagnostic.detailsDiagnostic) {
-			detailsTmp = null;
-			for(let details of this.diagnostic.details) {
-				if(dtDiag.transfer_detail_id == details.transfer_detail_id) {
-					detailsTmp = details;
-				}
-			}
-			if(detailsTmp) {
-				newDetails.push({
-				  "id": detailsTmp.id,
-                  "diagnostic_id": this.diagnostic.id,
-                  "transfer_detail_id": detailsTmp.transfer_detail_id,
-                  "dx1": detailsTmp.dx1,
-				  "transferData" : dtDiag
-                });
-			}
-			else {
-				newDetails.push({
-				  "id": -1,
-                  "diagnostic_id": this.diagnostic.id,
-                  "transfer_detail_id": dtDiag.transfer_detail_id,
-                  "dx1": "",
-				  "transferData" : dtDiag
-                });
-			}
-		}
-		//se modifica la lista
-		this.diagnostic.details = newDetails;
-	}
-    
+    let detailsTmp;
+
+    //Si el objeto details es diferente al objeto detailsDiagnostic se rearma la lista para incluir todos los detalles de detailsDiagnostic.
+    if (this.diagnostic.details.length !== this.diagnostic.detailsDiagnostic.length) {
+      const newDetails = [];
+      for (let dtDiag of this.diagnostic.detailsDiagnostic) {
+        detailsTmp = null;
+        for (let details of this.diagnostic.details) {
+          if (dtDiag.transfer_detail_id == details.transfer_detail_id) {
+            detailsTmp = details;
+          }
+        }
+        if (detailsTmp) {
+          newDetails.push({
+            "id": detailsTmp.id,
+            "diagnostic_id": this.diagnostic.id,
+            "transfer_detail_id": detailsTmp.transfer_detail_id,
+            "dx1": detailsTmp.dx1,
+            "transferData": dtDiag
+          });
+        }
+        else {
+          newDetails.push({
+            "id": -1,
+            "diagnostic_id": this.diagnostic.id,
+            "transfer_detail_id": dtDiag.transfer_detail_id,
+            "dx1": "",
+            "transferData": dtDiag
+          });
+        }
+      }
+      //se modifica la lista
+      this.diagnostic.details = newDetails;
+    }
+
     this.validation_form_general = this.formBuilder.group({
-      receiver_name: [this.diagnostic.receiver_name, Validators.required],
+      received_by: [this.diagnostic.received_by, Validators.required],
       identification_number: [this.diagnostic.identification_number, Validators.required],
       comments: [this.diagnostic.comments, Validators.required]
     });

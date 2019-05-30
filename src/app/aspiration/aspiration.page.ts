@@ -48,7 +48,7 @@ export class AspirationPage implements OnInit {
     'arrived_temperature_number': [
       { type: 'required', message: 'Campo requerido.' }
     ],
-    'receiver_name': [
+    'received_by': [
       { type: 'required', message: 'Campo requerido.' }
     ],
     'identification_number': [
@@ -101,7 +101,7 @@ export class AspirationPage implements OnInit {
     this.validation_form_general = this.formBuilder.group({
       arrived_temperature_number: [this.aspiration.arrived_temperature_number, Validators.required,],
       transport_type: [this.aspiration.transport_type, Validators.required],
-      receiver_name: [this.aspiration.receiver_name, Validators.required],
+      received_by: [this.aspiration.received_by, Validators.required],
       identification_number: [this.aspiration.identification_number, Validators.required],
       comments: [this.aspiration.comments, Validators.required]
     });

@@ -29,26 +29,10 @@ export class SexagePage implements OnInit {
   mbControlPanel: number = 1;
 
   //validations forms
-  validation_form_order: FormGroup;
   validation_form_general: FormGroup;
 
   validation_messages = {
-    'medium_opu': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'medium_lot_opu': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'aspirator': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'searcher': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'arrived_temperature_number': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'receiver_name': [
+    'received_by': [
       { type: 'required', message: 'Campo requerido.' }
     ],
     'identification_number': [
@@ -88,38 +72,47 @@ export class SexagePage implements OnInit {
     this.order = detail.order;
     this.detailApi = detail.detailApi;
     this.agenda = detail.agenda;
-    this.sexage.arrived_temperature = this.sexage.arrived_temperature || '';
-    this.sexage.arrived_temperature_number = Number(this.sexage.arrived_temperature.replace('°C', '').replace(',', '.'));
 
-    this.validation_form_order = this.formBuilder.group({
-      medium_opu: [this.sexage.medium_opu, Validators.required],
-      medium_lot_opu: [this.sexage.medium_lot_opu, Validators.required],
-      searcher: [this.sexage.searcher, Validators.required],
-      aspirator: [this.sexage.aspirator, Validators.required],
-    });
+    let detailsTmp;
+
+    //Si el objeto details es diferente al objeto detailsDiagnostic se rearma la lista para incluir todos los detalles de detailsDiagnostic.
+    if (this.sexage.details.length !== this.sexage.detailsDiagnostic.length) {
+      const newDetails = [];
+      for (let dtDiag of this.sexage.detailsDiagnostic) {
+        detailsTmp = null;
+        for (let details of this.sexage.details) {
+          if (dtDiag.transfer_detail_id == details.transfer_detail_id) {
+            detailsTmp = details;
+          }
+        }
+        if (detailsTmp) {
+          newDetails.push({
+            "id": detailsTmp.id,
+            "sexage_id": this.sexage.id,
+            "transfer_detail_id": detailsTmp.transfer_detail_id,
+            "dx1": detailsTmp.dx1,
+            "transferData": dtDiag
+          });
+        }
+        else {
+          newDetails.push({
+            "id": -1,
+            "sexage_id": this.sexage.id,
+            "transfer_detail_id": dtDiag.transfer_detail_id,
+            "dx1": "",
+            "transferData": dtDiag
+          });
+        }
+      }
+      //se modifica la lista
+      this.sexage.details = newDetails;
+    }
 
     this.validation_form_general = this.formBuilder.group({
-      arrived_temperature_number: [this.sexage.arrived_temperature_number, Validators.required,],
-      transport_type: [this.sexage.transport_type, Validators.required],
-      receiver_name: [this.sexage.receiver_name, Validators.required],
+      received_by: [this.sexage.received_by, Validators.required],
       identification_number: [this.sexage.identification_number, Validators.required],
       comments: [this.sexage.comments, Validators.required]
     });
-
-    for (let detail of this.sexage.details) {
-      if (detail.arrived_time) {
-        const minute = Number(detail.arrived_time.split(':')[1].substr(0, 2));
-        const pm = detail.arrived_time.split(':')[1].substr(2, 2) === 'PM' ? 12 : 0;
-        const hour = Number(detail.arrived_time.split(':')[0]) + pm;
-        let time = moment().set({ hour: hour, minute: minute });
-        detail.ionDateTime = time.format();
-        detail.arrived_time = time.format('hh:mmA');
-      }
-      detail.gi = Number(detail.gi) || 0;
-      detail.gii = Number(detail.gii) || 0;
-      detail.giii = Number(detail.giii) || 0;
-      detail.others = Number(detail.others) || 0;
-    }
   }
 
   openSexageDetail(indx) {
@@ -205,7 +198,7 @@ export class SexagePage implements OnInit {
         }
         this.ordersService.setDetailsApiStorage(detailsApi);
         this.detailApi.sexageApi = this.sexage;
-        this.showMessage('Aspiración Finalizada');
+        this.showMessage('Planilla Sexage Finalizada');
         this.location.back();
       }
     });
@@ -213,8 +206,8 @@ export class SexagePage implements OnInit {
 
   async presentAlertConfirm() {
     const alert = await this.alertController.create({
-      header: 'Finalizar Aspiración!',
-      message: 'Confirma que desa finalizar <strong>la aspiración</strong>!!!',
+      header: 'Finalizar Planilla Sexage!',
+      message: 'Confirma que desa finalizar <strong>la plantilla Sexage</strong>!!!',
       buttons: [
         {
           text: 'Cancelar',

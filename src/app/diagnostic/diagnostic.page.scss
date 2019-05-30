@@ -144,17 +144,17 @@ ion-card-content {
     max-width: 49px;
 	min-width: 49px;
 }
-
 .signature-image {
     transform: translate3d(0px, 0px, 0px) scale(1) !important;
     border: solid 1px grey; 
-    height: 180px;
+    min-height: 180px;
+	min-width: 90%;
 }
-.signature-image-undefined {
+.signature-image-underline {
     transform: translate3d(0px, 0px, 0px) scale(1) !important;
     border: solid 1px grey; 
     min-height: 180px;
-	width: 100%;
+	min-width: 90%;
 }
 .photo-image {
     border: solid 1px grey;
@@ -162,8 +162,9 @@ ion-card-content {
     background-color: rgba(80, 80, 80, 0.02);
 	opacity: 0.35;
     filter: alpha(opacity=35);
-    img {
+	img {
         transform: translate3d(0px, 0px, 0px) scale(1) !important;
+		width: 302px;
     }
 }
 .comment {

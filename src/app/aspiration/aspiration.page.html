@@ -306,13 +306,13 @@
                     <ion-col size="5">
                       <ion-grid>
                         <ion-row>
-                          <ion-col size="10.8" style="margin-left: -9px; margin-top: -9px">
+                          <ion-col size="10" style="margin-left: -9px; margin-top: -9px">
                             <ion-input type="number" step="any" formControlName="arrived_temperature_number"
                               [(ngModel)]="aspiration.arrived_temperature_number"
                               (ionChange)="onChangeArrivedTemperature()">
                             </ion-input>
                           </ion-col>
-                          <ion-col size="1" class="ion-text-start">
+                          <ion-col size="1.5" class="ion-text-start">
                             <h1 class="grade-celsius">°C</h1>
                           </ion-col>
                         </ion-row>
@@ -350,13 +350,13 @@
                   </ion-row>
                   <ion-row>
                     <ion-col size="7">
-                      <ion-input type="text" formControlName="receiver_name" [(ngModel)]="aspiration.receiver_name">
+                      <ion-input type="text" formControlName="received_by" [(ngModel)]="aspiration.received_by">
                       </ion-input>
                       <div>
-                        <ng-container *ngFor="let validation of validation_messages.receiver_name">
+                        <ng-container *ngFor="let validation of validation_messages.received_by">
                           <div class="error-message"
-                            *ngIf="validation_form_general.get('receiver_name').hasError(validation.type) 
-                            && (validation_form_general.get('receiver_name').dirty || validation_form_general.get('receiver_name').touched)">
+                            *ngIf="validation_form_general.get('received_by').hasError(validation.type) 
+                            && (validation_form_general.get('received_by').dirty || validation_form_general.get('received_by').touched)">
                             {{ validation.message }}
                           </div>
                         </ng-container>
@@ -382,9 +382,10 @@
                         Modificar Firma
                         <ion-icon name="create"></ion-icon>
                       </ion-button>
-                      <img *ngIf="aspiration.signatureImage" class="signature-image" [src]="aspiration.signatureImage"/>
-					  <div *ngIf="!aspiration.signatureImage" class="signature-image-underline"></div>
-					  <div>
+                      <img *ngIf="aspiration.signatureImage" class="signature-image"
+                        [src]="aspiration.signatureImage" />
+                      <div *ngIf="!aspiration.signatureImage" class="signature-image-underline"></div>
+                      <div>
                         <ng-container *ngFor="let validation of validation_messages.signatureImage">
                           <div class="error-message"
                             *ngIf="validation_form_general.get('signatureImage').hasError(validation.type) 
@@ -431,14 +432,15 @@
                         </ion-col>
                         <ion-col size="1"></ion-col>
                         <ion-col size="6">
-                          <ion-button [disabled]="!aspiration.signatureImage || !validation_form_order.valid || !validation_form_general.valid" 
+                          <ion-button
+                            [disabled]="!aspiration.signatureImage || !validation_form_order.valid || !validation_form_general.valid"
                             class="make-pdf-button" expand="full" (click)="openPdfViewer()">
                             Generar PDF
                             <ion-icon name="archive"></ion-icon>
                           </ion-button>
                           <ion-button class="button-finalize"
-                            [disabled]="!aspiration.signatureImage || !validation_form_order.valid || !validation_form_general.valid" expand="full"
-                            color="success-shade" (click)="presentAlertConfirm()">
+                            [disabled]="!aspiration.signatureImage || !validation_form_order.valid || !validation_form_general.valid"
+                            expand="full" color="success-shade" (click)="presentAlertConfirm()">
                             Finalizar Aspiración
                           </ion-button>
                         </ion-col>

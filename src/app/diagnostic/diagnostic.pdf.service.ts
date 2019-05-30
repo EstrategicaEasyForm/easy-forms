@@ -41,6 +41,8 @@ export class DiagnosticPdfService {
 
 		pdfmake.vfs = pdfFonts.pdfMake.vfs;
 
+		const photoImage = data.aspirationApi.photoImage || this.imageSrc.imagePhotoDefault;
+
 		var diagnosticDetails = [];
 		var workTeam = [];
 		var localsTe = [];
@@ -49,20 +51,20 @@ export class DiagnosticPdfService {
 		var k = [];
 
 		diagnosticDetails.push(['Donadora', 'Raza', 'Toro', 'Raza', 'Tipo', 'GI', 'GII', 'GIII', 'Otros', 'Viables', 'Total']);
-		for (let i of data.diagnosticApi.details) {
-			diagnosticDetails.push([i.donor,
-			i.donor_breed,
-			i.bull,
-			i.bull_breed,
-			i.type,
-			i.gi,
-			i.gii,
-			i.giii,
-			i.others,
-			i.gi + i.gii + i.giii,
-			i.gi + i.gii + i.giii + i.others
-			]);
-		}
+		// for (let i of data.diagnosticApi.details) {
+		// 	diagnosticDetails.push([i.donor,
+		// 	i.donor_breed,
+		// 	i.bull,
+		// 	i.bull_breed,
+		// 	i.type,
+		// 	i.gi,
+		// 	i.gii,
+		// 	i.giii,
+		// 	i.others,
+		// 	i.gi + i.gii + i.giii,
+		// 	i.gi + i.gii + i.giii + i.others
+		// 	]);
+		// }
 
 		workTeam.push(['Nombre', 'Teléfono', 'Correo', 'Evento', 'Observación', 'Departamento', 'Municipio', 'Direccion', 'Fecha']);
 		for (let j of data.order.agenda) {
@@ -79,15 +81,15 @@ export class DiagnosticPdfService {
 		}
 
 		localsTe.push(['Nombre Local', 'Ciudad', 'Departamento', 'Teléfono', 'Correo', 'Contacto']);
-		for (let k of data.local) {
-			localsTe.push([k.name,
-			k.city,
-			k.department,
-				'',
-				'',
-				''
-			]);
-		}
+		// for (let k of data.local) {
+		// 	localsTe.push([k.name,
+		// 	k.city,
+		// 	k.department,
+		// 		'',
+		// 		'',
+		// 		''
+		// 	]);
+		// }
 
 		const docDefinition = {
 			pageSize: 'A5',
@@ -150,7 +152,7 @@ export class DiagnosticPdfService {
 
 		return new Promise(resolve => {
 			const dataDirectory = _self.file.dataDirectory;
-			const filename = "InvitroAspiracion_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
+			const filename = "InvitroDiagnostic_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
 			try {
 				pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {
 					try {
