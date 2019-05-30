@@ -306,18 +306,23 @@ export class AspirationPdfService {
 						let utf8 = new Uint8Array(buffer);
 						let binaryArray = utf8.buffer;
 
-						_self.saveToDevice(binaryArray, filename);
-
-						if (options && options.open) {
-							_self.fileOpener.open(dataDirectory + filename, 'application/pdf')
-								.then(() => resolve({ status: "success", message: "File is opened", filename: filename, dataDirectory: dataDirectory }))
-								.catch(e => resolve({ status: "error", error: e, filename: filename }));
-						}
-						//Retorna el codigo binario del archivo pdf generado
-						else {
-							resolve({ status: "success", filename: filename, dataDirectory: dataDirectory });
-						}
-
+						_self.saveToDevice(binaryArray, filename)
+						.then(()=>{
+							if (options && options.open) {
+								_self.fileOpener.open(dataDirectory + filename, 'application/pdf')
+									.then(() => resolve({ status: "success", message: "File is opened", filename: filename, dataDirectory: dataDirectory }))
+									.catch(e => resolve({ status: "error", error: e, filename: filename }));
+							}
+							//Retorna el codigo binario del archivo pdf generado
+							else {
+								resolve({ status: "success", filename: filename, dataDirectory: dataDirectory });
+							}
+						})
+						.catch( (error) => {
+							const errm = e.message ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
+							resolve({ status: "error", error: errm, filename: filename });
+						});
+						
 					} catch (e) {
 						const errm = e.message ? e.message : typeof e === 'string' ? e : JSON.stringify(e);
 						resolve({ status: "error", error: errm, filename: filename });
@@ -333,8 +338,6 @@ export class AspirationPdfService {
 	}
 	saveToDevice(data: any, savefile: any) {
 		let options: IWriteOptions = { replace: true };
-
-		this.file.writeFile(this.file.dataDirectory, savefile, data, options);
-		console.log('File saved to your device in ' + this.file.dataDirectory);
+		return this.file.writeFile(this.file.dataDirectory, savefile, data, options);
 	}
 }
