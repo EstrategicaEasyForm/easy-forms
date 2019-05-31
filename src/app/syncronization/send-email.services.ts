@@ -6,6 +6,7 @@ import { SexagePdfService } from '../sexage/sexage.pdf.service';
 import { DeliveryPdfService } from '../delivery/delivery.pdf.service';
 import { TransferPdfService } from '../transfer/transfer.pdf.service';
 import { EvaluationPdfService } from '../evaluation/evaluation.pdf.service';
+import { UsersService } from '../users.service';
 
 
 @Injectable({
@@ -19,7 +20,8 @@ export class SendEmailService {
     public transferPdf: TransferPdfService,
     public diagnosticPdf: DiagnosticPdfService,
     public sexagePdf: SexagePdfService,
-    public deliveryPdf: DeliveryPdfService) {
+    public deliveryPdf: DeliveryPdfService,
+	public userService: UsersService) {
 
   }
 
@@ -38,12 +40,12 @@ export class SendEmailService {
     };
 
     let workSheetPdf;
-    if(type.id==="1") workSheetPdf = this.evaluationPdf;
-    if(type.id==="2") workSheetPdf = this.aspirationPdf;
-    if(type.id==="3") workSheetPdf = this.transferPdf;
-    if(type.id==="4") workSheetPdf = this.diagnosticPdf;
-    if(type.id==="5") workSheetPdf = this.sexagePdf;
-    if(type.id==="6") workSheetPdf = this.deliveryPdf;
+    if(type.id==='1') workSheetPdf = this.evaluationPdf;
+    if(type.id==='2') workSheetPdf = this.aspirationPdf;
+    if(type.id==='3') workSheetPdf = this.transferPdf;
+    if(type.id==='4') workSheetPdf = this.diagnosticPdf;
+    if(type.id==='5') workSheetPdf = this.sexagePdf;
+    if(type.id==='6') workSheetPdf = this.deliveryPdf;
     return workSheetPdf.makePdf(dataPdf, optionsPdf);
   }
 
@@ -51,39 +53,45 @@ export class SendEmailService {
 
     return new Promise(resolve => {
 
-      let textBody = 'Buen día, <br/> Adjunto se encuentra la planilla de ' + type.name + ' asociada con la order de produccion No ' + order.id + ', realizada en el local ' + detailApi.local.name;
-
+	  let textBody = 'Adjunto encontrará copia del procedimiento realizado en sus instalaciones. Por favor confirmar la correcta recepción del correo.<br/><br/><br/>Cordialmente,<br/><br/><h2 style="font-weight: bold;"> Equipo técnico</h2><br/>In Vitro Colombia S.A.S.<br/>informes@invitro.com.co<br/>Celular: 3135911966<br/>Tel. (1) 7968626<br/>Carrera 72A # 49A-39 Normandia II Sector<br/>Bogotá-Colombia<br/><br/>Este correo es generado automáticamente por invitro.com.co';
+      
       if (response.status === 'error') {
-        textBody += ' <br/> <h3 style="color: red"> Ha ocurrido un error al realizar la sincronizacion de esta planilla. <br/> Por favor, pongase en contacto con el administrador del sistema. </h3><br/><ul><li>response.error</ul><br/>';
+        textBody += ' <br/> <h3 style="color: red"> Ha ocurrido un error al realizar la sincronizacion de esta planilla. <br/> Por favor, pongase en contacto con el administrador del sistema. </h3><br/><ul><li>' + response.error + ' </ul><br/>';
       }
       const mailSettings = {
-        emailFrom: "estrategica.easy.form@gmail.com",
-        smtp: "smtp.gmail.com",
-        smtpUserName: "estrategica.easy.form",
-        smtpPassword: "HqXR8cnnL",
-        emailTo: "davithc01@gmail.com",
-        emailCC: "camachod@globalhitss.com, garzonhs@globalhitss.com",
+        emailFrom: 'estrategica.easy.form@gmail.com',
+        smtp: 'smtp.gmail.com',
+        smtpUserName: 'estrategica.easy.form',
+        smtpPassword: 'HqXR8cnnL',
+		
+		/* Using for test */
+        emailTo: 'davithc01@gmail.com',
+		emailCC: 'camachod@globalhitss.com, garzonhs@globalhitss.com',
+		/*
+		emailTo: order.client.email, //client contact email
+		emailCC: 'informes@invitro.com.co, '  + this.userService.getUserEmail(), //operator contact email 
+		*/
         attachments: [pdf.filename],
         dataDirectory: pdf.dataDirectory,
-        subject: "Planilla de " + type.name + " Invitro - Orden de trabajo No " + order.id,
+        subject: 'Orden de producción No  '+ order.id + ' - '+ ' Procedimiento de ' + type.name,
         textBody: textBody
       };
 
       const success = function (message) {
-        resolve({ status: "success", message: message });
+        resolve({ status: 'success', message: message });
       }
 
       const failure = function (message) {
-        resolve({ status: "error", error: message });
+        resolve({ status: 'error', error: message });
       }
 
       try {
-        //"Sendding Email and PDF attached with cordova-plugin-send-email"
-        // "https://github.com/EstrategicaEasyForm/cordova-plugin-send-email.git"
-        cordova.exec(success, failure, "SMTPClient", "execute", [mailSettings]);
+        //'Sendding Email and PDF attached with cordova-plugin-send-email'
+        // 'https://github.com/EstrategicaEasyForm/cordova-plugin-send-email.git'
+        cordova.exec(success, failure, 'SMTPClient', 'execute', [mailSettings]);
       }
       catch (err) {
-        resolve({ status: "error", error: err });
+        resolve({ status: 'error', error: err });
       };
     });
   }

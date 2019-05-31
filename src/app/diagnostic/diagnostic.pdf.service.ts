@@ -58,20 +58,19 @@ export class DiagnosticPdfService {
 			{ text: 'Transferidor', alignment: 'center', bold: true },
 			{ text: 'DX1', alignment: 'center', bold: true }
 		]);
-		for (let i of data.diagnosticApi.detailsDiagnostic) {
-		 	diagnosticDetails.push([
-			i.receiver,
-		 	i.embryo,
-		 	i.embryo_class,
-		 	i.donor,
-		 	i.donor_breed,
-		 	i.bull,
-		 	i.bull_breed,
-		 	i.corpus_luteum,
-		 	i.transferor,
-		 	i.dx1
+		for (let i of data.diagnosticApi.details) {
+		 	diagnosticDetails.push([i.transferData.receiver,
+		 	i.transferData.embryo,
+		 	i.transferData.embryo_class,
+		 	i.transferData.donor,
+		 	i.transferData.donor_breed,
+		 	i.transferData.bull,
+		 	i.transferData.bull_breed,
+		 	i.transferData.corpus_luteum,
+		 	i.transferData.transferor,
+			i.dx1
 		 	]);
-		 }
+		}
 
 		 workTeam.push([
 			{ text: 'Nombre', alignment: 'center', bold: true },

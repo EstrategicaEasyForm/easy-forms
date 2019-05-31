@@ -61,6 +61,10 @@ export class UsersService {
   getUserId() {
     return this.userAuthToken ? this.userAuthToken.id_user : '';
   }
+  
+  getUserEmail() {
+	return this.userAuthToken ? this.userAuthToken.email_user : '';  
+  }
 
   deleteUserAuthToken() {
     this.storage.remove('userAuthToken');

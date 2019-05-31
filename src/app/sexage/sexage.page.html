@@ -150,39 +150,40 @@
                 <ion-item-sliding *ngFor="let item of sexage.details; let indx = index">
                   <ion-item>
                     <ion-grid class="item-sliding">
-                      <ion-col class="detail-id">
-                        <ion-label>{{indx + 1}}</ion-label>
-                      </ion-col>
-                      <ion-col class="detail-receiver">
-                        <ion-label>{{item.transferData?.receiver }}</ion-label>
-                      </ion-col>
-                      <ion-col class="detail-embryo">
-                        <ion-label>{{item.transferData?.embryo }}</ion-label>
-                      </ion-col>
-                      <ion-col class="detail-embryo_class">
-                        <ion-label>{{item.transferData?.embryo_class }}</ion-label>
-                      </ion-col>
-                      <ion-col class="detail-donor">
-                        <ion-label>{{item.transferData?.donor }}</ion-label>
-                      </ion-col>
-                      <ion-col class="detail-donor-breed">
-                        <ion-label>{{item.transferData?.donor_breed }}</ion-label>
-                      </ion-col>
-                      <ion-col class="detail-bull">
-                        <ion-label>{{item.transferData?.bull }}</ion-label>
-                      </ion-col>
-                      <ion-col class="detail-bull-breed">
-                        <ion-label>{{item.transferData?.bull_breed }}</ion-label>
-                      </ion-col>
-                      <ion-col class="detail-corpus_luteum">
-                        <ion-label>{{item.transferData?.corpus_luteum }}</ion-label>
-                      </ion-col>
-                      <ion-col class="detail-transferor">
-                        <ion-label>{{item.transferData?.transferor }}</ion-label>
-                      </ion-col>
-                      <ion-col class="detail-dx1">
-                        <ion-label>{{item.dx1 }}</ion-label>
-                      </ion-col>
+                      <ion-row>
+                        <ion-col class="detail-id">
+                          <ion-label>{{indx + 1}}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-receiver">
+                          <ion-label>{{item.transferData?.receiver }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-embryo">
+                          <ion-label>{{item.transferData?.embryo }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-embryo_class">
+                          <ion-label>{{item.transferData?.embryo_class }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-donor">
+                          <ion-label>{{item.transferData?.donor }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-donor-breed">
+                          <ion-label>{{item.transferData?.donor_breed }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-bull">
+                          <ion-label>{{item.transferData?.bull }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-bull-breed">
+                          <ion-label>{{item.transferData?.bull_breed }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-corpus_luteum">
+                          <ion-label>{{item.transferData?.corpus_luteum }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-transferor">
+                          <ion-label>{{item.transferData?.transferor }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-dx1">
+                          <ion-label>{{item.dx1 }}</ion-label>
+                        </ion-col>
                       </ion-row>
                     </ion-grid>
                   </ion-item>
