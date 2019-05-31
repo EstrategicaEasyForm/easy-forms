@@ -230,9 +230,10 @@ export class SyncronizationPage {
                 if (resp.status === 'success') {
                   this.logs.push({
                     type: 'info',
-                    message: "Correo automático enviado a @nnn",
+                    message: "Correo automático enviado a @"+order.client.bussiness_name,
                     details: [
-                      "Archivo adjunto " + pdf.filename
+                      "Archivo adjunto " + pdf.filename,
+					  "Enviado a " + order.client.email
                     ],
                     time: moment().format('HH:mm:ss')
                   });
@@ -240,7 +241,7 @@ export class SyncronizationPage {
                 else {
                   this.logs.push({
                     type: 'error',
-                    message:"Error enviando correo automático",
+                    message:"Error enviando correo automático a @"+order.client.bussiness_name,
                     details: [
                       resp.error
                     ],

@@ -117,8 +117,6 @@
       "cordova-plugin-send-email": {},
       "cordova-send-email": {}
     },
-    "platforms": [
-      "android"
-    ]
+    "platforms": []
   }
 }
