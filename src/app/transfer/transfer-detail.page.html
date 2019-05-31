@@ -47,7 +47,7 @@
                   </div>
                 </ion-col>
                 <ion-col col-6>
-                  <ion-checkbox checked="true" (ngModelChange)="checkValue($event)"></ion-checkbox>
+                  <ion-checkbox checked="true" (ionChange)="checkValue()"></ion-checkbox>
                 </ion-col>
               </ion-row>
               <ion-row>
@@ -108,7 +108,7 @@
               <ion-row>
                 <ion-col col-6>
                   <ion-select style="max-width: 100%;" formControlName="local_id" placeholder="Nombre" [(ngModel)]="dataItem.local_id">
-                    <!--ion-select-option *ngFor="let local of detailApi.local" [value]="local.id">Leche</ion-select-option-->
+                    <ion-select-option *ngFor="let local of detailApi.transferApi.locals" [value]="local.id">{{local.name}}</ion-select-option>
                   </ion-select>
                   <div class="validation-errors">
                     <ng-container *ngFor="let validation of validation_messages.local_id">

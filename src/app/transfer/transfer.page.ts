@@ -18,7 +18,6 @@ import { TransferPdfService } from './transfer.pdf.service';
 export class TransferPage implements OnInit {
 
   transfer: any;
-  transferApi: any;
   detailApi: any;
   agendaPage: any;
   transferObjOri: any;
@@ -74,9 +73,8 @@ export class TransferPage implements OnInit {
     this.agendaPage = detail.agendaPage;
     this.detailApi = detail.detailApi;
     this.order = detail.order;
-    this.transferApi = detail.transferApi;
     this.agenda = detail.agenda;
-    console.log(detail);
+    console.log(this.transfer);
 
     this.validation_form_order = this.formBuilder.group({});
 
@@ -170,7 +168,7 @@ export class TransferPage implements OnInit {
           }
         }
         this.ordersService.setDetailsApiStorage(detailsApi);
-        this.transferApi.aspirationApi = this.transfer;
+        this.detailApi.transferApi = this.transfer;
         this.showMessage('Aspiración Finalizada');
         this.location.back();
       }

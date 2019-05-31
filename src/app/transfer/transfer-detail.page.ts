@@ -64,8 +64,6 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     this.transferPage = dataParam.transferPage;
     this.transfer = this.transferPage.transfer;
     this.detailsList = this.transferPage.transferApi.details_view;
-    console.log(dataParam);
-    console.log(this.detailApi);
     this.checkRecept = true;
 
     if (detailApiId >= 0) {
@@ -87,7 +85,6 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     if (!this.validation_form) {
       this.validation_form = this.formBuilder.group({
         embryo_class: [this.dataItem.embryo_class, Validators.required],
-        synchronizeds: [this.dataItem.synchronizeds, Validators.required],
         recept: [this.dataItem.recept, Validators.required],
         corpus_luteum: [this.dataItem.corpus_luteum, Validators.required],
         local_id: [this.dataItem.local_id, Validators.required],
@@ -98,7 +95,6 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     else {
       this.validation_form.reset({
         embryo_class: this.dataItem.embryo_class,
-        synchronizeds: this.dataItem.synchronizeds,
         recept: this.dataItem.recept,
         corpus_luteum: this.dataItem.corpus_luteum,
         local_id: this.dataItem.local_id,
@@ -121,7 +117,6 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     if (!this.validation_form) {
       this.validation_form = this.formBuilder.group({
         embryo_class: ['', Validators.required],
-        synchronizeds: ['', Validators.required],
         recept: ['', Validators.required],
         corpus_luteum: ['', Validators.required],
         local_id: ['', Validators.required],
@@ -132,7 +127,6 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     else {
       this.validation_form.reset({
         embryo_class: '',
-        synchronizeds: '',
         recept: '',
         corpus_luteum: '',
         local_id: '',
@@ -260,7 +254,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     this.location.back();
   }
 
-  checkValue(isChecked: any) {
+  checkValue() {
     this.checkRecept = !this.checkRecept;
   }
 

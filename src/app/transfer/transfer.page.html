@@ -138,9 +138,6 @@
                           <ion-col class="detail-bull-breed">
                             <ion-label>Cuerpo</ion-label>
                           </ion-col>
-                          <ion-col class="detail-gi">
-                            <ion-label>Trans.</ion-label>
-                          </ion-col>
                           <ion-col class="detail-gii">
                             <ion-label>Obser.</ion-label>
                           </ion-col>
@@ -174,9 +171,6 @@
                               </ion-col>
                               <ion-col class="detail-bull-breed">
                                 <ion-label>{{item.corpus_luteum }}</ion-label>
-                              </ion-col>
-                              <ion-col class="detail-gi">
-                                <ion-label>{{item.transferor }}</ion-label>
                               </ion-col>
                               <ion-col class="detail-gii">
                                 <ion-label>{{item.comments }}</ion-label>
@@ -223,7 +217,7 @@
                   </ion-row>
                   <ion-row>
                     <ion-col size="5">
-                      <ion-input type="text" formControlName="received_by" [(ngModel)]="transferApi.received_by">
+                      <ion-input type="text" formControlName="received_by" [(ngModel)]="transfer.received_by">
                       </ion-input>
                       <div>
                         <ng-container *ngFor="let validation of validation_messages.received_by">
@@ -236,7 +230,7 @@
                       </div>
                     </ion-col>
                     <ion-col size="5">
-                      <ion-input type="text" formControlName="identification_number" [(ngModel)]="transferApi.identification_number">
+                      <ion-input type="text" formControlName="identification_number" [(ngModel)]="transfer.identification_number">
                       </ion-input>
                       <div>
                         <ng-container *ngFor="let validation of validation_messages.identification_number">

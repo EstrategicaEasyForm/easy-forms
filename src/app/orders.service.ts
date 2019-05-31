@@ -100,6 +100,10 @@ query orders {
       }
       transferApi {
         id
+        locals {
+          id
+          name
+        }
         order_detail_id
         received_by
         identification_number

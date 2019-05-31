@@ -19,7 +19,7 @@ export class TransferService {
 
     updateTransfer(transfer: any) {
     const transferMutation = gql`
-      mutation updateTransfer($input: UpdateTransferInput!){
+      mutation transferUpdate($input: UpdateTransferInput!){
         updateTransfer(input: $input) {
           id
         }
@@ -34,58 +34,61 @@ export class TransferService {
       variables = Object.assign(variables, {
         "input": {
           "id": transfer.id,
-          "arrived_temperature": transfer.arrived_temperature,
-          "aspirator": transfer.aspirator,
           "comments": transfer.comments,
-          //"date": transfer.date,
           "identification_number": transfer.identification_number,
-          "medium_lot_miv": transfer.medium_lot_miv,
-          "medium_lot_opu": transfer.medium_lot_opu,
-          "medium_opu": transfer.medium_opu,
           "received_by": transfer.received_by,
-          "receiver_name": transfer.receiver_name,
-          "searcher": transfer.searcher,
-          "state": transfer.state,
-          "synchronized_receivers": transfer.synchronized_receivers,
-          "transport_type": transfer.transport_type,
-          "user_id_updated": this.userService.getUserId()
+          'user_id_updated': this.userService.getUserId(),
+          "state": transfer.state
         }
       });
     }
     const create = [];
     const update = [];
 	if(transfer.details)
-    transfer.details.forEach(detail => {
+    transfer.details_view.forEach(detail => {
       if (detail.stateSync === 'U') {
         update.push({
           'id': detail.id,
-          'local_id': detail.local_id,
-          'donor': detail.donor,
-          'donor_breed': detail.donor_breed,
-          'arrived_time': detail.arrived_time,
+          'attendant': detail.attendant,
           'bull': detail.bull,
           'bull_breed': detail.bull_breed,
-          'type': detail.type,
-          'gi': detail.gi,
-          'gss': detail.gss,
-          'gssi': detail.gssi,
-          'others': detail.others,
+          'comments': detail.comments,
+          'corpus_luteum': detail.corpus_luteum,
+          'discard': detail.discard,
+          'donor': detail.donor,
+          'donor_breed': detail.donor_breed,
+          'embryo': detail.embryo,
+          'embryo_class': detail.embryo_class,
+          'evaluation_detail_id': detail.evaluation_detail_id,
+          'local': detail.local,
+          'local_id': detail.local_id,
+          'production_detail_id': detail.production_detail_id,
+          'receiver': detail.receiver,
+          'transfer_id': detail.transfer_id,
+          'transferor': transfer.transferor,
           'user_id_updated': this.userService.getUserId()
         });
       }
       else if (detail.stateSync === 'C') {
-        update.push({
-          'local_id': transfer.local_id,
-          'donor': transfer.donor,
-          'donor_breed': transfer.donor_breed,
-          'arrived_time': transfer.arrived_time,
-          'bull': transfer.bull,
-          'bull_breed': transfer.bull_breed,
-          'type': transfer.type,
-          'gi': transfer.gi,
-          'gss': transfer.gss,
-          'gssi': transfer.gssi,
-          'others': transfer.others,
+        create.push({
+          'id': detail.id,
+          'attendant': detail.attendant,
+          'bull': detail.bull,
+          'bull_breed': detail.bull_breed,
+          'comments': detail.comments,
+          'corpus_luteum': detail.corpus_luteum,
+          'discard': detail.discard,
+          'donor': detail.donor,
+          'donor_breed': detail.donor_breed,
+          'embryo': detail.embryo,
+          'embryo_class': detail.embryo_class,
+          'evaluation_detail_id': detail.evaluation_detail_id,
+          'local': detail.local,
+          'local_id': detail.local_id,
+          'production_detail_id': detail.production_detail_id,
+          'receiver': detail.receiver,
+          'transfer_id': detail.transfer_id,
+          'transferor': transfer.transferor,
           'user_id_updated': this.userService.getUserId(),
           'user_id_created': this.userService.getUserId(),
         });
