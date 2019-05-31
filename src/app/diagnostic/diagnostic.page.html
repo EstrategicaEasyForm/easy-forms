@@ -256,8 +256,7 @@
                         Modificar Firma
                         <ion-icon name="create"></ion-icon>
                       </ion-button>
-                      <img *ngIf="diagnostic.signatureImage" class="signature-image"
-                        [src]="diagnostic.signatureImage" />
+                      <img *ngIf="diagnostic.signatureImage" class="signature-image" [src]="diagnostic.signatureImage" />
                       <div *ngIf="!diagnostic.signatureImage" class="signature-image-underline"></div>
                       <div>
                         <ng-container *ngFor="let validation of validation_messages.signatureImage">
@@ -268,8 +267,6 @@
                           </div>
                         </ng-container>
                       </div>
-
-                      
                     </ion-col>
                   </ion-row>
                   <ion-row>
@@ -308,7 +305,7 @@
                         </ion-col>
                         <ion-col size="1"></ion-col>
                         <ion-col size="6">
-                          <ion-button [disabled]="!validation_form_general.valid" class="make-pdf-button" expand="full"
+                          <ion-button [disabled]="!diagnostic.signatureImage || !validation_form_general.valid" class="make-pdf-button" expand="full"
                             (click)="openPdfViewer()">
                             Generar PDF
                             <ion-icon name="archive"></ion-icon>

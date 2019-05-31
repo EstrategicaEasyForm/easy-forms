@@ -241,9 +241,8 @@
                         Modificar Firma
                         <ion-icon name="create"></ion-icon>
                       </ion-button>
-                      <img *ngIf="aspiration.signatureImage" class="signature-image"
-                        [src]="aspiration.signatureImage" />
-                      <div *ngIf="!aspiration.signatureImage" class="signature-image-underline"></div>
+                      <img *ngIf="evaluation.signatureImage" class="signature-image" [src]="evaluation.signatureImage" />
+                      <div *ngIf="!evaluation.signatureImage" class="signature-image-underline"></div>
                     </ion-col>
                   </ion-row>
                   <ion-row>
@@ -282,7 +281,7 @@
                         </ion-col>
                         <ion-col size="1"></ion-col>
                         <ion-col size="6">
-                          <ion-button [disabled]="!validation_form_general.valid"
+                          <ion-button [disabled]="!evaluation.signatureImage || !validation_form_general.valid"
                             class="make-pdf-button" expand="full" (click)="openPdfViewer()">
                             Generar PDF
                             <ion-icon name="archive"></ion-icon>

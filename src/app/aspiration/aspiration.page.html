@@ -79,7 +79,7 @@
               </ion-row>
               <ion-row>
                 <ion-col size="4.3" class="text-readonly">
-                  <ion-label>{{agenda.name_local}}</ion-label>
+                  <ion-label>{{agenda?.name_local}}</ion-label>
                 </ion-col>
                 <ion-col size="3.5" class="text-readonly">
                   <ion-label>{{aspiration.date}}</ion-label>
@@ -382,8 +382,7 @@
                         Modificar Firma
                         <ion-icon name="create"></ion-icon>
                       </ion-button>
-                      <img *ngIf="aspiration.signatureImage" class="signature-image"
-                        [src]="aspiration.signatureImage" />
+                      <img *ngIf="aspiration.signatureImage" class="signature-image" [src]="aspiration.signatureImage" />
                       <div *ngIf="!aspiration.signatureImage" class="signature-image-underline"></div>
                       <div>
                         <ng-container *ngFor="let validation of validation_messages.signatureImage">
