@@ -90,7 +90,8 @@ export class SexagePage implements OnInit {
             "id": detailsTmp.id,
             "sexage_id": this.sexage.id,
             "transfer_detail_id": detailsTmp.transfer_detail_id,
-            "dx1": detailsTmp.dx1,
+            //"dx1": detailsTmp.dx1,
+			"sex": detailsTmp.sex,
             "transferData": dtDiag
           });
         }
@@ -99,7 +100,8 @@ export class SexagePage implements OnInit {
             "id": -1,
             "sexage_id": this.sexage.id,
             "transfer_detail_id": dtDiag.transfer_detail_id,
-            "dx1": "",
+            //"dx1": "",
+			"sex": "",
             "transferData": dtDiag
           });
         }

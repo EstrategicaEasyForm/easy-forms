@@ -249,8 +249,9 @@
                         Modificar Firma
                         <ion-icon name="create"></ion-icon>
                       </ion-button>
-                      <img class="signature-image" [src]="transfer.signatureImage"
-                        *ngIf="transfer.signatureImage" />
+                      <img *ngIf="aspiration.signatureImage" class="signature-image"
+                        [src]="aspiration.signatureImage" />
+                      <div *ngIf="!aspiration.signatureImage" class="signature-image-underline"></div>
                     </ion-col>
                   </ion-row>
                   <ion-row>

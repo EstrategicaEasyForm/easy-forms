@@ -21,7 +21,12 @@ export class SexageService {
     const sexageMutation = gql`
       mutation updateSexage($input: UpdateSexageInput!){
         updateSexage(input: $input) {
-          id
+          id,
+          details {
+            id,
+            dx1,
+			sex
+          }
         }
       }`;
 
@@ -34,70 +39,35 @@ export class SexageService {
       variables = Object.assign(variables, {
         "input": {
           "id": sexage.id,
-          "arrived_temperature": sexage.arrived_temperature,
-          "aspirator": sexage.aspirator,
-          "comments": sexage.comments,
-          //"date": sexage.date,
-          "identification_number": sexage.identification_number,
-          "medium_lot_miv": sexage.medium_lot_miv,
-          "medium_lot_opu": sexage.medium_lot_opu,
-          "medium_opu": sexage.medium_opu,
           "received_by": sexage.received_by,
-          "receiver_name": sexage.receiver_name,
-          "searcher": sexage.searcher,
+          "comments": sexage.comments,
+          "identification_number": sexage.identification_number,
           "state": sexage.state,
-          "synchronized_receivers": sexage.synchronized_receivers,
-          "transport_type": sexage.transport_type,
-          "user_id_updated": this.userService.getUserId()
+          'user_id_updated': this.userService.getUserId()
         }
-      });
+      }); 
     }
-    const create = [];
     const update = [];
     sexage.details.forEach(detail => {
-      if (detail.stateSync === 'U') {
+      if (detail.stateSync === 'U' || detail.stateSync === 'C') {
         update.push({
           'id': detail.id,
-          'local_id': detail.local_id,
-          'donor': detail.donor,
-          'donor_breed': detail.donor_breed,
-          'arrived_time': detail.arrived_time,
-          'bull': detail.bull,
-          'bull_breed': detail.bull_breed,
-          'type': detail.type,
-          'gi': detail.gi,
-          'gss': detail.gss,
-          'gssi': detail.gssi,
-          'others': detail.others,
+		  'sexage_id': Number(detail.sexage_id),
+          'transfer_detail_id': Number(detail.transfer_detail_id),
+          'dx1': detail.dx1,
+		  'sex': detail.sex,
           'user_id_updated': this.userService.getUserId()
-        });
-      }
-      else if (detail.stateSync === 'C') {
-        create.push({
-          'local_id': sexage.local_id,
-          'donor': sexage.donor,
-          'donor_breed': sexage.donor_breed,
-          'arrived_time': sexage.arrived_time,
-          'bull': sexage.bull,
-          'bull_breed': sexage.bull_breed,
-          'type': sexage.type,
-          'gi': sexage.gi,
-          'gss': sexage.gss,
-          'gssi': sexage.gssi,
-          'others': sexage.others,
-          'user_id_updated': this.userService.getUserId(),
-          'user_id_created': this.userService.getUserId(),
         });
       }
     });
 
-    if (create.length > 0 || update.length > 0) {
-      let details = { "details": {} };
-      if (create.length > 0) details = Object.assign(details, { "create": create });
-      if (update.length > 0) details = Object.assign(details, { "update": update });
-      variables = Object.assign(variables, details);
+    if (update.length > 0 || sexage.stateSync === 'U') {
+      const details = {
+         "details" : { "update": update } 
+      };
+      variables.input = Object.assign(variables.input, details);
     }
-    else if (sexage.stateSync !== 'U') {
+    else {
       //Si no se reflejan cambios en el elemento o sus detalles, se resuelve la promesa
       return new Promise(resolve => {
         resolve({ status: 'no_change' });

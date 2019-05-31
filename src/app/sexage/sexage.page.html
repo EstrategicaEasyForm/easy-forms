@@ -101,7 +101,7 @@
         <ion-item class="card-page-details">
           <ion-card>
             <ion-card-header class="ibox-title">
-              <h5>Planilla de Sezge</h5>
+              <h5>Planilla de Sexaje</h5>
             </ion-card-header>
             <ion-card-content>
               <ion-list>
@@ -111,20 +111,20 @@
                       <ion-col class="detail-id">
                         <ion-label>#</ion-label>
                       </ion-col>
+                      <ion-col class="detail-receiver">
+                        <ion-label>Receptora</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-embryo">
+                        <ion-label>Embrión</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-embryo_class">
+                        <ion-label>Clasif.</ion-label>embrión
+                      </ion-col>
                       <ion-col class="detail-donor">
                         <ion-label>Donadora</ion-label>
                       </ion-col>
-                      <ion-col class="detail-donor-breed">
+                      <ion-col class="detail-donor_breed">
                         <ion-label>Raza</ion-label>
-                      </ion-col>
-                      <ion-col class="detail-local-name">
-                        <ion-label>Local</ion-label>
-                      </ion-col>
-                      <ion-col class="detail-type">
-                        <ion-label>Tipo</ion-label>
-                      </ion-col>
-                      <ion-col class="detail-arrived-time">
-                        <ion-label>Hora</ion-label>
                       </ion-col>
                       <ion-col class="detail-bull">
                         <ion-label>Toro</ion-label>
@@ -132,22 +132,30 @@
                       <ion-col class="detail-bull-breed">
                         <ion-label>Raza</ion-label>
                       </ion-col>
-                      <ion-col class="detail-gi">
-                        <ion-label>Gi</ion-label>
+                      <ion-col class="detail-corpus_luteum">
+                        <ion-label>Cuerpo</ion-label>
+                        Luteo
                       </ion-col>
-                      <ion-col class="detail-gii">
-                        <ion-label>Gii</ion-label>
+                      <ion-col class="detail-transferor">
+                        <ion-label>Transferidor</ion-label>
                       </ion-col>
-                      <ion-col class="detail-giii">
-                        <ion-label>Giii</ion-label>
+					  <div *ngIf="sexage.apply_diagnostic.apply_diagnostic == 1">
+                      <ion-col size="0.5">
+                        <ion-label>Dx1</ion-label>
                       </ion-col>
-                      <ion-col class="detail-others">
-                        <ion-label>Otr</ion-label>
+					  <ion-col size="0.5">
+                        <ion-label>Sexaje</ion-label>
                       </ion-col>
+					  </div>
+					  <div *ngIf="sexage.apply_diagnostic.apply_diagnostic == 0">
+                      <ion-col size="0.5">
+                        <ion-label>Sexaje</ion-label>
+                      </ion-col>
+					  </div>
                     </ion-row>
                   </ion-grid>
                 </ion-item>
-                <ion-item-sliding *ngFor="let item of sexage.details; let indx = index">
+                <ion-item-sliding *ngFor="let item of diagnostic.details; let indx = index">
                   <ion-item>
                     <ion-grid class="item-sliding">
                       <ion-row>
@@ -181,14 +189,24 @@
                         <ion-col class="detail-transferor">
                           <ion-label>{{item.transferData?.transferor }}</ion-label>
                         </ion-col>
-                        <ion-col class="detail-dx1">
+						<div *ngIf="sexage.apply_diagnostic.apply_diagnostic == 1">
+                        <ion-col size="0.5">
                           <ion-label>{{item.dx1 }}</ion-label>
                         </ion-col>
+						<ion-col size="0.5">
+                          <ion-label>{{item.sex }}</ion-label>
+                        </ion-col>
+						</div>
+						<div *ngIf="sexage.apply_diagnostic.apply_diagnostic == 0">
+						<ion-col size="0.5">
+                          <ion-label>{{item.sex }}</ion-label>
+                        </ion-col>
+						</div>
                       </ion-row>
                     </ion-grid>
                   </ion-item>
                   <ion-item-options>
-                    <ion-button color="success" icon-start (click)="openSexageDetail(indx)">
+                    <ion-button color="success" icon-start (click)="openDiagnosticDetail(indx)">
                       Editar
                     </ion-button>
                     <ion-button color="danger" icon-start [disabled]="item.stateSync !== 'C'">
@@ -197,7 +215,7 @@
                     </ion-button>
                   </ion-item-options>
                 </ion-item-sliding>
-                <ion-item *ngIf="sexage.details.length === 0">
+                <ion-item *ngIf="diagnostic.details.length === 0">
                   <ion-label>No se encontraron registros</ion-label>
                 </ion-item>
               </ion-list>
@@ -217,52 +235,6 @@
               <ion-card-content>
                 <ion-grid>
                   <ion-row>
-                    <ion-col size="5">
-                      <ion-label>Temperatura de llegada</ion-label>
-                    </ion-col>
-                    <ion-col size="6">
-                      <ion-label>Tipo transporte</ion-label>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col size="5">
-                      <ion-grid>
-                        <ion-row>
-                          <ion-col size="10.8" style="margin-left: -9px; margin-top: -9px">
-                            <ion-input type="number" step="any" formControlName="arrived_temperature_number"
-                              [(ngModel)]="sexage.arrived_temperature_number"
-                              (ionChange)="onChangeArrivedTemperature()">
-                            </ion-input>
-                          </ion-col>
-                          <ion-col size="1" class="ion-text-start">
-                            <h1 class="grade-celsius">°C</h1>
-                          </ion-col>
-                        </ion-row>
-                      </ion-grid>
-                      <div>
-                        <ng-container *ngFor="let validation of validation_messages.arrived_temperature_number">
-                          <div class="error-message"
-                            *ngIf="validation_form_general.get('arrived_temperature_number').hasError(validation.type) 
-                            && (validation_form_general.get('arrived_temperature_number').dirty || validation_form_general.get('arrived_temperature_number').touched)">
-                            {{ validation.message }}
-                          </div>
-                        </ng-container>
-                      </div>
-                    </ion-col>
-                    <ion-col size="6.7">
-                      <ion-input formControlName="transport_type" [(ngModel)]="sexage.transport_type"></ion-input>
-                      <div>
-                        <ng-container *ngFor="let validation of validation_messages.transport_type">
-                          <div class="error-message"
-                            *ngIf="validation_form_general.get('transport_type').hasError(validation.type) 
-                            && (validation_form_general.get('transport_type').dirty || validation_form_general.get('transport_type').touched)">
-                            {{ validation.message }}
-                          </div>
-                        </ng-container>
-                      </div>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
                     <ion-col size="7">
                       <ion-label>Nombre del encargado</ion-label>
                     </ion-col>
@@ -272,7 +244,7 @@
                   </ion-row>
                   <ion-row>
                     <ion-col size="7">
-                      <ion-input type="text" formControlName="_by" [(ngModel)]="sexage.received_by">
+                      <ion-input type="text" formControlName="received_by" [(ngModel)]="sexage.received_by">
                       </ion-input>
                       <div>
                         <ng-container *ngFor="let validation of validation_messages.received_by">
