@@ -43,12 +43,9 @@ export class AspirationPdfService {
 		pdfmake.vfs = pdfFonts.pdfMake.vfs;
 
 		const photoImage = data.aspirationApi.photoImage || this.imageSrc.imagePhotoDefault;
-		
+
 		var aspirationDetails = [];
 		var workTeam = [];
-		var i = {};
-		var j = {};
-		var k = [];
 
 		aspirationDetails.push([{ text: 'Donadora', alignment: 'center', bold: true },
 		{ text: 'Raza', alignment: 'center', bold: true },
@@ -76,7 +73,14 @@ export class AspirationPdfService {
 			]);
 		}
 
-		workTeam.push(['Nombre', 'Correo', 'Evento', 'Observación', 'Departamento', 'Municipio', 'Fecha']);
+		workTeam.push([
+			{ text: 'Nombre', alignment: 'center', bold: true },
+			{ text: 'Correo', alignment: 'center', bold: true },
+			{ text: 'Evento', alignment: 'center', bold: true },
+			{ text: 'Observación', alignment: 'center', bold: true },
+			{ text: 'Departamento', alignment: 'center', bold: true },
+			{ text: 'Municipio', alignment: 'center', bold: true },
+			{ text: 'Fecha', alignment: 'center', bold: true }]);
 		for (let j of data.order.agenda) {
 			workTeam.push([j.user.name,
 			j.user.email,
@@ -122,11 +126,11 @@ export class AspirationPdfService {
 								fontSize: 12,
 								widths: ['*', '*', '*', '*'],
 								body: [
-									[{ text: 'Fecha:', alignment: 'right' }, data.order.date, { text: 'Correo Electrónico:', alignment: 'right' }, { text: data.order.client.email, alignment: 'left' }],
-									[{ text: 'N° Identificación:', alignment: 'right' }, data.order.client_id, { text: 'Contacto:', alignment: 'right' }, { text: data.order.client.contact, alignment: 'left' }],
-									[{ text: 'Razon Social:', alignment: 'right' }, data.order.client.bussiness_name, { text: 'Cargo:', alignment: 'right' }, { text: data.order.client.position, alignment: 'left' }],
-									[{ text: 'Departamento:', alignment: 'right' }, data.order.client.departmentOne.name, { text: 'Dirección:', alignment: 'right' }, { text: data.order.client.address, alignment: 'left' }],
-									[{ text: 'Ciudad:', alignment: 'right' }, data.order.client.citiesOne.name, { text: 'Teléfono:', alignment: 'right' }, { text: data.order.client.cellphone, alignment: 'left' }],
+									[{ text: 'Fecha:', alignment: 'right', bold: true }, data.order.date, { text: 'Correo Electrónico:', alignment: 'right', bold: true }, { text: data.order.client.email, alignment: 'left' }],
+									[{ text: 'N° Identificación:', alignment: 'right', bold: true }, data.order.client_id, { text: 'Contacto:', alignment: 'right', bold: true }, { text: data.order.client.contact, alignment: 'left' }],
+									[{ text: 'Razon Social:', alignment: 'right', bold: true }, data.order.client.bussiness_name, { text: 'Cargo:', alignment: 'right', bold: true }, { text: data.order.client.position, alignment: 'left' }],
+									[{ text: 'Departamento:', alignment: 'right', bold: true }, data.order.client.departmentOne.name, { text: 'Dirección:', alignment: 'right', bold: true }, { text: data.order.client.address, alignment: 'left' }],
+									[{ text: 'Ciudad:', alignment: 'right', bold: true }, data.order.client.citiesOne.name, { text: 'Teléfono:', alignment: 'right', bold: true }, { text: data.order.client.cellphone, alignment: 'left' }],
 								]
 							},
 							layout: 'noBorders'
@@ -149,7 +153,6 @@ export class AspirationPdfService {
 								fontSize: 9,
 								headerRows: 1,
 								widths: [100, 140, 60, 120, 80, 60, 60],
-								header: { alignment: 'center', bold: true },
 								body: workTeam
 							},
 							layout: {
@@ -204,7 +207,7 @@ export class AspirationPdfService {
 							width: '*', text: ''
 						},
 					]
-				}, 
+				},
 				{ text: '\n\n\ INFORMACIÓN DEL EVENTO: ASPIRACIÓN FOLICULAR', bold: true, fontSize: 15, alignment: 'left' },
 				{ text: '\n\n\ DETALLES DE ASPIRACION:', alignment: 'left', fontSize: 15, bold: true },
 				{ text: '\n\ ' },
@@ -250,7 +253,7 @@ export class AspirationPdfService {
 						},
 					],
 				},
-				{ text: data.aspirationApi.receiver_name, alignment: 'center', fontSize: 15, bold: true },
+				{ text: data.aspirationApi.received_by, alignment: 'center', fontSize: 15, bold: true },
 				{ text: data.aspirationApi.identification_number, alignment: 'center', fontSize: 15, bold: true },
 				{ text: '\n\n\ FOTO EVIDENCIA DEL EVENTO', alignment: 'center', pageBreak: 'before', fontSize: 18, bold: true },
 				{ text: '\n\n\ ' },
@@ -289,10 +292,10 @@ export class AspirationPdfService {
 			},
 		};
 
-		if(options.watermark) {
-			docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.3, bold: true, italics: false }});
+		if (options.watermark) {
+			docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.3, bold: true, italics: false } });
 		}
-		
+
 		const _self = this;
 
 		return new Promise(resolve => {
@@ -307,22 +310,22 @@ export class AspirationPdfService {
 						let binaryArray = utf8.buffer;
 
 						_self.saveToDevice(binaryArray, filename)
-						.then(()=>{
-							if (options && options.open) {
-								_self.fileOpener.open(dataDirectory + filename, 'application/pdf')
-									.then(() => resolve({ status: "success", message: "File is opened", filename: filename, dataDirectory: dataDirectory }))
-									.catch(e => resolve({ status: "error", error: e, filename: filename }));
-							}
-							//Retorna el codigo binario del archivo pdf generado
-							else {
-								resolve({ status: "success", filename: filename, dataDirectory: dataDirectory });
-							}
-						})
-						.catch( (error) => {
-							const errm = error.message ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
-							resolve({ status: "error", error: errm, filename: filename });
-						});
-						
+							.then(() => {
+								if (options && options.open) {
+									_self.fileOpener.open(dataDirectory + filename, 'application/pdf')
+										.then(() => resolve({ status: "success", message: "File is opened", filename: filename, dataDirectory: dataDirectory }))
+										.catch(e => resolve({ status: "error", error: e, filename: filename }));
+								}
+								//Retorna el codigo binario del archivo pdf generado
+								else {
+									resolve({ status: "success", filename: filename, dataDirectory: dataDirectory });
+								}
+							})
+							.catch((error) => {
+								const errm = error.message ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
+								resolve({ status: "error", error: errm, filename: filename });
+							});
+
 					} catch (e) {
 						const errm = e.message ? e.message : typeof e === 'string' ? e : JSON.stringify(e);
 						resolve({ status: "error", error: errm, filename: filename });

@@ -23,8 +23,9 @@ export class EvaluationPdfService {
 		public toastCtrl: ToastController,
 		public ordersService: OrdersService,
 		public http: HttpClient,
-		public imageSrc: ImageSrc
-	) { }
+		public imageSrc: ImageSrc) {
+
+	}
 
 	// params: 
 	// data: {
@@ -45,10 +46,7 @@ export class EvaluationPdfService {
 
 		var evaluationDetails = [];
 		var workTeam = [];
-		var localsTe = [];
-		var i = {};
-		var j = {};
-		var k = [];
+
 
 		evaluationDetails.push([
 			{ text: 'Id. Animal', alignment: 'center', bold: true },
@@ -58,7 +56,7 @@ export class EvaluationPdfService {
 			{ text: 'Local', alignment: 'center', bold: true },
 			{ text: 'Diagnóstico', alignment: 'center', bold: true }
 		]);
-		for (let i of data.evaluationApi.details) {
+		/*for (let i of data.evaluationApi.details) {
 			evaluationDetails.push([
 			i.id_animal,
 			i.chapeta,
@@ -67,9 +65,10 @@ export class EvaluationPdfService {
 			i.local.name,
 			i.diagnostic
 			]);
-		}
+		}*/
 
-		workTeam.push(['Nombre',
+		workTeam.push([
+			{ text: 'Nombre', alignment: 'center', bold: true },
 			{ text: 'Correo', alignment: 'center', bold: true },
 			{ text: 'Evento', alignment: 'center', bold: true },
 			{ text: 'Observación', alignment: 'center', bold: true },
@@ -120,11 +119,11 @@ export class EvaluationPdfService {
 								fontSize: 12,
 								widths: ['*', '*', '*', '*'],
 								body: [
-									[{ text: 'Fecha:', alignment: 'right' }, data.order.date, { text: 'Correo Electrónico:', alignment: 'right' }, { text: data.order.client.email, alignment: 'left' }],
-									[{ text: 'N° Identificación:', alignment: 'right' }, data.order.client_id, { text: 'Contacto:', alignment: 'right' }, { text: data.order.client.contact, alignment: 'left' }],
-									[{ text: 'Razon Social:', alignment: 'right' }, data.order.client.bussiness_name, { text: 'Cargo:', alignment: 'right' }, { text: data.order.client.position, alignment: 'left' }],
-									[{ text: 'Departamento:', alignment: 'right' }, data.order.client.departmentOne.name, { text: 'Dirección:', alignment: 'right' }, { text: data.order.client.address, alignment: 'left' }],
-									[{ text: 'Ciudad:', alignment: 'right' }, data.order.client.citiesOne.name, { text: 'Teléfono:', alignment: 'right' }, { text: data.order.client.cellphone, alignment: 'left' }],
+									[{ text: 'Fecha:', alignment: 'right', bold: true }, data.order.date, { text: 'Correo Electrónico:', alignment: 'right', bold: true }, { text: data.order.client.email, alignment: 'left' }],
+									[{ text: 'N° Identificación:', alignment: 'right', bold: true }, data.order.client_id, { text: 'Contacto:', alignment: 'right', bold: true }, { text: data.order.client.contact, alignment: 'left' }],
+									[{ text: 'Razon Social:', alignment: 'right', bold: true }, data.order.client.bussiness_name, { text: 'Cargo:', alignment: 'right', bold: true }, { text: data.order.client.position, alignment: 'left' }],
+									[{ text: 'Departamento:', alignment: 'right', bold: true }, data.order.client.departmentOne.name, { text: 'Dirección:', alignment: 'right', bold: true }, { text: data.order.client.address, alignment: 'left' }],
+									[{ text: 'Ciudad:', alignment: 'right', bold: true }, data.order.client.citiesOne.name, { text: 'Teléfono:', alignment: 'right', bold: true }, { text: data.order.client.cellphone, alignment: 'left' }],
 								]
 							},
 							layout: 'noBorders'
@@ -147,7 +146,6 @@ export class EvaluationPdfService {
 								fontSize: 9,
 								headerRows: 1,
 								widths: [100, 140, 60, 120, 80, 60, 60],
-								header: { alignment: 'center', bold: true },
 								body: workTeam
 							},
 							layout: {
@@ -202,7 +200,7 @@ export class EvaluationPdfService {
 							width: '*', text: ''
 						},
 					]
-				}, 
+				},
 				{ text: '\n\n\ INFORMACIÓN DEL EVENTO: EVALUACIÓN DE RECEPTORAS', bold: true, fontSize: 15, alignment: 'left' },
 				{ text: '\n\n\ DETALLES DE EVALUACIÓN:', alignment: 'left', fontSize: 15, bold: true },
 				{ text: '\n\ ' },
@@ -248,7 +246,7 @@ export class EvaluationPdfService {
 						},
 					],
 				},
-				{ text: data.evaluationApi.receiver_name, alignment: 'center', fontSize: 15, bold: true },
+				{ text: data.evaluationApi.received_by, alignment: 'center', fontSize: 15, bold: true },
 				{ text: data.evaluationApi.identification_number, alignment: 'center', fontSize: 15, bold: true },
 				{ text: '\n\n\ FOTO EVIDENCIA DEL EVENTO', alignment: 'center', pageBreak: 'before', fontSize: 18, bold: true },
 				{ text: '\n\n\ ' },
@@ -287,8 +285,8 @@ export class EvaluationPdfService {
 			},
 		};
 
-		if(options.watermark) {
-			docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.3, bold: true, italics: false }});
+		if (options.watermark) {
+			docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.3, bold: true, italics: false } });
 		}
 
 		const _self = this;
@@ -304,17 +302,22 @@ export class EvaluationPdfService {
 						let utf8 = new Uint8Array(buffer);
 						let binaryArray = utf8.buffer;
 
-						_self.saveToDevice(binaryArray, filename);
-
-						if (options && options.open) {
-							_self.fileOpener.open(dataDirectory + filename, 'application/pdf')
-								.then(() => resolve({ status: "success", message: "File is opened", filename: filename, dataDirectory: dataDirectory }))
-								.catch(e => resolve({ status: "error", error: e, filename: filename }));
-						}
-						//Retorna el codigo binario del archivo pdf generado
-						else {
-							resolve({ status: "success", filename: filename, dataDirectory: dataDirectory });
-						}
+						_self.saveToDevice(binaryArray, filename)
+							.then(() => {
+								if (options && options.open) {
+									_self.fileOpener.open(dataDirectory + filename, 'application/pdf')
+										.then(() => resolve({ status: "success", message: "File is opened", filename: filename, dataDirectory: dataDirectory }))
+										.catch(e => resolve({ status: "error", error: e, filename: filename }));
+								}
+								//Retorna el codigo binario del archivo pdf generado
+								else {
+									resolve({ status: "success", filename: filename, dataDirectory: dataDirectory });
+								}
+							})
+							.catch((error) => {
+								const errm = error.message ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
+								resolve({ status: "error", error: errm, filename: filename });
+							});
 
 					} catch (e) {
 						const errm = e.message ? e.message : typeof e === 'string' ? e : JSON.stringify(e);
@@ -331,8 +334,6 @@ export class EvaluationPdfService {
 	}
 	saveToDevice(data: any, savefile: any) {
 		let options: IWriteOptions = { replace: true };
-
-		this.file.writeFile(this.file.dataDirectory, savefile, data, options);
-		console.log('File saved to your device in ' + this.file.dataDirectory);
+		return this.file.writeFile(this.file.dataDirectory, savefile, data, options);
 	}
 }

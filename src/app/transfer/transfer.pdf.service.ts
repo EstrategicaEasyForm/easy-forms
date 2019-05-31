@@ -56,7 +56,7 @@ export class TransferPdfService {
 			{ text: 'Cuerpo Luteo', alignment: 'center', bold: true },
 			{ text: 'Observaciones', alignment: 'center', bold: true }
 		]);
-		for (let i of data.transferApi.details) {
+		/*for (let i of data.transferApi.details) {
 			transferDetails.push([
 				i.embryo_class,
 				'',
@@ -67,9 +67,10 @@ export class TransferPdfService {
 				i.corpus_luteum,
 				i.comments
 			]);
-		}
+		}*/
 
-		workTeam.push(['Nombre',
+		workTeam.push([
+			{ text: 'Nombre', alignment: 'center', bold: true },
 			{ text: 'Correo', alignment: 'center', bold: true },
 			{ text: 'Evento', alignment: 'center', bold: true },
 			{ text: 'Observación', alignment: 'center', bold: true },
@@ -122,11 +123,11 @@ export class TransferPdfService {
 								fontSize: 12,
 								widths: ['*', '*', '*', '*'],
 								body: [
-									[{ text: 'Fecha:', alignment: 'right' }, data.order.date, { text: 'Correo Electrónico:', alignment: 'right' }, { text: data.order.client.email, alignment: 'left' }],
-									[{ text: 'N° Identificación:', alignment: 'right' }, data.order.client_id, { text: 'Contacto:', alignment: 'right' }, { text: data.order.client.contact, alignment: 'left' }],
-									[{ text: 'Razon Social:', alignment: 'right' }, data.order.client.bussiness_name, { text: 'Cargo:', alignment: 'right' }, { text: data.order.client.position, alignment: 'left' }],
-									[{ text: 'Departamento:', alignment: 'right' }, data.order.client.departmentOne.name, { text: 'Dirección:', alignment: 'right' }, { text: data.order.client.address, alignment: 'left' }],
-									[{ text: 'Ciudad:', alignment: 'right' }, data.order.client.citiesOne.name, { text: 'Teléfono:', alignment: 'right' }, { text: data.order.client.cellphone, alignment: 'left' }],
+									[{ text: 'Fecha:', alignment: 'right', bold: true }, data.order.date, { text: 'Correo Electrónico:', alignment: 'right', bold: true }, { text: data.order.client.email, alignment: 'left' }],
+									[{ text: 'N° Identificación:', alignment: 'right', bold: true }, data.order.client_id, { text: 'Contacto:', alignment: 'right', bold: true }, { text: data.order.client.contact, alignment: 'left' }],
+									[{ text: 'Razon Social:', alignment: 'right', bold: true }, data.order.client.bussiness_name, { text: 'Cargo:', alignment: 'right', bold: true }, { text: data.order.client.position, alignment: 'left' }],
+									[{ text: 'Departamento:', alignment: 'right', bold: true }, data.order.client.departmentOne.name, { text: 'Dirección:', alignment: 'right', bold: true }, { text: data.order.client.address, alignment: 'left' }],
+									[{ text: 'Ciudad:', alignment: 'right', bold: true }, data.order.client.citiesOne.name, { text: 'Teléfono:', alignment: 'right', bold: true }, { text: data.order.client.cellphone, alignment: 'left' }],
 								]
 							},
 							layout: 'noBorders'
@@ -149,7 +150,6 @@ export class TransferPdfService {
 								fontSize: 9,
 								headerRows: 1,
 								widths: [100, 140, 60, 120, 80, 60, 60],
-								header: { alignment: 'center', bold: true },
 								body: workTeam
 							},
 							layout: {
@@ -204,7 +204,7 @@ export class TransferPdfService {
 							width: '*', text: ''
 						},
 					]
-				}, 
+				},
 				{ text: '\n\n\ INFORMACIÓN DEL EVENTO: TRANSFERENCIA DE EMBRIONES', bold: true, fontSize: 15, alignment: 'left' },
 				{ text: '\n\n\ DETALLES DE TRANSFERENCIA:', alignment: 'left', fontSize: 15, bold: true },
 				{ text: '\n\ ' },
@@ -250,7 +250,7 @@ export class TransferPdfService {
 						},
 					],
 				},
-				{ text: data.transferApi.receiver_name, alignment: 'center', fontSize: 15, bold: true },
+				{ text: data.transferApi.received_by, alignment: 'center', fontSize: 15, bold: true },
 				{ text: data.transferApi.identification_number, alignment: 'center', fontSize: 15, bold: true },
 				{ text: '\n\n\ FOTO EVIDENCIA DEL EVENTO', alignment: 'center', pageBreak: 'before', fontSize: 18, bold: true },
 				{ text: '\n\n\ ' },
@@ -306,17 +306,22 @@ export class TransferPdfService {
 						let utf8 = new Uint8Array(buffer);
 						let binaryArray = utf8.buffer;
 
-						_self.saveToDevice(binaryArray, filename);
-
-						if (options && options.open) {
-							_self.fileOpener.open(dataDirectory + filename, 'application/pdf')
-								.then(() => resolve({ status: "success", message: "File is opened", filename: filename, dataDirectory: dataDirectory }))
-								.catch(e => resolve({ status: "error", error: e, filename: filename }));
-						}
-						//Retorna el codigo binario del archivo pdf generado
-						else {
-							resolve({ status: "success", filename: filename, dataDirectory: dataDirectory });
-						}
+						_self.saveToDevice(binaryArray, filename)
+							.then(() => {
+								if (options && options.open) {
+									_self.fileOpener.open(dataDirectory + filename, 'application/pdf')
+										.then(() => resolve({ status: "success", message: "File is opened", filename: filename, dataDirectory: dataDirectory }))
+										.catch(e => resolve({ status: "error", error: e, filename: filename }));
+								}
+								//Retorna el codigo binario del archivo pdf generado
+								else {
+									resolve({ status: "success", filename: filename, dataDirectory: dataDirectory });
+								}
+							})
+							.catch((error) => {
+								const errm = error.message ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
+								resolve({ status: "error", error: errm, filename: filename });
+							});
 
 					} catch (e) {
 						const errm = e.message ? e.message : typeof e === 'string' ? e : JSON.stringify(e);
@@ -333,9 +338,6 @@ export class TransferPdfService {
 	}
 	saveToDevice(data: any, savefile: any) {
 		let options: IWriteOptions = { replace: true };
-
-		this.file.writeFile(this.file.dataDirectory, savefile, data, options);
-		console.log('File saved to your device in ' + this.file.dataDirectory);
+		return this.file.writeFile(this.file.dataDirectory, savefile, data, options);
 	}
 }
-
