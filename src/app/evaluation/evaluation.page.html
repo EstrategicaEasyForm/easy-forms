@@ -287,7 +287,7 @@
                             <ion-icon name="archive"></ion-icon>
                           </ion-button>
                           <ion-button class="button-finalize"
-                            [disabled]="!validation_form_general.valid" expand="full"
+                            [disabled]="!evaluation.signatureImage || !validation_form_general.valid" expand="full"
                             color="success-shade" (click)="presentAlertConfirm()">
                             Finalizar Evaluación
                           </ion-button>

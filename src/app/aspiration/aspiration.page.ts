@@ -213,7 +213,7 @@ export class AspirationPage implements OnInit {
   async presentAlertConfirm() {
     const alert = await this.alertController.create({
       header: 'Finalizar Aspiración!',
-      message: 'Confirma que desa finalizar <strong>la aspiración</strong>!!!',
+      message: 'Confirma que desa finalizar la <strong>Aspiración</strong>!!!',
       buttons: [
         {
           text: 'Cancelar',

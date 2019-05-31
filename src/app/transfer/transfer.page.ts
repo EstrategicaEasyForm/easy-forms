@@ -178,7 +178,7 @@ export class TransferPage implements OnInit {
   async presentAlertConfirm() {
     const alert = await this.alertController.create({
       header: 'Finalizar Transferencia!',
-      message: 'Confirma que desa finalizar <strong>la transferencia</strong>!!!',
+      message: 'Confirma que desa finalizar la planilla de <strong>Transferencia</strong>!!!',
       buttons: [
         {
           text: 'Cancelar',

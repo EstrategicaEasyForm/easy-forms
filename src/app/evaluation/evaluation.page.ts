@@ -193,7 +193,7 @@ export class EvaluationPage implements OnInit {
   async presentAlertConfirm() {
     const alert = await this.alertController.create({
       header: 'Finalizar Evaluación!',
-      message: 'Confirma que desa finalizar <strong>la Evaluación</strong>!!!',
+      message: 'Confirma que desa finalizar la planilla de <strong>Evaluación</strong>!!!',
       buttons: [
         {
           text: 'Cancelar',

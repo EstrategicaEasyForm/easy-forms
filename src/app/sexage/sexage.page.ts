@@ -206,8 +206,8 @@ export class SexagePage implements OnInit {
 
   async presentAlertConfirm() {
     const alert = await this.alertController.create({
-      header: 'Finalizar Planilla Sexage!',
-      message: 'Confirma que desa finalizar <strong>la plantilla Sexage</strong>!!!',
+      header: 'Finalizar Planilla Sexaje!',
+      message: 'Confirma que desa finalizar la plantilla <strong>Sexaje</strong>!!!',
       buttons: [
         {
           text: 'Cancelar',

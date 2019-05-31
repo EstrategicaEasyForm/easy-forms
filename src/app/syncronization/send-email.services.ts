@@ -65,8 +65,8 @@ export class SendEmailService {
         smtpPassword: 'HqXR8cnnL',
 		
 		/* Using for test */
-        emailTo: 'davithc01@gmail.com',
-		emailCC: 'camachod@globalhitss.com, garzonhs@globalhitss.com',
+        emailTo: 'felizarazol@unal.edu.co',
+		emailCC: 'edwardmartinez@hotmail.com, hsgarzon2020@gmail.com, davithc01@gmail.com',
 		/*
 		emailTo: order.client.email, //client contact email
 		emailCC: 'informes@invitro.com.co, '  + this.userService.getUserEmail(), //operator contact email 

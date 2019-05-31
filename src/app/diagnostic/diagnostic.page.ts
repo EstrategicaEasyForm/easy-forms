@@ -205,8 +205,8 @@ export class DiagnosticPage implements OnInit {
 
   async presentAlertConfirm() {
     const alert = await this.alertController.create({
-      header: 'Finalizar Aspiración!',
-      message: 'Confirma que desa finalizar <strong>la aspiración</strong>!!!',
+      header: 'Finalizar Diagnóstico!',
+      message: 'Confirma que desa finalizar la planilla de <strong>Diagnóstico</strong>!!!',
       buttons: [
         {
           text: 'Cancelar',
