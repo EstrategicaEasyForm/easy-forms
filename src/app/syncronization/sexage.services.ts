@@ -31,13 +31,13 @@ export class SexageService {
 
     let variables = {
       "input": {
-        "id": sexage.id
+        "id": Number(sexage.id),
       }
     };
     if (sexage.stateSync === 'U') {
       variables = Object.assign(variables, {
         "input": {
-          "id": sexage.id,
+          "id": Number(sexage.id),
           "received_by": sexage.received_by,
           "comments": sexage.comments,
           "identification_number": sexage.identification_number,
@@ -51,9 +51,10 @@ export class SexageService {
       if (detail.stateSync === 'U' || detail.stateSync === 'C') {
         update.push({
           'id': detail.id,
-		  'sexage_id': Number(detail.sexage_id),
+		  //'sexage_id': Number(detail.sexage_id),
           'transfer_detail_id': Number(detail.transfer_detail_id),
 		  'sex': detail.sex,
+		  'user_id_created': this.userService.getUserId(),
           'user_id_updated': this.userService.getUserId()
         });
       }
