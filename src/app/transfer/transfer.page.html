@@ -144,7 +144,7 @@
                         </ion-row>
                     </ion-grid>
                   </ion-item>
-                  <ion-item-sliding *ngFor="let item of transferApi.details_view; let indx = index">
+                  <ion-item-sliding *ngFor="let item of transfer.details_view; let indx = index">
                       <ion-item>
                         <ion-grid class="item-sliding">
                           <ion-row>
@@ -188,7 +188,7 @@
                         </ion-button>
                       </ion-item-options>
                   </ion-item-sliding>
-                  <ion-item *ngIf="transferApi.details_view.length === 0">
+                  <ion-item *ngIf="transfer.details_view.length === 0">
                     <ion-label>No se encontraron registros</ion-label>
                   </ion-item>
                 </ion-list>  

@@ -63,7 +63,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     this.detailApi = dataParam.transferPage.detailApi;
     this.transferPage = dataParam.transferPage;
     this.transfer = this.transferPage.transfer;
-    //this.detailsList = this.transferPage.transferApi.details_view;
+    this.detailsList = this.transferPage.transfer.details_view;
     this.checkRecept = true;
 
     if (detailApiId >= 0) {
