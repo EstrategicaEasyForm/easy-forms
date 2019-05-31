@@ -24,7 +24,6 @@ export class SexageService {
           id,
           details {
             id,
-            dx1,
 			sex
           }
         }
@@ -54,7 +53,6 @@ export class SexageService {
           'id': detail.id,
 		  'sexage_id': Number(detail.sexage_id),
           'transfer_detail_id': Number(detail.transfer_detail_id),
-          'dx1': detail.dx1,
 		  'sex': detail.sex,
           'user_id_updated': this.userService.getUserId()
         });

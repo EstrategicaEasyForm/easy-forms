@@ -50,30 +50,32 @@ export class SexagePdfService {
 		var j = {};
 		var k = [];
 
-		sexageDetails.push([{ text: 'Donadora', alignment: 'center', bold: true },
-		{ text: 'Raza', alignment: 'center', bold: true },
-		{ text: 'Toro', alignment: 'center', bold: true },
-		{ text: 'Raza', alignment: 'center', bold: true },
-		{ text: 'Tipo', alignment: 'center', bold: true },
-		{ text: 'GI', alignment: 'center', bold: true },
-		{ text: 'GII', alignment: 'center', bold: true },
-		{ text: 'GIII', alignment: 'center', bold: true },
-		{ text: 'Otros', alignment: 'center', bold: true },
-		{ text: 'Viables', alignment: 'center', bold: true },
-		{ text: 'Total', alignment: 'center', bold: true }]);
+		sexageDetails.push([
+			{ text: 'Receptora', alignment: 'center', bold: true },
+			{ text: 'Embrión', alignment: 'center', bold: true },
+			{ text: 'Clasif. Embrión', alignment: 'center', bold: true },
+			{ text: 'Donadora', alignment: 'center', bold: true },
+			{ text: 'Raza', alignment: 'center', bold: true },
+			{ text: 'Toro', alignment: 'center', bold: true },
+			{ text: 'Raza', alignment: 'center', bold: true },
+			{ text: 'Cuerpo Luteo', alignment: 'center', bold: true },
+			{ text: 'Transferidor', alignment: 'center', bold: true },
+			{ text: 'DX1', alignment: 'center', bold: true },
+			{ text: 'Sexaje', alignment: 'center', bold: true }
+		]);
 		for (let i of data.sexageApi.details) {
-			sexageDetails.push([i.donor,
-			i.donor_breed,
-			i.bull,
-			i.bull_breed,
-			i.type,
-			i.gi,
-			i.gii,
-			i.giii,
-			i.others,
-			i.gi + i.gii + i.giii,
-			i.gi + i.gii + i.giii + i.others
-			]);
+			sexageDetails.push([i.transferData.receiver,
+		 	i.transferData.embryo,
+		 	i.transferData.embryo_class,
+		 	i.transferData.donor,
+		 	i.transferData.donor_breed,
+		 	i.transferData.bull,
+		 	i.transferData.bull_breed,
+		 	i.transferData.corpus_luteum,
+		 	i.transferData.transferor,
+			i.transferData.dx1,
+			i.sex
+		 	]);
 		}
 
 		workTeam.push(['Nombre', 'Correo', 'Evento', 'Observación', 'Departamento', 'Municipio', 'Fecha']);
@@ -106,7 +108,7 @@ export class SexagePdfService {
 							alignment: 'right',
 							bold: true,
 							text: 'Cra 72A N° 49A-39 Bogotá \n\ Invitro \n\ (+57 1) 796 86 26 | 313 570 00 23 \n\ ivc.logistica@genusplc.com \n\ '
-						},
+						}, 
 					]
 				},
 				{ text: '\n\ ÓRDEN DE PRODUCCIÓN: ' + data.order.id, bold: true, fontSize: 18, alignment: 'left' },
@@ -185,7 +187,7 @@ export class SexagePdfService {
 										{ text: 'Teléfono', alignment: 'center', bold: true },
 										{ text: 'Correo', alignment: 'center', bold: true },
 										{ text: 'Contacto', alignment: 'center', bold: true }
-									],
+									]/*,
 									[
 										{ text: data.local.name, alignment: 'left' },
 										{ text: data.local.city, alignment: 'left' },
@@ -193,7 +195,7 @@ export class SexagePdfService {
 										{ text: data.order.client.cellphone, alignment: 'left' },
 										{ text: data.order.client.email, alignment: 'left' },
 										{ text: data.order.client.contact, alignment: 'left' }
-									],
+									]*/,
 								],
 							},
 							layout: {

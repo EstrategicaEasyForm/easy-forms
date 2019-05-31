@@ -91,7 +91,7 @@
           <ion-label item-start style="margin: 0 auto"> Registros encontratos {{sexage.details?.length }}
           </ion-label>
           <ion-item item-end>
-            <ion-label>Nuevo registro </ion-label>
+            <ion-label>Editar registros </ion-label>
             <ion-button class="new-detail-button" shape="round" fill="outline" expand="block"
               (click)="openSexageDetail()">
               <ion-icon name="create"></ion-icon>
@@ -155,7 +155,7 @@
                     </ion-row>
                   </ion-grid>
                 </ion-item>
-                <ion-item-sliding *ngFor="let item of diagnostic.details; let indx = index">
+                <ion-item-sliding *ngFor="let item of sexage.details; let indx = index">
                   <ion-item>
                     <ion-grid class="item-sliding">
                       <ion-row>
@@ -191,7 +191,7 @@
                         </ion-col>
 						<div *ngIf="sexage.apply_diagnostic.apply_diagnostic == 1">
                         <ion-col size="0.5">
-                          <ion-label>{{item.dx1 }}</ion-label>
+                          <ion-label>{{item.transferData.dx1 }}</ion-label>
                         </ion-col>
 						<ion-col size="0.5">
                           <ion-label>{{item.sex }}</ion-label>
@@ -206,7 +206,7 @@
                     </ion-grid>
                   </ion-item>
                   <ion-item-options>
-                    <ion-button color="success" icon-start (click)="openDiagnosticDetail(indx)">
+                    <ion-button color="success" icon-start (click)="openSexageDetail(indx)">
                       Editar
                     </ion-button>
                     <ion-button color="danger" icon-start [disabled]="item.stateSync !== 'C'">
@@ -215,7 +215,7 @@
                     </ion-button>
                   </ion-item-options>
                 </ion-item-sliding>
-                <ion-item *ngIf="diagnostic.details.length === 0">
+                <ion-item *ngIf="sexage.details.length === 0">
                   <ion-label>No se encontraron registros</ion-label>
                 </ion-item>
               </ion-list>
@@ -318,7 +318,6 @@
                             Generar Foto
                             <ion-icon name="camera"></ion-icon>
                           </ion-button>
-                          <div class="error-message" *ngIf="!sexage.photoImage"> Campo requerido. </div>
                           <div class="photo-image">
                             <img [src]="sexage.photoImage" *ngIf="sexage.photoImage" />
                             <img src="assets/imgs/noPhotoAvailable.jpg" *ngIf="!sexage.photoImage" />

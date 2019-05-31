@@ -204,7 +204,7 @@ export class AspirationPage implements OnInit {
         }
         this.ordersService.setDetailsApiStorage(detailsApi);
         this.detailApi.aspirationApi = this.aspiration;
-        this.showMessage('Aspiración Finalizada');
+        this.showMessage('Planilla Aspiración Finalizada');
         this.location.back();
       }
     });

@@ -197,7 +197,7 @@ export class DiagnosticPage implements OnInit {
         }
         this.ordersService.setDetailsApiStorage(detailsApi);
         this.detailApi.diagnosticApi = this.diagnostic;
-        this.showMessage('Aspiración Finalizada');
+        this.showMessage('Planilla Diagnóstico Finalizada');
         this.location.back();
       }
     });

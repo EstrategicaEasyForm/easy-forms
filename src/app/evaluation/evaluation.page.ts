@@ -184,7 +184,7 @@ export class EvaluationPage implements OnInit {
         }
         this.ordersService.setDetailsApiStorage(detailsApi);
         this.detailApi.evaluationApi = this.evaluation;
-        this.showMessage('Evaluación Finalizada');
+        this.showMessage('Planilla Evaluación Finalizada');
         this.location.back();
       }
     });

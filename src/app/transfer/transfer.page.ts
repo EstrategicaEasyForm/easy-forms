@@ -169,7 +169,7 @@ export class TransferPage implements OnInit {
         }
         this.ordersService.setDetailsApiStorage(detailsApi);
         this.detailApi.transferApi = this.transfer;
-        this.showMessage('Aspiración Finalizada');
+        this.showMessage('Planilla de Transferencia Finalizada');
         this.location.back();
       }
     });
