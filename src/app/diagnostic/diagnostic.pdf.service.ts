@@ -58,20 +58,20 @@ export class DiagnosticPdfService {
 			{ text: 'Transferidor', alignment: 'center', bold: true },
 			{ text: 'DX1', alignment: 'center', bold: true }
 		]);
-		/* for (let i of data.diagnosticApi.details) {
-		 	diagnosticDetails.push([i.donor,
+		for (let i of data.diagnosticApi.detailsDiagnostic) {
+		 	diagnosticDetails.push([
+			i.receiver,
+		 	i.embryo,
+		 	i.embryo_class,
+		 	i.donor,
 		 	i.donor_breed,
 		 	i.bull,
 		 	i.bull_breed,
-		 	i.type,
-		 	i.gi,
-		 	i.gii,
-		 	i.giii,
-		 	i.others,
-		 	i.gi + i.gii + i.giii,
-		 	i.gi + i.gii + i.giii + i.others
+		 	i.corpus_luteum,
+		 	i.transferor,
+		 	i.dx1
 		 	]);
-		 }*/
+		 }
 
 		 workTeam.push([
 			{ text: 'Nombre', alignment: 'center', bold: true },
@@ -177,6 +177,7 @@ export class DiagnosticPdfService {
 							width: 'auto',
 							table: {
 								fontSize: 12,
+								headerRows: 1,
 								widths: [120, 'auto', 'auto', 'auto', 120, 120],
 								body: [
 									[
@@ -244,7 +245,7 @@ export class DiagnosticPdfService {
 							width: '*', text: ''
 						},
 						{
-							image: data.evaluationApi.signatureImage,
+							image: data.diagnosticApi.signatureImage,
 							width: 700,
 							height: 300,
 						},
@@ -253,8 +254,8 @@ export class DiagnosticPdfService {
 						},
 					],
 				},
-				{ text: data.evaluationApi.received_by, alignment: 'center', fontSize: 15, bold: true },
-				{ text: data.evaluationApi.identification_number, alignment: 'center', fontSize: 15, bold: true },
+				{ text: data.diagnosticApi.received_by, alignment: 'center', fontSize: 15, bold: true },
+				{ text: data.diagnosticApi.identification_number, alignment: 'center', fontSize: 15, bold: true },
 				{ text: '\n\n\ FOTO EVIDENCIA DEL EVENTO', alignment: 'center', pageBreak: 'before', fontSize: 18, bold: true },
 				{ text: '\n\n\ ' },
 				{

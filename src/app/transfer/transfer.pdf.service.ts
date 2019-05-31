@@ -56,18 +56,18 @@ export class TransferPdfService {
 			{ text: 'Cuerpo Luteo', alignment: 'center', bold: true },
 			{ text: 'Observaciones', alignment: 'center', bold: true }
 		]);
-		/*for (let i of data.transferApi.details) {
+		for (let i of data.transferApi.details_view) {
 			transferDetails.push([
 				i.embryo_class,
-				'',
-				'',
-				'',
-				'',
+				i.donor,
+				i.donor_breed,
+				i.bull,
+				i.bull_breed,
 				i.receiver,
 				i.corpus_luteum,
 				i.comments
 			]);
-		}*/
+		}
 
 		workTeam.push([
 			{ text: 'Nombre', alignment: 'center', bold: true },

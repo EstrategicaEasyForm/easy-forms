@@ -56,16 +56,16 @@ export class EvaluationPdfService {
 			{ text: 'Local', alignment: 'center', bold: true },
 			{ text: 'Diagnóstico', alignment: 'center', bold: true }
 		]);
-		/*for (let i of data.evaluationApi.details) {
+		for (let i of data.evaluationApi.details) {
 			evaluationDetails.push([
-			i.id_animal,
+			i.animal_id,
 			i.chapeta,
 			i.fit,
 			i.synchronized,
 			i.local.name,
 			i.diagnostic
 			]);
-		}*/
+		}
 
 		workTeam.push([
 			{ text: 'Nombre', alignment: 'center', bold: true },
