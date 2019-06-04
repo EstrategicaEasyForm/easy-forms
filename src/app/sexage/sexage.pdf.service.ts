@@ -208,7 +208,7 @@ export class SexagePdfService {
 							width: '*', text: ''
 						},
 					]
-				}, { text: '\n\n\ DETALLES DE ASPIRACION:', alignment: 'left', fontSize: 15, bold: true },
+				}, { text: '\n\n\ DETALLES DE SEXAJE:', alignment: 'left', fontSize: 15, bold: true },
 				{ text: '\n\ ' },
 				{
 					columns: [
@@ -300,7 +300,7 @@ export class SexagePdfService {
 		return new Promise(resolve => {
 
 			const dataDirectory = this.file.dataDirectory;
-			const filename = "InvitroAspiracion_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
+			const filename = "InvitroSexaje_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
 
 			try {
 				pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {

@@ -29,15 +29,6 @@ export class TransferPage implements OnInit {
   mbControlPanel: number = 1;
 
   validation_messages = {
-    'medium_opu': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'medium_lot_opu': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'aspirator': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
     'received_by': [
       { type: 'required', message: 'Campo requerido.' }
     ],
@@ -74,8 +65,7 @@ export class TransferPage implements OnInit {
     this.detailApi = detail.detailApi;
     this.order = detail.order;
     this.agenda = detail.agenda;
-    console.log(this.transfer);
-
+    
     this.validation_form_order = this.formBuilder.group({});
 
     this.validation_form_general = this.formBuilder.group({

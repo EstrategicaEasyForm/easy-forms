@@ -3,7 +3,7 @@
       <ion-buttons slot="start">
         <ion-back-button class="toolbar-button"></ion-back-button>
       </ion-buttons>
-      <ion-title>PLANILLA DE ASPIRACION FOLICULAR</ion-title>
+      <ion-title>PLANILLA DE TRANSFERENCIA FOLICULAR</ion-title>
   
       <ion-buttons slot="end">
         <ion-button class="toolbar-button" (click)="saveItem()" [disabled]="!validation_form.valid">
@@ -107,8 +107,12 @@
               </ion-row>
               <ion-row>
                 <ion-col col-6>
-                  <ion-select style="max-width: 100%;" formControlName="local_id" placeholder="Nombre" [(ngModel)]="dataItem.local_id">
-                    <ion-select-option *ngFor="let local of detailApi.transferApi.locals" [value]="local.id">{{local.name}}</ion-select-option>
+                  <ion-select style="max-width: 100%;" formControlName="local_id" 
+                  interface = "popover"
+                  interfaceOptions = "{header: 'Locales'}"
+                  placeholder="Seleccione" 
+                  [(ngModel)]="dataItem.local_id">
+                    <ion-select-option *ngFor="let local of detailApi.order.client.locals" [value]="local.id">{{local.name}}</ion-select-option>
                   </ion-select>
                   <div class="validation-errors">
                     <ng-container *ngFor="let validation of validation_messages.local_id">

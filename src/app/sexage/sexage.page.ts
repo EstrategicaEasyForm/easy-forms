@@ -78,34 +78,25 @@ export class SexagePage implements OnInit {
     //Si el objeto details es diferente al objeto detailsSexage se rearma la lista para incluir todos los detalles de detailsSexage.
     if (this.sexage.details.length !== this.sexage.detailsSexage.length) {
       const newDetails = [];
-      for (let dtDiag of this.sexage.detailsSexage) {
+      for (let transferData of this.sexage.detailsSexage) {
         detailsTmp = null;
         for (let details of this.sexage.details) {
-          if (dtDiag.transfer_detail_id == details.transfer_detail_id) {
+          if (Number(transferData.transfer_detail_id) === Number(details.diagnostic_detail_id)) {
             detailsTmp = details;
           }
         }
-        if (detailsTmp) {
-          newDetails.push({
-            "id": detailsTmp.id,
-            "sexage_id": this.sexage.id,
-            "transfer_detail_id": detailsTmp.transfer_detail_id,
-			"sex": detailsTmp.sex,
-            "transferData": dtDiag
-          });
-        }
-        else {
-          newDetails.push({
-            "id": -1,
-            "sexage_id": this.sexage.id,
-            "transfer_detail_id": dtDiag.transfer_detail_id,
-			"sex": "",
-            "transferData": dtDiag
-          });
-        }
-		//se modifica la lista
-		this.sexage.details = newDetails;
-	   }
+
+        newDetails.push({
+          "id": detailsTmp ? detailsTmp.id : -1,
+          "sexage_id": this.sexage.id,
+          "transfer_detail_id": detailsTmp ? detailsTmp.transfer_detail_id : transferData.transfer_detail_id,
+          "sex": detailsTmp ? detailsTmp.sex : transferData.sex,
+          "transferData": transferData
+        });
+      }
+
+      //se modifica la lista
+      this.sexage.details = newDetails;
     }
 
     this.validation_form_general = this.formBuilder.group({
@@ -151,8 +142,8 @@ export class SexagePage implements OnInit {
       order: this.order,
       local: this.detailApi.local
     };
-	
-	const options = {
+
+    const options = {
       watermark: true,
       open: true
     };
@@ -206,8 +197,8 @@ export class SexagePage implements OnInit {
 
   async presentAlertConfirm() {
     const alert = await this.alertController.create({
-      header: 'Finalizar Planilla Sexaje!',
-      message: 'Confirma que desa finalizar la plantilla <strong>Sexaje</strong>!!!',
+      header: 'Finalizar Planilla Sexage!',
+      message: 'Confirma que desa finalizar <strong>la plantilla Sexage</strong>!!!',
       buttons: [
         {
           text: 'Cancelar',

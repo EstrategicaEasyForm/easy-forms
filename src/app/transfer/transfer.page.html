@@ -144,7 +144,7 @@
                         </ion-row>
                     </ion-grid>
                   </ion-item>
-                  <ion-item-sliding *ngFor="let item of transferApi.details_view; let indx = index">
+                  <ion-item-sliding *ngFor="let item of transfer.details_view; let indx = index">
                       <ion-item>
                         <ion-grid class="item-sliding">
                           <ion-row>
@@ -188,7 +188,7 @@
                         </ion-button>
                       </ion-item-options>
                   </ion-item-sliding>
-                  <ion-item *ngIf="transferApi.details_view.length === 0">
+                  <ion-item *ngIf="transfer.details_view.length === 0">
                     <ion-label>No se encontraron registros</ion-label>
                   </ion-item>
                 </ion-list>  
@@ -284,9 +284,9 @@
                               <ion-icon name="camera"></ion-icon>
                             </ion-button>
                             <div class="photo-image">
-                              <img [src]="transfer.photoImage" *ngIf="transfer.photoImage" />
-                              <img src="assets/imgs/take-photo-icon.png" *ngIf="!transfer.photoImage" />
-                            </div>
+								<img [src]="transfer.photoImage" *ngIf="transfer.photoImage" />
+								<img src="assets/imgs/noPhotoAvailable.jpg" *ngIf="!transfer.photoImage" />
+							 </div>
                           </ion-col>
                           <ion-col size="1"></ion-col>
                           <ion-col size="6">

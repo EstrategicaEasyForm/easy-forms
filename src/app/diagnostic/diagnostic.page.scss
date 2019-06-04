@@ -91,7 +91,8 @@ ion-textarea{
     margin-right: auto;
     ion-card {
         text-align: left;
-        width: 100%;
+        width: 78vw;
+        margin: 0 auto;
     }
 }
 ion-card-content {
@@ -145,24 +146,19 @@ ion-card-content {
 	min-width: 49px;
 }
 .signature-image {
-    transform: translate3d(0px, 0px, 0px) scale(1) !important;
     border: solid 1px grey; 
-    min-height: 180px;
-	min-width: 90%;
 }
 .signature-image-underline {
-    transform: translate3d(0px, 0px, 0px) scale(1) !important;
     border: solid 1px grey; 
-    min-height: 180px;
-	min-width: 90%;
+    min-height: 250px;
 }
 .photo-image {
     border: solid 1px grey;
     padding: 16px;
-    background-color: rgba(80, 80, 80, 0.02);
-	img {
+    img {
         transform: translate3d(0px, 0px, 0px) scale(1) !important;
-		width: 302px;
+		width: 60%;
+		margin: 0 auto;
     }
 }
 .comment {

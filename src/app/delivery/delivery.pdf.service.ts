@@ -112,7 +112,7 @@ export class DeliveryPdfService {
 					},
 
 				},
-				'DETALLES DE ASPIRACION:',
+				'DETALLES DE ENTREGA:',
 				{
 					table: {
 						widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],

@@ -133,11 +133,7 @@
                         <ion-label>Raza</ion-label>
                       </ion-col>
                       <ion-col class="detail-corpus_luteum">
-                        <ion-label>Cuerpo</ion-label>
-                        Luteo
-                      </ion-col>
-                      <ion-col class="detail-transferor">
-                        <ion-label>Transferidor</ion-label>
+                        <ion-label>Cuerpo</ion-label> Lúteo
                       </ion-col>
                       <ion-col class="detail-dx1">
                         <ion-label>Dx1</ion-label>
@@ -300,7 +296,7 @@
                           </ion-button>
                           <div class="photo-image">
                             <img [src]="diagnostic.photoImage" *ngIf="diagnostic.photoImage" />
-                            <img src="assets/imgs/take-photo-icon.png" *ngIf="!diagnostic.photoImage" />
+                            <img src="assets/imgs/noPhotoAvailable.jpg" *ngIf="!diagnostic.photoImage" />
                           </div>
                         </ion-col>
                         <ion-col size="1"></ion-col>

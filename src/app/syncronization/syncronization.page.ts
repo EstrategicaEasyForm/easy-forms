@@ -54,7 +54,7 @@ export class SyncronizationPage {
   }
 
   async ionViewWillEnter() {
-	const alert = await this.alertController.create({
+    const alert = await this.alertController.create({
       header: 'Confirmación',
       message: '¿Está seguro de iniciar la sincronización de datos?',
       buttons: [
@@ -81,9 +81,9 @@ export class SyncronizationPage {
   }
 
   async initSync() {
-	//Clear console
-	this.logs = [];
-    
+    //Clear console
+    this.logs = [];
+
     const _self = this;
     _self.loading = await this.loadingCtrl.create({
       message: 'Por favor espere'
@@ -121,7 +121,7 @@ export class SyncronizationPage {
                   this.updateWorkSheet(order, detailApi, detailApi.transferApi, this.ordersService.templates[2]);
                 }
               }
-			  //Api diagnostic template
+              //Api diagnostic template
               if (detailApi.diagnosticApi) {
                 const isSync = this.isSyncronized(detailApi.diagnosticApi);
                 if (isSync) {
@@ -129,7 +129,7 @@ export class SyncronizationPage {
                   this.updateWorkSheet(order, detailApi, detailApi.diagnosticApi, this.ordersService.templates[3]);
                 }
               }
-			  //Api sexage template
+              //Api sexage template
               if (detailApi.sexageApi) {
                 const isSync = this.isSyncronized(detailApi.sexageApi);
                 if (isSync) {
@@ -137,7 +137,7 @@ export class SyncronizationPage {
                   this.updateWorkSheet(order, detailApi, detailApi.sexageApi, this.ordersService.templates[4]);
                 }
               }
-			  //Api delivery template
+              //Api delivery template
               if (detailApi.deliveryApi) {
                 const isSync = this.isSyncronized(detailApi.deliveryApi);
                 if (isSync) {
@@ -157,15 +157,15 @@ export class SyncronizationPage {
   isSyncronized(workSheet: any): boolean {
     if (workSheet === null) return false;
     if (workSheet.stateSync === 'U') return true;
-	if(workSheet.details)
-    workSheet.details.forEach(detail => {
-      if (detail.stateSync === 'U') {
-        return true;
-      }
-      else if (detail.stateSync === 'C') {
-        return true;
-      }
-    });
+    if (workSheet.details)
+      workSheet.details.forEach(detail => {
+        if (detail.stateSync === 'U') {
+          return true;
+        }
+        else if (detail.stateSync === 'C') {
+          return true;
+        }
+      });
     return false;
   }
 
@@ -177,83 +177,83 @@ export class SyncronizationPage {
     });
 
     let updateWorkSheetFunction;
-    if(type.id==="1") updateWorkSheetFunction = this.evaluationService.updateEvaluation(detailApi.evaluationApi);
-    if(type.id==="2") updateWorkSheetFunction = this.aspirationService.updateAspiration(detailApi.aspirationApi);
-    if(type.id==="3") updateWorkSheetFunction = this.transferService.updateTransfer(detailApi.transferApi);
-    if(type.id==="4") updateWorkSheetFunction = this.diagnosticService.updateDiagnostic(detailApi.diagnosticApi);
-    if(type.id==="5") updateWorkSheetFunction = this.sexageService.updateSexage(detailApi.sexageApi);
-    if(type.id==="6") updateWorkSheetFunction = this.deliveryService.updateDelivery(detailApi.deliveryApi);
-      
+    if (type.id === "1") updateWorkSheetFunction = this.evaluationService.updateEvaluation(detailApi.evaluationApi);
+    if (type.id === "2") updateWorkSheetFunction = this.aspirationService.updateAspiration(detailApi.aspirationApi);
+    if (type.id === "3") updateWorkSheetFunction = this.transferService.updateTransfer(detailApi.transferApi);
+    if (type.id === "4") updateWorkSheetFunction = this.diagnosticService.updateDiagnostic(detailApi.diagnosticApi);
+    if (type.id === "5") updateWorkSheetFunction = this.sexageService.updateSexage(detailApi.sexageApi);
+    if (type.id === "6") updateWorkSheetFunction = this.deliveryService.updateDelivery(detailApi.deliveryApi);
+
     updateWorkSheetFunction.then((response: any) => {
-        if (response.status === 'error') {
+      if (response.status === 'error') {
+        this.logs.push({
+          type: 'error',
+          message: 'Error sincronizando la planilla ' + type.name + '. Orden de producción No ' + order.id,
+          details: [
+            response.error
+          ],
+          time: moment().format('HH:mm:ss')
+        });
+      }
+      else if (response.status === 'success') {
+        this.logs.push({
+          type: 'info',
+          message: 'La planilla ' + type.name + ' fué actualizada correctamente para la orden de producción No ' + order.id,
+          time: moment().format('HH:mm:ss')
+        });
+      }
+
+      this.sendEmail.makePdf(order, detailApi, workSheet, type, response).then((pdf) => {
+        if (pdf.status === 'error') {
+          const errorMessage = typeof pdf.error === 'string' ? pdf.error : JSON.stringify(pdf.error);
           this.logs.push({
             type: 'error',
-            message: 'Error sincronizando la planilla ' + type.name + '. Orden de producción No ' + order.id,
-			details: [
-				response.error
-			],
+            message: 'Error generando el archivo pdf: ' + pdf.filename,
+            details: [
+              errorMessage
+            ],
             time: moment().format('HH:mm:ss')
           });
         }
-        else if (response.status === 'success') {
+        else if (pdf.status === 'success') {
+          //State for Finalize
+          //if(detailApi.state === "1") {
           this.logs.push({
             type: 'info',
-            message: 'La planilla ' + type.name + ' fué actualizada correctamente para la orden de producción No ' + order.id,
+            message: 'Inicia envío de correo para la planilla de ' + type.name,
+            details: [
+              "Archivo adjunto " + pdf.filename
+            ],
             time: moment().format('HH:mm:ss')
           });
-        }
-
-        this.sendEmail.makePdf(order, detailApi, workSheet, type, response).then((pdf) => {
-          if (pdf.status === 'error') {
-            const errorMessage = typeof pdf.error === 'string' ? pdf.error : JSON.stringify(pdf.error);
-            this.logs.push({
-              type: 'error',
-              message: 'Error generando el archivo pdf: ' + pdf.filename,
-              details: [
-                errorMessage
-              ],
-              time: moment().format('HH:mm:ss')
-            });
-          }
-          else if (pdf.status === 'success') {
-            //State for Finalize
-            //if(detailApi.state === "1") {
+          this.sendEmail.makeEmail(order, detailApi, workSheet, type, response, pdf).then((resp: any) => {
+            if (resp.status === 'success') {
               this.logs.push({
                 type: 'info',
-                message: 'Inicia envío de correo para la planilla de ' + type.name,
+                message: "Correo automático enviado a @" + order.client.bussiness_name,
                 details: [
-                  "Archivo adjunto " + pdf.filename
+                  "Archivo adjunto " + pdf.filename,
+                  "Enviado a " + order.client.email
                 ],
                 time: moment().format('HH:mm:ss')
               });
-              this.sendEmail.makeEmail(order, detailApi, workSheet, type, response, pdf).then((resp: any) => {
-                if (resp.status === 'success') {
-                  this.logs.push({
-                    type: 'info',
-                    message: "Correo automático enviado a @"+order.client.bussiness_name,
-                    details: [
-                      "Archivo adjunto " + pdf.filename,
-					  "Enviado a " + order.client.email
-                    ],
-                    time: moment().format('HH:mm:ss')
-                  });
-                }
-                else {
-                  this.logs.push({
-                    type: 'error',
-                    message:"Error enviando correo automático a @"+order.client.bussiness_name,
-                    details: [
-                      resp.error
-                    ],
-                    time: moment().format('HH:mm:ss')
-                  });
-                }
-              })
-            //}
-          }
-          this.finishSync();
-        });
+            }
+            else {
+              this.logs.push({
+                type: 'error',
+                message: "Error enviando correo automático a @" + order.client.bussiness_name,
+                details: [
+                  resp.error
+                ],
+                time: moment().format('HH:mm:ss')
+              });
+            }
+          })
+          //}
+        }
+        this.finishSync();
       });
+    });
   }
 
   finishSync() {

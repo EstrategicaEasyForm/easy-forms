@@ -24,37 +24,30 @@ export class SexageService {
           id,
           details {
             id,
-			sex
+            sex
           }
         }
       }`;
 
+
     let variables = {
       "input": {
         "id": Number(sexage.id),
+        "received_by": sexage.received_by,
+        "comments": sexage.comments,
+        "identification_number": sexage.identification_number,
+        "state": sexage.state,
+        'user_id_updated': this.userService.getUserId()
       }
     };
-    if (sexage.stateSync === 'U') {
-      variables = Object.assign(variables, {
-        "input": {
-          "id": Number(sexage.id),
-          "received_by": sexage.received_by,
-          "comments": sexage.comments,
-          "identification_number": sexage.identification_number,
-          "state": sexage.state,
-          'user_id_updated': this.userService.getUserId()
-        }
-      }); 
-    }
     const update = [];
     sexage.details.forEach(detail => {
       if (detail.stateSync === 'U' || detail.stateSync === 'C') {
         update.push({
           'id': detail.id,
-		  //'sexage_id': Number(detail.sexage_id),
           'transfer_detail_id': Number(detail.transfer_detail_id),
-		  'sex': detail.sex,
-		  'user_id_created': this.userService.getUserId(),
+          'sex': detail.sex,
+          'user_id_created': this.userService.getUserId(),
           'user_id_updated': this.userService.getUserId()
         });
       }
@@ -62,15 +55,9 @@ export class SexageService {
 
     if (update.length > 0 || sexage.stateSync === 'U') {
       const details = {
-         "details" : { "update": update } 
+        "details": { "update": update }
       };
       variables.input = Object.assign(variables.input, details);
-    }
-    else {
-      //Si no se reflejan cambios en el elemento o sus detalles, se resuelve la promesa
-      return new Promise(resolve => {
-        resolve({ status: 'no_change' });
-      });
     }
 
     //se resuelve la promesa despues de obtener respuesta de la mutacion
