@@ -171,10 +171,7 @@
                         </ion-col>
                         <ion-col class="detail-corpus_luteum">
                           <ion-label>{{item.transferData?.corpus_luteum }}</ion-label>
-                        </ion-col>
-                        <ion-col class="detail-transferor">
-                          <ion-label>{{item.transferData?.transferor }}</ion-label>
-                        </ion-col>
+                        </ion-col> 
                         <ion-col class="detail-dx1">
                           <ion-label>{{item.dx1 }}</ion-label>
                         </ion-col>
@@ -182,13 +179,15 @@
                     </ion-grid>
                   </ion-item>
                   <ion-item-options>
-                    <ion-button color="success" icon-start (click)="openDiagnosticDetail(indx)">
-                      Editar
+                    <ion-button [ngClass]="{'slide-button-pregnant opacity': indx.dx1 === 'P', 'slide-button-pregnant': indx.dx1 !== 'P', }" (click)="indx.dx1 = 'P'">
+                      Preñada
                     </ion-button>
-                    <ion-button color="danger" icon-start [disabled]="item.stateSync !== 'C'">
-                      <ion-icon name="trash"></ion-icon>
-                      Borrar
+                    <ion-button [ngClass]="{'slide-button-void opacity': indx.dx1 === 'V', 'slide-button-void': indx.dx1 !== 'V', }" (click)="indx.dx1 = 'V'">
+                      Vacía
                     </ion-button>
+					<ion-button [ngClass]="{'slide-button-tpl opacity': indx.dx1 === 'T', 'slide-button-tpl': indx.dx1 !== 'T', }" (click)="indx.dx1 = 'T'">
+                      TPL
+                    </ion-button> 
                   </ion-item-options>
                 </ion-item-sliding>
                 <ion-item *ngIf="diagnostic.details.length === 0">
