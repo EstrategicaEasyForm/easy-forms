@@ -279,8 +279,9 @@ export class DiagnosticPage implements OnInit {
     await loading.present();
   }
 
-  onChangeDx1(item: { dx1: any; }, value: any) {
+  onChangeDx1(item: { dx1: any, stateSync: any}, value: any) {
     item.dx1 = value;
+    item.stateSync = 'U';
     this.saveDiagnostic();
     this.showMessage('Registro modificado');
   }
