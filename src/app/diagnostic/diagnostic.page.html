@@ -91,11 +91,7 @@
           <ion-label item-start style="margin: 0 auto"> Registros encontratos {{diagnostic.details?.length }}
           </ion-label>
           <ion-item item-end>
-            <ion-label>Editar Diagnóstico </ion-label>
-            <ion-button class="new-detail-button" shape="round" fill="outline" expand="block"
-              [disabled]="diagnostic.details.length === 0" (click)="openDiagnosticDetail()">
-              <ion-icon name="create"></ion-icon>
-            </ion-button>
+            
           </ion-item>
         </ion-item>
         <ion-item class="card-page-details">
@@ -117,13 +113,13 @@
                       <ion-col class="detail-embryo">
                         <ion-label>Embrión</ion-label>
                       </ion-col>
-                      <ion-col class="detail-embryo_class">
+                      <ion-col class="detail-embryo-class">
                         <ion-label>Clasif.</ion-label>embrión
                       </ion-col>
                       <ion-col class="detail-donor">
                         <ion-label>Donadora</ion-label>
                       </ion-col>
-                      <ion-col class="detail-donor_breed">
+                      <ion-col class="detail-donor-breed">
                         <ion-label>Raza</ion-label>
                       </ion-col>
                       <ion-col class="detail-bull">
@@ -132,7 +128,7 @@
                       <ion-col class="detail-bull-breed">
                         <ion-label>Raza</ion-label>
                       </ion-col>
-                      <ion-col class="detail-corpus_luteum">
+                      <ion-col class="detail-corpus-luteum">
                         <ion-label>Cuerpo</ion-label> Lúteo
                       </ion-col>
                       <ion-col class="detail-dx1">
@@ -154,7 +150,7 @@
                         <ion-col class="detail-embryo">
                           <ion-label>{{item.transferData?.embryo }}</ion-label>
                         </ion-col>
-                        <ion-col class="detail-embryo_class">
+                        <ion-col class="detail-embryo-class">
                           <ion-label>{{item.transferData?.embryo_class }}</ion-label>
                         </ion-col>
                         <ion-col class="detail-donor">
@@ -169,25 +165,21 @@
                         <ion-col class="detail-bull-breed">
                           <ion-label>{{item.transferData?.bull_breed }}</ion-label>
                         </ion-col>
-                        <ion-col class="detail-corpus_luteum">
+                        <ion-col class="detail-corpus-luteum">
                           <ion-label>{{item.transferData?.corpus_luteum }}</ion-label>
-                        </ion-col> 
+                        </ion-col>
                         <ion-col class="detail-dx1">
-                          <ion-label>{{item.dx1 }}</ion-label>
+                          <ion-label *ngIf="item.dx1 === 'P'" color="success">{{item.dx1}}</ion-label>
+                          <ion-label *ngIf="item.dx1 === 'V'" color="danger">{{item.dx1}}</ion-label>
+                          <ion-label *ngIf="item.dx1 === 'T'" color="warning">{{item.dx1}}</ion-label>
                         </ion-col>
                       </ion-row>
                     </ion-grid>
                   </ion-item>
                   <ion-item-options>
-                    <ion-button [ngClass]="{'slide-button-pregnant opacity': indx.dx1 === 'P', 'slide-button-pregnant': indx.dx1 !== 'P', }" (click)="indx.dx1 = 'P'">
-                      Preñada
-                    </ion-button>
-                    <ion-button [ngClass]="{'slide-button-void opacity': indx.dx1 === 'V', 'slide-button-void': indx.dx1 !== 'V', }" (click)="indx.dx1 = 'V'">
-                      Vacía
-                    </ion-button>
-					<ion-button [ngClass]="{'slide-button-tpl opacity': indx.dx1 === 'T', 'slide-button-tpl': indx.dx1 !== 'T', }" (click)="indx.dx1 = 'T'">
-                      TPL
-                    </ion-button> 
+                    <ion-button class="button-slide" color="success" (click)="onChangeDx1(item,'P')"> Preñada </ion-button>
+                    <ion-button class="button-slide" color="danger"  (click)="onChangeDx1(item,'V')"> Vacía </ion-button>
+                    <ion-button class="button-slide" color="warning" (click)="onChangeDx1(item,'T')"> TPL </ion-button>
                   </ion-item-options>
                 </ion-item-sliding>
                 <ion-item *ngIf="diagnostic.details.length === 0">
@@ -251,7 +243,8 @@
                         Modificar Firma
                         <ion-icon name="create"></ion-icon>
                       </ion-button>
-                      <img *ngIf="diagnostic.signatureImage" class="signature-image" [src]="diagnostic.signatureImage" />
+                      <img *ngIf="diagnostic.signatureImage" class="signature-image"
+                        [src]="diagnostic.signatureImage" />
                       <div *ngIf="!diagnostic.signatureImage" class="signature-image-underline"></div>
                       <div>
                         <ng-container *ngFor="let validation of validation_messages.signatureImage">
@@ -300,12 +293,13 @@
                         </ion-col>
                         <ion-col size="1"></ion-col>
                         <ion-col size="6">
-                          <ion-button [disabled]="!diagnostic.signatureImage || !validation_form_general.valid" class="make-pdf-button" expand="full"
-                            (click)="openPdfViewer()">
+                          <ion-button [disabled]="!diagnostic.signatureImage || !validation_form_general.valid"
+                            class="make-pdf-button" expand="full" (click)="openPdfViewer()">
                             Generar PDF
                             <ion-icon name="archive"></ion-icon>
                           </ion-button>
-                          <ion-button class="button-finalize" [disabled]="!diagnostic.signatureImage || !validation_form_general.valid" expand="full"
+                          <ion-button class="button-finalize"
+                            [disabled]="!diagnostic.signatureImage || !validation_form_general.valid" expand="full"
                             color="success-shade" (click)="presentAlertConfirm()">
                             Finalizar Diagnóstico
                           </ion-button>
