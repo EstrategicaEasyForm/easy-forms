@@ -25,6 +25,7 @@ export class SyncronizationPage {
   loading: any;
   logs = [];
   totalWorkSheets = 0;
+  totalError = 0;
 
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
   constructor(
@@ -54,30 +55,34 @@ export class SyncronizationPage {
   }
 
   async ionViewWillEnter() {
-    const alert = await this.alertController.create({
-      header: 'Confirmación',
-      message: '¿Está seguro de iniciar la sincronización de datos?',
-      buttons: [
-        {
-          text: 'Cancelar',
-          handler: () => {
-            this.logs.push({
-              type: 'warning',
-              message: "La sincronización se ha cancelado",
-              time: moment().format('HH:mm:ss')
-            });
+    if (this.validateUserToken()) {
+
+
+      const alert = await this.alertController.create({
+        header: 'Confirmación',
+        message: '¿Está seguro de iniciar la sincronización de datos?',
+        buttons: [
+          {
+            text: 'Cancelar',
+            handler: () => {
+              this.logs.push({
+                type: 'warning',
+                message: "La sincronización se ha cancelado",
+                time: moment().format('HH:mm:ss')
+              });
+            }
+          },
+          {
+            text: 'Confirmar',
+            handler: () => {
+              this.initSync();
+            }
           }
-        },
-        {
-          text: 'Confirmar',
-          handler: () => {
-            this.initSync();
-          }
-        }
-      ],
-      backdropDismiss: false
-    });
-    await alert.present();
+        ],
+        backdropDismiss: false
+      });
+      await alert.present();
+    }
   }
 
   async initSync() {
@@ -93,6 +98,9 @@ export class SyncronizationPage {
     this.ordersService.getDetailsApiStorage()
       .then((orders) => {
         this.totalWorkSheets = 0;
+        //set the total result of sincronization
+        this.totalError = 0;
+
         if (orders) {
           orders.forEach(order => {
             order.detailsApi.forEach(detailApi => {
@@ -149,7 +157,7 @@ export class SyncronizationPage {
           });
         }
         if (this.totalWorkSheets === 0) {
-          this.finishSync();
+          this.finishSync(null);
         }
       });
   }
@@ -218,14 +226,14 @@ export class SyncronizationPage {
         else if (pdf.status === 'success') {
           //State for Finalize
           //if(detailApi.state === "1") {
-          this.logs.push({
-            type: 'info',
-            message: 'Inicia envío de correo para la planilla de ' + type.name,
-            details: [
-              "Archivo adjunto " + pdf.filename
-            ],
-            time: moment().format('HH:mm:ss')
-          });
+          //this.logs.push({
+          //  type: 'info',
+          //  message: 'Inicia envío de correo para la planilla de ' + type.name,
+          //  details: [
+          //   "Archivo adjunto " + pdf.filename
+          // ],
+          //   time: moment().format('HH:mm:ss')
+          //});
           this.sendEmail.makeEmail(order, detailApi, workSheet, type, response, pdf).then((resp: any) => {
             if (resp.status === 'success') {
               this.logs.push({
@@ -237,6 +245,7 @@ export class SyncronizationPage {
                 ],
                 time: moment().format('HH:mm:ss')
               });
+              this.finishSync(null);
             }
             else {
               this.logs.push({
@@ -247,23 +256,36 @@ export class SyncronizationPage {
                 ],
                 time: moment().format('HH:mm:ss')
               });
+              this.finishSync(resp.error);
             }
           })
           //}
         }
-        this.finishSync();
+
       });
     });
   }
 
-  finishSync() {
+  finishSync(error) {
     this.totalWorkSheets--;
+    if (error) this.totalError++;
+
     if (this.totalWorkSheets <= 0) {
-      this.logs.push({
-        type: 'info',
-        message: 'La sincronización ha finalizado',
-        time: moment().format('HH:mm:ss')
-      });
+      if (this.totalError > 0) {
+        this.logs.push({
+          type: 'warning',
+          message: 'La sincronización ha finalizado con errores',
+          time: moment().format('HH:mm:ss')
+        });
+      }
+      else {
+        this.logs.push({
+          type: 'info',
+          message: 'La sincronización ha finalizado exitósamente',
+          time: moment().format('HH:mm:ss')
+        });
+      }
+
       this.retriveAgenda();
     }
   }
@@ -315,5 +337,52 @@ export class SyncronizationPage {
 
   deploy(registry: any) {
     registry.show = !registry.show;
+  }
+
+  validateUserToken() {
+    return new Promise((resolve, reject) => {
+      this.userService.getUserAuthToken().then(userAuthStorage => {
+
+
+        const userAuth = { 'email': userAuthStorage.email, 'password': userAuthStorage.password };
+        this.userService.login(userAuth)
+          .subscribe(({ data }) => {
+            //Setting new token authentication
+            this.userService.setUserAuthToken(data.login);
+            this.userService.addUserAuthStorage(userAuth);
+            resolve(true);
+
+          }, (error) => {
+            if (error.graphQLErrors) {
+              for (let err of error.graphQLErrors) {
+                if (err.extensions.category === 'authentication') {
+                  this.showMessage('Usuario o clave incorrectos');
+                  this.logs.push({
+                    type: 'error',
+                    message: "No se puede realizar la sincronización",
+                    detail: [
+                      "Usuario o clave inválidos",
+                      "Por favor cierre e inicie nuevamete sesión"
+                    ],
+                    time: moment().format('HH:mm:ss')
+                  });
+                  resolve(false); 
+                }
+              }
+              this.logs.push({
+                type: 'error',
+                message: "No se puede acceder al servidor. El servidor tardó demasiado en respoder",
+                detail: [
+                  "Comprueba tu conexión a Internet",
+                  "Reinicia los routers, modems y dispositivos de red que estés usando"
+                ],
+                time: moment().format('HH:mm:ss')
+              });
+              resolve(false);
+            }
+          })
+      });
+
+    });
   }
 }
