@@ -95,8 +95,9 @@ export class UsersService {
         }) : [];
 
         //Return user authentication data if exists
-        resolve(usersAuthList[0] ? true : false);
+        resolve(usersAuthList[0]);
       });
     });
   }
+  
 }

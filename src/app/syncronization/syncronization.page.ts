@@ -50,14 +50,11 @@ export class SyncronizationPage {
 
     this.eventCtrl.subscribe('graphql:error', (elementPush) => {
       this.logs.push(elementPush);
-      this.loading.dismiss();
+      if(this.loading) this.loading.dismiss();
     });
   }
-
-  async ionViewWillEnter() {
-    if (this.validateUserToken()) {
-
-
+  
+  async presentAlert() {
       const alert = await this.alertController.create({
         header: 'Confirmación',
         message: '¿Está seguro de iniciar la sincronización de datos?',
@@ -82,7 +79,12 @@ export class SyncronizationPage {
         backdropDismiss: false
       });
       await alert.present();
-    }
+  }
+
+  ionViewWillEnter() {
+    this.validateUserToken().then(()=>{
+		this.presentAlert();
+    });
   }
 
   async initSync() {
@@ -342,9 +344,7 @@ export class SyncronizationPage {
   validateUserToken() {
     return new Promise((resolve, reject) => {
       this.userService.getUserAuthToken().then(userAuthStorage => {
-
-
-        const userAuth = { 'email': userAuthStorage.email, 'password': userAuthStorage.password };
+		const userAuth = { 'email': userAuthStorage.email, 'password': userAuthStorage.password };
         this.userService.login(userAuth)
           .subscribe(({ data }) => {
             //Setting new token authentication
