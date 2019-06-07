@@ -73,11 +73,14 @@
                     </ion-row>
                     <ion-row>
                         <ion-col col-4>
-                                <ion-select style="max-width: 100%;" formControlName="fit" placeholder="Apta"
-                                    [(ngModel)]="dataItem.fit">
-                                    <ion-select-option value="1">Si</ion-select-option>
-                                    <ion-select-option value="0">No</ion-select-option>
-                                </ion-select>
+                            <ion-select style="max-width: 100%;" formControlName="fit" 
+                                interface="popover"
+                                interfaceOptions="{header: 'Apta'}" 
+                                placeholder="Apta"
+                                [(ngModel)]="dataItem.fit">
+                                <ion-select-option value="1">Si</ion-select-option>
+                                <ion-select-option value="0">No</ion-select-option>
+                            </ion-select>
                             <div class="validation-errors">
                                 <ng-container *ngFor="let validation of validation_messages.fit">
                                     <div class="error-message" *ngIf="validation_form.get('fit').hasError(validation.type) 
@@ -88,8 +91,9 @@
                             </div>
                         </ion-col>
                         <ion-col col-4>
-                            <ion-select style="max-width: 100%;" formControlName="synchronized"
-                                placeholder="Sincronizada" [(ngModel)]="dataItem.synchronized">
+                            <ion-select style="max-width: 100%;" formControlName="synchronized" interface="popover"
+                                interfaceOptions="{header: 'Sincronizada'}" placeholder="Sincronizada"
+                                [(ngModel)]="dataItem.synchronized">
                                 <ion-select-option value="1">Si</ion-select-option>
                                 <ion-select-option value="0">No</ion-select-option>
                             </ion-select>
@@ -103,17 +107,17 @@
                             </div>
                         </ion-col>
                         <ion-col col-4>
-                            <ion-select #localIds style="max-width: 100%;" placeholder="Local"
-                                [(ngModel)]="dataItem.local_id" formControlName="local_id"
-                                (ionChange)="onChangeLocal(localIds.value)">
+                            <ion-select #localIds style="max-width: 100%;" formControlName="local_id"
+                                interface="popover" interfaceOptions="{header: 'Locales'}" placeholder="Local"
+                                [(ngModel)]="dataItem.local_id">
                                 <ion-select-option *ngFor="let local of evaluation.locals" [value]="local.id">
-                                    {{local.name}}
-                                </ion-select-option>
+                                    {{local.name}}</ion-select-option>
                             </ion-select>
                             <div class="validation-errors">
                                 <ng-container *ngFor="let validation of validation_messages.local_id">
-                                    <div class="error-message" *ngIf="validation_form.get('local_id').hasError(validation.type) 
-                      && (validation_form.get('local_id').dirty || validation_form.get('local_id').touched)">
+                                    <div class="error-message"
+                                        *ngIf="validation_form.get('local_id').hasError(validation.type) 
+                                        && (validation_form.get('local_id').dirty || validation_form.get('local_id').touched)">
                                         {{ validation.message }}
                                     </div>
                                 </ng-container>
