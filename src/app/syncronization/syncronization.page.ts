@@ -224,6 +224,7 @@ export class SyncronizationPage {
             ],
             time: moment().format('HH:mm:ss')
           });
+          this.finishSync(errorMessage);
         }
         else if (pdf.status === 'success') {
           //State for Finalize

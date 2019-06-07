@@ -61,23 +61,23 @@
               <ion-col size="4" class="text-readonly">
                 <ion-label>{{order.id}}</ion-label>
               </ion-col>
-              <ion-col size="7.7" class="text-readonly">
+              <ion-col size="7.6" class="text-readonly">
                 <ion-label>{{order.client.bussiness_name}}</ion-label>
               </ion-col>
             </ion-row>
             <ion-row>
-              <ion-col size="4.3">
+              <ion-col size="6.6">
                 <ion-label>Local</ion-label>
               </ion-col>
-              <ion-col size="3.5">
-                <ion-label>Fecha de Sexaje</ion-label>
+              <ion-col size="5">
+                <ion-label>Fecha Sexaje</ion-label>
               </ion-col>
             </ion-row>
             <ion-row>
-              <ion-col size="4.3" class="text-readonly">
-                <ion-label>{{agenda?.name_local}}</ion-label>
+              <ion-col size="6.6" class="text-readonly">
+                <ion-label>{{detailApi?.local?.name}}</ion-label>
               </ion-col>
-              <ion-col size="3.5" class="text-readonly">
+              <ion-col size="5" class="text-readonly">
                 <ion-label>{{sexage.date}}</ion-label>
               </ion-col>
             </ion-row>
@@ -91,17 +91,13 @@
           <ion-label item-start style="margin: 0 auto"> Registros encontratos {{sexage.details?.length }}
           </ion-label>
           <ion-item item-end>
-            <ion-label>Editar registros </ion-label>
-            <ion-button class="new-detail-button" shape="round" fill="outline" expand="block"
-              (click)="openSexageDetail()">
-              <ion-icon name="create"></ion-icon>
-            </ion-button>
+
           </ion-item>
         </ion-item>
         <ion-item class="card-page-details">
           <ion-card>
             <ion-card-header class="ibox-title">
-              <h5>Planilla de Sexaje</h5>
+              <h5>Planilla Sexaje</h5>
             </ion-card-header>
             <ion-card-content>
               <ion-list>
@@ -117,9 +113,6 @@
                       <ion-col class="detail-embryo">
                         <ion-label>Embrión</ion-label>
                       </ion-col>
-                      <ion-col class="detail-embryo-class">
-                        <ion-label>Clasif.</ion-label>embrión
-                      </ion-col>
                       <ion-col class="detail-donor">
                         <ion-label>Donadora</ion-label>
                       </ion-col>
@@ -132,26 +125,18 @@
                       <ion-col class="detail-bull-breed">
                         <ion-label>Raza</ion-label>
                       </ion-col>
-                      <ion-col class="detail-corpus-luteum">
-                        <ion-label>Cuerpo</ion-label>
-                        Luteo
+                      <ion-col *ngIf="sexage.apply_diagnostic && sexage.apply_diagnostic.apply_diagnostic" class="detail-corpus-luteum">
+                        <ion-label>Cuerpo</ion-label> Lúteo
                       </ion-col>
-                      <ion-col class="detail-transferor">
-                        <ion-label>Transferidor</ion-label>
+                      <ion-col *ngIf="!sexage.apply_diagnostic || !sexage.apply_diagnostic.apply_diagnostic" class="detail-corpus-luteum-full">
+                        <ion-label>Cuerpo Lúteo</ion-label>
                       </ion-col>
-					  <div *ngIf="sexage.apply_diagnostic.apply_diagnostic == 1">
-                      <ion-col size="0.5">
+                      <ion-col *ngIf="sexage.apply_diagnostic && sexage.apply_diagnostic.apply_diagnostic" class="detail-dx1">
                         <ion-label>Dx1</ion-label>
                       </ion-col>
-					  <ion-col size="0.5">
-                        <ion-label>Sexaje</ion-label>
+                      <ion-col class="detail-sex">
+                        <ion-label>Sexo</ion-label>
                       </ion-col>
-					  </div>
-					  <div *ngIf="sexage.apply_diagnostic.apply_diagnostic == 0">
-                      <ion-col size="0.5">
-                        <ion-label>Sexaje</ion-label>
-                      </ion-col>
-					  </div>
                     </ion-row>
                   </ion-grid>
                 </ion-item>
@@ -168,9 +153,6 @@
                         <ion-col class="detail-embryo">
                           <ion-label>{{item.transferData?.embryo }}</ion-label>
                         </ion-col>
-                        <ion-col class="detail-embryo-class">
-                          <ion-label>{{item.transferData?.embryo_class }}</ion-label>
-                        </ion-col>
                         <ion-col class="detail-donor">
                           <ion-label>{{item.transferData?.donor }}</ion-label>
                         </ion-col>
@@ -183,35 +165,28 @@
                         <ion-col class="detail-bull-breed">
                           <ion-label>{{item.transferData?.bull_breed }}</ion-label>
                         </ion-col>
-                        <ion-col class="detail-corpus-luteum">
+                        <ion-col *ngIf="sexage.apply_diagnostic && sexage.apply_diagnostic.apply_diagnostic" class="detail-corpus-luteum">
                           <ion-label>{{item.transferData?.corpus_luteum }}</ion-label>
                         </ion-col>
-                        <ion-col class="detail-transferor">
-                          <ion-label>{{item.transferData?.transferor }}</ion-label>
+                        <ion-col *ngIf="!sexage.apply_diagnostic || !sexage.apply_diagnostic.apply_diagnostic" class="detail-corpus-luteum-full">
+                          <ion-label>{{item.transferData?.corpus_luteum }}</ion-label>
                         </ion-col>
-						<div *ngIf="sexage.apply_diagnostic.apply_diagnostic == 1">
-                        <ion-col size="0.5">
-                          <ion-label>{{item.transferData.dx1 }}</ion-label>
+                        <ion-col *ngIf="sexage.apply_diagnostic && sexage.apply_diagnostic.apply_diagnostic" class="detail-dx1">
+                          <ion-label *ngIf="item.dx1 === 'P'" color="success">Preñada</ion-label>
+                          <ion-label *ngIf="item.dx1 === 'V'" color="danger">Vacía</ion-label>
+                          <ion-label *ngIf="item.dx1 === 'PPL'" color="warning">Alto riesgo</ion-label>
                         </ion-col>
-						<ion-col size="0.5">
-                          <ion-label class="detail-sex">{{item.sex }}</ion-label>
+                        <ion-col class="detail-sex">
+                          <ion-label *ngIf="item.sex === 'M'" color="success">M</ion-label>
+                          <ion-label *ngIf="item.sex === 'H'" color="tertiary">H</ion-label>
                         </ion-col>
-						</div>
-						<div *ngIf="sexage.apply_diagnostic.apply_diagnostic == 0">
-						<ion-col size="0.5">
-                          <ion-label>{{item.sex }}</ion-label>
-                        </ion-col>
-						</div>
                       </ion-row>
                     </ion-grid>
                   </ion-item>
                   <ion-item-options>
-                    <ion-button color="success" icon-start (click)="openSexageDetail(indx)">
-                      Editar
+                    <ion-button class="button-slide" color="success" (click)="onChangeSex(item,'M')"> Macho
                     </ion-button>
-                    <ion-button color="danger" icon-start [disabled]="item.stateSync !== 'C'">
-                      <ion-icon name="trash"></ion-icon>
-                      Borrar
+                    <ion-button class="button-slide" color="tertiary" (click)="onChangeSex(item,'H')"> Hembra
                     </ion-button>
                   </ion-item-options>
                 </ion-item-sliding>
@@ -238,7 +213,7 @@
                     <ion-col size="7">
                       <ion-label>Nombre del encargado</ion-label>
                     </ion-col>
-                    <ion-col size="4.7">
+                    <ion-col size="4">
                       <ion-label>Cédula</ion-label>
                     </ion-col>
                   </ion-row>
@@ -271,7 +246,7 @@
                     </ion-col>
                   </ion-row>
                   <ion-row>
-                    <ion-col size="12">
+                    <ion-col>
                       <ion-button class="signature-pad-button" expand="full" (click)="openSignatureModel()">
                         Modificar Firma
                         <ion-icon name="create"></ion-icon>

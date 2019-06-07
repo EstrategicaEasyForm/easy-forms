@@ -38,9 +38,6 @@ export class SexagePage implements OnInit {
     'identification_number': [
       { type: 'required', message: 'Campo requerido.' }
     ],
-    'transport_type': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
     'comments': [
       { type: 'required', message: 'Campo requerido.' }
     ]
@@ -78,23 +75,34 @@ export class SexagePage implements OnInit {
     //Si el objeto details es diferente al objeto detailsSexage se rearma la lista para incluir todos los detalles de detailsSexage.
     if (this.sexage.details.length !== this.sexage.detailsSexage.length) {
       const newDetails = [];
-      for (let transferData of this.sexage.detailsSexage) {
+      for (let dtDiag of this.sexage.detailsSexage) {
         detailsTmp = null;
         for (let details of this.sexage.details) {
-          if (Number(transferData.transfer_detail_id) === Number(details.diagnostic_detail_id)) {
+          if (dtDiag.transfer_detail_id == details.transfer_detail_id) {
             detailsTmp = details;
           }
         }
-
-        newDetails.push({
-          "id": detailsTmp ? detailsTmp.id : -1,
-          "sexage_id": this.sexage.id,
-          "transfer_detail_id": detailsTmp ? detailsTmp.transfer_detail_id : transferData.transfer_detail_id,
-          "sex": detailsTmp ? detailsTmp.sex : transferData.sex,
-          "transferData": transferData
-        });
+        if (detailsTmp) {
+          newDetails.push({
+            "id": detailsTmp.id,
+            "sexage_id": this.sexage.id,
+            "transfer_detail_id": detailsTmp.transfer_detail_id,
+            "sex": detailsTmp.sex,
+            "dx1": detailsTmp.dx1,
+            "transferData": dtDiag
+          });
+        }
+        else {
+          newDetails.push({
+            "id": -1,
+            "sexage_id": this.sexage.id,
+            "transfer_detail_id": dtDiag.transfer_detail_id,
+            "sex": "",
+            "dx1": "",
+            "transferData": dtDiag
+          });
+        }
       }
-
       //se modifica la lista
       this.sexage.details = newDetails;
     }
@@ -104,15 +112,6 @@ export class SexagePage implements OnInit {
       identification_number: [this.sexage.identification_number, Validators.required],
       comments: [this.sexage.comments, Validators.required]
     });
-  }
-
-  openSexageDetail(indx) {
-    this.ordersService.setDetailApiParam({
-      sexage: this.sexage,
-      detailApiId: indx,
-      sexagePage: this
-    });
-    this.router.navigate(['sexage-detail']);
   }
 
   reloadDetailsList(detailsList) {
@@ -142,7 +141,6 @@ export class SexagePage implements OnInit {
       order: this.order,
       local: this.detailApi.local
     };
-
     const options = {
       watermark: true,
       open: true
@@ -189,7 +187,7 @@ export class SexagePage implements OnInit {
         }
         this.ordersService.setDetailsApiStorage(detailsApi);
         this.detailApi.sexageApi = this.sexage;
-        this.showMessage('Planilla Sexage Finalizada');
+        this.showMessage('Planilla Sexaje Finalizada');
         this.location.back();
       }
     });
@@ -197,8 +195,8 @@ export class SexagePage implements OnInit {
 
   async presentAlertConfirm() {
     const alert = await this.alertController.create({
-      header: 'Finalizar Planilla Sexage!',
-      message: 'Confirma que desa finalizar <strong>la plantilla Sexage</strong>!!!',
+      header: 'Finalizar Sexaje!',
+      message: 'Confirma que desa finalizar la planilla de <strong>Sexaje</strong>!!!',
       buttons: [
         {
           text: 'Cancelar',
@@ -243,17 +241,7 @@ export class SexagePage implements OnInit {
       }
     });
   }
-
-  onChangeArrivedTemperature() {
-    if (this.sexage.arrived_temperature_number || this.sexage.arrived_temperature_number === 0) {
-      this.sexage.arrived_temperature = this.sexage.arrived_temperature_number + "°C";
-      this.sexage.arrived_temperature = this.sexage.arrived_temperature.replace('.', ',');
-    }
-    else {
-      this.sexage.arrived_temperature = "";
-    }
-  }
-
+  
   async showMessage(message: string) {
     const toast = await this.toastCtrl.create({
       message: message,
@@ -269,6 +257,13 @@ export class SexagePage implements OnInit {
       duration: 200
     });
     await loading.present();
+  }
+
+  onChangeSex(item: { sex: any, stateSync: any}, value: any) {
+    item.sex = value;
+    item.stateSync = 'U';
+    this.saveSexage();
+    this.showMessage('Registro modificado');
   }
 
 }

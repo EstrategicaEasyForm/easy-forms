@@ -38,9 +38,6 @@ export class DiagnosticPage implements OnInit {
     'identification_number': [
       { type: 'required', message: 'Campo requerido.' }
     ],
-    'dx1': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
     'comments': [
       { type: 'required', message: 'Campo requerido.' }
     ]
@@ -113,15 +110,6 @@ export class DiagnosticPage implements OnInit {
       identification_number: [this.diagnostic.identification_number, Validators.required],
       comments: [this.diagnostic.comments, Validators.required]
     });
-  }
-
-  openDiagnosticDetail(indx) {
-    this.ordersService.setDetailApiParam({
-      diagnostic: this.diagnostic,
-      detailApiId: indx,
-      diagnosticPage: this
-    });
-    this.router.navigate(['diagnostic-detail']);
   }
 
   reloadDetailsList(detailsList) {
@@ -250,16 +238,6 @@ export class DiagnosticPage implements OnInit {
         this.showMessage(err);
       }
     });
-  }
-
-  onChangeArrivedTemperature() {
-    if (this.diagnostic.arrived_temperature_number || this.diagnostic.arrived_temperature_number === 0) {
-      this.diagnostic.arrived_temperature = this.diagnostic.arrived_temperature_number + "°C";
-      this.diagnostic.arrived_temperature = this.diagnostic.arrived_temperature.replace('.', ',');
-    }
-    else {
-      this.diagnostic.arrived_temperature = "";
-    }
   }
 
   async showMessage(message: string) {
