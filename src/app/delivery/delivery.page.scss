@@ -102,48 +102,69 @@ ion-card-content {
     font-weight: bold;
 }
 .detail-id {
-    max-width: 38px;
-    min-width: 38px;
+    max-width: 50px;
+    min-width: 50px;
 }
 .detail-receiver {
-    max-width: 113px;
-    min-width: 113px;
+    max-width: 160px;
+    min-width: 160px;
 }
 .detail-embryo {
-    max-width: 97px;
-    min-width: 97px;
+    max-width: 120px;
+    min-width: 120px;
 }
-.detail-embryo_class {
-    max-width: 101px;
-    min-width: 101px;
+.detail-embryo-class {
+    max-width: 152px;
+    min-width: 152px;
 }
 .detail-donor {
-    max-width: 116px;
-    min-width: 116px;
+    max-width: 146px;
+    min-width: 146px;
 }
 .detail-donor-breed {
-    max-width: 94px;
-    min-width: 94px;
+    max-width: 120px;
+    min-width: 120px;
 }
 .detail-bull {
-    max-width: 111px;
-    min-width: 111px;
+    max-width: 143px;
+    min-width: 143px;
 }
 .detail-bull-breed {
     max-width: 90px;
     min-width: 90px;
 }
-.detail-corpus_luteum {
-    max-width: 84px;
-	min-width: 84px;
+.detail-corpus-luteum {
+    max-width: 120px;
+	min-width: 120px;
+}
+.detail-corpus-luteum-full {
+    max-width: 200px;
+	min-width: 200px;
 }
 .detail-transferor {
     max-width: 160px;
 	min-width: 160px;
 }
 .detail-dx1 {
-    max-width: 49px;
-	min-width: 49px;
+    max-width: 90px;
+    min-width: 90px;
+    padding: 10px;
+    border-radius: 29px;
+    text-align: center;
+}
+.detail-sex {
+    max-width: 90px;
+    min-width: 90px;
+    padding: 10px;
+    border-radius: 29px;
+    text-align: center;
+}
+.detail-dx2 {
+    max-width: 90px;
+    min-width: 90px;
+    padding: 10px;
+    border-radius: 29px;
+    text-align: center;
 }
 .signature-image {
     border: solid 1px grey; 
@@ -251,5 +272,9 @@ ion-card-content {
 	    white-space: nowrap;
 		overflow: hidden!important;
 		text-overflow: initial;
-	}
+    }
+}
+.button-slide {
+    height: 60px;
+    font-weight: 700;
 }

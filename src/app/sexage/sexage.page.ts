@@ -97,8 +97,8 @@ export class SexagePage implements OnInit {
             "id": -1,
             "sexage_id": this.sexage.id,
             "transfer_detail_id": dtDiag.transfer_detail_id,
-            "sex": "",
-            "dx1": "",
+            "sex": dtDiag.sex,
+            "dx1": dtDiag.dx1,
             "transferData": dtDiag
           });
         }
