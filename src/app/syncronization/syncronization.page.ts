@@ -155,7 +155,7 @@ export class SyncronizationPage {
           });
         }
         if (this.totalWorkSheets === 0) {
-          this.finishSync(null);
+          this.retriveAgenda();
         }
       });
   }
@@ -223,16 +223,8 @@ export class SyncronizationPage {
           this.finishSync(errorMessage);
         }
         else if (pdf.status === 'success') {
-          //State for Finalize
+          //State for to Finalize
           //if(detailApi.state === "1") {
-          //this.writeLog({
-          //  type: 'info',
-          //  message: 'Inicia envío de correo para la planilla de ' + type.name,
-          //  details: [
-          //   "Archivo adjunto " + pdf.filename
-          // ],
-          //   time: moment().format('HH:mm:ss')
-          //});
           this.sendEmail.makeEmail(order, detailApi, workSheet, type, response, pdf).then((resp: any) => {
             if (resp.status === 'success') {
               this.writeLog({

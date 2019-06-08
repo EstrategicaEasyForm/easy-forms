@@ -33,6 +33,7 @@ export class DeliveryService {
     let variables = {
       "input": {
         "id": Number(delivery.id),
+        //"transferor": delivery.transferor,
         "received_by": delivery.received_by,
         "comments": delivery.comments,
         "identification_number": delivery.identification_number,

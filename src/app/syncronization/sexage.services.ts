@@ -33,6 +33,7 @@ export class SexageService {
     let variables = {
       "input": {
         "id": Number(sexage.id),
+        //"transferor": sexage.transferor,
         "received_by": sexage.received_by,
         "comments": sexage.comments,
         "identification_number": sexage.identification_number,

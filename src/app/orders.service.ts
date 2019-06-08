@@ -144,6 +144,7 @@ query orders {
       diagnosticApi {
         id
         order_detail_id
+        transferor
         received_by
         identification_number
         comments
@@ -175,6 +176,7 @@ query orders {
         id
         order_detail_id
         received_by
+        transferor
         identification_number
         comments
         apply_diagnostic {
@@ -210,6 +212,7 @@ query orders {
           apply_sexage
         }
         order_detail_id
+        transferor
         received_by
         identification_number
         comments
