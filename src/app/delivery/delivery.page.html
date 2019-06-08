@@ -100,7 +100,7 @@
               <h5>Planilla de Entrega</h5>
             </ion-card-header>
             <ion-card-content>
-              <ion-list>
+              <ion-list #detailList>
                 <ion-item>
                   <ion-grid>
                     <ion-row class="detail-table-header">
@@ -125,22 +125,21 @@
                       <ion-col class="detail-bull-breed">
                         <ion-label>Raza</ion-label>
                       </ion-col>
-					  <div *ngIf="delivery.apply_delivery">
-                      <ion-col *ngIf="delivery.apply_delivery.apply_diagnostic && delivery.apply_delivery.apply_sexage" class="detail-corpus-luteum">
+                      <ion-col *ngIf="delivery.apply_delivery.apply_diagnostic === 1 && delivery.apply_delivery.apply_sexage === 1"
+                        class="detail-corpus-luteum">
                         <ion-label>Cuerpo</ion-label> Lúteo
                       </ion-col>
-                      <ion-col *ngIf="!(delivery.apply_delivery.apply_diagnostic && delivery.apply_delivery.apply_sexage) && 
-					  (delivery.apply_delivery.apply_diagnostic || delivery.apply_delivery.apply_sexage)" class="detail-corpus-luteum-full">
+                      <ion-col *ngIf="delivery.apply_delivery.apply_diagnostic !== 1 || delivery.apply_delivery.apply_sexage !== 1"
+                        class="detail-corpus-luteum-full">
                         <ion-label>Cuerpo Lúteo</ion-label>
                       </ion-col>
-                      <ion-col *ngIf="delivery.apply_delivery.apply_diagnostic" class="detail-dx1">
+                      <ion-col *ngIf="delivery.apply_delivery.apply_diagnostic === 1" class="detail-dx1">
                         <ion-label>Dx1</ion-label>
                       </ion-col>
-                      <ion-col *ngIf="delivery.apply_delivery.apply_sexage" class="detail-sex">
+                      <ion-col *ngIf="delivery.apply_delivery.apply_sexage === 1" class="detail-sex">
                         <ion-label>Sexo</ion-label>
                       </ion-col>
-					  </div>
-					  <ion-col class="detail-dx2">
+                      <ion-col class="detail-dx2">
                         <ion-label>Dx2</ion-label>
                       </ion-col>
                     </ion-row>
@@ -171,34 +170,36 @@
                         <ion-col class="detail-bull-breed">
                           <ion-label>{{item.transferData?.bull_breed }}</ion-label>
                         </ion-col>
-                        <ion-col *ngIf="delivery.apply_delivery && delivery.apply_delivery.apply_diagnostic" class="detail-corpus-luteum">
+                        <ion-col *ngIf="delivery.apply_delivery.apply_sexage === 1 && delivery.apply_delivery.apply_diagnostic === 1"
+                          class="detail-corpus-luteum">
                           <ion-label>{{item.transferData?.corpus_luteum }}</ion-label>
                         </ion-col>
-                        <ion-col *ngIf="!(delivery.apply_delivery.apply_diagnostic && delivery.apply_delivery.apply_sexage) && 
-                          (delivery.apply_delivery.apply_diagnostic || delivery.apply_delivery.apply_sexage)"
+                        <ion-col *ngIf="delivery.apply_delivery.apply_sexage !== 1 || delivery.apply_delivery.apply_diagnostic !== 1"
                           class="detail-corpus-luteum-full">
                           <ion-label>{{item.transferData?.corpus_luteum }}</ion-label>
                         </ion-col>
-                        <ion-col *ngIf="delivery.apply_delivery.apply_diagnostic && delivery.apply_delivery.apply_sexage" class="detail-dx1">
-                          <ion-label *ngIf="item.dx1 === 'P'" color="success">Preñada</ion-label>
-                          <ion-label *ngIf="item.dx1 === 'V'" color="danger">Vacía</ion-label>
-                          <ion-label *ngIf="item.dx1 === 'PPL'" color="warning">Alto riesgo</ion-label>
+                        <ion-col
+                          *ngIf="delivery.apply_delivery.apply_diagnostic === 1 && delivery.apply_delivery.apply_sexage === 1"
+                          class="detail-dx1">
+                          <ion-label *ngIf="item.dx1 === 'P'" color="success">{{item.dx1}}</ion-label>
+                          <ion-label *ngIf="item.dx1 === 'V'" color="danger">{{item.dx1}}</ion-label>
+                          <ion-label *ngIf="item.dx1 === 'PPL'" color="warning">{{item.dx1}}</ion-label>
                         </ion-col>
-                        <ion-col class="detail-sex" *ngIf="delivery.apply_delivery.apply_sexage">
-                          <ion-label *ngIf="item.sex === 'M'" color="success">M</ion-label>
-                          <ion-label *ngIf="item.sex === 'H'" color="tertiary">H</ion-label>
+                        <ion-col class="detail-sex" *ngIf="delivery.apply_delivery.apply_sexage === 1">
+                          <ion-label *ngIf="item.sex === 'M'" color="success">{{item.sex}}</ion-label>
+                          <ion-label *ngIf="item.sex === 'H'" color="tertiary">{{item.sex}}</ion-label>
                         </ion-col>
-						<ion-col class="detail-dx2">
-                          <ion-label *ngIf="item.sex === 'P'" color="success">P</ion-label>
-                          <ion-label *ngIf="item.sex === 'V'" color="danger">V</ion-label>
+                        <ion-col class="detail-dx2">
+                          <ion-label *ngIf="item.dx2 === 'P'" color="success">{{item.dx2}}</ion-label>
+                          <ion-label *ngIf="item.dx2 === 'V'" color="danger">{{item.dx2}}</ion-label>
                         </ion-col>
                       </ion-row>
                     </ion-grid>
                   </ion-item>
                   <ion-item-options>
-                    <ion-button class="button-slide" color="success" (click)="onChangeDx2(item,'P')"> Preñada
+                    <ion-button class="button-slide" color="success" (click)="onChangeDx2(item,'P',detailList)"> Preñada
                     </ion-button>
-                    <ion-button class="button-slide" color="danger" (click)="onChangeDx2(item,'V')"> Vacía
+                    <ion-button class="button-slide" color="danger" (click)="onChangeDx2(item,'V',detailList)"> Vacía
                     </ion-button>
                   </ion-item-options>
                 </ion-item-sliding>

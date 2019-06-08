@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrdersService } from '../orders.service';
-import { LoadingController, ToastController, ModalController, AlertController, Platform } from '@ionic/angular';
+import { LoadingController, ToastController, ModalController, AlertController, Platform, IonList, IonButton } from '@ionic/angular';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { SignatureDrawPadPage } from '../signature-draw-pad/signature-draw-pad.page';
@@ -65,6 +65,7 @@ export class DeliveryPage implements OnInit {
     const detail = this.ordersService.getDetailApiParam();
     this.deliveryObjOri = detail.deliveryApi;
     this.delivery = Object.assign({}, this.deliveryObjOri);
+    this.delivery.apply_delivery = this.delivery.apply_delivery || {};
     this.agendaPage = detail.agendaPage;
     this.order = detail.order;
     this.detailApi = detail.detailApi;
@@ -78,15 +79,14 @@ export class DeliveryPage implements OnInit {
       for (let dtDiag of this.delivery.detailsDelivery) {
         detailsTmp = null;
         for (let details of this.delivery.details) {
-          if (dtDiag.sexage_detail_id == details.sexage_detail_id) {
+          if (Number(dtDiag.sexage_detail_id) == Number(details.sexage_detail_id)) {
             detailsTmp = details;
           }
         }
         if (detailsTmp) {
           newDetails.push({
             "id": detailsTmp.id,
-            "delivery_id": this.delivery.id,
-            "sexage_detail_id": detailsTmp.sexage_detail_id,
+            "transfer_detail_id": Number(detailsTmp.transfer_detail_id),
             "dx2": detailsTmp.dx2,
             "transferData": dtDiag
           });
@@ -94,11 +94,10 @@ export class DeliveryPage implements OnInit {
         else {
           newDetails.push({
             "id": -1,
-            "delivery_id": this.delivery.id,
-            "sexage_detail_id": dtDiag.sexage_detail_id,
+            "transfer_detail_id": Number(dtDiag.transfer_detail_id),
             "sex": dtDiag.sex,
             "dx1": dtDiag.dx1,
-			"dx2": dtDiag.dx2,
+		      	"dx2": dtDiag.dx2,
             "transferData": dtDiag
           });
         }
@@ -259,11 +258,11 @@ export class DeliveryPage implements OnInit {
     await loading.present();
   }
 
-  onChangeDx2(item: any, value: any) {
+  onChangeDx2(item: any, value: any, detailList: IonList) {
     item.dx2 = value;
     item.stateSync = 'U';
     this.saveDelivery();
+    detailList.closeSlidingItems();
     this.showMessage('Registro modificado');
   }
-
 }

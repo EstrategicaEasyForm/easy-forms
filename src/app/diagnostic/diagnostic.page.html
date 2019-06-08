@@ -100,7 +100,7 @@
               <h5>Planilla Diagnóstico</h5>
             </ion-card-header>
             <ion-card-content>
-              <ion-list>
+              <ion-list  #dataList>
                 <ion-item>
                   <ion-grid>
                     <ion-row class="detail-table-header">
@@ -165,15 +165,15 @@
                         <ion-col class="detail-dx1">
                           <ion-label *ngIf="item.dx1 === 'P'" color="success">{{item.dx1}}</ion-label>
                           <ion-label *ngIf="item.dx1 === 'V'" color="danger">{{item.dx1}}</ion-label>
-                          <ion-label *ngIf="item.dx1 === 'T'" color="warning">{{item.dx1}}</ion-label>
+                          <ion-label *ngIf="item.dx1 === 'PPL'" color="warning">{{item.dx1}}</ion-label>
                         </ion-col>
                       </ion-row>
                     </ion-grid>
                   </ion-item>
                   <ion-item-options>
-                    <ion-button class="button-slide" color="success" (click)="onChangeDx1(item,'P')"> Preñada </ion-button>
-                    <ion-button class="button-slide" color="danger"  (click)="onChangeDx1(item,'V')"> Vacía </ion-button>
-                    <ion-button class="button-slide" color="warning" (click)="onChangeDx1(item,'T')"> TPL </ion-button>
+                    <ion-button class="button-slide" color="success" (click)="onChangeDx1(item,'P',dataList)"> Preñada </ion-button>
+                    <ion-button class="button-slide" color="danger"  (click)="onChangeDx1(item,'V',dataList)"> Vacía </ion-button>
+                    <ion-button class="button-slide" color="warning" (click)="onChangeDx1(item,'PPL',dataList)"> PPL </ion-button>
                   </ion-item-options>
                 </ion-item-sliding>
                 <ion-item *ngIf="diagnostic.details.length === 0">

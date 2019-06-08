@@ -33,7 +33,7 @@ export class SyncronizationPage {
     public router: Router,
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
-    public userService: UsersService,
+    public usersService: UsersService,
     public alertController: AlertController,
     public eventCtrl: Events,
     public evaluationService: EvaluationService,
@@ -44,52 +44,48 @@ export class SyncronizationPage {
     public sexageService: SexageService,
     public deliveryService: DeliveryService) {
 
-    this.eventCtrl.subscribe('publish.aspiration.log', (elementPush) => {
-      this.logs.push(elementPush);
-    });
-
     this.eventCtrl.subscribe('graphql:error', (elementPush) => {
-      this.logs.push(elementPush);
-      if(this.loading) this.loading.dismiss();
+      //this.writeLog(elementPush);
+      //if(this.loading) this.loading.dismiss();
     });
   }
-  
+
   async presentAlert() {
-      const alert = await this.alertController.create({
-        header: 'Confirmación',
-        message: '¿Está seguro de iniciar la sincronización de datos?',
-        buttons: [
-          {
-            text: 'Cancelar',
-            handler: () => {
-              this.logs.push({
-                type: 'warning',
-                message: "La sincronización se ha cancelado",
-                time: moment().format('HH:mm:ss')
-              });
-            }
-          },
-          {
-            text: 'Confirmar',
-            handler: () => {
-              this.initSync();
-            }
+    const alert = await this.alertController.create({
+      header: 'Confirmación',
+      message: '¿Está seguro de iniciar la sincronización de datos?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          handler: () => {
+            this.writeLog({
+              type: 'warning',
+              message: "La sincronización se ha cancelado",
+              time: moment().format('HH:mm:ss')
+            });
           }
-        ],
-        backdropDismiss: false
-      });
-      await alert.present();
+        },
+        {
+          text: 'Confirmar',
+          handler: () => {
+            this.initSync();
+          }
+        }
+      ],
+      backdropDismiss: false
+    });
+    await alert.present();
   }
 
   ionViewWillEnter() {
-    this.validateUserToken().then(()=>{
-		this.presentAlert();
+    this.validateUserToken().then(() => {
+      this.presentAlert();
     });
   }
 
   async initSync() {
     //Clear console
-    this.logs = [];
+    //this.logs = [];
 
     const _self = this;
     _self.loading = await this.loadingCtrl.create({
@@ -180,7 +176,7 @@ export class SyncronizationPage {
   }
 
   updateWorkSheet(order, detailApi, workSheet, type) {
-    this.logs.push({
+    this.writeLog({
       type: 'info',
       message: "Inicia actualización de la planilla " + type.name + ". Orden de producción No " + order.id,
       time: moment().format('HH:mm:ss')
@@ -196,7 +192,7 @@ export class SyncronizationPage {
 
     updateWorkSheetFunction.then((response: any) => {
       if (response.status === 'error') {
-        this.logs.push({
+        this.writeLog({
           type: 'error',
           message: 'Error sincronizando la planilla ' + type.name + '. Orden de producción No ' + order.id,
           details: [
@@ -206,7 +202,7 @@ export class SyncronizationPage {
         });
       }
       else if (response.status === 'success') {
-        this.logs.push({
+        this.writeLog({
           type: 'info',
           message: 'La planilla ' + type.name + ' fué actualizada correctamente para la orden de producción No ' + order.id,
           time: moment().format('HH:mm:ss')
@@ -216,7 +212,7 @@ export class SyncronizationPage {
       this.sendEmail.makePdf(order, detailApi, workSheet, type, response).then((pdf) => {
         if (pdf.status === 'error') {
           const errorMessage = typeof pdf.error === 'string' ? pdf.error : JSON.stringify(pdf.error);
-          this.logs.push({
+          this.writeLog({
             type: 'error',
             message: 'Error generando el archivo pdf: ' + pdf.filename,
             details: [
@@ -229,7 +225,7 @@ export class SyncronizationPage {
         else if (pdf.status === 'success') {
           //State for Finalize
           //if(detailApi.state === "1") {
-          //this.logs.push({
+          //this.writeLog({
           //  type: 'info',
           //  message: 'Inicia envío de correo para la planilla de ' + type.name,
           //  details: [
@@ -239,7 +235,7 @@ export class SyncronizationPage {
           //});
           this.sendEmail.makeEmail(order, detailApi, workSheet, type, response, pdf).then((resp: any) => {
             if (resp.status === 'success') {
-              this.logs.push({
+              this.writeLog({
                 type: 'info',
                 message: "Correo automático enviado a @" + order.client.bussiness_name,
                 details: [
@@ -251,7 +247,7 @@ export class SyncronizationPage {
               this.finishSync(null);
             }
             else {
-              this.logs.push({
+              this.writeLog({
                 type: 'error',
                 message: "Error enviando correo automático a @" + order.client.bussiness_name,
                 details: [
@@ -275,14 +271,14 @@ export class SyncronizationPage {
 
     if (this.totalWorkSheets <= 0) {
       if (this.totalError > 0) {
-        this.logs.push({
+        this.writeLog({
           type: 'warning',
           message: 'La sincronización ha finalizado con errores',
           time: moment().format('HH:mm:ss')
         });
       }
       else {
-        this.logs.push({
+        this.writeLog({
           type: 'info',
           message: 'La sincronización ha finalizado exitósamente',
           time: moment().format('HH:mm:ss')
@@ -294,7 +290,7 @@ export class SyncronizationPage {
   }
 
   async retriveAgenda() {
-    this.logs.push({
+    this.writeLog({
       type: 'info',
       message: "Inicia descarga de la agenda",
       time: moment().format('HH:mm:ss')
@@ -305,7 +301,7 @@ export class SyncronizationPage {
       this.ordersService.setDetailsApiStorage(detailsApi);
       this.eventCtrl.publish('sync:finish');
 
-      this.logs.push({
+      this.writeLog({
         type: 'info',
         message: "La descarga de la agenda se ejecutó correctamente",
         time: moment().format('HH:mm:ss'),
@@ -313,7 +309,7 @@ export class SyncronizationPage {
       });
     }).catch(error => {
       this.loading.dismiss();
-      this.logs.push({
+      this.writeLog({
         type: 'error',
         message: "La descarga de la agenda falló",
         show: false,
@@ -342,35 +338,43 @@ export class SyncronizationPage {
     registry.show = !registry.show;
   }
 
-  validateUserToken() {
+  async validateUserToken() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere'
+    });
+    await loading.present();
+
     return new Promise((resolve, reject) => {
-      this.userService.getUserAuthToken().then(userAuthStorage => {
-		const userAuth = { 'email': userAuthStorage.email, 'password': userAuthStorage.password };
-        this.userService.login(userAuth)
+      this.usersService.getUserAuthToken().then(userAuthStorage => {
+        let userAuth = { 'email': userAuthStorage.email, 'password': userAuthStorage.password };
+        this.usersService.login(userAuth)
           .subscribe(({ data }) => {
+            loading.dismiss();
+            userAuth = Object.assign(userAuth, data.login);
             //Setting new token authentication
-            this.userService.setUserAuthToken(data.login);
-            this.userService.addUserAuthStorage(userAuth);
+            this.usersService.setUserAuthToken(userAuth);
+            this.usersService.addUserAuthStorage(userAuth);
             resolve(true);
 
           }, (error) => {
+            loading.dismiss();
             if (error.graphQLErrors) {
               for (let err of error.graphQLErrors) {
                 if (err.extensions.category === 'authentication') {
                   this.showMessage('Usuario o clave incorrectos');
-                  this.logs.push({
+                  this.writeLog({
                     type: 'error',
                     message: "No se puede realizar la sincronización",
                     detail: [
                       "Usuario o clave inválidos",
-                      "Por favor cierre e inicie nuevamete sesión"
+                      "Por favor cierre e inicie nuevamente sesión"
                     ],
                     time: moment().format('HH:mm:ss')
                   });
-                  resolve(false); 
+                  resolve(false);
                 }
               }
-              this.logs.push({
+              this.writeLog({
                 type: 'error',
                 message: "No se puede acceder al servidor. El servidor tardó demasiado en respoder",
                 detail: [
@@ -385,5 +389,9 @@ export class SyncronizationPage {
       });
 
     });
+  }
+
+  writeLog(elementPush) {
+    this.logs = [elementPush].concat(this.logs);
   }
 }

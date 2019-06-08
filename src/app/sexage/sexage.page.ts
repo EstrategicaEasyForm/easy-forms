@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrdersService } from '../orders.service';
-import { LoadingController, ToastController, ModalController, AlertController, Platform } from '@ionic/angular';
+import { LoadingController, ToastController, ModalController, AlertController, Platform, IonList } from '@ionic/angular';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { SignatureDrawPadPage } from '../signature-draw-pad/signature-draw-pad.page';
@@ -65,6 +65,7 @@ export class SexagePage implements OnInit {
     const detail = this.ordersService.getDetailApiParam();
     this.sexageObjOri = detail.sexageApi;
     this.sexage = Object.assign({}, this.sexageObjOri);
+    this.sexage.apply_diagnostic = this.sexage.apply_diagnostic || {};
     this.agendaPage = detail.agendaPage;
     this.order = detail.order;
     this.detailApi = detail.detailApi;
@@ -85,7 +86,6 @@ export class SexagePage implements OnInit {
         if (detailsTmp) {
           newDetails.push({
             "id": detailsTmp.id,
-            "sexage_id": this.sexage.id,
             "transfer_detail_id": detailsTmp.transfer_detail_id,
             "sex": detailsTmp.sex,
             "dx1": detailsTmp.dx1,
@@ -95,7 +95,6 @@ export class SexagePage implements OnInit {
         else {
           newDetails.push({
             "id": -1,
-            "sexage_id": this.sexage.id,
             "transfer_detail_id": dtDiag.transfer_detail_id,
             "sex": dtDiag.sex,
             "dx1": dtDiag.dx1,
@@ -259,9 +258,10 @@ export class SexagePage implements OnInit {
     await loading.present();
   }
 
-  onChangeSex(item: { sex: any, stateSync: any}, value: any) {
+  onChangeSex(item: any, value: any, detailList: IonList) {
     item.sex = value;
     item.stateSync = 'U';
+    detailList.closeSlidingItems();
     this.saveSexage();
     this.showMessage('Registro modificado');
   }

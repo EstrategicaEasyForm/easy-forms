@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrdersService } from '../orders.service';
-import { LoadingController, ToastController, ModalController, AlertController, Platform } from '@ionic/angular';
+import { LoadingController, ToastController, ModalController, AlertController, Platform, IonList } from '@ionic/angular';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { SignatureDrawPadPage } from '../signature-draw-pad/signature-draw-pad.page';
@@ -257,10 +257,11 @@ export class DiagnosticPage implements OnInit {
     await loading.present();
   }
 
-  onChangeDx1(item: { dx1: any, stateSync: any}, value: any) {
+  onChangeDx1(item: any, value: any, detailList: IonList) {
     item.dx1 = value;
     item.stateSync = 'U';
     this.saveDiagnostic();
+    detailList.closeSlidingItems();
     this.showMessage('Registro modificado');
   }
 

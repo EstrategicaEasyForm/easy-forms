@@ -41,7 +41,7 @@ export class LoginPage implements OnInit {
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController) {
 
-      this.usersService.deleteUserAuthToken();
+    this.usersService.deleteUserAuthToken();
   }
 
   ngOnInit() {
@@ -68,7 +68,7 @@ export class LoginPage implements OnInit {
         .subscribe(({ data }) => {
           loading.dismiss();
           if (data.login) {
-			userAuth = Object.assign(userAuth,data.login);
+            userAuth = Object.assign(userAuth, data.login);
             this.usersService.setUserAuthToken(userAuth);
             this.usersService.addUserAuthStorage(userAuth);
             this.goToHome();

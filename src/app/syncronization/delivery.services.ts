@@ -36,7 +36,7 @@ export class DeliveryService {
         "received_by": delivery.received_by,
         "comments": delivery.comments,
         "identification_number": delivery.identification_number,
-        "state": delivery.state,
+        "state": Number(delivery.state),
         'user_id_updated': this.userService.getUserId()
       }
     };
@@ -46,8 +46,8 @@ export class DeliveryService {
         update.push({
           'id': detail.id,
           'transfer_detail_id': Number(detail.transfer_detail_id),
+          'sex': detail.sex,
           'dx2': detail.dx2,
-          'user_id_created': this.userService.getUserId(),
           'user_id_updated': this.userService.getUserId()
         });
       }

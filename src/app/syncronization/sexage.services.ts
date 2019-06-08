@@ -36,7 +36,7 @@ export class SexageService {
         "received_by": sexage.received_by,
         "comments": sexage.comments,
         "identification_number": sexage.identification_number,
-        "state": sexage.state,
+        "state": Number(sexage.state),
         'user_id_updated': this.userService.getUserId()
       }
     };
