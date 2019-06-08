@@ -105,7 +105,7 @@
               <ion-fab vertical="top" horizontal="start" slot="fixed">
                 <fa-icon class="cart-fa-icon" [styles]="{'color': detailApi.type.color}" [icon]="detailApi.type.icon"></fa-icon>
               </ion-fab>
-              <ion-card-header [ngStyle]="{'background': '-webkit-gradient(linear, 41% 1820%, 1392% 66%, from(white), to(#e0e0e0))'}">
+              <ion-card-header [ngStyle]="{'background': '-webkit-gradient(linear, 41% 1820%, 1392% 66%, from(white), to('+detailApi.type.color+'))'}">
                 <ion-grid>
                   <ion-row class="click-card" (click)="goToTemplate(detailApi)">
                     <ion-col size="7" >
