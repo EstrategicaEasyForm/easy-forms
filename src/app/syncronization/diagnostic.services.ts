@@ -34,7 +34,7 @@ export class DiagnosticService {
         "id": diagnostic.id
       }
     };
-    if (diagnostic.stateSync === 'U') {
+    if (diagnostic.stateSync === 'U' || diagnostic.stateSync === 'E') {
       variables = Object.assign(variables, {
         "input": {
           "id": diagnostic.id,
@@ -44,14 +44,14 @@ export class DiagnosticService {
           "state": diagnostic.state,
           'user_id_updated': this.userService.getUserId()
         }
-      }); 
+      });
     }
     const update = [];
     diagnostic.details.forEach(detail => {
       if (detail.stateSync === 'U' || detail.stateSync === 'C') {
         update.push({
           'id': detail.id,
-		  'diagnostic_id': Number(detail.diagnostic_id),
+          'diagnostic_id': Number(detail.diagnostic_id),
           'transfer_detail_id': Number(detail.transfer_detail_id),
           'dx1': detail.dx1,
           'user_id_updated': this.userService.getUserId()
@@ -59,18 +59,10 @@ export class DiagnosticService {
       }
     });
 
-    if (update.length > 0 || diagnostic.stateSync === 'U') {
-      const details = {
-         "details" : { "update": update } 
-      };
-      variables.input = Object.assign(variables.input, details);
-    }
-    else {
-      //Si no se reflejan cambios en el elemento o sus detalles, se resuelve la promesa
-      return new Promise(resolve => {
-        resolve({ status: 'no_change' });
-      });
-    }
+    const details = {
+      "details": { "update": update }
+    };
+    variables.input = Object.assign(variables.input, details);
 
     //se resuelve la promesa despues de obtener respuesta de la mutacion
     return new Promise(resolve => {

@@ -29,17 +29,23 @@ export class SexageService {
         }
       }`;
 
-
     let variables = {
       "input": {
         "id": Number(sexage.id),
-        "received_by": sexage.received_by,
-        "comments": sexage.comments,
-        "identification_number": sexage.identification_number,
-        "state": Number(sexage.state),
-        'user_id_updated': this.userService.getUserId()
       }
     };
+    if (sexage.stateSync === 'U' || sexage.stateSync === 'E') {
+      variables = Object.assign(variables, {
+        "input": {
+          "id": sexage.id,
+          "received_by": sexage.received_by,
+          "comments": sexage.comments,
+          "identification_number": sexage.identification_number,
+          "state": sexage.state,
+          'user_id_updated': this.userService.getUserId()
+        }
+      });
+    }
     const update = [];
     sexage.details.forEach(detail => {
       if (detail.stateSync === 'U' || detail.stateSync === 'C') {
@@ -53,12 +59,10 @@ export class SexageService {
       }
     });
 
-    if (update.length > 0 || sexage.stateSync === 'U') {
-      const details = {
-        "details": { "update": update }
-      };
-      variables.input = Object.assign(variables.input, details);
-    }
+    const details = {
+      "details": { "update": update }
+    };
+    variables.input = Object.assign(variables.input, details);
 
     //se resuelve la promesa despues de obtener respuesta de la mutacion
     return new Promise(resolve => {

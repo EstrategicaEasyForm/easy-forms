@@ -30,7 +30,7 @@ export class EvaluationService {
         "id": evaluation.id
       }
     };
-    if (evaluation.stateSync === 'U') {
+    if (evaluation.stateSync === 'U' || evaluation.stateSync === 'E') {
       variables = Object.assign(variables, {
         "input": {
           "id": evaluation.id,
@@ -81,13 +81,7 @@ export class EvaluationService {
       if (update.length > 0) details.update = update;
       variables.input['details'] = details;
     }
-    else if (evaluation.stateSync !== 'U') {
-      //Si no se reflejan cambios en el elemento o sus detalles, se resuelve la promesa
-      return new Promise(resolve => {
-        resolve({ status: 'no_change' });
-      });
-    }
-
+    
     //se resuelve la promesa despues de obtener respuesta de la mutacion
     return new Promise(resolve => {
       this.apollo.mutate({

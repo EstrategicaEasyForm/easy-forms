@@ -29,17 +29,23 @@ export class DeliveryService {
         }
       }`;
 
-
     let variables = {
       "input": {
-        "id": Number(delivery.id),
-        "received_by": delivery.received_by,
-        "comments": delivery.comments,
-        "identification_number": delivery.identification_number,
-        "state": Number(delivery.state),
-        'user_id_updated': this.userService.getUserId()
+        "id": delivery.id
       }
     };
+    if (delivery.stateSync === 'U' || delivery.stateSync === 'E') {
+      variables = Object.assign(variables, {
+        "input": {
+          "id": Number(delivery.id),
+          "received_by": delivery.received_by,
+          "comments": delivery.comments,
+          "identification_number": delivery.identification_number,
+          "state": Number(delivery.state),
+          'user_id_updated': this.userService.getUserId()
+        }
+      });
+    }
     const update = [];
     delivery.details.forEach(detail => {
       if (detail.stateSync === 'U' || detail.stateSync === 'C') {
@@ -53,12 +59,10 @@ export class DeliveryService {
       }
     });
 
-    if (update.length > 0 || delivery.stateSync === 'U') {
-      const details = {
-        "details": { "update": update }
-      };
-      variables.input = Object.assign(variables.input, details);
-    }
+    const details = {
+      "details": { "update": update }
+    };
+    variables.input = Object.assign(variables.input, details);
 
     //se resuelve la promesa despues de obtener respuesta de la mutacion
     return new Promise(resolve => {

@@ -30,7 +30,7 @@ export class AspirationService {
         "id": aspiration.id
       }
     };
-    if (aspiration.stateSync === 'U') {
+    if (aspiration.stateSync === 'U' || aspiration.stateSync === 'E') {
       variables = Object.assign(variables, {
         "input": {
           "id": aspiration.id,
@@ -94,16 +94,10 @@ export class AspirationService {
     if (create.length > 0 || update.length > 0) {
       let details: any = {};
       if (create.length > 0) details.create = create;
-	  if (update.length > 0) details.update = update;
+      if (update.length > 0) details.update = update;
       variables.input['details'] = details;
     }
-    else if (aspiration.stateSync !== 'U') {
-      //Si no se reflejan cambios en el elemento o sus detalles, se resuelve la promesa
-      return new Promise(resolve => {
-        resolve({ status: 'no_change' });
-      });
-    }
-
+    
     //se resuelve la promesa despues de obtener respuesta de la mutacion
     return new Promise(resolve => {
       this.apollo.mutate({
@@ -115,5 +109,6 @@ export class AspirationService {
         resolve({ status: 'error', error: error });
       });
     });
+
   }
 }
