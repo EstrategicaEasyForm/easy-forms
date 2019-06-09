@@ -26,6 +26,7 @@ export class SyncronizationPage {
   logs = [];
   totalWorkSheets = 0;
   totalError = 0;
+  orderStorage: any;
 
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
   constructor(
@@ -48,6 +49,10 @@ export class SyncronizationPage {
       //this.writeLog(elementPush);
       //if(this.loading) this.loading.dismiss();
     });
+
+    this.eventCtrl.subscribe('sync:init', () => {
+      this.ionViewWillEnter();
+    }); 
   }
 
   async presentAlert() {
@@ -95,6 +100,7 @@ export class SyncronizationPage {
 
     this.ordersService.getDetailsApiStorage()
       .then((orders) => {
+        this.orderStorage = orders;
         this.totalWorkSheets = 0;
         //set the total result of sincronization
         this.totalError = 0;
@@ -155,6 +161,7 @@ export class SyncronizationPage {
           });
         }
         if (this.totalWorkSheets === 0) {
+          this.orderStorage = null;
           this.retriveAgenda();
         }
       });
@@ -162,7 +169,7 @@ export class SyncronizationPage {
 
   isSyncronized(workSheet: any): boolean {
     if (workSheet === null) return false;
-    if (workSheet.stateSync === 'U') return true;
+    if (workSheet.stateSync === 'U' || workSheet.stateSync === 'E') return true;
     if (workSheet.details)
       workSheet.details.forEach(detail => {
         if (detail.stateSync === 'U') {
@@ -192,13 +199,17 @@ export class SyncronizationPage {
 
     updateWorkSheetFunction.then((response: any) => {
       if (response.status === 'error') {
+        
+        workSheet.stateErrorSync = response.error;
+
         this.writeLog({
           type: 'error',
           message: 'Error sincronizando la planilla ' + type.name + '. Orden de producción No ' + order.id,
           details: [
             response.error
           ],
-          time: moment().format('HH:mm:ss')
+          time: moment().format('HH:mm:ss'),
+          show: false,
         });
       }
       else if (response.status === 'success') {
@@ -218,7 +229,8 @@ export class SyncronizationPage {
             details: [
               errorMessage
             ],
-            time: moment().format('HH:mm:ss')
+            time: moment().format('HH:mm:ss'),
+            show: false,
           });
           this.finishSync(errorMessage);
         }
@@ -234,7 +246,8 @@ export class SyncronizationPage {
                   "Archivo adjunto " + pdf.filename,
                   "Enviado a " + order.client.email
                 ],
-                time: moment().format('HH:mm:ss')
+                time: moment().format('HH:mm:ss'),
+                show: false,
               });
               this.finishSync(null);
             }
@@ -245,7 +258,8 @@ export class SyncronizationPage {
                 details: [
                   resp.error
                 ],
-                time: moment().format('HH:mm:ss')
+                time: moment().format('HH:mm:ss'),
+                show: false,
               });
               this.finishSync(resp.error);
             }
@@ -290,20 +304,24 @@ export class SyncronizationPage {
 
     this.ordersService.getDetailsApiQuery().then(detailsApi => {
       this.loading.dismiss();
+      detailsApi = this.diff(this.orderStorage,detailsApi);
+      
       this.ordersService.setDetailsApiStorage(detailsApi);
       this.eventCtrl.publish('sync:finish');
 
       this.writeLog({
         type: 'info',
         message: "La descarga de la agenda se ejecutó correctamente",
-        time: moment().format('HH:mm:ss'),
-        show: false,
+        time: moment().format('HH:mm:ss')
       });
     }).catch(error => {
       this.loading.dismiss();
       this.writeLog({
         type: 'error',
         message: "La descarga de la agenda falló",
+        details: [
+          error
+        ],
         show: false,
         time: moment().format('HH:mm:ss')
       });
@@ -312,6 +330,52 @@ export class SyncronizationPage {
       }
       else this.showMessage('No se puede consultar la lista de agendas');
     });
+  }
+  diff(orderStorage: any, ordersList: any) {
+    function getOrder(order){
+      for(let ord of ordersList) {
+        if(ord.id === order.id) {
+          return ord;
+        }
+      }
+      ordersList.push(order);
+      return order;
+    }
+    function getDetailApi(order,detail){
+      for(let dtApi of order.detailsApi) {
+        if(dtApi.id === detail.id) {
+          return dtApi;
+        }
+      }
+      order.detailApi.push(detail);
+      return detail;
+    }
+    let newOrder:any;
+    let newDetailApi:any;
+    let newWorkSheetApi: any;
+    for(let order of orderStorage) {
+      for(let detail of order.detailsApi){
+        for(let template of this.ordersService.templates){
+          newOrder = getOrder(order);
+          newDetailApi = getDetailApi(newOrder,detail);
+          if(newDetailApi[template.tag]) {
+            newWorkSheetApi = newDetailApi[template.tag];
+            newWorkSheetApi.photoImage = detail[template.tag].photoImage;
+            newWorkSheetApi.signatureImage = detail[template.tag].signatureImage;
+            if(detail[template.tag].stateErrorSync) {
+              newWorkSheetApi.stateSync = 'E';
+            }
+          }
+          else {
+            if(detail[template.tag] && detail[template.tag].stateErrorSync) {
+              newWorkSheetApi = detail[template.tag];
+              newWorkSheetApi.stateSync = 'E';
+            }
+          }
+        }
+      }
+    }
+    return ordersList;
   }
 
   async showMessage(message: string) {
@@ -357,22 +421,24 @@ export class SyncronizationPage {
                   this.writeLog({
                     type: 'error',
                     message: "No se puede realizar la sincronización",
-                    detail: [
+                    details: [
                       "Usuario o clave inválidos",
                       "Por favor cierre e inicie nuevamente sesión"
                     ],
-                    time: moment().format('HH:mm:ss')
+                    time: moment().format('HH:mm:ss'),
+                    show: false,
                   });
                   resolve(false);
                 }
               }
               this.writeLog({
                 type: 'error',
-                message: "No se puede acceder al servidor. El servidor tardó demasiado en respoder",
-                detail: [
-                  "Comprueba tu conexión a Internet",
-                  "Reinicia los routers, modems y dispositivos de red que estés usando"
+                message: "No se puede acceder al servidor",
+                details: [
+                  "Comprueba tu conexión a Internet!!, Reinicia los routers, modems y dispositivos de red que estés usando",
+                  JSON.stringify(error),
                 ],
+                show: false,
                 time: moment().format('HH:mm:ss')
               });
               resolve(false);

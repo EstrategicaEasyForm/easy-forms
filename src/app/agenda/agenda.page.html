@@ -111,7 +111,7 @@
                     <ion-col size="7" >
                       <h2 class="cart-fa-name"> &nbsp; {{detailApi.type.name}} </h2>
                       <h2 class="sync-update" *ngIf="detailApi[detailApi.type.tag].stateSync === 'U'"><ion-icon name="swap"></ion-icon></h2>
-                      <h2 class="sync-error" *ngIf="detailApi[detailApi.type.tag].stateErrorSync"><ion-icon name="sync"></ion-icon></h2>
+                      <h2 class="sync-error"  *ngIf="detailApi[detailApi.type.tag].stateSync === 'E'"><ion-icon name="sync"></ion-icon></h2>
                     </ion-col>
                     <ion-col size="5" style="margin-top: -30px;">
                       <h2 class="order-id" >Orden de producción {{detailApi.order?.id}}</h2>

@@ -38,7 +38,6 @@ export class DiagnosticService {
       variables = Object.assign(variables, {
         "input": {
           "id": diagnostic.id,
-         // "transferor": diagnostic.transferor,
           "received_by": diagnostic.received_by,
           "comments": diagnostic.comments,
           "identification_number": diagnostic.identification_number,
