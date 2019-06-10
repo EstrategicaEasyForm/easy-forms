@@ -9,6 +9,7 @@ import { Location } from '@angular/common';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import * as moment from 'moment-timezone';
 import { EvaluationPdfService } from './evaluation.pdf.service';
+import { AnyARecord } from 'dns';
 
 @Component({
   selector: 'app-evaluation',
@@ -65,7 +66,12 @@ export class EvaluationPage implements OnInit {
 
   ngOnInit() {
 
-    const detail = this.ordersService.getDetailApiParam();
+    const detail :any = this.ordersService.getDetailApiParam();
+    for(let dt of detail.evaluationApi.details){
+      dt.fit = dt.fit + "";
+      dt.synchronized = dt.synchronized + "";
+      dt.local_id = dt.local.id + "";
+    }
     this.evaluationObjOri = detail.evaluationApi;
     this.evaluation = Object.assign({}, this.evaluationObjOri);
     this.agendaPage = detail.agendaPage;

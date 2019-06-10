@@ -83,8 +83,10 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
     this.newRegistry = false;
     //create a copy of the object
     this.dataItemOri = Object.assign({}, this.dataItem);
+    
     //initialize the form
     if (!this.validation_form) {
+      
       this.validation_form = this.formBuilder.group({
         animal_id: [this.dataItem.animal_id, Validators.required],
         chapeta: [this.dataItem.chapeta, Validators.required],
@@ -183,6 +185,9 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
         else {
           this.indx++;
           this.dataItem = this.detailsList[this.indx];
+          this.dataItem.fit = this.dataItem.fit;
+          this.dataItem.synchronized = this.dataItem.synchronized;
+          this.dataItem.local_id = this.dataItem.local_id;
           this.dataItemOri = Object.assign({}, this.dataItem);
         }
       }
@@ -197,6 +202,9 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
       }
       this.indx--;
       this.dataItem = this.detailsList[this.indx];
+      this.dataItem.fit = this.dataItem.fit;
+      this.dataItem.synchronized = this.dataItem.synchronized;
+      this.dataItem.local_id = this.dataItem.local_id;
       this.dataItemOri = Object.assign({}, this.dataItem);
       this.action = 'update';
       this.newRegistry = false;
@@ -204,6 +212,9 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
     else if (this.action === 'new') {
       this.indx--;
       this.dataItem = this.detailsList[this.indx];
+      this.dataItem.fit = this.dataItem.fit;
+      this.dataItem.synchronized = this.dataItem.synchronized;
+      this.dataItem.local_id = this.dataItem.local_id;
       this.dataItemOri = Object.assign({}, this.dataItem);
       this.action = 'update';
       this.newRegistry = false;
@@ -220,9 +231,9 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
   equalsDetailsEvaluation(dataObjOri: any, dataItem: any) {
     return dataObjOri.animal_id === dataItem.animal_id &&
       dataObjOri.chapeta === dataItem.chapeta &&
-      dataObjOri.fit === dataItem.fit &&
-      dataObjOri.synchronized === dataItem.synchronized &&
-      dataObjOri.local_id === dataItem.local_id &&
+      Number(dataObjOri.fit) === Number(dataItem.fit) &&
+      Number(dataObjOri.synchronized) === Number(dataItem.synchronized) &&
+      Number(dataObjOri.local_id) === Number(dataItem.local_id) &&
       dataObjOri.diagnostic === dataItem.diagnostic &&
       dataObjOri.other_procedures === dataItem.other_procedures &&
       dataObjOri.comments === dataItem.comments;
@@ -244,7 +255,8 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
   onChangeLocal($localId) {
     if (this.evaluation.locals) {
       for (let local of this.evaluation.locals) {
-        if (local.id === $localId) {
+        if (local.id == $localId) {
+          //this.dataItem.local_id = Number($localId);
           this.dataItem.local = local;
         }
       }

@@ -47,7 +47,7 @@ export class SyncronizationPage {
 
     this.eventCtrl.subscribe('graphql:error', (elementPush) => {
       //this.writeLog(elementPush);
-      //if(this.loading) this.loading.dismiss();
+      if(this.loading) this.loading.dismiss();
     });
 
     this.eventCtrl.subscribe('sync:init', () => {
@@ -304,6 +304,7 @@ export class SyncronizationPage {
 
     this.ordersService.getDetailsApiQuery().then(detailsApi => {
       this.loading.dismiss();
+      if(this.orderStorage)
       detailsApi = this.diff(this.orderStorage,detailsApi);
       
       this.ordersService.setDetailsApiStorage(detailsApi);
