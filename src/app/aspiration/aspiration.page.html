@@ -266,10 +266,10 @@
                     </ion-grid>
                   </ion-item>
                   <ion-item-options>
-                    <ion-button color="success" icon-start (click)="openAspirationDetail(indx)">
+                    <ion-button class="button-slide" color="success" icon-start (click)="openAspirationDetail(indx)">
                       Editar
                     </ion-button>
-                    <ion-button color="danger" icon-start [disabled]="item.stateSync !== 'C'">
+                    <ion-button class="button-slide" color="danger" icon-start [disabled]="item.stateSync !== 'C'">
                       <ion-icon name="trash"></ion-icon>
                       Borrar
                     </ion-button>

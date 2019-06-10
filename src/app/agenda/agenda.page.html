@@ -25,9 +25,9 @@
         </ion-item>
         <ion-item>
           <ion-label>Todas las planillas</ion-label>
-          <ion-toggle item-end [(ngModel)]="filter.allTemplates" (ngModelChange)="onItemFilter()"></ion-toggle>
+          <ion-toggle item-end [(ngModel)]="filter.allTemplates" (ngModelChange)="onChangeFilter()"></ion-toggle>
         </ion-item>
-        <div *ngIf="!filter.allTemplates">
+        <div>
           <ion-item *ngFor="let template of templates">
             <fa-icon [icon]="template.icon" item-start></fa-icon>
             <ion-label> &nbsp; {{template.name}}</ion-label>
@@ -103,16 +103,18 @@
           <ion-col>
             <ion-card class="card-detail" *ngFor="let detailApi of detailsApi" >
               <ion-fab vertical="top" horizontal="start" slot="fixed">
-                <fa-icon class="cart-fa-icon" [icon]="detailApi.type.icon"></fa-icon>
+                <fa-icon class="cart-fa-icon" [styles]="{'color': detailApi.type.color}" [icon]="detailApi.type.icon"></fa-icon>
               </ion-fab>
-              <ion-card-header>
+              <ion-card-header [ngStyle]="{'background': '-webkit-gradient(linear, 41% 1820%, 1392% 66%, from(white), to(#e0e0e0))'}">
                 <ion-grid>
                   <ion-row class="click-card" (click)="goToTemplate(detailApi)">
-                    <ion-col size="7">
-                      <h2 class="cart-fa-name"> {{detailApi.type.name}} </h2>
+                    <ion-col size="7" >
+                      <h2 class="cart-fa-name"> &nbsp; {{detailApi.type.name}} </h2>
+                      <h2 class="sync-update" *ngIf="detailApi[detailApi.type.tag].stateSync === 'U'"><ion-icon name="swap"></ion-icon></h2>
+                      <h2 class="sync-error"  *ngIf="detailApi[detailApi.type.tag].stateSync === 'E'">Error<ion-icon name="swap"></ion-icon></h2>
                     </ion-col>
                     <ion-col size="5" style="margin-top: -30px;">
-                      <h2>Orden de producción {{detailApi.order?.id}}</h2>
+                      <h2 class="order-id" >Orden de producción {{detailApi.order?.id}}</h2>
                       <h3 *ngIf="detailApi.agenda.start_date" class="date-and-time">
                         Fecha y hora:
                         <ion-label class="card-item-field" *ngIf="!detailApi.agenda.all_day" item-end>

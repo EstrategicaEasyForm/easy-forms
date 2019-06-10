@@ -35,6 +35,7 @@
             [ngClass]="{'button-panel-enabled': mbControlPanel === 3, 'button-panel-disabled': mbControlPanel !== 3}">
               <ion-label>3.General</ion-label>
             </div>
+            <ion-badge class="badge-error" *ngIf="!validation_form_general.valid" color="danger">!</ion-badge>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -179,10 +180,10 @@
                         </ion-grid>
                       </ion-item>
                       <ion-item-options>
-                        <ion-button color="success" icon-start (click)="openTransferDetail(indx)">
+                        <ion-button class="button-slide" color="success" icon-start (click)="openTransferDetail(indx)">
                           Editar
                         </ion-button>
-                        <ion-button color="danger" icon-start [disabled]="item.stateSync !== 'C'">
+                        <ion-button class="button-slide" color="danger" icon-start [disabled]="item.stateSync !== 'C'">
                           <ion-icon name="trash"></ion-icon>
                           Borrar
                         </ion-button>
@@ -208,15 +209,15 @@
               <ion-card-content>
                 <ion-grid>
                   <ion-row>
-                    <ion-col size="5">
+                    <ion-col size="5.9">
                       <ion-label>Recibido por</ion-label>
                     </ion-col>
-                    <ion-col size="5">
+                    <ion-col size="5.9">
                       <ion-label>Cédula</ion-label>
                     </ion-col>
                   </ion-row>
                   <ion-row>
-                    <ion-col size="5">
+                    <ion-col size="5.9">
                       <ion-input type="text" formControlName="received_by" [(ngModel)]="transfer.received_by">
                       </ion-input>
                       <div>
@@ -229,7 +230,7 @@
                         </ng-container>
                       </div>
                     </ion-col>
-                    <ion-col size="5">
+                    <ion-col size="5.9">
                       <ion-input type="text" formControlName="identification_number" [(ngModel)]="transfer.identification_number">
                       </ion-input>
                       <div>
@@ -284,9 +285,9 @@
                               <ion-icon name="camera"></ion-icon>
                             </ion-button>
                             <div class="photo-image">
-                              <img [src]="transfer.photoImage" *ngIf="transfer.photoImage" />
-                              <img src="assets/imgs/take-photo-icon.png" *ngIf="!transfer.photoImage" />
-                            </div>
+								<img [src]="transfer.photoImage" *ngIf="transfer.photoImage" />
+								<img src="assets/imgs/noPhotoAvailable.jpg" *ngIf="!transfer.photoImage" />
+							 </div>
                           </ion-col>
                           <ion-col size="1"></ion-col>
                           <ion-col size="6">

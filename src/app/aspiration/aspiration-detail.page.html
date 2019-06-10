@@ -71,8 +71,9 @@
           </ion-row>
           <ion-row>
             <ion-col col-4>
-              <ion-select #localIds style="max-width: 100%;" placeholder="Local" [(ngModel)]="dataItem.local_id" formControlName="local_id"
-                (ionChange)="onChangeLocal(localIds.value)">
+              <ion-select #localIds style="max-width: 100%;" formControlName="local_id" 
+                interface="popover" interfaceOptions="{header: 'Locales'}" placeholder="Local"
+                [(ngModel)]="dataItem.local_id" >
                 <ion-select-option *ngFor="let local of aspiration.locals" [value]="local.id">{{local.name}}
                 </ion-select-option>
               </ion-select>
@@ -86,7 +87,9 @@
               </div>
             </ion-col>
             <ion-col col-4>
-              <ion-select style="max-width: 100%;" formControlName="type" placeholder="Tipo" [(ngModel)]="dataItem.type">
+              <ion-select style="max-width: 100%;" formControlName="type" 
+              interface="popover" interfaceOptions="{header: 'Tipo'}" placeholder="Tipo"
+              [(ngModel)]="dataItem.type">
                 <ion-select-option value="Leche">Leche</ion-select-option>
                 <ion-select-option value="Carne">Carne</ion-select-option>
               </ion-select>
@@ -101,8 +104,9 @@
             </ion-col>
             <ion-col col-4>
               <ion-item>
-                <ion-datetime #datetimePicker formControlName="arrived_time" [(ngModel)]="dataItem.ionDateTime" displayFormat="hh:mmA" pickerFormat="hh:mmA"
-                  cancelText="Cancelar" doneText="Aceptar" (ionChange)="onChangeDatetime(datetimePicker.value)">
+                <ion-datetime #datetimePicker formControlName="arrived_time" [(ngModel)]="dataItem.ionDateTime"
+                  displayFormat="hh:mmA" pickerFormat="hh:mmA" cancelText="Cancelar" doneText="Aceptar"
+                  (ionChange)="onChangeDatetime(datetimePicker.value)">
                 </ion-datetime>
                 <div class="validation-errors">
                   <ng-container *ngFor="let validation of validation_messages.arrived_time">
@@ -214,14 +218,16 @@
       <ion-grid style="text-align: center;">
         <ion-row>
           <ion-col>
-            <ion-button fill="outline" class="fab-button" [disabled]="indx===0 || (action === 'update' && !validation_form.valid) " (click)="backItemButton()">
+            <ion-button fill="outline" class="fab-button"
+              [disabled]="indx===0 || (action === 'update' && !validation_form.valid) " (click)="backItemButton()">
               <ion-icon name="arrow-dropleft-circle"></ion-icon>
             </ion-button>
           </ion-col>
           <ion-col>
           </ion-col>
           <ion-col>
-            <ion-button fill="outline" class="fab-button" [disabled]="!validation_form.valid" (click)="nextItemButton()">
+            <ion-button fill="outline" class="fab-button" [disabled]="!validation_form.valid"
+              (click)="nextItemButton()">
               <ion-icon name="arrow-dropright-circle"></ion-icon>
             </ion-button>
           </ion-col>

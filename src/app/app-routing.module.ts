@@ -14,9 +14,7 @@ const routes: Routes = [
   { path: 'aspiration-detail', loadChildren: './aspiration/aspiration-detail.module#AspirationDetailPageModule' },
   { path: 'transfer', loadChildren: './transfer/transfer.module#TransferPageModule' },
   { path: 'diagnostic', loadChildren: './diagnostic/diagnostic.module#DiagnosticPageModule' },
-  { path: 'diagnostic-detail', loadChildren: './diagnostic/diagnostic-detail.module#DiagnosticDetailPageModule' },
   { path: 'sexage', loadChildren: './sexage/sexage.module#SexagePageModule' },
-  { path: 'sexage-detail', loadChildren: './sexage/sexage-detail.module#SexageDetailPageModule' },
   { path: 'delivery', loadChildren: './delivery/delivery.module#DeliveryPageModule' },
   { path: 'transfer-detail', loadChildren: './transfer/transfer-detail.module#TransferDetailPageModule' }
 

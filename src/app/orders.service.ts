@@ -144,6 +144,7 @@ query orders {
       diagnosticApi {
         id
         order_detail_id
+        transferor
         received_by
         identification_number
         comments
@@ -175,6 +176,7 @@ query orders {
         id
         order_detail_id
         received_by
+        transferor
         identification_number
         comments
         apply_diagnostic {
@@ -210,6 +212,7 @@ query orders {
           apply_sexage
         }
         order_detail_id
+        transferor
         received_by
         identification_number
         comments
@@ -324,7 +327,7 @@ export class OrdersService {
       "tag": "evaluationApi",
       "icon": ['fas', 'search'],
       "style": { 'color': "yellow" },
-      "color": "yellow"
+      "color": "#3F6CB2"
     },
     {
       "id": "2",
@@ -332,7 +335,7 @@ export class OrdersService {
       "tag": "aspirationApi",
       "icon": ['fas', 'eye-dropper'],
       "style": { 'color': "blue" },
-      "color": "red"
+      "color": "#F091AF"
     },
     {
       "id": "3",
@@ -340,7 +343,7 @@ export class OrdersService {
       "tag": "transferApi",
       "icon": ['fas', 'magic'],
       "style": { 'color': "red" },
-      "color": "red"
+      "color": "#16A588"
     },
     {
       "id": "4",
@@ -348,7 +351,7 @@ export class OrdersService {
       "tag": "diagnosticApi",
       "icon": ['fas', 'stethoscope'],
       "style": "color: black;",
-      "color": "red"
+      "color": "#E42320"
     },
     {
       "id": "5",
@@ -356,7 +359,7 @@ export class OrdersService {
       "tag": "sexageApi",
       "icon": ['fas', 'random'],
       "style": "color: red;",
-      "color": "red"
+      "color": "#694594"
     },
     {
       "id": "6",
@@ -364,7 +367,7 @@ export class OrdersService {
       "tag": "deliveryApi",
       "icon": ['fas', 'truck'],
       "style": "color: blue;",
-      "color": "red"
+      "color": "#E62582"
     }
   ];
 

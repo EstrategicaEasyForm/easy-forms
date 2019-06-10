@@ -41,7 +41,7 @@ export class LoginPage implements OnInit {
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController) {
 
-      this.usersService.deleteUserAuthToken();
+    this.usersService.deleteUserAuthToken();
   }
 
   ngOnInit() {
@@ -61,14 +61,15 @@ export class LoginPage implements OnInit {
       });
       await loading.present();
 
-      const userAuth = { 'email': data.email, 'password': data.password, 'token': null };
+      let userAuth = { 'email': data.email, 'password': data.password };
 
       // Invoque the Graqhl login mutation
       this.usersService.login(userAuth)
         .subscribe(({ data }) => {
           loading.dismiss();
           if (data.login) {
-            this.usersService.setUserAuthToken(data.login);
+            userAuth = Object.assign(userAuth, data.login);
+            this.usersService.setUserAuthToken(userAuth);
             this.usersService.addUserAuthStorage(userAuth);
             this.goToHome();
           }

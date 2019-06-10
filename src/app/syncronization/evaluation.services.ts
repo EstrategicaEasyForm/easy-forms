@@ -30,13 +30,13 @@ export class EvaluationService {
         "id": evaluation.id
       }
     };
-    if (evaluation.stateSync === 'U') {
+    if (evaluation.stateSync === 'U' || evaluation.stateSync === 'E') {
       variables = Object.assign(variables, {
         "input": {
           "id": evaluation.id,
           "comments": evaluation.comments,
-          //"identification_number": evaluation.identification_number,
-          //"received_by": evaluation.received_by,
+          "identification_number": evaluation.identification_number,
+          "received_by": evaluation.received_by,
           "state": evaluation.state,
           "user_id_updated": this.userService.getUserId()
         }
@@ -53,9 +53,9 @@ export class EvaluationService {
           'chapeta': detail.chapeta,
           'fit': detail.fit,
           'synchronized': detail.synchronized,
-		  'other_procedures': detail.other_procedures,
-		  'comments': detail.comments,
-		  'diagnostic': detail.diagnostic,
+          'other_procedures': detail.other_procedures,
+          'comments': detail.comments,
+          'diagnostic': detail.diagnostic,
           'user_id_updated': this.userService.getUserId()
         });
       }
@@ -66,9 +66,9 @@ export class EvaluationService {
           'chapeta': detail.chapeta,
           'fit': detail.fit,
           'synchronized': detail.synchronized,
-		  'diagnostic': detail.diagnostic,
-		  'other_procedures': detail.other_procedures,
-		  'comments': detail.comments,
+          'diagnostic': detail.diagnostic,
+          'other_procedures': detail.other_procedures,
+          'comments': detail.comments,
           'user_id_updated': this.userService.getUserId(),
           'user_id_created': this.userService.getUserId(),
         });
@@ -78,16 +78,10 @@ export class EvaluationService {
     if (create.length > 0 || update.length > 0) {
       let details: any = {};
       if (create.length > 0) details.create = create;
-	  if (update.length > 0) details.update = update;
+      if (update.length > 0) details.update = update;
       variables.input['details'] = details;
     }
-    else if (evaluation.stateSync !== 'U') {
-      //Si no se reflejan cambios en el elemento o sus detalles, se resuelve la promesa
-      return new Promise(resolve => {
-        resolve({ status: 'no_change' });
-      });
-    }
-
+    
     //se resuelve la promesa despues de obtener respuesta de la mutacion
     return new Promise(resolve => {
       this.apollo.mutate({

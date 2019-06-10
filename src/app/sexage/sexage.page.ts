@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrdersService } from '../orders.service';
-import { LoadingController, ToastController, ModalController, AlertController, Platform } from '@ionic/angular';
+import { LoadingController, ToastController, ModalController, AlertController, Platform, IonList } from '@ionic/angular';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { SignatureDrawPadPage } from '../signature-draw-pad/signature-draw-pad.page';
@@ -32,13 +32,13 @@ export class SexagePage implements OnInit {
   validation_form_general: FormGroup;
 
   validation_messages = {
+    'transferor': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
     'received_by': [
       { type: 'required', message: 'Campo requerido.' }
     ],
     'identification_number': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'transport_type': [
       { type: 'required', message: 'Campo requerido.' }
     ],
     'comments': [
@@ -68,6 +68,7 @@ export class SexagePage implements OnInit {
     const detail = this.ordersService.getDetailApiParam();
     this.sexageObjOri = detail.sexageApi;
     this.sexage = Object.assign({}, this.sexageObjOri);
+    this.sexage.apply_diagnostic = this.sexage.apply_diagnostic || {};
     this.agendaPage = detail.agendaPage;
     this.order = detail.order;
     this.detailApi = detail.detailApi;
@@ -88,40 +89,32 @@ export class SexagePage implements OnInit {
         if (detailsTmp) {
           newDetails.push({
             "id": detailsTmp.id,
-            "sexage_id": this.sexage.id,
             "transfer_detail_id": detailsTmp.transfer_detail_id,
-			"sex": detailsTmp.sex,
+            "sex": detailsTmp.sex,
+            "dx1": detailsTmp.dx1,
             "transferData": dtDiag
           });
         }
         else {
           newDetails.push({
             "id": -1,
-            "sexage_id": this.sexage.id,
             "transfer_detail_id": dtDiag.transfer_detail_id,
-			"sex": "",
+            "sex": dtDiag.sex,
+            "dx1": dtDiag.dx1,
             "transferData": dtDiag
           });
         }
-		//se modifica la lista
-		this.sexage.details = newDetails;
-	   }
+      }
+      //se modifica la lista
+      this.sexage.details = newDetails;
     }
 
     this.validation_form_general = this.formBuilder.group({
+      transferor: [this.sexage.transferor, Validators.required],
       received_by: [this.sexage.received_by, Validators.required],
       identification_number: [this.sexage.identification_number, Validators.required],
       comments: [this.sexage.comments, Validators.required]
     });
-  }
-
-  openSexageDetail(indx) {
-    this.ordersService.setDetailApiParam({
-      sexage: this.sexage,
-      detailApiId: indx,
-      sexagePage: this
-    });
-    this.router.navigate(['sexage-detail']);
   }
 
   reloadDetailsList(detailsList) {
@@ -151,8 +144,7 @@ export class SexagePage implements OnInit {
       order: this.order,
       local: this.detailApi.local
     };
-	
-	const options = {
+    const options = {
       watermark: true,
       open: true
     };
@@ -198,7 +190,7 @@ export class SexagePage implements OnInit {
         }
         this.ordersService.setDetailsApiStorage(detailsApi);
         this.detailApi.sexageApi = this.sexage;
-        this.showMessage('Planilla Sexage Finalizada');
+        this.showMessage('Planilla Sexaje Finalizada');
         this.location.back();
       }
     });
@@ -206,8 +198,8 @@ export class SexagePage implements OnInit {
 
   async presentAlertConfirm() {
     const alert = await this.alertController.create({
-      header: 'Finalizar Planilla Sexaje!',
-      message: 'Confirma que desa finalizar la plantilla <strong>Sexaje</strong>!!!',
+      header: 'Finalizar Sexaje!',
+      message: 'Confirma que desa finalizar la planilla de <strong>Sexaje</strong>!!!',
       buttons: [
         {
           text: 'Cancelar',
@@ -252,17 +244,7 @@ export class SexagePage implements OnInit {
       }
     });
   }
-
-  onChangeArrivedTemperature() {
-    if (this.sexage.arrived_temperature_number || this.sexage.arrived_temperature_number === 0) {
-      this.sexage.arrived_temperature = this.sexage.arrived_temperature_number + "°C";
-      this.sexage.arrived_temperature = this.sexage.arrived_temperature.replace('.', ',');
-    }
-    else {
-      this.sexage.arrived_temperature = "";
-    }
-  }
-
+  
   async showMessage(message: string) {
     const toast = await this.toastCtrl.create({
       message: message,
@@ -278,6 +260,14 @@ export class SexagePage implements OnInit {
       duration: 200
     });
     await loading.present();
+  }
+
+  onChangeSex(item: any, value: any, detailList: IonList) {
+    item.sex = value;
+    item.stateSync = 'U';
+    detailList.closeSlidingItems();
+    this.saveSexage();
+    this.showMessage('Registro modificado');
   }
 
 }

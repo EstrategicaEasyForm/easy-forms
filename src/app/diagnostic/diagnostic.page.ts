@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrdersService } from '../orders.service';
-import { LoadingController, ToastController, ModalController, AlertController, Platform } from '@ionic/angular';
+import { LoadingController, ToastController, ModalController, AlertController, Platform, IonList } from '@ionic/angular';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { SignatureDrawPadPage } from '../signature-draw-pad/signature-draw-pad.page';
@@ -32,13 +32,13 @@ export class DiagnosticPage implements OnInit {
   validation_form_general: FormGroup;
 
   validation_messages = {
+    'transferor': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
     'received_by': [
       { type: 'required', message: 'Campo requerido.' }
     ],
     'identification_number': [
-      { type: 'required', message: 'Campo requerido.' }
-    ],
-    'dx1': [
       { type: 'required', message: 'Campo requerido.' }
     ],
     'comments': [
@@ -109,19 +109,11 @@ export class DiagnosticPage implements OnInit {
     }
 
     this.validation_form_general = this.formBuilder.group({
+      transferor: [this.diagnostic.transferor, Validators.required],
       received_by: [this.diagnostic.received_by, Validators.required],
       identification_number: [this.diagnostic.identification_number, Validators.required],
       comments: [this.diagnostic.comments, Validators.required]
     });
-  }
-
-  openDiagnosticDetail(indx) {
-    this.ordersService.setDetailApiParam({
-      diagnostic: this.diagnostic,
-      detailApiId: indx,
-      diagnosticPage: this
-    });
-    this.router.navigate(['diagnostic-detail']);
   }
 
   reloadDetailsList(detailsList) {
@@ -252,16 +244,6 @@ export class DiagnosticPage implements OnInit {
     });
   }
 
-  onChangeArrivedTemperature() {
-    if (this.diagnostic.arrived_temperature_number || this.diagnostic.arrived_temperature_number === 0) {
-      this.diagnostic.arrived_temperature = this.diagnostic.arrived_temperature_number + "°C";
-      this.diagnostic.arrived_temperature = this.diagnostic.arrived_temperature.replace('.', ',');
-    }
-    else {
-      this.diagnostic.arrived_temperature = "";
-    }
-  }
-
   async showMessage(message: string) {
     const toast = await this.toastCtrl.create({
       message: message,
@@ -277,6 +259,14 @@ export class DiagnosticPage implements OnInit {
       duration: 200
     });
     await loading.present();
+  }
+
+  onChangeDx1(item: any, value: any, detailList: IonList) {
+    item.dx1 = value;
+    item.stateSync = 'U';
+    this.saveDiagnostic();
+    detailList.closeSlidingItems();
+    this.showMessage('Registro modificado');
   }
 
 }

@@ -44,7 +44,7 @@ Download for Windows (msi): [https://desktop.github.com/](https://desktop.github
 cd easy-forms/
 ```
 ```
-yarn install
+npm install
 ```
 
 To test server use. In this mode the Cordova plugins doesn't work

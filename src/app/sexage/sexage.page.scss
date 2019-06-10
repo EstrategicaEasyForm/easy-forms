@@ -91,7 +91,8 @@ ion-textarea{
     margin-right: auto;
     ion-card {
         text-align: left;
-        width: 100%;
+        width: 78vw;
+        margin: 0 auto;
     }
 }
 ion-card-content {
@@ -101,75 +102,77 @@ ion-card-content {
     font-weight: bold;
 }
 .detail-id {
-    max-width: 38px;
-    min-width: 38px;
+    max-width: 50px;
+    min-width: 50px;
+}
+.detail-receiver {
+    max-width: 160px;
+    min-width: 160px;
+}
+.detail-embryo {
+    max-width: 120px;
+    min-width: 120px;
+}
+.detail-embryo-class {
+    max-width: 152px;
+    min-width: 152px;
 }
 .detail-donor {
-    max-width: 151px;
-    min-width: 151px;
+    max-width: 146px;
+    min-width: 146px;
 }
 .detail-donor-breed {
-    max-width: 106px;
-    min-width: 106px;
-}
-.detail-local-name {
-   max-width: 140px;
-    min-width: 140px;
-}
-.detail-type {
-    max-width: 76px;
-    min-width: 76px;
-}
-.detail-arrived-time {
-    max-width: 82px;
-    min-width: 82px;
+    max-width: 120px;
+    min-width: 120px;
 }
 .detail-bull {
-    max-width: 103px;
-    min-width: 103px;
+    max-width: 143px;
+    min-width: 143px;
 }
 .detail-bull-breed {
-    max-width: 115px;
-    min-width: 115px;
+    max-width: 90px;
+    min-width: 90px;
 }
-.detail-gi {
-    max-width: 36px;
-	min-width: 36px;
+.detail-corpus-luteum {
+    max-width: 120px;
+	min-width: 120px;
 }
-.detail-gii {
-    max-width: 43px;
-	min-width: 43px;
+.detail-corpus-luteum-full {
+    max-width: 200px;
+	min-width: 200px;
 }
-.detail-giii {
-    max-width: 49px;
-	min-width: 49px;
+.detail-transferor {
+    max-width: 160px;
+	min-width: 160px;
 }
-.detail-others {
-    min-width: 45px;
-    max-width: 45px;
+.detail-dx1 {
+    max-width: 90px;
+    min-width: 90px;
+    padding: 10px;
+    border-radius: 29px;
+    text-align: center;
 }
-.grade-celsius {
-    margin-left: -10px;
+.detail-sex {
+    max-width: 90px;
+    min-width: 90px;
+    padding: 10px;
+    border-radius: 29px;
+    text-align: center;
 }
 .signature-image {
-    transform: translate3d(0px, 0px, 0px) scale(1) !important;
     border: solid 1px grey; 
-    min-height: 180px;
-	min-width: 90%;
 }
 .signature-image-underline {
-    transform: translate3d(0px, 0px, 0px) scale(1) !important;
     border: solid 1px grey; 
-    min-height: 180px;
-	min-width: 90%;
+    min-height: 250px;
 }
 .photo-image {
     border: solid 1px grey;
     padding: 16px;
-    background-color: rgba(80, 80, 80, 0.02);
-	img {
+    img {
         transform: translate3d(0px, 0px, 0px) scale(1) !important;
-		width: 302px;
+		width: 60%;
+		margin: 0 auto;
     }
 }
 .comment {
@@ -262,5 +265,9 @@ ion-card-content {
 	    white-space: nowrap;
 		overflow: hidden!important;
 		text-overflow: initial;
-	}
+    }
+}
+.button-slide {
+    height: 60px;
+    font-weight: 700;
 }

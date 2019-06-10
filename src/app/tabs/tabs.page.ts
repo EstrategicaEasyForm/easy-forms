@@ -10,7 +10,7 @@ import { UsersService } from '../users.service';
 export class TabsPage {
 
   newAgenda: boolean = false;
-
+  
   constructor(
     public navCtrl: NavController,
     public usersService: UsersService,
@@ -28,5 +28,9 @@ export class TabsPage {
         this.navCtrl.navigateRoot('/login');
       }
     });
+  }
+  
+  onSyncButton() {
+    this.events.publish('sync:init');
   }
 }

@@ -19,7 +19,7 @@
         <ion-list *ngIf="isDeploy(registry)" class="item-accordion">
           <ion-item *ngFor="let detail of registry.details">
             <ion-label item-start class="sizeTime"></ion-label>
-            <ion-label text-wrap>{{detail}}</ion-label>
+            <ion-label [ngClass]="registry.type" text-wrap>{{detail}}</ion-label>
           </ion-item>
         </ion-list>
       </div>

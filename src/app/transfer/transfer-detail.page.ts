@@ -13,7 +13,6 @@ import { TransferPage } from './transfer.page';
 })
 export class TransferDetailPage implements OnInit, OnDestroy {
 
-  // Aspiration form template
   transferPage: TransferPage;
   transfer: any;
   indx: number;
@@ -64,12 +63,12 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     this.transferPage = dataParam.transferPage;
     this.transfer = this.transferPage.transfer;
     this.detailsList = this.transferPage.transfer.details_view;
-    this.checkRecept = true;
 
     if (detailApiId >= 0) {
       this.updateItem(detailApiId);
     }
     else {
+      this.checkRecept = true;
       this.newItem();
     }
   }
@@ -81,6 +80,11 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     this.newRegistry = false;
     //create a copy of the object
     this.dataItemOri = Object.assign({}, this.dataItem);
+    if (this.dataItem.evaluation_detail_id || this.dataItem.evaluation_detail_id == null) {
+      this.checkRecept = false;
+    } else {
+      this.checkRecept = true;
+    }
     //initialize the form
     if (!this.validation_form) {
       this.validation_form = this.formBuilder.group({
@@ -157,6 +161,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     this.action = 'update';
     this.newRegistry = false;
     this.dataItemOri = Object.assign({}, this.dataItem);
+    console.log(this.dataItemOri);
   }
 
   nextItemButton() {
