@@ -80,7 +80,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     this.newRegistry = false;
     //create a copy of the object
     this.dataItemOri = Object.assign({}, this.dataItem);
-    if (this.dataItem.evaluation_detail_id || this.dataItem.evaluation_detail_id == null) {
+    if (!this.dataItem.evaluation_detail_id || this.dataItem.evaluation_detail_id == null) {
       this.checkRecept = false;
     } else {
       this.checkRecept = true;

@@ -94,8 +94,6 @@ export class TransferPage implements OnInit {
       cssClass: "modal-signature"
     });
 
-
-
     modalPage.onDidDismiss().then(({ data }) => {
       if (data) {
         this.transfer.signatureImage = data.signatureImage;
