@@ -361,9 +361,9 @@ export class SyncronizationPage {
           newDetailApi = getDetailApi(newOrder,detail);
           if(newDetailApi[template.tag]) {
             newWorkSheetApi = newDetailApi[template.tag];
-            newWorkSheetApi.photoImage = detail[template.tag].photoImage;
-            newWorkSheetApi.signatureImage = detail[template.tag].signatureImage;
-            if(detail[template.tag].stateErrorSync) {
+			newWorkSheetApi.photoImage = detail[template.tag] ? detail[template.tag].photoImage : '';
+			newWorkSheetApi.signatureImage = detail[template.tag] ? detail[template.tag].signatureImage : '';
+            if(detail[template.tag] && detail[template.tag].stateErrorSync) {
               newWorkSheetApi.stateSync = 'E';
             }
           }
