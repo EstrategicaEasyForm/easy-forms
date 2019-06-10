@@ -24,6 +24,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
   newRegistry: boolean;
   validation_form: FormGroup;
   checkRecept: boolean;
+  checkInitial: boolean;
 
   validation_messages = {
     'embryo_class': [
@@ -81,9 +82,9 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     //create a copy of the object
     this.dataItemOri = Object.assign({}, this.dataItem);
     if (!this.dataItem.evaluation_detail_id || this.dataItem.evaluation_detail_id == null) {
-      this.checkRecept = false;
+      this.checkInitial = false;
     } else {
-      this.checkRecept = true;
+      this.checkInitial = true;
     }
     //initialize the form
     if (!this.validation_form) {
