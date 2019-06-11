@@ -110,7 +110,6 @@ export class SexagePage implements OnInit {
     }
 
     this.validation_form_general = this.formBuilder.group({
-      transferor: [this.sexage.transferor, Validators.required],
       received_by: [this.sexage.received_by, Validators.required],
       identification_number: [this.sexage.identification_number, Validators.required],
       comments: [this.sexage.comments, Validators.required]

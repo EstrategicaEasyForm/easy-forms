@@ -44,27 +44,27 @@ export class TransferService {
     }
     const create = [];
     const update = [];
-    if (transfer.details)
+    if (transfer.details_view)
       transfer.details_view.forEach(detail => {
         if (detail.stateSync === 'U') {
           update.push({
             'id': detail.id,
-            'attendant': detail.attendant,
-            'bull': detail.bull,
-            'bull_breed': detail.bull_breed,
+            //'attendant': detail.attendant,
+            //'bull': detail.bull,
+            //'bull_breed': detail.bull_breed,
             'comments': detail.comments,
             'corpus_luteum': detail.corpus_luteum,
-            'discard': detail.discard,
-            'donor': detail.donor,
-            'donor_breed': detail.donor_breed,
-            'embryo': detail.embryo,
-            'embryo_class': detail.embryo_class,
-            'evaluation_detail_id': detail.evaluation_detail_id,
-            'local': detail.local,
+            'discard': detail.discard == "1",
+            //'donor': detail.donor,
+            //'donor_breed': detail.donor_breed,
+            //'embryo': detail.embryo,
+            //'embryo_class': detail.embryo_class,
+            //'evaluation_detail_id': detail.evaluation_detail_id,
+            //'local': detail.local,
             'local_id': detail.local_id,
-            'production_detail_id': detail.production_detail_id,
+            //'production_detail_id': detail.production_detail_id,
             'receiver': detail.receiver,
-            'transfer_id': detail.transfer_id,
+            //'transfer_id': detail.transfer_id,
             'transferor': transfer.transferor,
             'user_id_updated': this.userService.getUserId()
           });
@@ -72,22 +72,22 @@ export class TransferService {
         else if (detail.stateSync === 'C') {
           create.push({
             'id': detail.id,
-            'attendant': detail.attendant,
-            'bull': detail.bull,
-            'bull_breed': detail.bull_breed,
+            //'attendant': detail.attendant,
+            //'bull': detail.bull,
+            //'bull_breed': detail.bull_breed,
             'comments': detail.comments,
             'corpus_luteum': detail.corpus_luteum,
-            'discard': detail.discard,
-            'donor': detail.donor,
-            'donor_breed': detail.donor_breed,
-            'embryo': detail.embryo,
-            'embryo_class': detail.embryo_class,
-            'evaluation_detail_id': detail.evaluation_detail_id,
-            'local': detail.local,
+            'discard': detail.discard == "1",
+            //'donor': detail.donor,
+            //'donor_breed': detail.donor_breed,
+            //'embryo': detail.embryo,
+            //'embryo_class': detail.embryo_class,
+            //'evaluation_detail_id': detail.evaluation_detail_id,
+            //'local': detail.local,
             'local_id': detail.local_id,
-            'production_detail_id': detail.production_detail_id,
+            //'production_detail_id': detail.production_detail_id,
             'receiver': detail.receiver,
-            'transfer_id': detail.transfer_id,
+            //'transfer_id': detail.transfer_id,
             'transferor': transfer.transferor,
             'user_id_updated': this.userService.getUserId(),
             'user_id_created': this.userService.getUserId(),
@@ -96,10 +96,10 @@ export class TransferService {
       });
 
     if (create.length > 0 || update.length > 0) {
-      let details = { "details": {} };
-      if (create.length > 0) details = Object.assign(details, { "create": create });
-      if (update.length > 0) details = Object.assign(details, { "update": update });
-      variables = Object.assign(variables, details);
+      let details: any = {};
+      if (create.length > 0) details.create = create;
+      if (update.length > 0) details.update = update;
+      variables.input['details'] = details;
     }
 
     //se resuelve la promesa despues de obtener respuesta de la mutacion

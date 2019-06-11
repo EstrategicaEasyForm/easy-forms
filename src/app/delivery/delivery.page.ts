@@ -110,7 +110,6 @@ export class DeliveryPage implements OnInit {
     }
 
     this.validation_form_general = this.formBuilder.group({
-      transferor: [this.delivery.transferor, Validators.required],
       received_by: [this.delivery.received_by, Validators.required],
       identification_number: [this.delivery.identification_number, Validators.required],
       comments: [this.delivery.comments, Validators.required]
