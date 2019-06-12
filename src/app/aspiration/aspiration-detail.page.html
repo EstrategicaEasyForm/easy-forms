@@ -73,6 +73,7 @@
             <ion-col col-4>
               <ion-select #localIds style="max-width: 100%;" formControlName="local_id" 
                 interface="popover" interfaceOptions="{header: 'Locales'}" placeholder="Local"
+				(ionChange)="onChangeLocal(localIds.value)"
                 [(ngModel)]="dataItem.local_id" >
                 <ion-select-option *ngFor="let local of aspiration.locals" [value]="local.id">{{local.name}}
                 </ion-select-option>

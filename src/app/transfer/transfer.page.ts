@@ -70,11 +70,11 @@ export class TransferPage implements OnInit {
     this.agenda = detail.agenda;
     
     this.validation_form_order = this.formBuilder.group({});
-
+	this.transfer.transferor = this.transfer.details_view[0].transferor
     this.validation_form_general = this.formBuilder.group({
       received_by: [this.transfer.received_by, Validators.required],
       identification_number: [this.transfer.identification_number, Validators.required],
-      transferor: [this.transfer.details_view[0].bull_breed, Validators.required],
+      transferor: [this.transfer.transferor, Validators.required],
       comments: [this.transfer.comments, Validators.required]
     });
   }
@@ -272,6 +272,15 @@ export class TransferPage implements OnInit {
       duration: 200
     });
     await loading.present();
+  }
+  
+  onChangeTransferor() {
+	  if(this.transfer.transferor) {
+		  for(let detail of this.transfer.details_view){
+			  detail.transferor = this.transfer.transferor;
+			  detail.stateSync = 'U';
+		  }
+	  }
   }
 
 }

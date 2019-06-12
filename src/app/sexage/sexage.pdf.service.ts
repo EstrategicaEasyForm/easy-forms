@@ -64,21 +64,7 @@ export class SexagePdfService {
 				{ text: 'DX1', alignment: 'center', bold: true },
 				{ text: 'Sexaje', alignment: 'center', bold: true }
 			]);
-			for (let i of data.sexageApi.details) {
-				sexageDetails.push([i.transferData.receiver,
-				i.transferData.embryo,
-				i.transferData.embryo_class,
-				i.transferData.donor,
-				i.transferData.donor_breed,
-				i.transferData.bull,
-				i.transferData.bull_breed,
-				i.transferData.corpus_luteum,
-				i.transferData.transferor,
-				i.transferData.dx1,
-				i.sex
-				]);
-			}
-
+			
 			workTeam.push(['Nombre', 'Correo', 'Evento', 'Observación', 'Departamento', 'Municipio', 'Fecha']);
 			for (let j of data.order.agenda) {
 				workTeam.push([j.user.name,
