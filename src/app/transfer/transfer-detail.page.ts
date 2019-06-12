@@ -93,7 +93,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
         recept: [this.dataItem.recept, Validators.required],
         corpus_luteum: [this.dataItem.corpus_luteum, Validators.required],
         local_id: [this.dataItem.local_id, Validators.required],
-        transferor: [this.dataItem.transferor, Validators.required],
+        //transferor: [this.dataItem.transferor, Validators.required],
         comments: [this.dataItem.comments, Validators.required]
       });
     }
@@ -103,7 +103,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
         recept: this.dataItem.recept,
         corpus_luteum: this.dataItem.corpus_luteum,
         local_id: this.dataItem.local_id,
-        transferor: this.dataItem.transferor,
+        //transferor: this.dataItem.transferor,
         comments: this.dataItem.comments
       });
     }
@@ -125,7 +125,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
         recept: ['', Validators.required],
         corpus_luteum: ['', Validators.required],
         local_id: ['', Validators.required],
-        transferor: ['', Validators.required],
+        //transferor: ['', Validators.required],
         comments: ['', Validators.required]
       });
     }
@@ -135,7 +135,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
         recept: '',
         corpus_luteum: '',
         local_id: '',
-        transferor: '',
+        //transferor: '',
         comments: ''
       });
     }

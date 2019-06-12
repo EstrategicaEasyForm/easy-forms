@@ -35,6 +35,9 @@ export class TransferPage implements OnInit {
     'identification_number': [
       { type: 'required', message: 'Campo requerido.' }
     ],
+    'transferor': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
     'comments': [
       { type: 'required', message: 'Campo requerido.' }
     ]
@@ -71,6 +74,7 @@ export class TransferPage implements OnInit {
     this.validation_form_general = this.formBuilder.group({
       received_by: [this.transfer.received_by, Validators.required],
       identification_number: [this.transfer.identification_number, Validators.required],
+      transferor: [this.transfer.details_view[0].bull_breed, Validators.required],
       comments: [this.transfer.comments, Validators.required]
     });
   }
@@ -82,6 +86,44 @@ export class TransferPage implements OnInit {
       transferPage: this
     });
     this.router.navigate(['transfer-detail']);
+  }
+
+  discardTransferDetail(indx) {
+    this.ordersService.getDetailsApiStorage().then((ordersList) => {
+      if (ordersList) {
+        for (let order of ordersList) {
+          for (let detail of order.detailsApi) {
+            if (detail.transferApi && detail.transferApi.id === this.transfer.id) {
+              detail.transferApi.details_view[indx].discard = false;
+            }
+          }
+        }
+      }
+    });
+  }
+
+  async presentAlertConfirmDiscard(indx) {
+    const alert = await this.alertController.create({
+      header: 'Descartar Detalle!',
+      message: '¿Confirma que desea descartar el detalle?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+
+          }
+        }, {
+          text: 'Aceptar',
+          handler: () => {
+            this.discardTransferDetail(indx);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   reloadDetailsList(detailsList) {
@@ -135,6 +177,9 @@ export class TransferPage implements OnInit {
             if (detail.transferApi && detail.transferApi.id === this.transfer.id) {
               this.transfer.stateSync = 'U';
               detail.transferApi = this.transfer;
+              for (let i = 1; i < detail.transferApi.details_view.length; i++) {
+                detail.transferApi.details_view[i].bull_breed = detail.transferApi.details_view[0].bull_breed;
+              }
             }
           }
         }
@@ -166,7 +211,7 @@ export class TransferPage implements OnInit {
   async presentAlertConfirm() {
     const alert = await this.alertController.create({
       header: 'Finalizar Transferencia!',
-      message: 'Confirma que desa finalizar la planilla de <strong>Transferencia</strong>!!!',
+      message: 'Confirma que desea finalizar la planilla de <strong>Transferencia</strong>!!!',
       buttons: [
         {
           text: 'Cancelar',
