@@ -156,7 +156,8 @@ export class AspirationPage implements OnInit {
     const data = {
       aspirationApi: this.aspiration,
       order: this.order,
-      local: this.detailApi.local
+      local: this.detailApi.local,
+      agenda: this.agenda
     };
     const options = {
       watermark: true,

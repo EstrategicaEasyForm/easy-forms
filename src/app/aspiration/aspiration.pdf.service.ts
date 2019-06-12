@@ -49,91 +49,100 @@ export class AspirationPdfService {
 
 			var aspirationDetails = [];
 			var workTeam = [];
+			var cont_details = 0;
 
-			aspirationDetails.push([{ text: 'Donadora', alignment: 'center', bold: true },
-			{ text: 'Raza', alignment: 'center', bold: true },
-			{ text: 'Toro', alignment: 'center', bold: true },
-			{ text: 'Raza', alignment: 'center', bold: true },
-			{ text: 'Tipo', alignment: 'center', bold: true },
-			{ text: 'GI', alignment: 'center', bold: true },
-			{ text: 'GII', alignment: 'center', bold: true },
-			{ text: 'GIII', alignment: 'center', bold: true },
-			{ text: 'Otros', alignment: 'center', bold: true },
-			{ text: 'Viables', alignment: 'center', bold: true },
-			{ text: 'Total', alignment: 'center', bold: true }]);
+			aspirationDetails.push([
+				{ text: 'No.', style: 'title_table_style' },
+				{ text: 'Hora', style: 'title_table_style' },
+				{ text: 'Donadora', style: 'title_table_style' },
+				{ text: 'Raza', style: 'title_table_style' },
+				{ text: 'Toro', style: 'title_table_style' },
+				{ text: 'Raza', style: 'title_table_style' },
+				{ text: 'Tipo', style: 'title_table_style' },
+				{ text: 'Local', style: 'title_table_style' },
+				{ text: 'GI', style: 'title_table_style' },
+				{ text: 'GII', style: 'title_table_style' },
+				{ text: 'GIII', style: 'title_table_style' },
+				{ text: 'Otros', style: 'title_table_style' },
+				{ text: 'Viables', style: 'title_table_style' },
+			]);
 			for (let i of data.aspirationApi.details) {
-				aspirationDetails.push([i.donor,
-				i.donor_breed,
-				i.bull,
-				i.bull_breed,
-				i.type,
-				i.gi,
-				i.gii,
-				i.giii,
-				i.others,
-				i.gi + i.gii + i.giii,
-				i.gi + i.gii + i.giii + i.others
+				aspirationDetails.push([
+					{ text: cont_details++, style: 'title_table_style' },
+					{ text: i.arrived_time, style: 'title_table_style' },
+					{ text: i.donor, style: 'title_table_style' },
+					{ text: i.donor_breed, style: 'title_table_style' },
+					{ text: i.bull, style: 'title_table_style' },
+					{ text: i.bull_breed, style: 'title_table_style' },
+					{ text: i.type, style: 'title_table_style' },
+					{ text: i.local.name, style: 'title_table_style' },
+					{ text: i.gi, style: 'title_table_style' },
+					{ text: i.gii, style: 'title_table_style' },
+					{ text: i.giii, style: 'title_table_style' },
+					{ text: i.others, style: 'title_table_style' },
+					{ text: i.gi + i.gii + i.giii, style: 'title_table_style' },
 				]);
 			}
 
 			workTeam.push([
-				{ text: 'Nombre', alignment: 'center', bold: true },
-				{ text: 'Correo', alignment: 'center', bold: true },
-				{ text: 'Evento', alignment: 'center', bold: true },
-				{ text: 'Observación', alignment: 'center', bold: true },
-				{ text: 'Departamento', alignment: 'center', bold: true },
-				{ text: 'Municipio', alignment: 'center', bold: true },
-				{ text: 'Fecha', alignment: 'center', bold: true }]);
-			for (let j of data.order.agenda) {
-				workTeam.push([j.user.name,
-				j.user.email,
-				j.event.name,
-				j.observation,
-				j.department.name,
-				j.municipality.name,
-				j.start_date
+				{ text: 'Nombre del técnico', style: 'title_table_style' },
+				{ text: 'Evento', style: 'title_table_style' },
+				{ text: 'Fecha', style: 'title_table_style' },
+				{ text: 'Observaciones', style: 'title_table_style' }
+			]);
+			for (let j of data.agenda) {
+				workTeam.push([
+					j.user.name,
+					j.event.name,
+					j.start_date,
+					j.observation
 				]);
 			}
-
 
 			let docDefinition = {
 				pageSize: 'A4',
 				pageMargins: [40, 60, 40, 60],
 				pageOrientation: 'landscape',
+				header: {
+					image: this.imageSrc.logoSrcBase64,
+					width: 110,
+					height: 60,
+					alignment: 'right',
+				},
+				footer: {
+					text: 'Carrera 72A # 49A - 39 Bogotá, (+57 1) 7968626 – 3135700023 – logística@invitro.com.co',
+					alignment: 'center',
+					fontSize: 12,
+					opacity: 0.3,
+				},
 				content: [
 					{
-						columns: [
-							{
-								image: this.imageSrc.logoSrcBase64,
-								width: 120,
-								height: 80,
-							},
-							{
-								fontSize: 12,
-								alignment: 'right',
-								bold: true,
-								text: 'Cra 72A N° 49A-39 Bogotá \n\ Invitro \n\ (+57 1) 796 86 26 | 313 570 00 23 \n\ ivc.logistica@genusplc.com \n\ '
-							},
-						]
+						text: '\n\ REPORTE DE SERVICIO TÉCNICO',
+						fontSize: 16,
+						alignment: 'left',
 					},
-					{ text: '\n\ ÓRDEN DE PRODUCCIÓN: ' + data.order.id, bold: true, fontSize: 18, alignment: 'left' },
-					{ text: '\n\ DATOS:', bold: true, fontSize: 15, alignment: 'left' },
+					{
+						text: '\n\ FECHA DE REPORTE: 28-03-2019',
+						fontSize: 12,
+						alignment: 'right',
+					},
+					{
+						text: 'DATOS DEL CLIENTE',
+						style: 'subtitle_style'
+					},
 					{
 						columns: [
-							{
-								width: '*', text: ''
-							},
 							{
 								width: 'auto',
 								table: {
 									fontSize: 12,
-									widths: ['*', '*', '*', '*'],
+									widths: ['*', '*'],
 									body: [
-										[{ text: 'Fecha:', alignment: 'right', bold: true }, data.order.date, { text: 'Correo Electrónico:', alignment: 'right', bold: true }, { text: data.order.client.email, alignment: 'left' }],
-										[{ text: 'N° Identificación:', alignment: 'right', bold: true }, data.order.client_id, { text: 'Contacto:', alignment: 'right', bold: true }, { text: data.order.client.contact, alignment: 'left' }],
-										[{ text: 'Razon Social:', alignment: 'right', bold: true }, data.order.client.bussiness_name, { text: 'Cargo:', alignment: 'right', bold: true }, { text: data.order.client.position, alignment: 'left' }],
-										[{ text: 'Departamento:', alignment: 'right', bold: true }, data.order.client.departmentOne.name, { text: 'Dirección:', alignment: 'right', bold: true }, { text: data.order.client.address, alignment: 'left' }],
-										[{ text: 'Ciudad:', alignment: 'right', bold: true }, data.order.client.citiesOne.name, { text: 'Teléfono:', alignment: 'right', bold: true }, { text: data.order.client.cellphone, alignment: 'left' }],
+										[{ text: 'Razon Social:', style: 'normal_style' }, { text: data.order.client.bussiness_name, style: 'normal_style' }],
+										[{ text: 'No. Identificación:', style: 'normal_style' }, { text: data.order.client_id, style: 'normal_style' }],
+										[{ text: 'Contacto:', style: 'normal_style' }, { text: data.order.client.contact, style: 'normal_style' }],
+										[{ text: 'Correo electrónico:', style: 'normal_style' }, { text: data.order.client.email, style: 'normal_style' }],
+										[{ text: 'Móvil:', style: 'normal_style' }, { text: data.order.client.cellphone, style: 'normal_style' }],
 									]
 								},
 								layout: 'noBorders'
@@ -141,9 +150,15 @@ export class AspirationPdfService {
 							{
 								width: '*', text: ''
 							},
+							{
+								width: '*', text: ''
+							},
 						]
 					},
-					{ text: '\n\ EQUIPO DE TRABAJO: ', bold: true, fontSize: 15, alignment: 'left' },
+					{
+						text: 'PERSONAL ASIGNADO',
+						style: 'subtitle_style'
+					},
 					{ text: '\n\ ' },
 					{
 						columns: [
@@ -155,22 +170,19 @@ export class AspirationPdfService {
 								table: {
 									fontSize: 9,
 									headerRows: 1,
-									widths: [100, 140, 60, 120, 80, 60, 60],
+									widths: [140, 100, 60, 140],
 									body: workTeam
 								},
-								layout: {
-									fillColor: function (rowIndex, node, columnIndex) {
-										return (rowIndex === 0) ? '#b9d2e8' : null;
-									}
-								}
 							},
 							{
 								width: '*', text: ''
 							},
 						]
 					},
-					{ text: '\n\n\ LOCALES TE:', alignment: 'left', fontSize: 15, bold: true },
-					{ text: '\n\ ' },
+					{
+						text: 'INFORMACIÓN DEL SERVICIO',
+						style: 'subtitle_style'
+					},
 					{
 						columns: [
 							{
@@ -180,40 +192,45 @@ export class AspirationPdfService {
 								width: 'auto',
 								table: {
 									fontSize: 12,
-									widths: [120, 'auto', 'auto', 'auto', 120, 120],
+									widths: ['*', '*', 40, '*', '*'],
 									body: [
-										[
-											{ text: 'Nombre Local', alignment: 'center', bold: true },
-											{ text: 'Ciudad', alignment: 'center', bold: true },
-											{ text: 'Departamento', alignment: 'center', bold: true },
-											{ text: 'Teléfono', alignment: 'center', bold: true },
-											{ text: 'Correo', alignment: 'center', bold: true },
-											{ text: 'Contacto', alignment: 'center', bold: true }
+										[{ text: 'Orden de prod.: ', style: 'normal_style' },
+										{ text: data.order.id, style: 'normal_style' },
+											'',
+										{ text: 'Fecha OPU : ', style: 'normal_style' },
+										{ text: data.aspirationApi.date, style: 'normal_style' },
 										],
-										[
-											{ text: data.local.name, alignment: 'left' },
-											{ text: data.local.city, alignment: 'left' },
-											{ text: data.local.department, alignment: 'left' },
-											{ text: data.order.client.cellphone, alignment: 'left' },
-											{ text: data.order.client.email, alignment: 'left' },
-											{ text: data.order.client.contact, alignment: 'left' }
+										[{ text: 'Local: ', style: 'normal_style' },
+										{ text: data.local.name, style: 'normal_style' },
+											'',
+										{ text: 'Receptoras sinc. : ', style: 'normal_style' },
+										{ text: data.aspirationApi.synchronized_receivers, style: 'normal_style' },
 										],
-									],
+										[{ text: 'Medio OPU: ', style: 'normal_style' },
+										{ text: data.aspirationApi.medium_opu, style: 'normal_style' },
+											'',
+										{ text: 'Lote medio OPU : ', style: 'normal_style' },
+										{ text: data.aspirationApi.medium_lot_opu, style: 'normal_style' },
+										],
+										[{ text: 'Aspirador: ', style: 'normal_style' },
+										{ text: data.aspirationApi.aspirator, style: 'normal_style' },
+											'',
+										{ text: 'Buscador : ', style: 'normal_style' },
+										{ text: data.aspirationApi.searcher, style: 'normal_style' },
+										],
+									]
 								},
-								layout: {
-									fillColor: function (rowIndex, node, columnIndex) {
-										return (rowIndex === 0) ? '#b9d2e8' : null;
-									}
-								}
+								layout: 'noBorders'
 							},
 							{
 								width: '*', text: ''
 							},
 						]
 					},
-					{ text: '\n\n\ INFORMACIÓN DEL EVENTO: ASPIRACIÓN FOLICULAR', bold: true, fontSize: 15, alignment: 'left' },
-					{ text: '\n\n\ DETALLES DE ASPIRACION:', alignment: 'left', fontSize: 15, bold: true },
-					{ text: '\n\ ' },
+					{
+						text: 'DETALLES DEL SERVICIO',
+						style: 'subtitle_style'
+					},
 					{
 						columns: [
 							{
@@ -224,47 +241,45 @@ export class AspirationPdfService {
 								table: {
 									headerRows: 1,
 									alignment: 'center',
-									fontSize: 9,
-									widths: [100, 100, 100, 100, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+									widths: ['auto', 'auto', 100, 100, 100, 100, 'auto', 100, 'auto', 'auto', 'auto', 'auto', 'auto'],
 									body: aspirationDetails,
 								},
-								layout: {
-									fillColor: function (rowIndex, node, columnIndex) {
-										return (rowIndex === 0) ? '#b9d2e8' : null;
-									}
-								}
 							},
 							{
 								width: '*', text: ''
 							},
 						]
 					},
-					{ text: '\n\n\ NOMBRE Y FIRMA DEL ENCARGADO', alignment: 'center', pageBreak: 'before', fontSize: 18, bold: true },
-					{ text: '\n\n\ ' },
 					{
-						columns: [
-							{
-								width: '*', text: ''
-							},
-							{
-								image: signatureImage,
-								width: 700,
-								height: 300,
-							},
-							{
-								width: '*', text: ''
-							},
-						],
+						text: 'DATOS GENERALES',
+						style: 'subtitle_style'
 					},
-					{ text: data.aspirationApi.received_by, alignment: 'center', fontSize: 15, bold: true },
-					{ text: data.aspirationApi.identification_number, alignment: 'center', fontSize: 15, bold: true },
-					{ text: '\n\n\ FOTO EVIDENCIA DEL EVENTO', alignment: 'center', pageBreak: 'before', fontSize: 18, bold: true },
-					{ text: '\n\n\ ' },
+					{
+						text: 'Temperatura de llegada:' + data.aspirationApi.arrived_temperature,
+						style: 'normal_style',
+					},
+					{
+						text: 'Tipo de transporte:' + data.aspirationApi.transport_type,
+						style: 'normal_style',
+					},
+					{
+						text: 'Observaciones:' + data.aspirationApi.comments,
+						style: 'normal_style',
+					},
 					{
 						columns: [
 							{
 								width: '*', text: ''
 							},
+							[	{
+									image: signatureImage,
+									width: 500,
+									height: 200,
+								},
+								{ text: 'Nombre del encargado: ' + data.aspirationApi.received_by },
+								{ text: 'Cédula: ' + data.aspirationApi.identification_number }
+							],
+							['',],
 							{
 								image: photoImage,
 								width: 300,
@@ -277,21 +292,22 @@ export class AspirationPdfService {
 					},
 				],
 				styles: {
-					header: {
-						bold: true,
-						fontSize: 10,
-						alignment: 'center'
-					},
-					sub_header: {
-						bold: true,
-						fontSize: 15,
-						alignment: 'left'
-					},
-					sub_header2: {
+					subtitle_style: {
 						bold: true,
 						fontSize: 12,
-						alignment: 'right'
+						decoration: 'underline',
+						alignment: 'left',
 					},
+					normal_style: {
+						fontSize: 12,
+						bold: false,
+						alignment: 'left',
+					},
+					title_table_style: {
+						fontSize: 11,
+						bold: true,
+						alignment: 'center',
+					}
 				},
 			};
 
