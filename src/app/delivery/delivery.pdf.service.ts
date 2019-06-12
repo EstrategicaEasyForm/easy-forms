@@ -39,7 +39,15 @@ export class DeliveryPdfService {
 	//	 open: true|false
 	// }
 	async makePdf(data, options) {
+
+		const _self = this;
+		let filename = "InVitroEntrega_";
+		if(data && data.order) filename = "InvitroEntrega_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
+		
+		return new Promise(resolve => {
 		try {
+			const dataDirectory = this.file.dataDirectory;
+			
 			pdfmake.vfs = pdfFonts.pdfMake.vfs;
 
 			const photoImage = data.deliveryApi.photoImage || this.imageSrc.imagePhotoDefault;
@@ -66,6 +74,7 @@ export class DeliveryPdfService {
 			]);
 
 			workTeam.push(['Nombre', 'Correo', 'Evento', 'Observación', 'Departamento', 'Municipio', 'Fecha']);
+			if(data.order.agenda)
 			for (let j of data.order.agenda) {
 				workTeam.push([j.user.name,
 				j.user.email,
@@ -281,54 +290,56 @@ export class DeliveryPdfService {
 			if (options.watermark) {
 				docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.3, bold: true, italics: false } });
 			}
+				pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {
+					try {
+						let utf8 = new Uint8Array(buffer);
+						let binaryArray = utf8.buffer;
 
-			const _self = this;
+						_self.saveToDevice(binaryArray, filename)
+							.then((result:any) => {
+								if(result.status==="success") {
+									if (options && options.open) {
+										_self.fileOpener.open(dataDirectory + filename, 'application/pdf')
+											.then(() => resolve({ status: "success", message: "File is opened", filename: filename, dataDirectory: dataDirectory }))
+											.catch(e => resolve({ status: "error", error: e, filename: filename }));
+									}
+									//Retorna el codigo binario del archivo pdf generado
+									else {
+										resolve({ status: "success", filename: filename, dataDirectory: dataDirectory });
+									}
+								}
+								else {
+									resolve({ status: "error", error: result.error, filename: filename });
+								}
+							});
 
-			return new Promise(resolve => {
+					} catch (e) {
+						const errm = e.message ? e.message : typeof e === 'string' ? e : JSON.stringify(e);
+						resolve({ status: "error", error: errm, filename: filename });
+					}
+				});
 
-				const dataDirectory = this.file.dataDirectory;
-				const filename = "InvitroDelivery_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
-
-				try {
-					pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {
-						try {
-							let utf8 = new Uint8Array(buffer);
-							let binaryArray = utf8.buffer;
-
-							_self.saveToDevice(binaryArray, filename);
-
-							if (options && options.open) {
-								_self.fileOpener.open(dataDirectory + filename, 'application/pdf')
-									.then(() => resolve({ status: "success", message: "File is opened", filename: filename, dataDirectory: dataDirectory }))
-									.catch(e => resolve({ status: "error", error: e, filename: filename }));
-							}
-							//Retorna el codigo binario del archivo pdf generado
-							else {
-								resolve({ status: "success", filename: filename, dataDirectory: dataDirectory });
-							}
-
-						} catch (e) {
-							const errm = e.message ? e.message : typeof e === 'string' ? e : '';
-							resolve({ status: "error", error: errm, filename: filename });
-						}
-					});
-
-				} catch (err) {
-					const errm = err.message ? err.message : typeof err === 'string' ? err : '';
-					resolve({ status: "error", error: errm, filename: filename });
-				}
-			});
-		}
-		catch (err) {
-			return new Promise(resolve => {
-				resolve({ status: "error", error: err });
-			});
-		}
+			} catch (err) {
+				const errm = err.message ? err.message : typeof err === 'string' ? err : JSON.stringify(err);
+				resolve({ status: "error", error: errm, filename: filename });
+			}
+		});
 	}
 	saveToDevice(data: any, savefile: any) {
-		let options: IWriteOptions = { replace: true };
-
-		this.file.writeFile(this.file.dataDirectory, savefile, data, options);
-		console.log('File saved to your device in ' + this.file.dataDirectory);
+		return new Promise(resolve => {
+			let options: IWriteOptions = { replace: true };
+			try {
+				this.file.writeFile(this.file.dataDirectory, savefile, data, options)
+				.then((result) => {
+					resolve({ status: "success"});
+				}).catch((error) => {
+					const errm = error.message ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
+					resolve({ status: "error", error: errm});
+				});
+			} catch(error){
+				const errm = error.message ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
+				resolve({ status: "error", error: errm});
+			};
+		});	
 	}
 }
