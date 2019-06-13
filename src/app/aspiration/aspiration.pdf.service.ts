@@ -57,7 +57,7 @@ export class AspirationPdfService {
 
 				var aspirationDetails = [];
 				var workTeam = [];
-				var cont_details = 0;
+				var cont_details = 1;
 
 				aspirationDetails.push([
 					{ text: 'No.', style: 'title_table_style' },
@@ -76,19 +76,19 @@ export class AspirationPdfService {
 				]);
 				for (let i of data.aspirationApi.details) {
 					aspirationDetails.push([
-						{ text: cont_details++, style: 'title_table_style' },
-						{ text: i.arrived_time, style: 'title_table_style' },
-						{ text: i.donor, style: 'title_table_style' },
-						{ text: i.donor_breed, style: 'title_table_style' },
-						{ text: i.bull, style: 'title_table_style' },
-						{ text: i.bull_breed, style: 'title_table_style' },
-						{ text: i.type, style: 'title_table_style' },
-						{ text: i.local.name, style: 'title_table_style' },
-						{ text: i.gi, style: 'title_table_style' },
-						{ text: i.gii, style: 'title_table_style' },
-						{ text: i.giii, style: 'title_table_style' },
-						{ text: i.others, style: 'title_table_style' },
-						{ text: i.gi + i.gii + i.giii, style: 'title_table_style' },
+						{ text: cont_details++, style: 'normal_style' },
+						{ text: i.arrived_time, style: 'normal_style' },
+						{ text: i.donor, style: 'normal_style' },
+						{ text: i.donor_breed, style: 'normal_style' },
+						{ text: i.bull, style: 'normal_style' },
+						{ text: i.bull_breed, style: 'normal_style' },
+						{ text: i.type, style: 'normal_style' },
+						{ text: i.local.name, style: 'normal_style' },
+						{ text: i.gi, style: 'normal_style' },
+						{ text: i.gii, style: 'normal_style' },
+						{ text: i.giii, style: 'normal_style' },
+						{ text: i.others, style: 'normal_style' },
+						{ text: i.gi + i.gii + i.giii, style: 'normal_style' },
 					]);
 				}
 
@@ -109,14 +109,16 @@ export class AspirationPdfService {
 				}
 
 				let docDefinition = {
-					pageSize: 'A4',
-					pageMargins: [40, 60, 40, 60],
+					pageSize: 'LETTER',
+					pageMargins: [72,72,72,72],
 					pageOrientation: 'landscape',
 					header: {
 						image: this.imageSrc.logoSrcBase64,
-						width: 110,
-						height: 60,
+						width: 90,
+						height: 40,
 						alignment: 'right',
+						margin: [25,25],
+						opacity: 0.5,
 					},
 					footer: {
 						text: 'Carrera 72A # 49A - 39 Bogotá, (+57 1) 7968626 – 3135700023 – logística@invitro.com.co',
@@ -126,26 +128,28 @@ export class AspirationPdfService {
 					},
 					content: [
 						{
-							text: '\n\ REPORTE DE SERVICIO TÉCNICO',
+							text: 'REPORTE DE SERVICIO TÉCNICO',
 							fontSize: 16,
 							alignment: 'left',
 						},
 						{
-							text: '\n\ FECHA DE REPORTE: 28-03-2019',
+							text: 'FECHA DE REPORTE: 28-03-2019',
 							fontSize: 12,
 							alignment: 'right',
 						},
+						{ text: '\n\ ' },
 						{
 							text: 'DATOS DEL CLIENTE',
 							style: 'subtitle_style'
 						},
+						{ text: '\n\ ' },
 						{
 							columns: [
 								{
 									width: 'auto',
 									table: {
 										fontSize: 12,
-										widths: ['*', '*'],
+										widths: ['auto', '*'],
 										body: [
 											[{ text: 'Razon Social:', style: 'normal_style' }, { text: data.order.client.bussiness_name, style: 'normal_style' }],
 											[{ text: 'No. Identificación:', style: 'normal_style' }, { text: data.order.client_id, style: 'normal_style' }],
@@ -164,6 +168,7 @@ export class AspirationPdfService {
 								},
 							]
 						},
+						{ text: '\n\ ' },
 						{
 							text: 'PERSONAL ASIGNADO',
 							style: 'subtitle_style'
@@ -177,7 +182,6 @@ export class AspirationPdfService {
 								{
 									width: 'auto',
 									table: {
-										fontSize: 9,
 										headerRows: 1,
 										widths: [140, 100, 60, 140],
 										body: workTeam
@@ -188,10 +192,12 @@ export class AspirationPdfService {
 								},
 							]
 						},
+						{ text: '\n\ ' },
 						{
 							text: 'INFORMACIÓN DEL SERVICIO',
 							style: 'subtitle_style'
 						},
+						{ text: '\n\ ' },
 						{
 							columns: [
 								{
@@ -201,7 +207,7 @@ export class AspirationPdfService {
 									width: 'auto',
 									table: {
 										fontSize: 12,
-										widths: ['*', '*', 40, '*', '*'],
+										widths: ['auto', 120, 40, 'auto', 120],
 										body: [
 											[{ text: 'Orden de prod.: ', style: 'normal_style' },
 											{ text: data.order.id, style: 'normal_style' },
@@ -238,8 +244,10 @@ export class AspirationPdfService {
 						},
 						{
 							text: 'DETALLES DEL SERVICIO',
-							style: 'subtitle_style'
+							style: 'subtitle_style',
+							pageBreak: 'before',
 						},
+						{ text: '\n\ ' },
 						{
 							columns: [
 								{
@@ -250,7 +258,7 @@ export class AspirationPdfService {
 									table: {
 										headerRows: 1,
 										alignment: 'center',
-										widths: ['auto', 'auto', 100, 100, 100, 100, 'auto', 100, 'auto', 'auto', 'auto', 'auto', 'auto'],
+										widths: ['auto', 'auto', 60, 50, 60, 50, 'auto', 100, 'auto', 'auto', 'auto', 'auto', 'auto'],
 										body: aspirationDetails,
 									},
 								},
@@ -259,10 +267,12 @@ export class AspirationPdfService {
 								},
 							]
 						},
+						{ text: '\n\ ' },
 						{
 							text: 'DATOS GENERALES',
 							style: 'subtitle_style'
 						},
+						{ text: '\n\ ' },
 						{
 							text: 'Temperatura de llegada:' + data.aspirationApi.arrived_temperature,
 							style: 'normal_style',
@@ -271,32 +281,31 @@ export class AspirationPdfService {
 							text: 'Tipo de transporte:' + data.aspirationApi.transport_type,
 							style: 'normal_style',
 						},
+						{ text: '\n\ ' },
 						{
 							text: 'Observaciones:' + data.aspirationApi.comments,
 							style: 'normal_style',
 						},
 						{
 							columns: [
-								{
-									width: '*', text: ''
-								},
 								[	{
 										image: signatureImage,
 										width: 500,
 										height: 200,
 									},
+									{ text: '\n\ ' },
 									{ text: 'Nombre del encargado: ' + data.aspirationApi.received_by },
 									{ text: 'Cédula: ' + data.aspirationApi.identification_number }
 								],
-								['',],
-								{
+								[	{ text: '\n\ ' },
+									{ text: '\n\ ' },
+									{ text: '\n\ ' },
+									{
 									image: photoImage,
-									width: 300,
-									height: 300,
-								},
-								{
-									width: '*', text: ''
-								},
+									width: 150,
+									height: 150,
+									}
+								],
 							]
 						},
 					],
