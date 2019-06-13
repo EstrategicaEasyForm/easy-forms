@@ -115,7 +115,7 @@ export class AspirationPdfService {
 					header: {
 						image: this.imageSrc.logoSrcBase64,
 						width: 90,
-						height: 40,
+						height: 55,
 						alignment: 'right',
 						margin: [25,25],
 						opacity: 0.5,
@@ -133,16 +133,22 @@ export class AspirationPdfService {
 							alignment: 'left',
 						},
 						{
+							text: ' ',
+							fontSize: 15,
+						},
+						{
 							text: 'FECHA DE REPORTE: ' + moment().format('DD-MM-YYYY'),
 							fontSize: 12,
 							alignment: 'right',
 						},
-						{ text: '\n\ ' },
 						{
 							text: 'DATOS DEL CLIENTE',
 							style: 'subtitle_style'
 						},
-						{ text: '\n\ ' },
+						{
+							text: ' ',
+							fontSize: 12,
+						},
 						{
 							columns: [
 								{
@@ -173,7 +179,10 @@ export class AspirationPdfService {
 							text: 'PERSONAL ASIGNADO',
 							style: 'subtitle_style'
 						},
-						{ text: '\n\ ' },
+						{
+							text: ' ',
+							fontSize: 12,
+						},
 						{
 							columns: [
 								{
@@ -197,7 +206,10 @@ export class AspirationPdfService {
 							text: 'INFORMACIÓN DEL SERVICIO',
 							style: 'subtitle_style'
 						},
-						{ text: '\n\ ' },
+						{
+							text: ' ',
+							fontSize: 12,
+						},
 						{
 							columns: [
 								{
