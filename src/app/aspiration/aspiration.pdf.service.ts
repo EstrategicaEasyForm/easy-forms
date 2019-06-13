@@ -58,6 +58,8 @@ export class AspirationPdfService {
 				var aspirationDetails = [];
 				var workTeam = [];
 				var cont_details = 1;
+				
+				data.aspirationApi.totals = {gi: 0, gii: 0, giii: 0, others: 0,all: 0};
 
 				aspirationDetails.push([
 					{ text: 'No.', style: 'title_table_style' },
@@ -75,6 +77,11 @@ export class AspirationPdfService {
 					{ text: 'Viables', style: 'title_table_style' },
 				]);
 				for (let i of data.aspirationApi.details) {
+					data.aspirationApi.totals.gi += Number(i.gi);
+					data.aspirationApi.totals.gii += Number(i.gii);
+					data.aspirationApi.totals.giii += Number(i.giii);
+					data.aspirationApi.totals.others += Number(i.others);
+					data.aspirationApi.totals.all += Number(i.gi)+Number(i.gii)+Number(i.giii)+Number(i.others);
 					aspirationDetails.push([
 						{ text: cont_details++, style: 'normal_style' },
 						{ text: i.arrived_time, style: 'normal_style' },
@@ -91,6 +98,21 @@ export class AspirationPdfService {
 						{ text: i.gi + i.gii + i.giii, style: 'normal_style' },
 					]);
 				}
+				aspirationDetails.push([
+						{ text: '', style: 'normal_style' },
+						{ text: '', style: 'normal_style' },
+						{ text: '', style: 'normal_style' },
+						{ text: '', style: 'normal_style' },
+						{ text: '', style: 'normal_style' },
+						{ text: '', style: 'normal_style' },
+						{ text: '', style: 'normal_style' },
+						{ text: 'Total', style: 'normal_style' },
+						{ text: data.aspirationApi.totals.gi, style: 'normal_style' },
+						{ text: data.aspirationApi.totals.gii, style: 'normal_style' },
+						{ text: data.aspirationApi.totals.giii, style: 'normal_style' },
+						{ text: data.aspirationApi.totals.others, style: 'normal_style' },
+						{ text: data.aspirationApi.totals.all, style: 'normal_style' },
+					]);
 
 				workTeam.push([
 					{ text: 'Nombre del técnico', style: 'title_table_style' },
@@ -98,7 +120,7 @@ export class AspirationPdfService {
 					{ text: 'Fecha', style: 'title_table_style' },
 					{ text: 'Observaciones', style: 'title_table_style' }
 				]);
-				if(data.agenda)
+				if(data.agenda.user && data.agenda.event) {
 				//for (let j of data.agenda) {
 					workTeam.push([
 						data.agenda.user.name,
@@ -106,7 +128,15 @@ export class AspirationPdfService {
 						data.agenda.start_date,
 						data.agenda.observation,
 					]);
-				//}
+				}
+				else {
+					workTeam.push([
+						'',
+						'',
+						'',
+						'',
+					]);
+				}
 
 				let docDefinition = {
 					pageSize: 'LETTER',
@@ -259,7 +289,10 @@ export class AspirationPdfService {
 							style: 'subtitle_style',
 							pageBreak: 'before',
 						},
-						{ text: '\n\ ' },
+						{
+							text: ' ',
+							fontSize: 12,
+						},
 						{
 							columns: [
 								{
@@ -284,38 +317,40 @@ export class AspirationPdfService {
 							text: 'DATOS GENERALES',
 							style: 'subtitle_style'
 						},
-						{ text: '\n\ ' },
 						{
-							text: 'Temperatura de llegada:' + data.aspirationApi.arrived_temperature,
+							text: ' ',
+							fontSize: 12,
+						},
+						{
+							text: 'Temperatura de llegada  : ' + data.aspirationApi.arrived_temperature_number + '°C',
 							style: 'normal_style',
 						},
 						{
-							text: 'Tipo de transporte:' + data.aspirationApi.transport_type,
+							text: 'Tipo de transporte  : ' + data.aspirationApi.transport_type,
 							style: 'normal_style',
 						},
 						{ text: '\n\ ' },
 						{
-							text: 'Observaciones:' + data.aspirationApi.comments,
+							text: 'Observaciones  : ' + data.aspirationApi.comments,
 							style: 'normal_style',
 						},
 						{
 							columns: [
-								[	{
+								[	{ text: '\n\ ' },
+									{
 										image: signatureImage,
-										width: 500,
-										height: 200,
+										width: 400,
+										height: 120,
 									},
-									{ text: '\n\ ' },
-									{ text: 'Nombre del encargado: ' + data.aspirationApi.received_by },
-									{ text: 'Cédula: ' + data.aspirationApi.identification_number }
+									{ text: 'Nombre del encargado  : ' + data.aspirationApi.received_by, alignment: 'center' },
+									{ text: 'Cédula  : ' + data.aspirationApi.identification_number, alignment: 'center'  }
 								],
 								[	{ text: '\n\ ' },
 									{ text: '\n\ ' },
-									{ text: '\n\ ' },
 									{
-									image: photoImage,
-									width: 150,
-									height: 150,
+										image: photoImage,
+										width: 100,
+										height: 120,
 									}
 								],
 							]
@@ -364,20 +399,6 @@ export class AspirationPdfService {
 									}
 								}
 								else { 
-									if(options && options.open) {
-										var file = new Blob([binaryArray], {type:'application/pdf'});
-										var fileUrl = URL.createObjectURL(file);
-
-										//open it via a link
-										var fileName = "test.pdf";
-										var a = document.createElement("a");
-										document.body.appendChild(a);
-										a.href = fileUrl;
-										a.download = fileName;
-										a.click();
-										//open it directly 
-										window.open(fileUrl);
-									}
 									resolve({ status: "error", error: result.error, filename: filename });
 								}
 							});
