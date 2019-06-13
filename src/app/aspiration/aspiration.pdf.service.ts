@@ -99,14 +99,14 @@ export class AspirationPdfService {
 					{ text: 'Observaciones', style: 'title_table_style' }
 				]);
 				if(data.agenda)
-				for (let j of data.agenda) {
+				//for (let j of data.agenda) {
 					workTeam.push([
-						j.user.name,
-						j.event.name,
-						j.start_date,
-						j.observation
+						data.agenda.user.name,
+						data.agenda.event.name,
+						data.agenda.start_date,
+						data.agenda.observation,
 					]);
-				}
+				//}
 
 				let docDefinition = {
 					pageSize: 'LETTER',
@@ -351,7 +351,7 @@ export class AspirationPdfService {
 										resolve({ status: "success", filename: filename, dataDirectory: dataDirectory });
 									}
 								}
-								else {
+								else { 
 									if(options && options.open) {
 										var file = new Blob([binaryArray], {type:'application/pdf'});
 										var fileUrl = URL.createObjectURL(file);
