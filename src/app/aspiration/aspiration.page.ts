@@ -9,6 +9,7 @@ import { Location } from '@angular/common';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import * as moment from 'moment-timezone';
 import { AspirationPdfService } from './aspiration.pdf.service';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 @Component({
   selector: 'app-aspiration',
@@ -75,11 +76,18 @@ export class AspirationPage implements OnInit {
     public alertController: AlertController,
     public camera: Camera,
     public platform: Platform,
-    public aspirationPdf: AspirationPdfService) {
-
-  }
+    public aspirationPdf: AspirationPdfService,
+	public screenOrientation: ScreenOrientation) {
+		
+    }
 
   ngOnInit() {
+	  
+	try {  
+		this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
+	} catch(err) {
+		
+	}
 
     const detail = this.ordersService.getDetailApiParam();
     this.aspirationObjOri = detail.aspirationApi;
@@ -285,6 +293,6 @@ export class AspirationPage implements OnInit {
       duration: 200
     });
     await loading.present();
+	
   }
-
 }

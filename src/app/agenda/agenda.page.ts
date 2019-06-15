@@ -6,6 +6,7 @@ import { UsersService } from '../users.service';
 import { ViewChild } from '@angular/core';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 import * as moment from 'moment-timezone';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 @Component({
   selector: 'app-agenda',
@@ -28,7 +29,8 @@ export class AgendaPage implements OnInit {
     public usersService: UsersService,
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
-    public events: Events) {
+    public events: Events,
+	public screenOrientation: ScreenOrientation) {
 
     this.initFilters();
 
@@ -42,6 +44,14 @@ export class AgendaPage implements OnInit {
       this.userId = "" + userAuth.id_user;
       this.retriveDetailsApi();
     });
+	
+	try {  
+		this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);	
+		// allow user rotate
+		this.screenOrientation.unlock();
+	} catch(err) {
+		
+	}
   }
 
   async retriveDetailsApi() {

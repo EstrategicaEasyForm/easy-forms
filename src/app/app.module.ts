@@ -23,6 +23,7 @@ import { SignatureDrawPadPageModule } from './signature-draw-pad/signature-draw-
 import { AspirationDetailPageModule } from './aspiration/aspiration-detail.module';
 import { EvaluationDetailPageModule } from './evaluation/evaluation-detail.module';
 import { Camera } from '@ionic-native/camera/ngx';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -47,8 +48,9 @@ import { Camera } from '@ionic-native/camera/ngx';
     Network,
     NetworkNotifyService,
     Camera,
-	  File,
+	File,
     FileOpener,
+	ScreenOrientation,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
