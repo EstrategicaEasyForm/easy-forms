@@ -141,6 +141,19 @@ ion-card-header {
     right: 0px;
     box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
 }
+.sync-finalize {
+    text-align: center;
+    background: yellow;
+    opacity: 0.6;
+    width: 28%;
+    border-radius: 51px;
+    height: 34px;
+    font-size: 23px;
+    color: black;
+    padding-top: 5px;
+    right: 0px;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+}
 .sync-error {
     text-align: center;
     background: rgb(238, 89, 89);

@@ -115,17 +115,33 @@ export class AgendaPage implements OnInit {
       order: order,
       local: detailApi.local,
       employees: [],
+	  employeesNames: '',
       agenda: {},
       comments: ''
     }
     newDetailApi[type.tag] = worksheet;
     const employees = [];
+	let employee: string;
     for (let agenda of order.agenda) {
       if (agenda.event.id === newDetailApi.type.id && newDetailApi.local.name === agenda.name_local) {
-        employees.push(agenda.user);
+		  
+		if(agenda.user) {
+			employee = agenda.user.name;
+			employees.push(agenda.user);
+		}
+		else if(agenda.other_user) {
+			employee = agenda.other_user.name;
+		}
+		else {
+			employee = '';
+		}
+		
+		if(newDetailApi.employeesNames.length > 0 ) newDetailApi.employeesNames += ',';
+		newDetailApi.employeesNames += employee;
       }
     }
     newDetailApi.employees = employees;
+	
     let mbAdding = false;
     for (let agenda of order.agenda) {
       if (agenda.event.id === newDetailApi.type.id && newDetailApi.local.name === agenda.name_local) {

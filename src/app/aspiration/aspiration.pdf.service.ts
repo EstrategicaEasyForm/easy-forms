@@ -120,22 +120,48 @@ export class AspirationPdfService {
 					{ text: 'Fecha', style: 'title_table_style' },
 					{ text: 'Observaciones', style: 'title_table_style' }
 				]);
-				if(data.agenda.user && data.agenda.event) {
-				//for (let j of data.agenda) {
+				
+				const employees = [];
+				let employee: string;
+				for (let agenda of data.order.agenda) {
+				  if (agenda.event.id === '2' && data.local.name === agenda.name_local) {
+					if(agenda.user) {
+						employee = agenda.user.name;
+					}
+					else if(agenda.other_user) {
+						employee = agenda.other_user.name;
+						
+					}
+					else {
+						employee = '';
+					}
+					const start_date = agenda.all_day ? agenda.start_date.substr(0,10)  : agenda.start_date;
+					employees.push({ 
+						name: employee, 
+						eventName:agenda.event.name, 
+						start_date: start_date,
+						observation: agenda.observation 
+					});
+				  }
+				}
+				
+				for (let j of employees) {
 					workTeam.push([
-						data.agenda.user.name,
-						data.agenda.event.name,
-						data.agenda.start_date,
-						data.agenda.observation,
+						j.name,
+						j.eventName,
+						j.start_date,
+						j.observation,
 					]);
 				}
-				else {
-					workTeam.push([
-						'',
-						'',
-						'',
-						'',
-					]);
+				if(employees.length < 3){
+					for(let i=0;i<3-employees.length;i++) {
+						workTeam.push([
+							'\r',
+							'\r',
+							'\r',
+							'\r',
+						]);
+					}	
 				}
 
 				let docDefinition = {
@@ -222,7 +248,7 @@ export class AspirationPdfService {
 									width: 'auto',
 									table: {
 										headerRows: 1,
-										widths: [140, 100, 60, 140],
+										widths: [140, 100, 100, 140],
 										body: workTeam
 									},
 								},
@@ -399,6 +425,20 @@ export class AspirationPdfService {
 									}
 								}
 								else { 
+									if(options && options.open) {
+										var file = new Blob([binaryArray], {type:'application/pdf'});
+										var fileUrl = URL.createObjectURL(file);
+
+										//open it via a link
+										var fileName = "test.pdf";
+										var a = document.createElement("a");
+										document.body.appendChild(a);
+										a.href = fileUrl;
+										a.download = fileName;
+										a.click();
+										//open it directly 
+										window.open(fileUrl);
+									}
 									resolve({ status: "error", error: result.error, filename: filename });
 								}
 							});
