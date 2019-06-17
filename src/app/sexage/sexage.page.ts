@@ -9,6 +9,7 @@ import { Location } from '@angular/common';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import * as moment from 'moment-timezone';
 import { SexagePdfService } from './sexage.pdf.service';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 @Component({
   selector: 'app-sexage',
@@ -59,7 +60,8 @@ export class SexagePage implements OnInit {
     public alertController: AlertController,
     public camera: Camera,
     public platform: Platform,
-    public sexagePdf: SexagePdfService) {
+    public sexagePdf: SexagePdfService,
+    public screenOrientation: ScreenOrientation) {
 
   }
 
@@ -243,7 +245,7 @@ export class SexagePage implements OnInit {
       }
     });
   }
-  
+
   async showMessage(message: string) {
     const toast = await this.toastCtrl.create({
       message: message,
@@ -267,6 +269,22 @@ export class SexagePage implements OnInit {
     detailList.closeSlidingItems();
     this.saveSexage();
     this.showMessage('Registro modificado');
+  }
+
+  ionViewWillEnter() {
+    this.initOrientation();
+  }
+
+  ionViewDidLeave() {
+    this.agendaPage.initOrientation();
+  }
+
+  initOrientation() {
+    try {
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
+    } catch (err) {
+      this.showMessage(err);
+    }
   }
 
 }

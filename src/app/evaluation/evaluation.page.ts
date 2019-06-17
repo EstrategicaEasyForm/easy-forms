@@ -10,6 +10,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import * as moment from 'moment-timezone';
 import { EvaluationPdfService } from './evaluation.pdf.service';
 import { AnyARecord } from 'dns';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 @Component({
   selector: 'app-evaluation',
@@ -61,7 +62,8 @@ export class EvaluationPage implements OnInit {
     public alertController: AlertController,
     public camera: Camera,
     public platform: Platform,
-    public evaluationPdf: EvaluationPdfService) {
+    public evaluationPdf: EvaluationPdfService,
+    public screenOrientation: ScreenOrientation) {
   }
 
   ngOnInit() {
@@ -271,4 +273,21 @@ export class EvaluationPage implements OnInit {
       }
     }
   }
+
+  ionViewWillEnter() {
+      this.initOrientation();
+  }
+
+  ionViewDidLeave() {
+    this.agendaPage.initOrientation();
+  }
+
+  initOrientation() {
+    try {  
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE_SECONDARY);
+    } catch(err) {
+      this.showMessage(err);
+    }
+  }
+
 }

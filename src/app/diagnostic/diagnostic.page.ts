@@ -9,6 +9,7 @@ import { Location } from '@angular/common';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import * as moment from 'moment-timezone';
 import { DiagnosticPdfService } from './diagnostic.pdf.service';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 @Component({
   selector: 'app-diagnostic',
@@ -59,7 +60,8 @@ export class DiagnosticPage implements OnInit {
     public alertController: AlertController,
     public camera: Camera,
     public platform: Platform,
-    public diagnosticPdf: DiagnosticPdfService) {
+    public diagnosticPdf: DiagnosticPdfService,
+    public screenOrientation: ScreenOrientation) {
 
   }
 
@@ -266,6 +268,22 @@ export class DiagnosticPage implements OnInit {
     this.saveDiagnostic();
     detailList.closeSlidingItems();
     this.showMessage('Registro modificado');
+  }
+
+  ionViewWillEnter() {
+      this.initOrientation();
+  }
+
+  ionViewDidLeave() {
+    this.agendaPage.initOrientation();
+  }
+
+  initOrientation() {
+    try {  
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);	
+    } catch(err) {
+      this.showMessage(err);
+    }
   }
 
 }

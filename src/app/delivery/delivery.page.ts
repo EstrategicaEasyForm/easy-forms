@@ -9,6 +9,7 @@ import { Location } from '@angular/common';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import * as moment from 'moment-timezone';
 import { DeliveryPdfService } from './delivery.pdf.service';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 @Component({
   selector: 'app-delivery',
@@ -59,7 +60,8 @@ export class DeliveryPage implements OnInit {
     public alertController: AlertController,
     public camera: Camera,
     public platform: Platform,
-    public deliveryPdf: DeliveryPdfService) {
+    public deliveryPdf: DeliveryPdfService,
+    public screenOrientation: ScreenOrientation) {
 
   }
 
@@ -75,6 +77,8 @@ export class DeliveryPage implements OnInit {
     this.agenda = detail.agenda;
 
     let detailsTmp;
+
+
 
     //Si el objeto details es diferente al objeto detailsDelivery se rearma la lista para incluir todos los detalles de detailsDelivery.
     if (this.delivery.details.length !== this.delivery.detailsDelivery.length) {
@@ -267,5 +271,21 @@ export class DeliveryPage implements OnInit {
     this.saveDelivery();
     detailList.closeSlidingItems();
     this.showMessage('Registro modificado');
+  }
+
+  ionViewWillEnter() {
+      this.initOrientation();
+  }
+
+  ionViewDidLeave() {
+    this.agendaPage.initOrientation();
+  }
+
+  initOrientation() {
+    try {  
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);	
+    } catch(err) {
+      this.showMessage(err);
+    }
   }
 }

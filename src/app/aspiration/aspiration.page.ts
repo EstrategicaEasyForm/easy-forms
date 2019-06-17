@@ -82,14 +82,7 @@ export class AspirationPage implements OnInit {
     }
 
   ngOnInit() {
-	  
-	try {  
-		this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
-	} catch(err) {
-		
-	}
-
-    const detail = this.ordersService.getDetailApiParam();
+	  const detail = this.ordersService.getDetailApiParam();
     this.aspirationObjOri = detail.aspirationApi;
     this.aspiration = Object.assign({}, this.aspirationObjOri);
     this.agendaPage = detail.agendaPage;
@@ -293,6 +286,21 @@ export class AspirationPage implements OnInit {
       duration: 200
     });
     await loading.present();
-	
+  }
+
+  ionViewWillEnter() {
+      this.initOrientation();
+  }
+
+  ionViewDidLeave() {
+    this.agendaPage.initOrientation();
+  }
+
+  initOrientation() {
+    try {  
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY);	
+    } catch(err) {
+      this.showMessage(err);
+    }
   }
 }

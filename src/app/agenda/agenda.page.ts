@@ -44,14 +44,6 @@ export class AgendaPage implements OnInit {
       this.userId = "" + userAuth.id_user;
       this.retriveDetailsApi();
     });
-	
-	try {  
-		this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);	
-		// allow user rotate
-		this.screenOrientation.unlock();
-	} catch(err) {
-		
-	}
   }
 
   async retriveDetailsApi() {
@@ -435,6 +427,20 @@ export class AgendaPage implements OnInit {
     return new Promise(resolve => {
       setTimeout(resolve, ms);
     });
+  }
+
+  ionViewDidEnter() {
+    this.initOrientation();
+  }
+
+  initOrientation() {
+    try {  
+      //this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);	
+      // allow user rotate
+      this.screenOrientation.unlock();
+    } catch(err) {
+      this.showMessage(err);
+    }
   }
 
 }

@@ -9,6 +9,7 @@ import { Location } from '@angular/common';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import * as moment from 'moment-timezone';
 import { TransferPdfService } from './transfer.pdf.service';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 @Component({
   selector: 'app-transfer',
@@ -58,9 +59,10 @@ export class TransferPage implements OnInit {
     public alertController: AlertController,
     public camera: Camera,
     public platform: Platform,
-    public transferPdf: TransferPdfService) { }
+    public transferPdf: TransferPdfService,
+    public screenOrientation: ScreenOrientation) { }
 
-  ngOnInit() {
+  ngOnInit() {    
     const detail = this.ordersService.getDetailApiParam();
     this.transferObjOri = detail.transferApi;
     this.transfer = Object.assign({}, this.transferObjOri);
@@ -281,6 +283,22 @@ export class TransferPage implements OnInit {
 			  detail.stateSync = 'U';
 		  }
 	  }
+  }
+
+  ionViewWillEnter() {
+      this.initOrientation();
+  }
+
+  ionViewDidLeave() {
+    this.agendaPage.initOrientation();
+  }
+
+  initOrientation() {
+    try {  
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);	
+    } catch(err) {
+      this.showMessage(err);
+    }
   }
 
 }
