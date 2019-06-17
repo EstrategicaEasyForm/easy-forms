@@ -28,6 +28,7 @@ export class SexagePage implements OnInit {
   showTakePhoto = true;
   photoImage: any;
   mbControlPanel: number = 1;
+  start_date = '';
 
   //validations forms
   validation_form_general: FormGroup;
@@ -75,6 +76,7 @@ export class SexagePage implements OnInit {
     this.order = detail.order;
     this.detailApi = detail.detailApi;
     this.agenda = detail.agenda;
+	this.start_date = this.agenda && this.agenda.all_day === '1' ? this.agenda.start_date.substr(0,10) : this.agenda.start_date;
 
     let detailsTmp;
 
@@ -139,7 +141,13 @@ export class SexagePage implements OnInit {
     return await modalPage.present();
   }
 
-  openPdfViewer() {
+  async openPdfViewer() {
+	  
+	const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere' 
+    });
+    await loading.present();
+	
     const data = {
       sexageApi: this.sexage,
       order: this.order,
@@ -150,7 +158,8 @@ export class SexagePage implements OnInit {
       open: true
     };
     this.sexagePdf.makePdf(data, options).then((pdf: any) => {
-      if (pdf.status === 'error') {
+	  loading.dismiss();	
+	  if (pdf.status === 'error') {
         this.showMessage(pdf.error);
       }
     });

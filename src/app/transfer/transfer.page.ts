@@ -28,6 +28,7 @@ export class TransferPage implements OnInit {
   showTakePhoto = true;
   photoImage: any;
   mbControlPanel: number = 1;
+  start_date = '';
 
   validation_messages = {
     'received_by': [
@@ -70,6 +71,7 @@ export class TransferPage implements OnInit {
     this.detailApi = detail.detailApi;
     this.order = detail.order;
     this.agenda = detail.agenda;
+	this.start_date = this.agenda && this.agenda.all_day === '1' ? this.agenda.start_date.substr(0,10) : this.agenda.start_date;
     
     this.validation_form_order = this.formBuilder.group({});
 	this.transfer.transferor = this.transfer.details_view[0].transferor
@@ -149,7 +151,13 @@ export class TransferPage implements OnInit {
     return await modalPage.present();
   }
 
-  openPdfViewer() {
+  async openPdfViewer() {
+	  
+	const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere' 
+    });
+    await loading.present();
+	
     const data = {
       transferApi: this.transfer,
       order: this.order,
@@ -160,7 +168,8 @@ export class TransferPage implements OnInit {
       open: true
     };
     this.transferPdf.makePdf(data, options).then((pdf: any) => {
-      if (pdf.status === 'error') {
+	  loading.dismiss();	
+	  if (pdf.status === 'error') {
         this.showMessage(pdf.error);
       }
     });
