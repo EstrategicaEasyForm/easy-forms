@@ -115,8 +115,9 @@ export class EvaluationPage implements OnInit {
     this.ordersService.setDetailApiParam({
       evaluation: this.evaluation,
       detailApiId: indx,
-      evaluationPage: this
-    });
+      evaluationPage: this,
+	  local: this.detailApi.local
+    }); 
     this.router.navigate(['evaluation-detail']);
   }
 
@@ -271,16 +272,6 @@ export class EvaluationPage implements OnInit {
       duration: 200
     });
     await loading.present();
-  }
-
-  onChangeLocal($localId) {
-    if (this.evaluation.locals) {
-      for (let local of this.evaluation.locals) {
-        if (local.id === $localId) {
-          this.detailApi.local = local;
-        }
-      }
-    }
   }
 
   ionViewWillEnter() {
