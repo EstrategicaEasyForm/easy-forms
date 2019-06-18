@@ -280,7 +280,7 @@ export class AspirationPdfService {
 											[{ text: 'Orden de prod.: ', style: 'normal_style' },
 											{ text: data.order.id, style: 'normal_style' },
 												'',
-											{ text: 'Fecha OPU : ', style: 'normal_style' },
+											{ text: 'Fecha OPU: ', style: 'normal_style' },
 											{ text: data.aspirationApi.date, style: 'normal_style' },
 											],
 											[{ text: 'Local: ', style: 'normal_style' },
@@ -368,8 +368,6 @@ export class AspirationPdfService {
 										width: 400,
 										height: 120,
 									},
-									{ text: 'Nombre del encargado  : ' + data.aspirationApi.received_by, alignment: 'center' },
-									{ text: 'Cédula  : ' + data.aspirationApi.identification_number, alignment: 'center'  }
 								],
 								[	{ text: '\n\ ' },
 									{ text: '\n\ ' },
@@ -381,6 +379,8 @@ export class AspirationPdfService {
 								],
 							]
 						},
+						{ text: 'Nombre del encargado  : ' + data.aspirationApi.received_by, alignment: 'left' },
+						{ text: 'Cédula  : ' + data.aspirationApi.identification_number, alignment: 'left'  }
 					],
 					styles: {
 						subtitle_style: {
