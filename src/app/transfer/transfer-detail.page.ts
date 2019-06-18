@@ -33,7 +33,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     'synchronizeds': [
       { type: 'required', message: 'Campo requerido.' }
     ],
-    'recept': [
+    'receiver': [
       { type: 'required', message: 'Campo requerido.' }
     ],
     'corpus_luteum': [
@@ -77,6 +77,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
   updateItem(detailId) {
     this.indx = detailId;
     this.dataItem = this.detailsList[this.indx];
+    console.log(this.dataItem);
     this.action = 'update';
     this.newRegistry = false;
     //create a copy of the object
@@ -90,7 +91,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     if (!this.validation_form) {
       this.validation_form = this.formBuilder.group({
         embryo_class: [this.dataItem.embryo_class, Validators.required],
-        recept: [this.dataItem.recept, Validators.required],
+        receiver: [this.dataItem.receiver, Validators.required],
         corpus_luteum: [this.dataItem.corpus_luteum, Validators.required],
         local_id: [this.dataItem.local_id, Validators.required],
         //transferor: [this.dataItem.transferor, Validators.required],
@@ -100,7 +101,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     else {
       this.validation_form.reset({
         embryo_class: this.dataItem.embryo_class,
-        recept: this.dataItem.recept,
+        receiver: this.dataItem.receiver,
         corpus_luteum: this.dataItem.corpus_luteum,
         local_id: this.dataItem.local_id,
         //transferor: this.dataItem.transferor,
@@ -122,7 +123,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     if (!this.validation_form) {
       this.validation_form = this.formBuilder.group({
         embryo_class: ['', Validators.required],
-        recept: ['', Validators.required],
+        receiver: ['', Validators.required],
         corpus_luteum: ['', Validators.required],
         local_id: ['', Validators.required],
         //transferor: ['', Validators.required],
@@ -132,7 +133,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     else {
       this.validation_form.reset({
         embryo_class: '',
-        recept: '',
+        receiver: '',
         corpus_luteum: '',
         local_id: '',
         //transferor: '',

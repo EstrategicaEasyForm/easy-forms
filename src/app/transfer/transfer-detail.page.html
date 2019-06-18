@@ -57,11 +57,11 @@
               </ion-row>
               <ion-row>    
                 <ion-col col-12>
-                  <ion-input type="text" formControlName="corpus_luteum" [(ngModel)]="dataItem.corpus_luteum"></ion-input>
+                  <ion-input type="text" formControlName="receiver" [(ngModel)]="dataItem.receiver"></ion-input>
                   <div class="validation-errors">
-                    <ng-container *ngFor="let validation of validation_messages.corpus_luteum">
-                      <div class="error-message" *ngIf="validation_form.get('corpus_luteum').hasError(validation.type) 
-                        && (validation_form.get('corpus_luteum').dirty || validation_form.get('corpus_luteum').touched)">
+                    <ng-container *ngFor="let validation of validation_messages.receiver">
+                      <div class="error-message" *ngIf="validation_form.get('receiver').hasError(validation.type) 
+                        && (validation_form.get('receiver').dirty || validation_form.get('receiver').touched)">
                         {{ validation.message }}
                       </div>
                     </ng-container>
@@ -89,20 +89,20 @@
                       </ion-select-option>
                     </ion-select>
                     <div class="validation-errors">
-                      <ng-container *ngFor="let validation of validation_messages.recept">
-                        <div class="error-message" *ngIf="validation_form.get('recept').hasError(validation.type) 
-                          && (validation_form.get('recept').dirty || validation_form.get('recept').touched)">
+                      <ng-container *ngFor="let validation of validation_messages.synchronizeds">
+                        <div class="error-message" *ngIf="validation_form.get('synchronizeds').hasError(validation.type) 
+                          && (validation_form.get('synchronizeds').dirty || validation_form.get('synchronizeds').touched)">
                           {{ validation.message }}
                         </div>
                       </ng-container>
                     </div>
                   </ion-col>
                   <ion-col col-6 *ngIf="!checkRecept">
-                    <ion-input type="text" formControlName="recept" [(ngModel)]="dataItem.receiver"></ion-input>
+                    <ion-input type="text" formControlName="corpus_luteum" [(ngModel)]="dataItem.corpus_luteum"></ion-input>
                     <div class="validation-errors">
-                      <ng-container *ngFor="let validation of validation_messages.recept">
-                        <div class="error-message" *ngIf="validation_form.get('recept').hasError(validation.type) 
-                          && (validation_form.get('recept').dirty || validation_form.get('recept').touched)">
+                      <ng-container *ngFor="let validation of validation_messages.corpus_luteum">
+                        <div class="error-message" *ngIf="validation_form.get('corpus_luteum').hasError(validation.type) 
+                          && (validation_form.get('corpus_luteum').dirty || validation_form.get('corpus_luteum').touched)">
                           {{ validation.message }}
                         </div>
                       </ng-container>
@@ -162,14 +162,14 @@
           <ion-grid style="text-align: center;">
             <ion-row>
               <ion-col>
-                <ion-button fill="outline" class="fab-button" [disabled]="indx===0 || (action === 'update' && !validation_form.valid) " (click)="backItemButton()">
+                <ion-button fill="outline" class="fab-button" [disabled]="indx === 0 || (action === 'update' && !validation_form.valid) " (click)="backItemButton()">
                   <ion-icon name="arrow-dropleft-circle"></ion-icon>
                 </ion-button>
               </ion-col>
               <ion-col>
               </ion-col>
               <ion-col>
-                <ion-button fill="outline" class="fab-button" [disabled]="!validation_form.valid" (click)="nextItemButton()">
+                <ion-button fill="outline" class="fab-button" [disabled]="indx === detailsList.length - 1 || !validation_form.valid" (click)="nextItemButton()">
                   <ion-icon name="arrow-dropright-circle"></ion-icon>
                 </ion-button>
               </ion-col>
