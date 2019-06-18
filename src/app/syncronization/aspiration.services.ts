@@ -46,7 +46,6 @@ export class AspirationService {
           "receiver_name": aspiration.receiver_name,
           "searcher": aspiration.searcher,
           "state": aspiration.state,
-          "synchronized_receivers": aspiration.synchronized_receivers,
           "transport_type": aspiration.transport_type,
           "user_id_updated": this.userService.getUserId()
         }
@@ -66,25 +65,25 @@ export class AspirationService {
           'bull_breed': detail.bull_breed,
           'type': detail.type,
           'gi': detail.gi,
-          'gss': detail.gss,
-          'gssi': detail.gssi,
+          'gii': detail.gii,
+          'giii': detail.giii,
           'others': detail.others,
           'user_id_updated': this.userService.getUserId()
         });
       }
       else if (detail.stateSync === 'C') {
         create.push({
-          'local_id': aspiration.local_id,
-          'donor': aspiration.donor,
-          'donor_breed': aspiration.donor_breed,
-          'arrived_time': aspiration.arrived_time,
-          'bull': aspiration.bull,
-          'bull_breed': aspiration.bull_breed,
-          'type': aspiration.type,
-          'gi': aspiration.gi,
-          'gss': aspiration.gss,
-          'gssi': aspiration.gssi,
-          'others': aspiration.others,
+          'local_id': detail.local_id,
+          'donor': detail.donor,
+          'donor_breed': detail.donor_breed,
+          'arrived_time': detail.arrived_time,
+          'bull': detail.bull,
+          'bull_breed': detail.bull_breed,
+          'type': detail.type,
+          'gi': detail.gi,
+          'gii': detail.gii,
+          'giii': detail.giii,
+          'others': detail.others,
           'user_id_updated': this.userService.getUserId(),
           'user_id_created': this.userService.getUserId(),
         });

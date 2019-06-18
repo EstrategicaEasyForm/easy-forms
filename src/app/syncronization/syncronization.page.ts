@@ -227,44 +227,49 @@ export class SyncronizationPage {
             type: 'error',
             message: 'Error generando el archivo pdf: ' + pdf.filename,
             details: [
-              errorMessage
+              'No se ha podido crear el archivo pdf',
+			  errorMessage
             ],
             time: moment().format('HH:mm:ss'),
             show: false,
           });
-          this.finishSync(errorMessage);
+          this.finishSync(null);
         }
         else if (pdf.status === 'success') {
           //State for to Finalize
-          //if(detailApi.state === "1") {
-          this.sendEmail.makeEmail(order, detailApi, workSheet, type, response, pdf).then((resp: any) => {
-            if (resp.status === 'success') {
-              this.writeLog({
-                type: 'info',
-                message: "Correo automático enviado a @" + order.client.bussiness_name,
-                details: [
-                  "Archivo adjunto " + pdf.filename,
-                  "Enviado a " + order.client.email
-                ],
-                time: moment().format('HH:mm:ss'),
-                show: false,
-              });
-              this.finishSync(null);
-            }
-            else {
-              this.writeLog({
-                type: 'error',
-                message: "Error enviando correo automático a @" + order.client.bussiness_name,
-                details: [
-                  resp.error
-                ],
-                time: moment().format('HH:mm:ss'),
-                show: false,
-              });
-              this.finishSync(resp.error);
-            }
-          })
-          //}
+          if(detailApi.state == "1") {
+			  this.sendEmail.makeEmail(order, detailApi, workSheet, type, response, pdf).then((resp: any) => {
+				if (resp.status === 'success') {
+				  this.writeLog({
+					type: 'info',
+					message: "Correo automático enviado a @" + order.client.bussiness_name,
+					details: [
+					  "Archivo adjunto " + pdf.filename,
+					  "Enviado a " + order.client.email
+					],
+					time: moment().format('HH:mm:ss'),
+					show: false,
+				  });
+				  this.finishSync(null);
+				}
+				else {
+				  this.writeLog({
+					type: 'error',
+					message: "Error enviando correo automático a @" + order.client.bussiness_name,
+					details: [
+					  'No es posible enviar el correo electrónico', 
+					  resp.error
+					],
+					time: moment().format('HH:mm:ss'),
+					show: false,
+				  });
+				  this.finishSync(null);
+				}
+			  })
+          }
+		  else {
+			  this.finishSync(null);
+		  }
         }
 
       });

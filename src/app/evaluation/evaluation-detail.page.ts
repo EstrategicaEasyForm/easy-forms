@@ -67,12 +67,13 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
     this.evaluationPage = dataParam.evaluationPage;
     this.evaluation = this.evaluationPage.evaluation;
     this.detailsList = this.evaluationPage.evaluation.details;
-
+	
     if (detailApiId >= 0) {
       this.updateItem(detailApiId);
     }
     else {
-      this.newItem();
+	  const local_id = dataParam.local ? dataParam.local.id : ''; 
+	  this.newItem(local_id);
     }
   }
 
@@ -112,7 +113,7 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
     }
   }
 
-  newItem() {
+  newItem(local_id) {
 
     this.dataItem = {
       stateSync: 'C'
@@ -128,11 +129,13 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
         chapeta: ['', Validators.required],
         fit: ['', Validators.required],
         synchronized: ['', Validators.required],
-        local_id: ['', Validators.required],
+        local_id: [local_id, Validators.required],
         diagnostic: [''],
         other_procedures: ['', Validators.required],
         comments: ['', Validators.required]
       });
+	  this.dataItem.local_id = local_id;
+	  this.onChangeLocal(local_id);
     }
     else {
       this.validation_form.reset({
@@ -140,11 +143,13 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
         chapeta: '',
         fit: '',
         synchronized: '',
-        local_id: '',
+        local_id: local_id,
         diagnostic: '',
         other_procedures: '',
         comments: ''
       });
+	  this.dataItem.local_id = local_id;
+	  this.onChangeLocal(local_id);
     }
   }
 
@@ -170,7 +175,7 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
     if (this.validation_form.valid) {
       if (this.action === 'new') {
         this.saveItem();
-        this.newItem();
+        this.newItem(this.dataItem.local_id);
         this.dataItemOri = Object.assign({}, this.dataItem);
       }
       else if (this.action === 'update') {
@@ -179,7 +184,7 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
           this.dataItemOri = Object.assign({}, this.dataItem);
         }
         if (this.indx === this.detailsList.length - 1) {
-          this.newItem();
+          this.newItem(this.dataItem.local_id);
           this.dataItemOri = Object.assign({}, this.dataItem);
         }
         else {
@@ -248,16 +253,12 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
     }
   }
 
-  onChangeDatetime($datetime) {
-    this.dataItem.arrived_time = moment($datetime).format('hh:mmA');
-  }
-
   onChangeLocal($localId) {
     if (this.evaluation.locals) {
       for (let local of this.evaluation.locals) {
         if (local.id == $localId) {
-          //this.dataItem.local_id = Number($localId);
           this.dataItem.local = local;
+		  break;
         }
       }
     }

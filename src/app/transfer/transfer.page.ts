@@ -9,6 +9,7 @@ import { Location } from '@angular/common';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import * as moment from 'moment-timezone';
 import { TransferPdfService } from './transfer.pdf.service';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 @Component({
   selector: 'app-transfer',
@@ -27,6 +28,7 @@ export class TransferPage implements OnInit {
   showTakePhoto = true;
   photoImage: any;
   mbControlPanel: number = 1;
+  start_date = '';
 
   validation_messages = {
     'received_by': [
@@ -58,9 +60,10 @@ export class TransferPage implements OnInit {
     public alertController: AlertController,
     public camera: Camera,
     public platform: Platform,
-    public transferPdf: TransferPdfService) { }
+    public transferPdf: TransferPdfService,
+    public screenOrientation: ScreenOrientation) { }
 
-  ngOnInit() {
+  ngOnInit() {    
     const detail = this.ordersService.getDetailApiParam();
     this.transferObjOri = detail.transferApi;
     this.transfer = Object.assign({}, this.transferObjOri);
@@ -68,13 +71,14 @@ export class TransferPage implements OnInit {
     this.detailApi = detail.detailApi;
     this.order = detail.order;
     this.agenda = detail.agenda;
+	this.start_date = this.agenda && this.agenda.all_day === '1' ? this.agenda.start_date.substr(0,10) : this.agenda.start_date;
     
     this.validation_form_order = this.formBuilder.group({});
-
+	this.transfer.transferor = this.transfer.details_view[0].transferor
     this.validation_form_general = this.formBuilder.group({
       received_by: [this.transfer.received_by, Validators.required],
       identification_number: [this.transfer.identification_number, Validators.required],
-      transferor: [this.transfer.details_view[0].bull_breed, Validators.required],
+      transferor: [this.transfer.transferor, Validators.required],
       comments: [this.transfer.comments, Validators.required]
     });
   }
@@ -147,7 +151,13 @@ export class TransferPage implements OnInit {
     return await modalPage.present();
   }
 
-  openPdfViewer() {
+  async openPdfViewer() {
+	  
+	const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere' 
+    });
+    await loading.present();
+	
     const data = {
       transferApi: this.transfer,
       order: this.order,
@@ -158,7 +168,8 @@ export class TransferPage implements OnInit {
       open: true
     };
     this.transferPdf.makePdf(data, options).then((pdf: any) => {
-      if (pdf.status === 'error') {
+	  loading.dismiss();	
+	  if (pdf.status === 'error') {
         this.showMessage(pdf.error);
       }
     });
@@ -272,6 +283,31 @@ export class TransferPage implements OnInit {
       duration: 200
     });
     await loading.present();
+  }
+  
+  onChangeTransferor() {
+	  if(this.transfer.transferor) {
+		  for(let detail of this.transfer.details_view){
+			  detail.transferor = this.transfer.transferor;
+			  detail.stateSync = 'U';
+		  }
+	  }
+  }
+
+  ionViewWillEnter() {
+      this.initOrientation();
+  }
+
+  ionViewDidLeave() {
+    this.agendaPage.initOrientation();
+  }
+
+  initOrientation() {
+    try {  
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);	
+    } catch(err) {
+      this.showMessage(err);
+    }
   }
 
 }

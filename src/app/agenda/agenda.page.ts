@@ -6,6 +6,7 @@ import { UsersService } from '../users.service';
 import { ViewChild } from '@angular/core';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 import * as moment from 'moment-timezone';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 @Component({
   selector: 'app-agenda',
@@ -28,7 +29,8 @@ export class AgendaPage implements OnInit {
     public usersService: UsersService,
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
-    public events: Events) {
+    public events: Events,
+	public screenOrientation: ScreenOrientation) {
 
     this.initFilters();
 
@@ -115,17 +117,33 @@ export class AgendaPage implements OnInit {
       order: order,
       local: detailApi.local,
       employees: [],
+	  employeesNames: '',
       agenda: {},
       comments: ''
     }
     newDetailApi[type.tag] = worksheet;
     const employees = [];
+	let employee: string;
     for (let agenda of order.agenda) {
       if (agenda.event.id === newDetailApi.type.id && newDetailApi.local.name === agenda.name_local) {
-        employees.push(agenda.user);
+		  
+		if(agenda.user) {
+			employee = agenda.user.name;
+			employees.push(agenda.user);
+		}
+		else if(agenda.other_user) {
+			employee = agenda.other_user.name;
+		}
+		else {
+			employee = '';
+		}
+		
+		if(newDetailApi.employeesNames.length > 0 ) newDetailApi.employeesNames += ',';
+		newDetailApi.employeesNames += employee;
       }
     }
     newDetailApi.employees = employees;
+	
     let mbAdding = false;
     for (let agenda of order.agenda) {
       if (agenda.event.id === newDetailApi.type.id && newDetailApi.local.name === agenda.name_local) {
@@ -409,6 +427,20 @@ export class AgendaPage implements OnInit {
     return new Promise(resolve => {
       setTimeout(resolve, ms);
     });
+  }
+
+  ionViewDidEnter() {
+    this.initOrientation();
+  }
+
+  initOrientation() {
+    try {  
+      //this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);	
+      // allow user rotate
+      this.screenOrientation.unlock();
+    } catch(err) {
+      this.showMessage(err);
+    }
   }
 
 }

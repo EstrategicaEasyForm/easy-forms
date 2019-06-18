@@ -40,280 +40,380 @@ export class AspirationPdfService {
 	// }
 	async makePdf(data, options) {
 
+		const _self = this;
+		let filename = "InVitroAspiracion_";
+		if(data && data.order) filename = "InvitroAspiracion_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
+		
+		return new Promise(resolve => {
 		try {
+			const dataDirectory = this.file.dataDirectory;
+			
 
+			
 			pdfmake.vfs = pdfFonts.pdfMake.vfs;
 
-			const photoImage = data.aspirationApi.photoImage || this.imageSrc.imagePhotoDefault;
-			const signatureImage = data.aspirationApi.signatureImage || this.imageSrc.imageBlank;
+				const photoImage = data.aspirationApi.photoImage || this.imageSrc.imagePhotoDefault;
+				const signatureImage = data.aspirationApi.signatureImage || this.imageSrc.imageBlank;
 
-			var aspirationDetails = [];
-			var workTeam = [];
+				var aspirationDetails = [];
+				var workTeam = [];
+				var cont_details = 1;
+				
+				data.aspirationApi.totals = {gi: 0, gii: 0, giii: 0, others: 0,all: 0};
 
-			aspirationDetails.push([{ text: 'Donadora', alignment: 'center', bold: true },
-			{ text: 'Raza', alignment: 'center', bold: true },
-			{ text: 'Toro', alignment: 'center', bold: true },
-			{ text: 'Raza', alignment: 'center', bold: true },
-			{ text: 'Tipo', alignment: 'center', bold: true },
-			{ text: 'GI', alignment: 'center', bold: true },
-			{ text: 'GII', alignment: 'center', bold: true },
-			{ text: 'GIII', alignment: 'center', bold: true },
-			{ text: 'Otros', alignment: 'center', bold: true },
-			{ text: 'Viables', alignment: 'center', bold: true },
-			{ text: 'Total', alignment: 'center', bold: true }]);
-			for (let i of data.aspirationApi.details) {
-				aspirationDetails.push([i.donor,
-				i.donor_breed,
-				i.bull,
-				i.bull_breed,
-				i.type,
-				i.gi,
-				i.gii,
-				i.giii,
-				i.others,
-				i.gi + i.gii + i.giii,
-				i.gi + i.gii + i.giii + i.others
+				aspirationDetails.push([
+					{ text: 'No.', style: 'title_table_style' },
+					{ text: 'Hora', style: 'title_table_style' },
+					{ text: 'Donadora', style: 'title_table_style' },
+					{ text: 'Raza', style: 'title_table_style' },
+					{ text: 'Toro', style: 'title_table_style' },
+					{ text: 'Raza', style: 'title_table_style' },
+					{ text: 'Tipo', style: 'title_table_style' },
+					{ text: 'Local', style: 'title_table_style' },
+					{ text: 'GI', style: 'title_table_style' },
+					{ text: 'GII', style: 'title_table_style' },
+					{ text: 'GIII', style: 'title_table_style' },
+					{ text: 'Otros', style: 'title_table_style' },
+					{ text: 'Viables', style: 'title_table_style' },
 				]);
-			}
+				for (let i of data.aspirationApi.details) {
+					data.aspirationApi.totals.gi += Number(i.gi);
+					data.aspirationApi.totals.gii += Number(i.gii);
+					data.aspirationApi.totals.giii += Number(i.giii);
+					data.aspirationApi.totals.others += Number(i.others);
+					data.aspirationApi.totals.all += Number(i.gi)+Number(i.gii)+Number(i.giii)+Number(i.others);
+					aspirationDetails.push([
+						{ text: cont_details++, style: 'normal_style' },
+						{ text: i.arrived_time, style: 'normal_style' },
+						{ text: i.donor, style: 'normal_style' },
+						{ text: i.donor_breed, style: 'normal_style' },
+						{ text: i.bull, style: 'normal_style' },
+						{ text: i.bull_breed, style: 'normal_style' },
+						{ text: i.type, style: 'normal_style' },
+						{ text: i.local.name, style: 'normal_style' },
+						{ text: i.gi, style: 'normal_style' },
+						{ text: i.gii, style: 'normal_style' },
+						{ text: i.giii, style: 'normal_style' },
+						{ text: i.others, style: 'normal_style' },
+						{ text: i.gi + i.gii + i.giii, style: 'normal_style' },
+					]);
+				}
+				aspirationDetails.push([
+						{ text: '', style: 'normal_style' },
+						{ text: '', style: 'normal_style' },
+						{ text: '', style: 'normal_style' },
+						{ text: '', style: 'normal_style' },
+						{ text: '', style: 'normal_style' },
+						{ text: '', style: 'normal_style' },
+						{ text: '', style: 'normal_style' },
+						{ text: 'Total', style: 'normal_style' },
+						{ text: data.aspirationApi.totals.gi, style: 'normal_style' },
+						{ text: data.aspirationApi.totals.gii, style: 'normal_style' },
+						{ text: data.aspirationApi.totals.giii, style: 'normal_style' },
+						{ text: data.aspirationApi.totals.others, style: 'normal_style' },
+						{ text: data.aspirationApi.totals.all, style: 'normal_style' },
+					]);
 
-			workTeam.push([
-				{ text: 'Nombre', alignment: 'center', bold: true },
-				{ text: 'Correo', alignment: 'center', bold: true },
-				{ text: 'Evento', alignment: 'center', bold: true },
-				{ text: 'Observación', alignment: 'center', bold: true },
-				{ text: 'Departamento', alignment: 'center', bold: true },
-				{ text: 'Municipio', alignment: 'center', bold: true },
-				{ text: 'Fecha', alignment: 'center', bold: true }]);
-			for (let j of data.order.agenda) {
-				workTeam.push([j.user.name,
-				j.user.email,
-				j.event.name,
-				j.observation,
-				j.department.name,
-				j.municipality.name,
-				j.start_date
+				workTeam.push([
+					{ text: 'Nombre del técnico', style: 'title_table_style' },
+					{ text: 'Evento', style: 'title_table_style' },
+					{ text: 'Fecha', style: 'title_table_style' },
+					{ text: 'Observaciones', style: 'title_table_style' }
 				]);
-			}
+				
+				const employees = [];
+				let employee: string;
+				for (let agenda of data.order.agenda) {
+				  if (agenda.event.id === '2' && data.local.name === agenda.name_local) {
+					if(agenda.user) {
+						employee = agenda.user.name;
+					}
+					else if(agenda.other_user) {
+						employee = agenda.other_user.name;
+						
+					}
+					else {
+						employee = '';
+					}
+					const start_date = agenda.all_day ? agenda.start_date.substr(0,10)  : agenda.start_date;
+					employees.push({ 
+						name: employee, 
+						eventName:agenda.event.name, 
+						start_date: start_date,
+						observation: agenda.observation 
+					});
+				  }
+				}
+				
+				for (let j of employees) {
+					workTeam.push([
+						j.name,
+						j.eventName,
+						j.start_date,
+						j.observation,
+					]);
+				}
+				if(employees.length < 3){
+					for(let i=0;i<3-employees.length;i++) {
+						workTeam.push([
+							'\r',
+							'\r',
+							'\r',
+							'\r',
+						]);
+					}	
+				}
 
-
-			let docDefinition = {
-				pageSize: 'A4',
-				pageMargins: [40, 60, 40, 60],
-				pageOrientation: 'landscape',
-				content: [
-					{
-						columns: [
-							{
-								image: this.imageSrc.logoSrcBase64,
-								width: 120,
-								height: 80,
-							},
-							{
-								fontSize: 12,
-								alignment: 'right',
-								bold: true,
-								text: 'Cra 72A N° 49A-39 Bogotá \n\ Invitro \n\ (+57 1) 796 86 26 | 313 570 00 23 \n\ ivc.logistica@genusplc.com \n\ '
-							},
-						]
-					},
-					{ text: '\n\ ÓRDEN DE PRODUCCIÓN: ' + data.order.id, bold: true, fontSize: 18, alignment: 'left' },
-					{ text: '\n\ DATOS:', bold: true, fontSize: 15, alignment: 'left' },
-					{
-						columns: [
-							{
-								width: '*', text: ''
-							},
-							{
-								width: 'auto',
-								table: {
-									fontSize: 12,
-									widths: ['*', '*', '*', '*'],
-									body: [
-										[{ text: 'Fecha:', alignment: 'right', bold: true }, data.order.date, { text: 'Correo Electrónico:', alignment: 'right', bold: true }, { text: data.order.client.email, alignment: 'left' }],
-										[{ text: 'N° Identificación:', alignment: 'right', bold: true }, data.order.client_id, { text: 'Contacto:', alignment: 'right', bold: true }, { text: data.order.client.contact, alignment: 'left' }],
-										[{ text: 'Razon Social:', alignment: 'right', bold: true }, data.order.client.bussiness_name, { text: 'Cargo:', alignment: 'right', bold: true }, { text: data.order.client.position, alignment: 'left' }],
-										[{ text: 'Departamento:', alignment: 'right', bold: true }, data.order.client.departmentOne.name, { text: 'Dirección:', alignment: 'right', bold: true }, { text: data.order.client.address, alignment: 'left' }],
-										[{ text: 'Ciudad:', alignment: 'right', bold: true }, data.order.client.citiesOne.name, { text: 'Teléfono:', alignment: 'right', bold: true }, { text: data.order.client.cellphone, alignment: 'left' }],
-									]
-								},
-								layout: 'noBorders'
-							},
-							{
-								width: '*', text: ''
-							},
-						]
-					},
-					{ text: '\n\ EQUIPO DE TRABAJO: ', bold: true, fontSize: 15, alignment: 'left' },
-					{ text: '\n\ ' },
-					{
-						columns: [
-							{
-								width: '*', text: ''
-							},
-							{
-								width: 'auto',
-								table: {
-									fontSize: 9,
-									headerRows: 1,
-									widths: [100, 140, 60, 120, 80, 60, 60],
-									body: workTeam
-								},
-								layout: {
-									fillColor: function (rowIndex, node, columnIndex) {
-										return (rowIndex === 0) ? '#b9d2e8' : null;
-									}
-								}
-							},
-							{
-								width: '*', text: ''
-							},
-						]
-					},
-					{ text: '\n\n\ LOCALES TE:', alignment: 'left', fontSize: 15, bold: true },
-					{ text: '\n\ ' },
-					{
-						columns: [
-							{
-								width: '*', text: ''
-							},
-							{
-								width: 'auto',
-								table: {
-									fontSize: 12,
-									widths: [120, 'auto', 'auto', 'auto', 120, 120],
-									body: [
-										[
-											{ text: 'Nombre Local', alignment: 'center', bold: true },
-											{ text: 'Ciudad', alignment: 'center', bold: true },
-											{ text: 'Departamento', alignment: 'center', bold: true },
-											{ text: 'Teléfono', alignment: 'center', bold: true },
-											{ text: 'Correo', alignment: 'center', bold: true },
-											{ text: 'Contacto', alignment: 'center', bold: true }
-										],
-										[
-											{ text: data.local.name, alignment: 'left' },
-											{ text: data.local.city, alignment: 'left' },
-											{ text: data.local.department, alignment: 'left' },
-											{ text: data.order.client.cellphone, alignment: 'left' },
-											{ text: data.order.client.email, alignment: 'left' },
-											{ text: data.order.client.contact, alignment: 'left' }
-										],
-									],
-								},
-								layout: {
-									fillColor: function (rowIndex, node, columnIndex) {
-										return (rowIndex === 0) ? '#b9d2e8' : null;
-									}
-								}
-							},
-							{
-								width: '*', text: ''
-							},
-						]
-					},
-					{ text: '\n\n\ INFORMACIÓN DEL EVENTO: ASPIRACIÓN FOLICULAR', bold: true, fontSize: 15, alignment: 'left' },
-					{ text: '\n\n\ DETALLES DE ASPIRACION:', alignment: 'left', fontSize: 15, bold: true },
-					{ text: '\n\ ' },
-					{
-						columns: [
-							{
-								width: '*', text: ''
-							},
-							{
-								width: 'auto',
-								table: {
-									headerRows: 1,
-									alignment: 'center',
-									fontSize: 9,
-									widths: [100, 100, 100, 100, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-									body: aspirationDetails,
-								},
-								layout: {
-									fillColor: function (rowIndex, node, columnIndex) {
-										return (rowIndex === 0) ? '#b9d2e8' : null;
-									}
-								}
-							},
-							{
-								width: '*', text: ''
-							},
-						]
-					},
-					{ text: '\n\n\ NOMBRE Y FIRMA DEL ENCARGADO', alignment: 'center', pageBreak: 'before', fontSize: 18, bold: true },
-					{ text: '\n\n\ ' },
-					{
-						columns: [
-							{
-								width: '*', text: ''
-							},
-							{
-								image: signatureImage,
-								width: 700,
-								height: 300,
-							},
-							{
-								width: '*', text: ''
-							},
-						],
-					},
-					{ text: data.aspirationApi.received_by, alignment: 'center', fontSize: 15, bold: true },
-					{ text: data.aspirationApi.identification_number, alignment: 'center', fontSize: 15, bold: true },
-					{ text: '\n\n\ FOTO EVIDENCIA DEL EVENTO', alignment: 'center', pageBreak: 'before', fontSize: 18, bold: true },
-					{ text: '\n\n\ ' },
-					{
-						columns: [
-							{
-								width: '*', text: ''
-							},
-							{
-								image: photoImage,
-								width: 300,
-								height: 300,
-							},
-							{
-								width: '*', text: ''
-							},
-						]
-					},
-				],
-				styles: {
+				let docDefinition = {
+					pageSize: 'LETTER',
+					pageMargins: [72,72,72,72],
+					pageOrientation: 'landscape',
 					header: {
-						bold: true,
-						fontSize: 10,
-						alignment: 'center'
+						image: this.imageSrc.logoSrcBase64,
+						width: 90,
+						height: 55,
+						alignment: 'right',
+						margin: [25,25],
+						opacity: 0.5,
 					},
-					sub_header: {
-						bold: true,
-						fontSize: 15,
-						alignment: 'left'
-					},
-					sub_header2: {
-						bold: true,
+					footer: {
+						text: 'Carrera 72A # 49A - 39 Bogotá, (+57 1) 7968626 – 3135700023 – logística@invitro.com.co',
+						alignment: 'center',
 						fontSize: 12,
-						alignment: 'right'
+						opacity: 0.3,
 					},
-				},
-			};
+					content: [
+						{
+							text: 'REPORTE DE SERVICIO TÉCNICO',
+							fontSize: 16,
+							alignment: 'left',
+						},
+						{
+							text: ' ',
+							fontSize: 15,
+						},
+						{
+							text: 'FECHA DE REPORTE: ' + moment().format('DD-MM-YYYY'),
+							fontSize: 12,
+							alignment: 'right',
+						},
+						{
+							text: 'DATOS DEL CLIENTE',
+							style: 'subtitle_style'
+						},
+						{
+							text: ' ',
+							fontSize: 12,
+						},
+						{
+							columns: [
+								{
+									width: 'auto',
+									table: {
+										fontSize: 12,
+										widths: ['auto', '*'],
+										body: [
+											[{ text: 'Razón Social:', style: 'normal_style' }, { text: data.order.client.bussiness_name, style: 'normal_style' }],
+											[{ text: 'No. Identificación:', style: 'normal_style' }, { text: data.order.client_id, style: 'normal_style' }],
+											[{ text: 'Contacto:', style: 'normal_style' }, { text: data.order.client.contact, style: 'normal_style' }],
+											[{ text: 'Correo electrónico:', style: 'normal_style' }, { text: data.order.client.email, style: 'normal_style' }],
+											[{ text: 'Móvil:', style: 'normal_style' }, { text: data.order.client.cellphone, style: 'normal_style' }],
+										]
+									},
+									layout: 'noBorders'
+								},
+								{
+									width: '*', text: ''
+								},
+								{
+									width: '*', text: ''
+								},
+							]
+						},
+						{ text: '\n\ ' },
+						{
+							text: 'PERSONAL ASIGNADO',
+							style: 'subtitle_style'
+						},
+						{
+							text: ' ',
+							fontSize: 12,
+						},
+						{
+							columns: [
+								{
+									width: '*', text: ''
+								},
+								{
+									width: 'auto',
+									table: {
+										headerRows: 1,
+										widths: [140, 100, 100, 140],
+										body: workTeam
+									},
+								},
+								{
+									width: '*', text: ''
+								},
+							]
+						},
+						{ text: '\n\ ' },
+						{
+							text: 'INFORMACIÓN DEL SERVICIO',
+							style: 'subtitle_style'
+						},
+						{
+							text: ' ',
+							fontSize: 12,
+						},
+						{
+							columns: [
+								{
+									width: '*', text: ''
+								},
+								{
+									width: 'auto',
+									table: {
+										fontSize: 12,
+										widths: ['auto', 120, 40, 'auto', 120],
+										body: [
+											[{ text: 'Orden de prod.: ', style: 'normal_style' },
+											{ text: data.order.id, style: 'normal_style' },
+												'',
+											{ text: 'Fecha OPU : ', style: 'normal_style' },
+											{ text: data.aspirationApi.date, style: 'normal_style' },
+											],
+											[{ text: 'Local: ', style: 'normal_style' },
+											{ text: data.local.name, style: 'normal_style' },
+												'',
+											{ text: 'Receptoras sinc. : ', style: 'normal_style' },
+											{ text: data.aspirationApi.synchronized_receivers, style: 'normal_style' },
+											],
+											[{ text: 'Medio OPU: ', style: 'normal_style' },
+											{ text: data.aspirationApi.medium_opu, style: 'normal_style' },
+												'',
+											{ text: 'Lote medio OPU : ', style: 'normal_style' },
+											{ text: data.aspirationApi.medium_lot_opu, style: 'normal_style' },
+											],
+											[{ text: 'Aspirador: ', style: 'normal_style' },
+											{ text: data.aspirationApi.aspirator, style: 'normal_style' },
+												'',
+											{ text: 'Buscador : ', style: 'normal_style' },
+											{ text: data.aspirationApi.searcher, style: 'normal_style' },
+											],
+										]
+									},
+									layout: 'noBorders'
+								},
+								{
+									width: '*', text: ''
+								},
+							]
+						},
+						{
+							text: 'DETALLES DEL SERVICIO',
+							style: 'subtitle_style',
+							pageBreak: 'before',
+						},
+						{
+							text: ' ',
+							fontSize: 12,
+						},
+						{
+							columns: [
+								{
+									width: '*', text: ''
+								},
+								{
+									width: 'auto',
+									table: {
+										headerRows: 1,
+										alignment: 'center',
+										widths: ['auto', 'auto', 60, 50, 60, 50, 'auto', 100, 'auto', 'auto', 'auto', 'auto', 'auto'],
+										body: aspirationDetails,
+									},
+								},
+								{
+									width: '*', text: ''
+								},
+							]
+						},
+						{ text: '\n\ ' },
+						{
+							text: 'DATOS GENERALES',
+							style: 'subtitle_style'
+						},
+						{
+							text: ' ',
+							fontSize: 12,
+						},
+						{
+							text: 'Temperatura de llegada  : ' + data.aspirationApi.arrived_temperature_number + '°C',
+							style: 'normal_style',
+						},
+						{
+							text: 'Tipo de transporte  : ' + data.aspirationApi.transport_type,
+							style: 'normal_style',
+						},
+						{ text: '\n\ ' },
+						{
+							text: 'Observaciones  : ' + data.aspirationApi.comments,
+							style: 'normal_style',
+						},
+						{
+							columns: [
+								[	{ text: '\n\ ' },
+									{
+										image: signatureImage,
+										width: 400,
+										height: 120,
+									},
+									{ text: 'Nombre del encargado  : ' + data.aspirationApi.received_by, alignment: 'center' },
+									{ text: 'Cédula  : ' + data.aspirationApi.identification_number, alignment: 'center'  }
+								],
+								[	{ text: '\n\ ' },
+									{ text: '\n\ ' },
+									{
+										image: photoImage,
+										width: 100,
+										height: 120,
+									}
+								],
+							]
+						},
+					],
+					styles: {
+						subtitle_style: {
+							bold: true,
+							fontSize: 12,
+							decoration: 'underline',
+							alignment: 'left',
+						},
+						normal_style: {
+							fontSize: 12,
+							bold: false,
+							alignment: 'left',
+						},
+						title_table_style: {
+							fontSize: 11,
+							bold: true,
+							alignment: 'center',
+						}
+					},
+				};
 
-			if (options.watermark) {
-				docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.3, bold: true, italics: false } });
-			}
+				if (options.watermark) {
+					docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.2, bold: true, italics: false } });
+				}
+		
+				pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {
+					try {
+						let utf8 = new Uint8Array(buffer);
+						let binaryArray = utf8.buffer;
 
-			const _self = this;
-
-			return new Promise(resolve => {
-
-				const dataDirectory = this.file.dataDirectory;
-				const filename = "InvitroAspiracion_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
-
-				try {
-					pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {
-						try {
-							let utf8 = new Uint8Array(buffer);
-							let binaryArray = utf8.buffer;
-
-							_self.saveToDevice(binaryArray, filename)
-								.then(() => {
+						_self.saveToDevice(binaryArray, filename)
+							.then((result:any) => {
+								if(result.status==="success") {
 									if (options && options.open) {
 										_self.fileOpener.open(dataDirectory + filename, 'application/pdf')
 											.then(() => resolve({ status: "success", message: "File is opened", filename: filename, dataDirectory: dataDirectory }))
@@ -323,32 +423,40 @@ export class AspirationPdfService {
 									else {
 										resolve({ status: "success", filename: filename, dataDirectory: dataDirectory });
 									}
-								})
-								.catch((error) => {
-									const errm = error.message ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
-									resolve({ status: "error", error: errm, filename: filename });
-								});
+								}
+								else { 
+									resolve({ status: "error", error: result.error, filename: filename });
+								}
+							});
 
-						} catch (e) {
-							const errm = e.message ? e.message : typeof e === 'string' ? e : JSON.stringify(e);
-							resolve({ status: "error", error: errm, filename: filename });
-						}
-					});
+					} catch (e) {
+						const errm = e.message ? e.message : typeof e === 'string' ? e : JSON.stringify(e);
+						resolve({ status: "error", error: errm, filename: filename });
+					}
+				});
 
-				} catch (err) {
-					const errm = err.message ? err.message : typeof err === 'string' ? err : JSON.stringify(err);
-					resolve({ status: "error", error: errm, filename: filename });
-				}
-			});
-		}
-		catch (err) {
-			return new Promise(resolve => {
-				resolve({ status: "error", error: err });
-			});
-		}
+			} catch (err) {
+				const errm = err.message ? err.message : typeof err === 'string' ? err : JSON.stringify(err);
+				resolve({ status: "error", error: errm, filename: filename });
+			}
+		});
 	}
 	saveToDevice(data: any, savefile: any) {
-		let options: IWriteOptions = { replace: true };
-		return this.file.writeFile(this.file.dataDirectory, savefile, data, options);
+		return new Promise(resolve => {
+			let options: IWriteOptions = { replace: true };
+			try {
+				this.file.writeFile(this.file.dataDirectory, savefile, data, options)
+				.then((result) => {
+					resolve({ status: "success"});
+				}).catch((error) => {
+					const errm = error.message ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
+					resolve({ status: "error", error: errm});
+				});
+			} catch(error){
+				const errm = error.message ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
+				resolve({ status: "error", error: errm});
+			};
+		});	
 	}
 }
+ 

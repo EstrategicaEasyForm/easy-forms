@@ -10,6 +10,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import * as moment from 'moment-timezone';
 import { EvaluationPdfService } from './evaluation.pdf.service';
 import { AnyARecord } from 'dns';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 @Component({
   selector: 'app-evaluation',
@@ -28,6 +29,7 @@ export class EvaluationPage implements OnInit {
   showTakePhoto = true;
   photoImage: any;
   mbControlPanel: number = 1;
+  start_date = '';
 
   validation_form_order: FormGroup;
   validation_form_general: FormGroup;
@@ -61,7 +63,8 @@ export class EvaluationPage implements OnInit {
     public alertController: AlertController,
     public camera: Camera,
     public platform: Platform,
-    public evaluationPdf: EvaluationPdfService) {
+    public evaluationPdf: EvaluationPdfService,
+    public screenOrientation: ScreenOrientation) {
   }
 
   ngOnInit() {
@@ -78,6 +81,7 @@ export class EvaluationPage implements OnInit {
     this.order = detail.order;
     this.detailApi = detail.detailApi;
     this.agenda = detail.agenda;
+	this.start_date = this.agenda && this.agenda.all_day === '1' ? this.agenda.start_date.substr(0,10) : this.agenda.start_date;
 
     this.validation_form_order = this.formBuilder.group({
     });
@@ -111,8 +115,9 @@ export class EvaluationPage implements OnInit {
     this.ordersService.setDetailApiParam({
       evaluation: this.evaluation,
       detailApiId: indx,
-      evaluationPage: this
-    });
+      evaluationPage: this,
+	  local: this.detailApi.local
+    }); 
     this.router.navigate(['evaluation-detail']);
   }
 
@@ -138,7 +143,13 @@ export class EvaluationPage implements OnInit {
   }
 
 
-  openPdfViewer() {
+  async openPdfViewer() {
+	  
+	const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere' 
+    });
+    await loading.present();
+	
     const data = {
       evaluationApi: this.evaluation,
       order: this.order,
@@ -149,7 +160,8 @@ export class EvaluationPage implements OnInit {
       open: true
     };
     this.evaluationPdf.makePdf(data, options).then((pdf: any) => {
-      if (pdf.status === 'error') {
+	  loading.dismiss();	
+	  if (pdf.status === 'error') {
         this.showMessage(pdf.error);
       }
     });
@@ -262,13 +274,20 @@ export class EvaluationPage implements OnInit {
     await loading.present();
   }
 
-  onChangeLocal($localId) {
-    if (this.evaluation.locals) {
-      for (let local of this.evaluation.locals) {
-        if (local.id === $localId) {
-          this.detailApi.local = local;
-        }
-      }
+  ionViewWillEnter() {
+      this.initOrientation();
+  }
+
+  ionViewDidLeave() {
+    this.agendaPage.initOrientation();
+  }
+
+  initOrientation() {
+    try {  
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE_SECONDARY);
+    } catch(err) {
+      this.showMessage(err);
     }
   }
+
 }

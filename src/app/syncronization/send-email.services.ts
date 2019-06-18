@@ -64,9 +64,14 @@ export class SendEmailService {
         smtpUserName: 'estrategica.easy.form',
         smtpPassword: 'HqXR8cnnL',
 		
-		/* Using for test */
+		/* Using for test */ 
+		
         emailTo: 'felizarazol@unal.edu.co',
 		emailCC: 'edwardmartinez@hotmail.com, hsgarzon2020@gmail.com, davithc01@gmail.com',
+		
+		/* Using for e2e /
+        emailTo: 'jcontreras@estrategicaco.com',
+		emailCC: 'operaciones@estrategicaco.com, cristianjojoa01@gmail.com',
 		/*
 		emailTo: order.client.email, //client contact email
 		emailCC: 'informes@invitro.com.co, '  + this.userService.getUserEmail(), //operator contact email 

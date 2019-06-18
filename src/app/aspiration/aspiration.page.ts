@@ -9,6 +9,7 @@ import { Location } from '@angular/common';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import * as moment from 'moment-timezone';
 import { AspirationPdfService } from './aspiration.pdf.service';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 @Component({
   selector: 'app-aspiration',
@@ -27,6 +28,7 @@ export class AspirationPage implements OnInit {
   showTakePhoto = true;
   photoImage: any;
   mbControlPanel: number = 1;
+  start_date = '';
 
   //validations forms
   validation_form_order: FormGroup;
@@ -75,19 +77,20 @@ export class AspirationPage implements OnInit {
     public alertController: AlertController,
     public camera: Camera,
     public platform: Platform,
-    public aspirationPdf: AspirationPdfService) {
-
-  }
+    public aspirationPdf: AspirationPdfService,
+	public screenOrientation: ScreenOrientation) {
+		
+    }
 
   ngOnInit() {
-
-    const detail = this.ordersService.getDetailApiParam();
+	  const detail = this.ordersService.getDetailApiParam();
     this.aspirationObjOri = detail.aspirationApi;
     this.aspiration = Object.assign({}, this.aspirationObjOri);
     this.agendaPage = detail.agendaPage;
     this.order = detail.order;
     this.detailApi = detail.detailApi;
     this.agenda = detail.agenda;
+	this.start_date = this.agenda && this.agenda.all_day === '1' ? this.agenda.start_date.substr(0,10) : this.agenda.start_date;
     this.aspiration.arrived_temperature = this.aspiration.arrived_temperature || '';
     this.aspiration.arrived_temperature_number = Number(this.aspiration.arrived_temperature.replace('°C', '').replace(',', '.'));
 
@@ -152,18 +155,26 @@ export class AspirationPage implements OnInit {
     return await modalPage.present();
   }
 
-  openPdfViewer() {
+  async openPdfViewer() {
+	  
+	const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere' 
+    });
+    await loading.present();
+	
     const data = {
       aspirationApi: this.aspiration,
       order: this.order,
-      local: this.detailApi.local
+      local: this.detailApi.local,
+      agenda: this.agenda
     };
     const options = {
       watermark: true,
       open: true
     };
     this.aspirationPdf.makePdf(data, options).then((pdf: any) => {
-      if (pdf.status === 'error') {
+	  loading.dismiss();	
+	  if (pdf.status === 'error') {
         this.showMessage(pdf.error);
       }
     });
@@ -286,4 +297,19 @@ export class AspirationPage implements OnInit {
     await loading.present();
   }
 
+  ionViewWillEnter() {
+      this.initOrientation();
+  }
+
+  ionViewDidLeave() {
+    this.agendaPage.initOrientation();
+  }
+
+  initOrientation() {
+    try {  
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY);	
+    } catch(err) {
+      this.showMessage(err);
+    }
+  }
 }
