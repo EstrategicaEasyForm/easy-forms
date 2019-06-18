@@ -163,15 +163,16 @@ ion-card-content {
 .photo-image {
     border: solid 1px grey;
     padding: 16px;
+    background-color: rgba(80, 80, 80, 0.02);
     img {
         transform: translate3d(0px, 0px, 0px) scale(1) !important;
-		width: 60%;
-		margin: 0 auto;
+		width: 302px;
     }
 }
 .comment {
     height: 107px;
     margin-top: -4px;
+	padding-left: 13px;
 }
 .take-photo-button {
     font-size: 23px;
