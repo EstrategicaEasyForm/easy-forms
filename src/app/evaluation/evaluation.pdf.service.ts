@@ -75,10 +75,13 @@ export class EvaluationPdfService {
 					{ text: 'Observaciones', style: 'title_table_style' },
 
 				]);
+				
 				for (let i of data.evaluationApi.details) {
-					i.fit === '1' ? synchronizeds += + 1 : '';
+					if(i.synchronized === '1') {
+						synchronizeds ++;
+					}
 					evaluationDetails.push([
-						{ text: cont_details += + 1, style: 'normal_style' },
+						{ text: cont_details +=  1, style: 'normal_style' },
 						{ text: i.animal_id, style: 'normal_style' },
 						{ text: i.chapeta, style: 'normal_style' },
 						{ text: i.diagnostic, style: 'normal_style' },
@@ -122,6 +125,8 @@ export class EvaluationPdfService {
 						});
 					}
 				}
+
+				const evaluationDate = employees[0] ? employees[0].start_date : '';
 
 				for (let j of employees) {
 					workTeam.push([
@@ -259,7 +264,7 @@ export class EvaluationPdfService {
 											{ text: data.order.id, style: 'normal_style' },
 												'',
 											{ text: 'Fecha evaluación: ', style: 'normal_style' },
-											{ text: employees[0].start_date, style: 'normal_style' },
+											{ text: evaluationDate, style: 'normal_style' },
 											],
 											[{ text: 'ciudad: ', style: 'normal_style' },
 											{ text: data.local.city, style: 'normal_style' },
@@ -311,7 +316,7 @@ export class EvaluationPdfService {
 							bold: true,
 						},
 						{
-							text: 'Total Sincronizadas: ' + cont_details,
+							text: 'Total Sincronizadas: ' + synchronizeds,
 							style: 'normal_style',
 							bold: true,
 						},
@@ -332,17 +337,17 @@ export class EvaluationPdfService {
 							text: 'Observaciones: ' + data.evaluationApi.comments,
 							style: 'normal_style',
 						},
+						{ text: '\n\ ' },
 						{
 							columns: [
-								[{ text: '\n\ ' },
+								[
 								{
 									image: signatureImage,
 									width: 400,
 									height: 120,
 								},
 								],
-								[{ text: '\n\ ' },
-								{ text: '\n\ ' },
+								[
 								{
 									image: photoImage,
 									width: 100,
