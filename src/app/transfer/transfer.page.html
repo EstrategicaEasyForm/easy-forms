@@ -139,6 +139,9 @@
                           <ion-col class="detail-bull-breed">
                             <ion-label>Cuerpo</ion-label>Lúteo
                           </ion-col>
+                          <ion-col class="detail-sync">
+                            <ion-label>Sinc.</ion-label>
+                          </ion-col>
                           <ion-col class="detail-gii">
                             <ion-label>Obser.</ion-label>
                           </ion-col>
@@ -172,6 +175,10 @@
                               </ion-col>
                               <ion-col class="detail-bull-breed">
                                 <ion-label>{{item.corpus_luteum }}</ion-label>
+                              </ion-col>
+                              <ion-col class="detail-sync">
+                                <ion-label *ngIf="item.evaluation_detail_id == null">No</ion-label>
+                                <ion-label *ngIf="item.evaluation_detail_id != null">Si</ion-label>
                               </ion-col>
                               <ion-col class="detail-gii">
                                 <ion-label>{{item.comments }}</ion-label>
@@ -216,11 +223,11 @@
                       <ion-label>Nombre del técnico encargado</ion-label>
                     </ion-col>
                   </ion-row>
-				  <ion-row>
+				          <ion-row>
                     <ion-col size=12>
                       <ion-input type="text" formControlName="transferor" 
-					  (ionChange)="onChangeTransferor()"
-					  [(ngModel)]="transfer.transferor">
+                        (ionChange)="onChangeTransferor()"
+                        [(ngModel)]="transfer.transferor">
                       </ion-input>
                       <div>
                         <ng-container *ngFor="let validation of validation_messages.transferor">

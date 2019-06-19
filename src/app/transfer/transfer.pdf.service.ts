@@ -8,7 +8,7 @@ import { OrdersService } from '../orders.service';
 import * as moment from 'moment-timezone';
 import { HttpClient } from '@angular/common/http';
 import { ImageSrc } from '../imageSrc';
-
+import { url } from 'inspector';
 
 @Injectable({
 	providedIn: 'root'
@@ -23,105 +23,216 @@ export class TransferPdfService {
 		public toastCtrl: ToastController,
 		public ordersService: OrdersService,
 		public http: HttpClient,
-		public imageSrc: ImageSrc
-	) { }
+		public imageSrc: ImageSrc) {
 
-	// params: 
-	// data: {
-	//		transfer: any,
-	//		order: any,
-	//		local: any
-	// }
-	// callback: function,
-	// options {
-	//   watermark: true|false,
-	//	 open: true|false
-	// }
+	}
 	async makePdf(data, options) {
 
 		const _self = this;
 		let filename = "InVitroTransferencia_";
-		if(data && data.order) filename = "InVitroTransferencia" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
+		if(data && data.order) filename = "InvitroTransferencia_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
 		
 		return new Promise(resolve => {
-			try {
-				const dataDirectory = this.file.dataDirectory;
-				
-				pdfmake.vfs = pdfFonts.pdfMake.vfs;
+		try {
+			const dataDirectory = this.file.dataDirectory;
+
+			pdfmake.vfs = pdfFonts.pdfMake.vfs;
 
 				const photoImage = data.transferApi.photoImage || this.imageSrc.imagePhotoDefault;
 				const signatureImage = data.transferApi.signatureImage || this.imageSrc.imageBlank;
 
 				var transferDetails = [];
 				var workTeam = [];
+				var cont_details = 1;
+				var con_discard = {transfers: 0, discards: 0};
 
 				transferDetails.push([
-					{ text: 'Clasificación', alignment: 'center', bold: true },
-					{ text: 'Donadora', alignment: 'center', bold: true },
-					{ text: 'Raza', alignment: 'center', bold: true },
-					{ text: 'Toro', alignment: 'center', bold: true },
-					{ text: 'Raza', alignment: 'center', bold: true },
-					{ text: 'Receptora', alignment: 'center', bold: true },
-					{ text: 'Cuerpo Luteo', alignment: 'center', bold: true },
-					{ text: 'Observaciones', alignment: 'center', bold: true }
+					{ text: 'No.', style: 'title_table_style' },
+					{ text: 'Receptora', style: 'title_table_style' },
+					{ text: 'Embrión', style: 'title_table_style' },
+					{ text: 'Cl', style: 'title_table_style' },
+					{ text: 'Donadora', style: 'title_table_style' },
+					{ text: 'Raza', style: 'title_table_style' },
+					{ text: 'Toro', style: 'title_table_style' },
+					{ text: 'Raza', style: 'title_table_style' },
+					{ text: 'Transferidor', style: 'title_table_style' },
+					{ text: 'Sinc.', style: 'title_table_style' },
+					{ text: 'Observaciones para éxamen', style: 'title_table_style' },
+					{ text: 'Local', style: 'title_table_style' },
 				]);
 				for (let i of data.transferApi.details_view) {
+					if (i.discard === '1') {
+						con_discard.transfers++;
+					} else {
+						con_discard.discards++;
+					}
 					transferDetails.push([
-						i.embryo_class,
-						i.donor,
-						i.donor_breed,
-						i.bull,
-						i.bull_breed,
-						i.receiver,
-						i.corpus_luteum,
-						i.comments
+						{ text: cont_details++, style: 'normal_style' },
+						{ text: i.receiver, style: 'normal_style' },
+						{ text: i.embryo, style: 'normal_style' },
+						{ text: i.embryo_class, style: 'normal_style' },
+						{ text: i.donor, style: 'normal_style' },
+						{ text: i.donor_breed, style: 'normal_style' },
+						{ text: i.bull, style: 'normal_style' },
+						{ text: i.bull_breed, style: 'normal_style' },
+						{ text: i.transferor, style: 'normal_style' },
+						{ text: i.evaluation_detail_id == null ? 'No' : 'Si', style: 'normal_style' },
+						{ text: i.comments, style: 'normal_style' },
+						{ text: i.local != null ? i.local.name : ' ', style: 'normal_style' },
 					]);
 				}
 
 				workTeam.push([
-					{ text: 'Nombre', alignment: 'center', bold: true },
-					{ text: 'Correo', alignment: 'center', bold: true },
-					{ text: 'Evento', alignment: 'center', bold: true },
-					{ text: 'Observación', alignment: 'center', bold: true },
-					{ text: 'Departamento', alignment: 'center', bold: true },
-					{ text: 'Municipio', alignment: 'center', bold: true },
-					{ text: 'Fecha', alignment: 'center', bold: true }]);
-				if(data.order.agenda)
-				for (let j of data.order.agenda) {
+					{ text: 'Nombre del técnico', style: 'title_table_style' },
+					{ text: 'Evento', style: 'title_table_style' },
+					{ text: 'Fecha', style: 'title_table_style' },
+					{ text: 'Observaciones', style: 'title_table_style' }
+				]);
+				
+				const employees = [];
+				let employee: string;
+				for (let agenda of data.order.agenda) {
+				  if (agenda.event.id === '3' && data.local.name === agenda.name_local) {
+					if(agenda.user) {
+						employee = agenda.user.name;
+					}
+					else if(agenda.other_user) {
+						employee = agenda.other_user.name;
+					}
+					else {
+						employee = '';
+					}
+					const start_date = agenda.all_day ? agenda.start_date.substr(0,10)  : agenda.start_date;
+					employees.push({ 
+						name: employee, 
+						eventName:agenda.event.name, 
+						start_date: start_date,
+						observation: agenda.observation 
+					});
+				  }
+				}
+				
+				for (let j of employees) {
 					workTeam.push([
-						j.user.name,
-						j.user.email,
-						j.event.name,
+						j.name,
+						j.eventName,
+						j.start_date,
 						j.observation,
-						j.department.name,
-						j.municipality.name,
-						j.start_date
 					]);
+				}
+				if(employees.length < 3) {
+					for(let i=0;i<3-employees.length;i++) {
+						workTeam.push([
+							'\r',
+							'\r',
+							'\r',
+							'\r',
+						]);
+					}	
 				}
 
 				let docDefinition = {
-					pageSize: 'A4',
-
-					pageMargins: [40, 60, 40, 60],
+					pageSize: 'LETTER',
+					pageMargins: [72,72,72,72],
 					pageOrientation: 'landscape',
+					header: {
+						image: this.imageSrc.logoSrcBase64,
+						width: 90,
+						height: 55,
+						alignment: 'right',
+						margin: [25,25],
+						opacity: 0.5,
+					},
+					footer: {
+						text: 'Carrera 72A # 49A - 39 Bogotá, (+57 1) 7968626 – 3135700023 – logística@invitro.com.co',
+						alignment: 'center',
+						fontSize: 12,
+						opacity: 0.3,
+					},
 					content: [
+						{
+							text: 'REPORTE DE SERVICIO TÉCNICO',
+							fontSize: 16,
+							alignment: 'left',
+						},
+						{
+							text: ' ',
+							fontSize: 15,
+						},
+						{
+							text: 'FECHA DE REPORTE: ' + moment().format('DD-MM-YYYY'),
+							fontSize: 12,
+							alignment: 'right',
+						},
+						{
+							text: 'DATOS DEL CLIENTE',
+							style: 'subtitle_style'
+						},
+						{
+							text: ' ',
+							fontSize: 12,
+						},
 						{
 							columns: [
 								{
-									image: this.imageSrc.logoSrcBase64,
-									width: 120,
-									height: 80,
+									width: 'auto',
+									table: {
+										fontSize: 12,
+										widths: ['auto', '*'],
+										body: [
+											[{ text: 'Razón Social:', style: 'normal_style' }, { text: data.order.client.bussiness_name, style: 'normal_style' }],
+											[{ text: 'No. Identificación:', style: 'normal_style' }, { text: data.order.client_id, style: 'normal_style' }],
+											[{ text: 'Contacto:', style: 'normal_style' }, { text: data.order.client.contact, style: 'normal_style' }],
+											[{ text: 'Correo electrónico:', style: 'normal_style' }, { text: data.order.client.email, style: 'normal_style' }],
+											[{ text: 'Móvil:', style: 'normal_style' }, { text: data.order.client.cellphone, style: 'normal_style' }],
+										]
+									},
+									layout: 'noBorders'
 								},
 								{
-									fontSize: 12,
-									alignment: 'right',
-									bold: true,
-									text: 'Cra 72A N° 49A-39 Bogotá \n\ Invitro \n\ (+57 1) 796 86 26 | 313 570 00 23 \n\ ivc.logistica@genusplc.com \n\ '
+									width: '*', text: ''
+								},
+								{
+									width: '*', text: ''
 								},
 							]
 						},
-						{ text: '\n\ ÓRDEN DE PRODUCCIÓN: ' + data.order.id, bold: true, fontSize: 18, alignment: 'left' },
-						{ text: '\n\ DATOS:', bold: true, fontSize: 15, alignment: 'left' },
+						{ text: '\n\ ' },
+						{
+							text: 'PERSONAL ASIGNADO',
+							style: 'subtitle_style'
+						},
+						{
+							text: ' ',
+							fontSize: 12,
+						},
+						{
+							columns: [
+								{
+									width: '*', text: ''
+								},
+								{
+									width: 'auto',
+									table: {
+										headerRows: 1,
+										widths: [140, 100, 100, 140],
+										body: workTeam
+									},
+								},
+								{
+									width: '*', text: ''
+								},
+							]
+						},
+						{ text: '\n\ ' },
+						{
+							text: 'INFORMACIÓN DEL SERVICIO',
+							style: 'subtitle_style'
+						},
+						{
+							text: ' ',
+							fontSize: 12,
+						},
 						{
 							columns: [
 								{
@@ -131,13 +242,20 @@ export class TransferPdfService {
 									width: 'auto',
 									table: {
 										fontSize: 12,
-										widths: ['*', '*', '*', '*'],
+										widths: ['auto', 120, 40, 'auto', 120],
 										body: [
-											[{ text: 'Fecha:', alignment: 'right', bold: true }, data.order.date, { text: 'Correo Electrónico:', alignment: 'right', bold: true }, { text: data.order.client.email, alignment: 'left' }],
-											[{ text: 'N° Identificación:', alignment: 'right', bold: true }, data.order.client_id, { text: 'Contacto:', alignment: 'right', bold: true }, { text: data.order.client.contact, alignment: 'left' }],
-											[{ text: 'Razon Social:', alignment: 'right', bold: true }, data.order.client.bussiness_name, { text: 'Cargo:', alignment: 'right', bold: true }, { text: data.order.client.position, alignment: 'left' }],
-											[{ text: 'Departamento:', alignment: 'right', bold: true }, data.order.client.departmentOne.name, { text: 'Dirección:', alignment: 'right', bold: true }, { text: data.order.client.address, alignment: 'left' }],
-											[{ text: 'Ciudad:', alignment: 'right', bold: true }, data.order.client.citiesOne.name, { text: 'Teléfono:', alignment: 'right', bold: true }, { text: data.order.client.cellphone, alignment: 'left' }],
+											[{ text: 'Orden de prod.: ', style: 'normal_style' },
+											{ text: data.order.id, style: 'normal_style' },
+												'',
+											{ text: 'Fecha transferencia: ', style: 'normal_style' },
+											{ text: data.transferApi.date, style: 'normal_style' },
+											],
+											[{ text: 'Ciudad: ', style: 'normal_style' },
+											{ text: data.local.city, style: 'normal_style' },
+												'',
+											{ text: 'Local: ', style: 'normal_style' },
+											{ text: data.local.name, style: 'normal_style' },
+											]
 										]
 									},
 									layout: 'noBorders'
@@ -147,77 +265,15 @@ export class TransferPdfService {
 								},
 							]
 						},
-						{ text: '\n\ EQUIPO DE TRABAJO: ', bold: true, fontSize: 15, alignment: 'left' },
-						{ text: '\n\ ' },
 						{
-							columns: [
-								{
-									width: '*', text: ''
-								},
-								{
-									width: 'auto',
-									table: {
-										fontSize: 9,
-										headerRows: 1,
-										widths: [100, 140, 60, 120, 80, 60, 60],
-										body: workTeam
-									},
-									layout: {
-										fillColor: function (rowIndex, node, columnIndex) {
-											return (rowIndex === 0) ? '#b9d2e8' : null;
-										}
-									}
-								},
-								{
-									width: '*', text: ''
-								},
-							]
+							text: 'DETALLES DEL SERVICIO',
+							style: 'subtitle_style',
+							pageBreak: 'before',
 						},
-						{ text: '\n\n\ LOCALES TE:', alignment: 'left', fontSize: 15, bold: true },
-						{ text: '\n\ ' },
 						{
-							columns: [
-								{
-									width: '*', text: ''
-								},
-								{
-									width: 'auto',
-									table: {
-										fontSize: 12,
-										widths: [120, 'auto', 'auto', 'auto', 120, 120],
-										body: [
-											[
-												{ text: 'Nombre Local', alignment: 'center', bold: true },
-												{ text: 'Ciudad', alignment: 'center', bold: true },
-												{ text: 'Departamento', alignment: 'center', bold: true },
-												{ text: 'Teléfono', alignment: 'center', bold: true },
-												{ text: 'Correo', alignment: 'center', bold: true },
-												{ text: 'Contacto', alignment: 'center', bold: true }
-											],
-											[
-												{ text: data.local.name, alignment: 'left' },
-												{ text: data.local.city, alignment: 'left' },
-												{ text: data.local.department, alignment: 'left' },
-												{ text: data.order.client.cellphone, alignment: 'left' },
-												{ text: data.order.client.email, alignment: 'left' },
-												{ text: data.order.client.contact, alignment: 'left' }
-											],
-										],
-									},
-									layout: {
-										fillColor: function (rowIndex, node, columnIndex) {
-											return (rowIndex === 0) ? '#b9d2e8' : null;
-										}
-									}
-								},
-								{
-									width: '*', text: ''
-								},
-							]
+							text: ' ',
+							fontSize: 12,
 						},
-						{ text: '\n\n\ INFORMACIÓN DEL EVENTO: TRANSFERENCIA DE EMBRIONES', bold: true, fontSize: 15, alignment: 'left' },
-						{ text: '\n\n\ DETALLES DE TRANSFERENCIA:', alignment: 'left', fontSize: 15, bold: true },
-						{ text: '\n\ ' },
 						{
 							columns: [
 								{
@@ -228,79 +284,87 @@ export class TransferPdfService {
 									table: {
 										headerRows: 1,
 										alignment: 'center',
-										fontSize: 9,
-										widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 120, 120],
+										widths: ['auto', 60, 60, 'auto', 60, 'auto', 80, 'auto', 80, 'auto', 150, 150],
 										body: transferDetails,
 									},
-									layout: {
-										fillColor: function (rowIndex, node, columnIndex) {
-											return (rowIndex === 0) ? '#b9d2e8' : null;
-										}
+								},
+								{
+									width: '*', text: ''
+								},
+							]
+						},
+						{
+							text: 'Total transferidos: ' + con_discard.transfers,
+							style: 'subtitle_style',
+							pageBreak: 'before'
+						},
+						{
+							text: 'Total descartados: ' + con_discard.discards,
+							style: 'subtitle_style',
+							pageBreak: 'before'
+						},
+						{ text: '\n\ ' },
+						{
+							text: 'DATOS GENERALES',
+							style: 'subtitle_style'
+						},
+						{
+							text: ' ',
+							fontSize: 12,
+						},
+						{
+							text: 'Nombre del técnico  : ' + data.transferApi.transferor,
+							style: 'normal_style',
+						},
+						{ text: '\n\ ' },
+						{
+							text: 'Observaciones  : ' + data.transferApi.comments,
+							style: 'normal_style',
+						},
+						{
+							columns: [
+								[	{ text: '\n\ ' },
+									{
+										image: signatureImage,
+										width: 400,
+										height: 120,
+									},
+								],
+								[	{ text: '\n\ ' },
+									{ text: '\n\ ' },
+									{
+										image: photoImage,
+										width: 100,
+										height: 120,
 									}
-								},
-								{
-									width: '*', text: ''
-								},
+								],
 							]
 						},
-						{ text: '\n\n\ NOMBRE Y FIRMA DEL ENCARGADO', alignment: 'center', pageBreak: 'before', fontSize: 18, bold: true },
-						{ text: '\n\n\ ' },
-						{
-							columns: [
-								{
-									width: '*', text: ''
-								},
-								{
-									image: signatureImage,
-									width: 700,
-									height: 300,
-								},
-								{
-									width: '*', text: ''
-								},
-							],
-						},
-						{ text: data.transferApi.received_by, alignment: 'center', fontSize: 15, bold: true },
-						{ text: data.transferApi.identification_number, alignment: 'center', fontSize: 15, bold: true },
-						{ text: '\n\n\ FOTO EVIDENCIA DEL EVENTO', alignment: 'center', pageBreak: 'before', fontSize: 18, bold: true },
-						{ text: '\n\n\ ' },
-						{
-							columns: [
-								{
-									width: '*', text: ''
-								},
-								{
-									image: photoImage,
-									width: 300,
-									height: 300,
-								},
-								{
-									width: '*', text: ''
-								},
-							]
-						},
+						{ text: 'Nombre del encargado  : ' + data.transferApi.received_by, alignment: 'left' },
+						{ text: 'Cédula  : ' + data.transferApi.identification_number, alignment: 'left'  }
 					],
 					styles: {
-						header: {
-							bold: true,
-							fontSize: 10,
-							alignment: 'center'
-						},
-						sub_header: {
-							bold: true,
-							fontSize: 15,
-							alignment: 'left'
-						},
-						sub_header2: {
+						subtitle_style: {
 							bold: true,
 							fontSize: 12,
-							alignment: 'right'
+							decoration: 'underline',
+							alignment: 'left',
 						},
+						normal_style: {
+							fontSize: 12,
+							bold: false,
+							alignment: 'left',
+						},
+						title_table_style: {
+							fontSize: 11,
+							bold: true,
+							alignment: 'center',
+						}
 					},
 				};
 
 				if (options.watermark) {
-					docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.3, bold: true, italics: false } });
+					docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.2, bold: true, italics: false } });
 				}
 		
 				pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {
@@ -356,3 +420,4 @@ export class TransferPdfService {
 		});	
 	}
 }
+ 

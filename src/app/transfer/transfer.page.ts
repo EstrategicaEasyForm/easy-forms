@@ -98,7 +98,7 @@ export class TransferPage implements OnInit {
         for (let order of ordersList) {
           for (let detail of order.detailsApi) {
             if (detail.transferApi && detail.transferApi.id === this.transfer.id) {
-              detail.transferApi.details_view[indx].discard = false;
+              detail.transferApi.details_view[indx].discard = '0';
             }
           }
         }
