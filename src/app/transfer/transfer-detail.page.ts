@@ -144,7 +144,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
 
   saveItem() {
     if (this.checkRecept) {
-      this.dataItem.receiver = null;
+      this.dataItem.corpus_luteum = null;
     } else {
       this.dataItem.evaluation_detail_id = null;
     }
