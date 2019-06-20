@@ -236,8 +236,8 @@ export class SyncronizationPage {
           this.finishSync(null);
         }
         else if (pdf.status === 'success') {
-          //State for to Finalize
-          if(detailApi.state == "1") {
+          //If Template State is Finalize
+          if(workSheet.state == "1") {
 			  this.sendEmail.makeEmail(order, detailApi, workSheet, type, response, pdf).then((resp: any) => {
 				if (resp.status === 'success') {
 				  this.writeLog({

@@ -63,6 +63,8 @@ export class DeliveryPdfService {
 							newDetails.push({
 								"id": detailsTmp.id,
 								"transfer_detail_id": Number(detailsTmp.transfer_detail_id),
+								"sex": dtDiag.sex,
+								"dx1": dtDiag.dx1,
 								"dx2": detailsTmp.dx2,
 								"transferData": dtDiag
 							});
@@ -316,7 +318,7 @@ export class DeliveryPdfService {
 						{
 							text: 'DETALLES DEL SERVICIO',
 							style: 'subtitle_style',
-							pageBreak: 'before',
+							
 						},
 						{
 							text: ' ',
@@ -332,7 +334,7 @@ export class DeliveryPdfService {
 									table: {
 										headerRows: 1,
 										alignment: 'center',
-										widths: ['auto', 120, 60, 50, 60, 50, 'auto', 100, 'auto', 'auto', 'auto'],
+										widths: ['auto', 100, 60, 60, 60, 60, 'auto', 100, 'auto', 'auto', 'auto'],
 										body: deliveryDetails,
 									},
 								},
@@ -430,7 +432,6 @@ export class DeliveryPdfService {
 									}
 								}
 								else {
-									/*
 									if (options && options.open) {
 										var file = new Blob([binaryArray], { type: 'application/pdf' });
 										var fileUrl = URL.createObjectURL(file);
@@ -444,7 +445,8 @@ export class DeliveryPdfService {
 										a.click();
 										//open it directly 
 										window.open(fileUrl);
-									}*/
+									}
+									
 									resolve({ status: "error", error: result.error, filename: filename });
 								}
 							});

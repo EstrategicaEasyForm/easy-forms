@@ -81,7 +81,7 @@ export class SexagePage implements OnInit {
     let detailsTmp;
 
     //Si el objeto details es diferente al objeto detailsSexage se rearma la lista para incluir todos los detalles de detailsSexage.
-    if (this.sexage.details.length !== this.sexage.detailsSexage.length) {
+    if (this.sexage.details[0] && !this.sexage.details[0].transferData) {
       const newDetails = [];
       for (let dtDiag of this.sexage.detailsSexage) {
         detailsTmp = null;
