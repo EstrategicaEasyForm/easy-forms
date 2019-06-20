@@ -168,8 +168,8 @@ export class TransferPage implements OnInit {
       open: true
     };
     this.transferPdf.makePdf(data, options).then((pdf: any) => {
-	  loading.dismiss();	
-	  if (pdf.status === 'error') {
+      loading.dismiss();	
+      if (pdf.status === 'error') {
         this.showMessage(pdf.error);
       }
     });

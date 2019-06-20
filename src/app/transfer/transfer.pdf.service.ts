@@ -47,18 +47,18 @@ export class TransferPdfService {
 				var con_discard = {transfers: 0, discards: 0};
 
 				transferDetails.push([
-					{ text: 'No.', style: 'title_table_style' },
-					{ text: 'Receptora', style: 'title_table_style' },
-					{ text: 'Embrión', style: 'title_table_style' },
-					{ text: 'Cl', style: 'title_table_style' },
-					{ text: 'Donadora', style: 'title_table_style' },
-					{ text: 'Raza', style: 'title_table_style' },
-					{ text: 'Toro', style: 'title_table_style' },
-					{ text: 'Raza', style: 'title_table_style' },
-					{ text: 'Transferidor', style: 'title_table_style' },
-					{ text: 'Sinc.', style: 'title_table_style' },
-					{ text: 'Observaciones para éxamen', style: 'title_table_style' },
-					{ text: 'Local', style: 'title_table_style' },
+					{ text: 'No.', style: 'title_detail_style' },
+					{ text: 'Receptora', style: 'title_detail_style' },
+					{ text: 'Embrión', style: 'title_detail_style' },
+					{ text: 'Cl', style: 'title_detail_style' },
+					{ text: 'Donadora', style: 'title_detail_style' },
+					{ text: 'Raza', style: 'title_detail_style' },
+					{ text: 'Toro', style: 'title_detail_style' },
+					{ text: 'Raza', style: 'title_detail_style' },
+					{ text: 'Transferidor', style: 'title_detail_style' },
+					{ text: 'Sinc.', style: 'title_detail_style' },
+					{ text: 'Obs. para éxamen', style: 'title_detail_style' },
+					{ text: 'Local', style: 'title_detail_style' },
 				]);
 				for (let i of data.transferApi.details_view) {
 					if (i.discard === '1') {
@@ -67,18 +67,18 @@ export class TransferPdfService {
 						con_discard.discards++;
 					}
 					transferDetails.push([
-						{ text: cont_details++, style: 'normal_style' },
-						{ text: i.receiver, style: 'normal_style' },
-						{ text: i.embryo, style: 'normal_style' },
-						{ text: i.embryo_class, style: 'normal_style' },
-						{ text: i.donor, style: 'normal_style' },
-						{ text: i.donor_breed, style: 'normal_style' },
-						{ text: i.bull, style: 'normal_style' },
-						{ text: i.bull_breed, style: 'normal_style' },
-						{ text: i.transferor, style: 'normal_style' },
-						{ text: i.evaluation_detail_id == null ? 'No' : 'Si', style: 'normal_style' },
-						{ text: i.comments, style: 'normal_style' },
-						{ text: i.local != null ? i.local.name : ' ', style: 'normal_style' },
+						{ text: cont_details++, style: 'normal_detail_style' },
+						{ text: i.receiver, style: 'normal_detail_style' },
+						{ text: i.embryo, style: 'normal_detail_style' },
+						{ text: i.embryo_class, style: 'normal_detail_style' },
+						{ text: i.donor, style: 'normal_detail_style' },
+						{ text: i.donor_breed, style: 'normal_detail_style' },
+						{ text: i.bull, style: 'normal_detail_style' },
+						{ text: i.bull_breed, style: 'normal_detail_style' },
+						{ text: i.transferor, style: 'normal_detail_style' },
+						{ text: i.evaluation_detail_id == null ? 'No' : 'Si', style: 'normal_detail_style' },
+						{ text: i.comments, style: 'normal_detail_style' },
+						{ text: i.local != null ? i.local.name : ' ', style: 'normal_detail_style' },
 					]);
 				}
 
@@ -284,7 +284,7 @@ export class TransferPdfService {
 									table: {
 										headerRows: 1,
 										alignment: 'center',
-										widths: ['auto', 60, 60, 'auto', 60, 'auto', 80, 'auto', 80, 'auto', 150, 150],
+										widths: ['auto', 55, 45, 'auto', 50, 45, 50, 45, 65, 'auto', 65, 60],
 										body: transferDetails,
 									},
 								},
@@ -295,13 +295,11 @@ export class TransferPdfService {
 						},
 						{
 							text: 'Total transferidos: ' + con_discard.transfers,
-							style: 'subtitle_style',
-							pageBreak: 'before'
+							style: 'normal_style',
 						},
 						{
 							text: 'Total descartados: ' + con_discard.discards,
-							style: 'subtitle_style',
-							pageBreak: 'before'
+							style: 'normal_style',
 						},
 						{ text: '\n\ ' },
 						{
@@ -355,6 +353,16 @@ export class TransferPdfService {
 							bold: false,
 							alignment: 'left',
 						},
+						normal_detail_style: {
+							fontSize: 11,
+							bold: false,
+							alignment: 'left',
+						},
+						title_detail_style: {
+							fontSize: 11,
+							bold: true,
+							alignment: 'center',
+						},
 						title_table_style: {
 							fontSize: 11,
 							bold: true,
@@ -395,6 +403,12 @@ export class TransferPdfService {
 						resolve({ status: "error", error: errm, filename: filename });
 					}
 				});
+				/*let pdfDoc = pdfmake.createPdf(docDefinition);
+				try {
+					pdfDoc.open();
+				} catch (err) {
+					alert(err);
+				}*/
 
 			} catch (err) {
 				const errm = err.message ? err.message : typeof err === 'string' ? err : JSON.stringify(err);
