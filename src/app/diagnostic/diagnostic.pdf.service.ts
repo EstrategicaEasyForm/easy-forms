@@ -8,6 +8,7 @@ import { OrdersService } from '../orders.service';
 import * as moment from 'moment-timezone';
 import { HttpClient } from '@angular/common/http';
 import { ImageSrc } from '../imageSrc';
+import { url } from 'inspector';
 
 @Injectable({
 	providedIn: 'root'
@@ -41,91 +42,242 @@ export class DiagnosticPdfService {
 
 		const _self = this;
 		let filename = "InVitroDiagnostico_";
-		if(data && data.order) filename = "InvitroDiagnostico_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
-		
-		return new Promise(resolve => {
-		try {
-			const dataDirectory = this.file.dataDirectory;
-			
+		if (data && data.order) filename = "InvitroDiagnostico_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
 
-			
-			pdfmake.vfs = pdfFonts.pdfMake.vfs;
+		return new Promise(resolve => {
+			try {
+				const dataDirectory = this.file.dataDirectory;
+
+				let detailsTmp;
+				if (data.diagnosticApi.details[0] && !data.diagnosticApi.details[0].transferData) {
+				  const newDetails = [];
+				  for (let dtDiag of data.diagnosticApi.detailsDiagnostic) {
+					detailsTmp = null;
+					for (let details of data.diagnosticApi.details) {
+					  if (dtDiag.transfer_detail_id == details.transfer_detail_id) {
+						detailsTmp = details;
+					  }
+					}
+					if (detailsTmp) {
+					  newDetails.push({
+						"id": detailsTmp.id,
+						"diagnostic_id": data.diagnosticApi.id,
+						"transfer_detail_id": detailsTmp.transfer_detail_id,
+						"dx1": detailsTmp.dx1,
+						"transferData": dtDiag
+					  });
+					}
+					else {
+					  newDetails.push({
+						"id": -1,
+						"diagnostic_id": data.diagnosticApi.id,
+						"transfer_detail_id": dtDiag.transfer_detail_id,
+						"dx1": "",
+						"transferData": dtDiag
+					  });
+					}
+				  }
+				  //se modifica la lista
+				  data.diagnosticApi.details = newDetails;
+				}
+
+				pdfmake.vfs = pdfFonts.pdfMake.vfs;
 
 				const photoImage = data.diagnosticApi.photoImage || this.imageSrc.imagePhotoDefault;
 				const signatureImage = data.diagnosticApi.signatureImage || this.imageSrc.imageBlank;
 
 				var diagnosticDetails = [];
 				var workTeam = [];
+				var cont_details = 1;
 
 				diagnosticDetails.push([
-					{ text: 'Receptora', alignment: 'center', bold: true },
-					{ text: 'Embrión', alignment: 'center', bold: true },
-					{ text: 'Clasif. Embrión', alignment: 'center', bold: true },
-					{ text: 'Donadora', alignment: 'center', bold: true },
-					{ text: 'Raza', alignment: 'center', bold: true },
-					{ text: 'Toro', alignment: 'center', bold: true },
-					{ text: 'Raza', alignment: 'center', bold: true },
-					{ text: 'Cuerpo Luteo', alignment: 'center', bold: true },
-					{ text: 'Transferidor', alignment: 'center', bold: true },
-					{ text: 'DX1', alignment: 'center', bold: true }
+					{ text: 'No.', style: 'title_table_style' },
+					{ text: 'Receptora', style: 'title_table_style' },
+					{ text: 'Embrión', style: 'title_table_style' },
+					{ text: 'Donadora', style: 'title_table_style' },
+					{ text: 'Raza', style: 'title_table_style' },
+					{ text: 'Toro', style: 'title_table_style' },
+					{ text: 'Raza', style: 'title_table_style' },
+					{ text: 'Local', style: 'title_table_style' },
+					{ text: 'DX1', style: 'title_table_style' },
 				]);
+
+				let totalVoid = 0;
+				let totalPregned = 0;
+				let totalPPL = 0;
+				let diagnosticEmployee = data.diagnosticApi.details[0] && data.diagnosticApi.details[0].transferData ? data.diagnosticApi.details[0].transferData.transferor : '';
 				for (let i of data.diagnosticApi.details) {
-					diagnosticDetails.push([i.transferData.receiver,
-					i.transferData.embryo,
-					i.transferData.embryo_class,
-					i.transferData.donor,
-					i.transferData.donor_breed,
-					i.transferData.bull,
-					i.transferData.bull_breed,
-					i.transferData.corpus_luteum,
-					i.transferData.transferor,
-					i.dx1
+					if (i.dx1 === 'V') totalVoid++;
+					if (i.dx1 === 'P') totalPregned++;
+					if (i.dx1 === 'PPL') totalPregned++;
+
+					diagnosticDetails.push([
+						{ text: cont_details++, style: 'normal_style' },
+						{ text: i.transferData.receiver, style: 'normal_style' },
+						{ text: i.transferData.embryo, style: 'normal_style' },
+						{ text: i.transferData.donor, style: 'normal_style' },
+						{ text: i.transferData.donor_breed, style: 'normal_style' },
+						{ text: i.transferData.bull, style: 'normal_style' },
+						{ text: i.transferData.bull_breed, style: 'normal_style' },
+						{ text: 'i.local.name', style: 'normal_style' },
+						{ text: i.transferData.dx1, style: 'normal_style' },
 					]);
 				}
 
 				workTeam.push([
-					{ text: 'Nombre', alignment: 'center', bold: true },
-					{ text: 'Correo', alignment: 'center', bold: true },
-					{ text: 'Evento', alignment: 'center', bold: true },
-					{ text: 'Observación', alignment: 'center', bold: true },
-					{ text: 'Departamento', alignment: 'center', bold: true },
-					{ text: 'Municipio', alignment: 'center', bold: true },
-					{ text: 'Fecha', alignment: 'center', bold: true }]);
-				if(data.order.agenda)	
-				for (let j of data.order.agenda) {
+					{ text: 'Nombre del técnico', style: 'title_table_style' },
+					{ text: 'Evento', style: 'title_table_style' },
+					{ text: 'Fecha', style: 'title_table_style' },
+					{ text: 'Observaciones', style: 'title_table_style' }
+				]);
+
+				const employees = [];
+				let employee: string;
+				for (let agenda of data.order.agenda) {
+					if (agenda.event.id === '2' && data.local.name === agenda.name_local) {
+						if (agenda.user) {
+							employee = agenda.user.name;
+						}
+						else if (agenda.other_user) {
+							employee = agenda.other_user.name;
+
+						}
+						else {
+							employee = '';
+						}
+						const start_date = agenda.all_day ? agenda.start_date.substr(0, 10) : agenda.start_date;
+						employees.push({
+							name: employee,
+							eventName: agenda.event.name,
+							start_date: start_date,
+							observation: agenda.observation
+						});
+					}
+				}
+
+				const diagnosticDate = employees[0] ? employees[0].start_date : '';
+
+				for (let j of employees) {
 					workTeam.push([
-						j.user.name,
-						j.user.email,
-						j.event.name,
+						j.name,
+						j.eventName,
+						j.start_date,
 						j.observation,
-						j.department.name,
-						j.municipality.name,
-						j.start_date
 					]);
+				}
+				if (employees.length < 3) {
+					for (let i = 0; i < 3 - employees.length; i++) {
+						workTeam.push([
+							'\r',
+							'\r',
+							'\r',
+							'\r',
+						]);
+					}
 				}
 
 				let docDefinition = {
-					pageSize: 'A4',
-					pageMargins: [40, 60, 40, 60],
+					pageSize: 'LETTER',
+					pageMargins: [72, 72, 72, 72],
 					pageOrientation: 'landscape',
+					header: {
+						image: this.imageSrc.logoSrcBase64,
+						width: 90,
+						height: 55,
+						alignment: 'right',
+						margin: [25, 25],
+						opacity: 0.5,
+					},
+					footer: {
+						text: 'Carrera 72A # 49A - 39 Bogotá, (+57 1) 7968626 – 3135700023 – logística@invitro.com.co',
+						alignment: 'center',
+						fontSize: 12,
+						opacity: 0.3,
+					},
 					content: [
+						{
+							text: 'REPORTE DE SERVICIO TÉCNICO',
+							fontSize: 16,
+							alignment: 'left',
+						},
+						{
+							text: ' ',
+							fontSize: 15,
+						},
+						{
+							text: 'FECHA DE REPORTE: ' + moment().format('DD-MM-YYYY'),
+							fontSize: 12,
+							alignment: 'right',
+						},
+						{
+							text: 'DATOS DEL CLIENTE',
+							style: 'subtitle_style'
+						},
+						{
+							text: ' ',
+							fontSize: 12,
+						},
 						{
 							columns: [
 								{
-									image: this.imageSrc.logoSrcBase64,
-									width: 120,
-									height: 80,
+									width: 'auto',
+									table: {
+										fontSize: 12,
+										widths: ['auto', '*'],
+										body: [
+											[{ text: 'Razón Social:', style: 'normal_style' }, { text: data.order.client.bussiness_name, style: 'normal_style' }],
+											[{ text: 'No. Identificación:', style: 'normal_style' }, { text: data.order.client_id, style: 'normal_style' }],
+											[{ text: 'Contacto:', style: 'normal_style' }, { text: data.order.client.contact, style: 'normal_style' }],
+											[{ text: 'Correo electrónico:', style: 'normal_style' }, { text: data.order.client.email, style: 'normal_style' }],
+											[{ text: 'Móvil:', style: 'normal_style' }, { text: data.order.client.cellphone, style: 'normal_style' }],
+										]
+									},
+									layout: 'noBorders'
 								},
 								{
-									fontSize: 12,
-									alignment: 'right',
-									bold: true,
-									text: 'Cra 72A N° 49A-39 Bogotá \n\ Invitro \n\ (+57 1) 796 86 26 | 313 570 00 23 \n\ ivc.logistica@genusplc.com \n\ '
+									width: '*', text: ''
+								},
+								{
+									width: '*', text: ''
 								},
 							]
 						},
-						{ text: '\n\ ÓRDEN DE PRODUCCIÓN: ' + data.order.id, bold: true, fontSize: 18, alignment: 'left' },
-						{ text: '\n\ DATOS:', bold: true, fontSize: 15, alignment: 'left' },
+						{ text: '\n\ ' },
+						{
+							text: 'PERSONAL ASIGNADO',
+							style: 'subtitle_style'
+						},
+						{
+							text: ' ',
+							fontSize: 12,
+						},
+						{
+							columns: [
+								{
+									width: '*', text: ''
+								},
+								{
+									width: 'auto',
+									table: {
+										headerRows: 1,
+										widths: [140, 100, 100, 140],
+										body: workTeam
+									},
+								},
+								{
+									width: '*', text: ''
+								},
+							]
+						},
+						{ text: '\n\ ' },
+						{
+							text: 'INFORMACIÓN DEL SERVICIO',
+							style: 'subtitle_style'
+						},
+						{
+							text: ' ',
+							fontSize: 12,
+						},
 						{
 							columns: [
 								{
@@ -135,13 +287,20 @@ export class DiagnosticPdfService {
 									width: 'auto',
 									table: {
 										fontSize: 12,
-										widths: ['*', '*', '*', '*'],
+										widths: ['auto', 120, 40, 'auto', 120],
 										body: [
-											[{ text: 'Fecha:', alignment: 'right', bold: true }, data.order.date, { text: 'Correo Electrónico:', alignment: 'right', bold: true }, { text: data.order.client.email, alignment: 'left' }],
-											[{ text: 'N° Identificación:', alignment: 'right', bold: true }, data.order.client_id, { text: 'Contacto:', alignment: 'right', bold: true }, { text: data.order.client.contact, alignment: 'left' }],
-											[{ text: 'Razon Social:', alignment: 'right', bold: true }, data.order.client.bussiness_name, { text: 'Cargo:', alignment: 'right', bold: true }, { text: data.order.client.position, alignment: 'left' }],
-											[{ text: 'Departamento:', alignment: 'right', bold: true }, data.order.client.departmentOne.name, { text: 'Dirección:', alignment: 'right', bold: true }, { text: data.order.client.address, alignment: 'left' }],
-											[{ text: 'Ciudad:', alignment: 'right', bold: true }, data.order.client.citiesOne.name, { text: 'Teléfono:', alignment: 'right', bold: true }, { text: data.order.client.cellphone, alignment: 'left' }],
+											[{ text: 'Orden de prod.: ', style: 'normal_style' },
+											{ text: data.order.id, style: 'normal_style' }, 
+											'',
+											{ text: 'Fecha Diagnóstico: ', style: 'normal_style' },
+											{ text: diagnosticDate, style: 'normal_style' },
+											],
+											[{ text: 'Ciudad: ', style: 'normal_style' },
+											{ text: data.local.city, style: 'normal_style' },
+											'',
+											{ text: 'Local: ', style: 'normal_style' },
+											{ text: data.local.name, style: 'normal_style' },
+											],
 										]
 									},
 									layout: 'noBorders'
@@ -151,78 +310,15 @@ export class DiagnosticPdfService {
 								},
 							]
 						},
-						{ text: '\n\ EQUIPO DE TRABAJO: ', bold: true, fontSize: 15, alignment: 'left' },
-						{ text: '\n\ ' },
 						{
-							columns: [
-								{
-									width: '*', text: ''
-								},
-								{
-									width: 'auto',
-									table: {
-										fontSize: 9,
-										headerRows: 1,
-										widths: [100, 140, 60, 120, 80, 60, 60],
-										body: workTeam
-									},
-									layout: {
-										fillColor: function (rowIndex, node, columnIndex) {
-											return (rowIndex === 0) ? '#b9d2e8' : null;
-										}
-									}
-								},
-								{
-									width: '*', text: ''
-								},
-							]
+							text: 'DETALLES DEL SERVICIO',
+							style: 'subtitle_style',
+							
 						},
-						{ text: '\n\n\ LOCALES TE:', alignment: 'left', fontSize: 15, bold: true },
-						{ text: '\n\ ' },
 						{
-							columns: [
-								{
-									width: '*', text: ''
-								},
-								{
-									width: 'auto',
-									table: {
-										fontSize: 12,
-										headerRows: 1,
-										widths: [120, 'auto', 'auto', 'auto', 120, 120],
-										body: [
-											[
-												{ text: 'Nombre Local', alignment: 'center', bold: true },
-												{ text: 'Ciudad', alignment: 'center', bold: true },
-												{ text: 'Departamento', alignment: 'center', bold: true },
-												{ text: 'Teléfono', alignment: 'center', bold: true },
-												{ text: 'Correo', alignment: 'center', bold: true },
-												{ text: 'Contacto', alignment: 'center', bold: true }
-											],
-											[
-												{ text: data.local.name, alignment: 'left' },
-												{ text: data.local.city, alignment: 'left' },
-												{ text: data.local.department, alignment: 'left' },
-												{ text: data.order.client.cellphone, alignment: 'left' },
-												{ text: data.order.client.email, alignment: 'left' },
-												{ text: data.order.client.contact, alignment: 'left' }
-											],
-										],
-									},
-									layout: {
-										fillColor: function (rowIndex, node, columnIndex) {
-											return (rowIndex === 0) ? '#b9d2e8' : null;
-										}
-									}
-								},
-								{
-									width: '*', text: ''
-								},
-							]
+							text: ' ',
+							fontSize: 12,
 						},
-						{ text: '\n\n\ INFORMACIÓN DEL EVENTO: DIAGNÓSTICO DX1', bold: true, fontSize: 15, alignment: 'left' },
-						{ text: '\n\n\ DETALLES DE DIAGNÓSTICO:', alignment: 'left', fontSize: 15, bold: true },
-						{ text: '\n\ ' },
 						{
 							columns: [
 								{
@@ -233,88 +329,98 @@ export class DiagnosticPdfService {
 									table: {
 										headerRows: 1,
 										alignment: 'center',
-										fontSize: 9,
-										widths: ['auto', 100, 'auto', 'auto', '*', '*', '*', '*', '*', '*'],
+										widths: ['auto', 100, 60, 60, 60, 60, 'auto', 100, 'auto'],
 										body: diagnosticDetails,
 									},
-									layout: {
-										fillColor: function (rowIndex, node, columnIndex) {
-											return (rowIndex === 0) ? '#b9d2e8' : null;
-										}
-									}
 								},
 								{
 									width: '*', text: ''
 								},
 							]
 						},
-						{ text: '\n\n\ NOMBRE Y FIRMA DEL ENCARGADO', alignment: 'center', pageBreak: 'before', fontSize: 18, bold: true },
-						{ text: '\n\n\ ' },
+						{ text: '\n\ ' },
+						{
+							text: 'Total Preñadas: ' + totalPregned,
+							style: 'normal_style',
+							bold: true,
+						},
+						{
+							text: 'Total Vacias: ' + totalVoid,
+							style: 'normal_style',
+							bold: true,
+						},
+						{
+							text: 'Total PPL: ' + totalPPL,
+							style: 'normal_style',
+							bold: true,
+						},
+						{ text: '\n\ ' },
+						{
+							text: 'DATOS GENERALES',
+							style: 'subtitle_style'
+						},
+						{
+							text: ' ',
+							fontSize: 12,
+						},
+						{
+							text: 'Nombre del técnico  : ' + diagnosticEmployee,
+							style: 'normal_style',
+						},
+						{ text: '\n\ ' },
+						{
+							text: 'Observaciones  : ' + data.diagnosticApi.comments,
+							style: 'normal_style',
+						},
 						{
 							columns: [
-								{
-									width: '*', text: ''
-								},
-								{
+								[{
 									image: signatureImage,
-									width: 700,
-									height: 300,
-								},
-								{
-									width: '*', text: ''
-								},
-							],
-						},
-						{ text: data.diagnosticApi.received_by, alignment: 'center', fontSize: 15, bold: true },
-						{ text: data.diagnosticApi.identification_number, alignment: 'center', fontSize: 15, bold: true },
-						{ text: '\n\n\ FOTO EVIDENCIA DEL EVENTO', alignment: 'center', pageBreak: 'before', fontSize: 18, bold: true },
-						{ text: '\n\n\ ' },
-						{
-							columns: [
-								{
-									width: '*', text: ''
-								},
-								{
+									width: 400,
+									height: 120,
+								}],
+								[{
 									image: photoImage,
-									width: 300,
-									height: 300,
-								},
-								{
-									width: '*', text: ''
-								},
+									width: 100,
+									height: 120,
+								}],
 							]
 						},
+						{ text: 'Nombre del encargado  : ' + data.diagnosticApi.received_by, alignment: 'left' },
+						{ text: 'Cédula  : ' + data.diagnosticApi.identification_number, alignment: 'left' }
 					],
 					styles: {
-						header: {
-							bold: true,
-							fontSize: 10,
-							alignment: 'center'
-						},
-						sub_header: {
-							bold: true,
-							fontSize: 15,
-							alignment: 'left'
-						},
-						sub_header2: {
+						subtitle_style: {
 							bold: true,
 							fontSize: 12,
-							alignment: 'right'
+							decoration: 'underline',
+							alignment: 'left',
 						},
+						normal_style: {
+							fontSize: 12,
+							bold: false,
+							alignment: 'left',
+						},
+						title_table_style: {
+							fontSize: 11,
+							bold: true,
+							alignment: 'center',
+						}
 					},
 				};
 
 				if (options.watermark) {
-					docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.3, bold: true, italics: false } });
-				}		
+					docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.2, bold: true, italics: false } });
+				}
+
 				pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {
 					try {
 						let utf8 = new Uint8Array(buffer);
 						let binaryArray = utf8.buffer;
 
 						_self.saveToDevice(binaryArray, filename)
-							.then((result:any) => {
-								if(result.status==="success") {
+							.then((result: any) => {
+								if (result.status === "success") {
 									if (options && options.open) {
 										_self.fileOpener.open(dataDirectory + filename, 'application/pdf')
 											.then(() => resolve({ status: "success", message: "File is opened", filename: filename, dataDirectory: dataDirectory }))
@@ -326,6 +432,22 @@ export class DiagnosticPdfService {
 									}
 								}
 								else {
+									/*
+									if (options && options.open) {
+										var file = new Blob([binaryArray], { type: 'application/pdf' });
+										var fileUrl = URL.createObjectURL(file);
+
+										//open it via a link
+										var fileName = "test.pdf";
+										var a = document.createElement("a");
+										document.body.appendChild(a);
+										a.href = fileUrl;
+										a.download = fileName;
+										a.click();
+										//open it directly 
+										window.open(fileUrl);
+									}
+									*/
 									resolve({ status: "error", error: result.error, filename: filename });
 								}
 							});
@@ -347,16 +469,16 @@ export class DiagnosticPdfService {
 			let options: IWriteOptions = { replace: true };
 			try {
 				this.file.writeFile(this.file.dataDirectory, savefile, data, options)
-				.then((result) => {
-					resolve({ status: "success"});
-				}).catch((error) => {
-					const errm = error.message ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
-					resolve({ status: "error", error: errm});
-				});
-			} catch(error){
+					.then((result) => {
+						resolve({ status: "success" });
+					}).catch((error) => {
+						const errm = error.message ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
+						resolve({ status: "error", error: errm });
+					});
+			} catch (error) {
 				const errm = error.message ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
-				resolve({ status: "error", error: errm});
+				resolve({ status: "error", error: errm });
 			};
-		});	
+		});
 	}
 }
