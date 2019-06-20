@@ -428,7 +428,7 @@ export class SexagePdfService {
 									}
 								}
 								else {
-									
+									/*
 									if (options && options.open) {
 										var file = new Blob([binaryArray], { type: 'application/pdf' });
 										var fileUrl = URL.createObjectURL(file);
@@ -443,6 +443,7 @@ export class SexagePdfService {
 										//open it directly 
 										window.open(fileUrl);
 									}
+									*/
 									resolve({ status: "error", error: result.error, filename: filename });
 								}
 							});
