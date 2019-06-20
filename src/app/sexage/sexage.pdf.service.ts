@@ -135,7 +135,7 @@ export class SexagePdfService {
 				const employees = [];
 				let employee: string;
 				for (let agenda of data.order.agenda) {
-					if (agenda.event.id === '2' && data.local.name === agenda.name_local) {
+					if (agenda.event.id === '5' && data.local.name === agenda.name_local) {
 						if (agenda.user) {
 							employee = agenda.user.name;
 						}
@@ -314,7 +314,7 @@ export class SexagePdfService {
 						{
 							text: 'DETALLES DEL SERVICIO',
 							style: 'subtitle_style',
-							
+							pageBreak: 'before',
 						},
 						{
 							text: ' ',
@@ -330,7 +330,7 @@ export class SexagePdfService {
 									table: {
 										headerRows: 1,
 										alignment: 'center',
-										widths: ['auto', 120, 60, 60, 60, 60, 'auto', 100, 'auto', 'auto'],
+										widths: ['auto', 80, 60, 60, 60, 60, 'auto', 80, 'auto', 'auto'],
 										body: deliveryDetails,
 									},
 								},

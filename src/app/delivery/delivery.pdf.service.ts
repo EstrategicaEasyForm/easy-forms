@@ -139,7 +139,7 @@ export class DeliveryPdfService {
 				const employees = [];
 				let employee: string;
 				for (let agenda of data.order.agenda) {
-					if (agenda.event.id === '2' && data.local.name === agenda.name_local) {
+					if (agenda.event.id === '6' && data.local.name === agenda.name_local) {
 						if (agenda.user) {
 							employee = agenda.user.name;
 						}
@@ -318,7 +318,7 @@ export class DeliveryPdfService {
 						{
 							text: 'DETALLES DEL SERVICIO',
 							style: 'subtitle_style',
-							
+							pageBreak: 'before',
 						},
 						{
 							text: ' ',
@@ -334,7 +334,7 @@ export class DeliveryPdfService {
 									table: {
 										headerRows: 1,
 										alignment: 'center',
-										widths: ['auto', 100, 60, 60, 60, 60, 'auto', 100, 'auto', 'auto', 'auto'],
+										widths: ['auto', 70, 60, 60, 60, 60, 'auto', 80, 'auto', 'auto', 'auto'],
 										body: deliveryDetails,
 									},
 								},

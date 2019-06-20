@@ -403,12 +403,6 @@ export class TransferPdfService {
 						resolve({ status: "error", error: errm, filename: filename });
 					}
 				});
-				/*let pdfDoc = pdfmake.createPdf(docDefinition);
-				try {
-					pdfDoc.open();
-				} catch (err) {
-					alert(err);
-				}*/
 
 			} catch (err) {
 				const errm = err.message ? err.message : typeof err === 'string' ? err : JSON.stringify(err);
