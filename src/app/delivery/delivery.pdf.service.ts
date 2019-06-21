@@ -122,7 +122,7 @@ export class DeliveryPdfService {
 						{ text: i.transferData.donor_breed, style: 'normal_style' },
 						{ text: i.transferData.bull, style: 'normal_style' },
 						{ text: i.transferData.bull_breed, style: 'normal_style' },
-						{ text: 'i.local.name', style: 'normal_style' },
+						{ text: i.transferData.local_name, style: 'normal_style' },
 						{ text: i.transferData.dx1, style: 'normal_style' },
 						{ text: i.transferData.sex, style: 'normal_style' },
 						{ text: i.dx2, style: 'normal_style' },
@@ -350,7 +350,7 @@ export class DeliveryPdfService {
 							bold: true,
 						},
 						{
-							text: 'Total Vacias: ' + totalVoid,
+							text: 'Total Vacías: ' + totalVoid,
 							style: 'normal_style',
 							bold: true,
 						},
@@ -410,7 +410,7 @@ export class DeliveryPdfService {
 				};
 
 				if (options.watermark) {
-					docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.2, bold: true, italics: false } });
+					docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.1, bold: true, italics: false } });
 				}
 
 				pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {
@@ -448,6 +448,7 @@ export class DeliveryPdfService {
 										window.open(fileUrl);
 									}
 									*/
+									
 									resolve({ status: "error", error: result.error, filename: filename });
 								}
 							});

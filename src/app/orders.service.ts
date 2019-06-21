@@ -168,6 +168,7 @@ query orders {
           bull_breed
           corpus_luteum
           transferor
+		  local_name
           comments
           dx1
         }
@@ -201,6 +202,7 @@ query orders {
           corpus_luteum
           transferor
           comments
+		  local_name
           dx1
           sex
         }
@@ -239,6 +241,7 @@ query orders {
           corpus_luteum
           transferor
           comments
+		  local_name
           dx1
           sex
           dx2

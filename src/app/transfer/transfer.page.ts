@@ -203,20 +203,10 @@ export class TransferPage implements OnInit {
 
   finalizeTransfer() {
     this.transfer.state = 1;
-    this.ordersService.getDetailsApiStorage().then((detailsApi) => {
-      if (detailsApi) {
-        for (let detail of detailsApi) {
-          if (detail.transferApi && detail.transferApi.id === this.transfer.id) {
-            this.transfer.stateSync = 'U';
-            detail.transferApi = this.transfer;
-          }
-        }
-        this.ordersService.setDetailsApiStorage(detailsApi);
-        this.detailApi.transferApi = this.transfer;
-        this.showMessage('Planilla de Transferencia Finalizada');
-        this.location.back();
-      }
-    });
+	this.transfer.stateSync = 'U';
+	this.saveTransfer();
+	this.showMessage('Planilla de Transferencia Finalizada');
+	this.location.back();
   }
 
   async presentAlertConfirm() {

@@ -189,20 +189,10 @@ export class DiagnosticPage implements OnInit {
 
   finalizeDiagnostic() {
     this.diagnostic.state = 1;
-    this.ordersService.getDetailsApiStorage().then((detailsApi) => {
-      if (detailsApi) {
-        for (let detail of detailsApi) {
-          if (detail.diagnosticApi && detail.diagnosticApi.id === this.diagnostic.id) {
-            this.diagnostic.stateSync = 'U';
-            detail.diagnosticApi = this.diagnostic;
-          }
-        }
-        this.ordersService.setDetailsApiStorage(detailsApi);
-        this.detailApi.diagnosticApi = this.diagnostic;
-        this.showMessage('Planilla Diagnóstico Finalizada');
-        this.location.back();
-      }
-    });
+	this.diagnostic.stateSync = 'U';
+	this.saveDiagnostic();
+	this.showMessage('Planilla Diagnóstico Finalizada');
+	this.location.back();
   }
 
   async presentAlertConfirm() {

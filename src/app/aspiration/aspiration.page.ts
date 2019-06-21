@@ -205,20 +205,10 @@ export class AspirationPage implements OnInit {
 
   finalizeAspiration() {
     this.aspiration.state = 1;
-    this.ordersService.getDetailsApiStorage().then((detailsApi) => {
-      if (detailsApi) {
-        for (let detail of detailsApi) {
-          if (detail.aspirationApi && detail.aspirationApi.id === this.aspiration.id) {
-            this.aspiration.stateSync = 'U';
-            detail.aspirationApi = this.aspiration;
-          }
-        }
-        this.ordersService.setDetailsApiStorage(detailsApi);
-        this.detailApi.aspirationApi = this.aspiration;
-        this.showMessage('Planilla Aspiración Finalizada');
-        this.location.back();
-      }
-    });
+	this.aspiration.stateSync = 'U';
+	this.saveAspiration();
+	this.showMessage('Planilla Aspiración Finalizada');
+	this.location.back();
   }
 
   async presentAlertConfirm() {

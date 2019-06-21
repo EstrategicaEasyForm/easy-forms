@@ -109,7 +109,7 @@ export class DiagnosticPdfService {
 				for (let i of data.diagnosticApi.details) {
 					if (i.dx1 === 'V') totalVoid++;
 					if (i.dx1 === 'P') totalPregned++;
-					if (i.dx1 === 'PPL') totalPregned++;
+					if (i.dx1 === 'PPL') totalPPL++;
 
 					diagnosticDetails.push([
 						{ text: cont_details++, style: 'normal_style' },
@@ -119,8 +119,8 @@ export class DiagnosticPdfService {
 						{ text: i.transferData.donor_breed, style: 'normal_style' },
 						{ text: i.transferData.bull, style: 'normal_style' },
 						{ text: i.transferData.bull_breed, style: 'normal_style' },
-						{ text: i.local.name, style: 'normal_style' },
-						{ text: i.transferData.dx1, style: 'normal_style' },
+						{ text: i.transferData.local_name, style: 'normal_style' },
+						{ text: i.dx1, style: 'normal_style' },
 					]);
 				}
 
@@ -329,7 +329,7 @@ export class DiagnosticPdfService {
 									table: {
 										headerRows: 1,
 										alignment: 'center',
-										widths: ['auto', 100, 60, 60, 60, 60, 'auto', 100, 'auto'],
+										widths: ['auto', 80, 60, 60, 60, 60, 'auto', 100, 40],
 										body: diagnosticDetails,
 									},
 								},
@@ -345,7 +345,7 @@ export class DiagnosticPdfService {
 							bold: true,
 						},
 						{
-							text: 'Total Vacias: ' + totalVoid,
+							text: 'Total Vacías: ' + totalVoid,
 							style: 'normal_style',
 							bold: true,
 						},
@@ -410,7 +410,7 @@ export class DiagnosticPdfService {
 				};
 
 				if (options.watermark) {
-					docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.2, bold: true, italics: false } });
+					docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.1, bold: true, italics: false } });
 				}
 
 				pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {
@@ -432,7 +432,7 @@ export class DiagnosticPdfService {
 									}
 								}
 								else {
-									
+									/*
 									if (options && options.open) {
 										var file = new Blob([binaryArray], { type: 'application/pdf' });
 										var fileUrl = URL.createObjectURL(file);
@@ -447,6 +447,7 @@ export class DiagnosticPdfService {
 										//open it directly 
 										window.open(fileUrl);
 									}
+									*/
 									
 									resolve({ status: "error", error: result.error, filename: filename });
 								}

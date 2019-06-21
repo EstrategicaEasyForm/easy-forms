@@ -105,11 +105,13 @@ export class SexagePdfService {
 				]);
 
 				let totalVoid = 0;
-				let totalPregned = 0;
+				let totalFemale = 0;
+				let totalMale = 0;
 				let deliveryEmployee = data.sexageApi.details[0] && data.sexageApi.details[0].transferData ? data.sexageApi.details[0].transferData.transferor : '';
 				for (let i of data.sexageApi.details) {
-					if (i.dx2 === 'V') totalVoid++;
-					if (i.dx2 === 'P') totalPregned++;
+					if (i.sex === 'V') totalVoid++;
+					if (i.sex === 'H') totalFemale++;
+					if (i.sex === 'M') totalMale++;
 
 					deliveryDetails.push([
 						{ text: cont_details++, style: 'normal_style' },
@@ -119,9 +121,9 @@ export class SexagePdfService {
 						{ text: i.transferData.donor_breed, style: 'normal_style' },
 						{ text: i.transferData.bull, style: 'normal_style' },
 						{ text: i.transferData.bull_breed, style: 'normal_style' },
-						{ text: 'i.local.name', style: 'normal_style' },
+						{ text: i.transferData.local_name, style: 'normal_style' },
 						{ text: i.transferData.dx1, style: 'normal_style' },
-						{ text: i.transferData.sex, style: 'normal_style' },
+						{ text: i.sex, style: 'normal_style' },
 					]);
 				}
 
@@ -341,12 +343,17 @@ export class SexagePdfService {
 						},
 						{ text: '\n\ ' },
 						{
-							text: 'Total Preñadas: ' + totalPregned,
+							text: 'Total Hembra: ' + totalFemale,
 							style: 'normal_style',
 							bold: true,
 						},
 						{
-							text: 'Total Vacias: ' + totalVoid,
+							text: 'Total Macho: ' + totalMale,
+							style: 'normal_style',
+							bold: true,
+						},
+						{
+							text: 'Total Vacías: ' + totalVoid,
 							style: 'normal_style',
 							bold: true,
 						},
@@ -406,7 +413,7 @@ export class SexagePdfService {
 				};
 
 				if (options.watermark) {
-					docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.2, bold: true, italics: false } });
+					docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.1, bold: true, italics: false } });
 				}
 
 				pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {

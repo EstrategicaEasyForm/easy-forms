@@ -183,12 +183,7 @@ export class SyncronizationPage {
   }
 
   updateWorkSheet(order, detailApi, workSheet, type) {
-    this.writeLog({
-      type: 'info',
-      message: "Inicia actualización de la planilla " + type.name + ". Orden de producción No " + order.id,
-      time: moment().format('HH:mm:ss')
-    });
-
+    
     let updateWorkSheetFunction;
     if (type.id === "1") updateWorkSheetFunction = this.evaluationService.updateEvaluation(detailApi.evaluationApi);
     if (type.id === "2") updateWorkSheetFunction = this.aspirationService.updateAspiration(detailApi.aspirationApi);
@@ -199,9 +194,7 @@ export class SyncronizationPage {
 
     updateWorkSheetFunction.then((response: any) => {
       if (response.status === 'error') {
-        
-        workSheet.stateErrorSync = response.error;
-
+        workSheet.stateErrorSync = 'Error sincronizando la planilla';
         this.writeLog({
           type: 'error',
           message: 'Error sincronizando la planilla ' + type.name + '. Orden de producción No ' + order.id,
@@ -212,47 +205,45 @@ export class SyncronizationPage {
           show: false,
         });
       }
-      else if (response.status === 'success') {
-        this.writeLog({
-          type: 'info',
-          message: 'La planilla ' + type.name + ' fué actualizada correctamente para la orden de producción No ' + order.id,
-          time: moment().format('HH:mm:ss')
-        });
-      }
-
-      this.sendEmail.makePdf(order, detailApi, workSheet, type, response).then((pdf) => {
-        if (pdf.status === 'error') {
-          const errorMessage = typeof pdf.error === 'string' ? pdf.error : JSON.stringify(pdf.error);
-          this.writeLog({
-            type: 'error',
-            message: 'Error generando el archivo pdf: ' + pdf.filename,
-            details: [
-              'No se ha podido crear el archivo pdf',
-			  errorMessage
-            ],
-            time: moment().format('HH:mm:ss'),
-            show: false,
-          });
-          this.finishSync(null);
-        }
-        else if (pdf.status === 'success') {
-          //If Template State is Finalize
-          if(workSheet.state == "1") {
+	  //If Template State is Finalize
+	  else if(workSheet.state == "1") {
+		  
+		  this.sendEmail.makePdf(order, detailApi, workSheet, type, response).then((pdf) => {
+			if (pdf.status === 'error') {
+			  
+			  const errorMessage = typeof pdf.error === 'string' ? pdf.error : JSON.stringify(pdf.error);
+			  workSheet.stateErrorSync = 'Error generando el pdf';
+			  this.writeLog({
+				type: 'error',
+				message: 'No se pudo generar el archivo pdf: ' + pdf.filename,
+				details: [
+				  errorMessage
+				],
+				time: moment().format('HH:mm:ss'),
+				show: false,
+			  });
+			  this.finishSync(errorMessage);
+			}
+			else if (pdf.status === 'success') {
+			  
 			  this.sendEmail.makeEmail(order, detailApi, workSheet, type, response, pdf).then((resp: any) => {
 				if (resp.status === 'success') {
-				  this.writeLog({
-					type: 'info',
-					message: "Correo automático enviado a @" + order.client.bussiness_name,
-					details: [
-					  "Archivo adjunto " + pdf.filename,
-					  "Enviado a " + order.client.email
-					],
-					time: moment().format('HH:mm:ss'),
-					show: false,
-				  });
+				  if (response.status === 'success') {
+					this.writeLog({
+					  type: 'info',
+					  message: 'La planilla de ' + type.name + ' fué actualizada correctamente para la orden de producción No ' + order.id,
+					  details: [
+						"Correo automático enviado a @" + order.client.bussiness_name,
+						"Archivo adjunto " + pdf.filename
+					  ],
+					  time: moment().format('HH:mm:ss'),
+					  show: false,
+					});
+				  }
 				  this.finishSync(null);
 				}
 				else {
+				  workSheet.stateErrorSync = 'Error enviando el correo';
 				  this.writeLog({
 					type: 'error',
 					message: "Error enviando correo automático a @" + order.client.bussiness_name,
@@ -263,16 +254,15 @@ export class SyncronizationPage {
 					time: moment().format('HH:mm:ss'),
 					show: false,
 				  });
-				  this.finishSync(null);
+				  this.finishSync(resp.error);
 				}
 			  })
-          }
-		  else {
-			  this.finishSync(null);
-		  }
-        }
-
-      });
+			}
+		  });
+	  }
+	  else {
+		  this.finishSync(null);
+	  }
     });
   }
 
@@ -301,12 +291,7 @@ export class SyncronizationPage {
   }
 
   async retriveAgenda() {
-    this.writeLog({
-      type: 'info',
-      message: "Inicia descarga de la agenda",
-      time: moment().format('HH:mm:ss')
-    });
-
+    
     this.ordersService.getDetailsApiQuery().then(detailsApi => {
       this.loading.dismiss();
       if(this.orderStorage)
@@ -315,17 +300,13 @@ export class SyncronizationPage {
       this.ordersService.setDetailsApiStorage(detailsApi);
       this.eventCtrl.publish('sync:finish');
 
-      this.writeLog({
-        type: 'info',
-        message: "La descarga de la agenda se ejecutó correctamente",
-        time: moment().format('HH:mm:ss')
-      });
     }).catch(error => {
       this.loading.dismiss();
       this.writeLog({
         type: 'error',
-        message: "La descarga de la agenda falló",
+        message: "Se ha generado un error realizando la descarga de la agenda",
         details: [
+		  'No se puede consultar el servicio de Ordenes',  
           error
         ],
         show: false,
@@ -334,7 +315,7 @@ export class SyncronizationPage {
       if (typeof error === 'string') {
         this.showMessage(error);
       }
-      else this.showMessage('No se puede consultar la lista de agendas');
+      else this.showMessage('No se puede consultar el servicio de ordenes');
     });
   }
   diff(orderStorage: any, ordersList: any) {

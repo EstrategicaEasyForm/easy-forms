@@ -380,7 +380,7 @@ export class EvaluationPdfService {
 				};
 
 				if (options.watermark) {
-					docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.2, bold: true, italics: false } });
+					docDefinition = Object.assign(docDefinition, { watermark: { text: 'Borrador', color: 'gray', opacity: 0.1, bold: true, italics: false } });
 				}
 
 				pdfmake.createPdf(docDefinition).getBuffer(function (buffer: Uint8Array) {

@@ -190,20 +190,10 @@ export class SexagePage implements OnInit {
 
   finalizeSexage() {
     this.sexage.state = 1;
-    this.ordersService.getDetailsApiStorage().then((detailsApi) => {
-      if (detailsApi) {
-        for (let detail of detailsApi) {
-          if (detail.sexageApi && detail.sexageApi.id === this.sexage.id) {
-            this.sexage.stateSync = 'U';
-            detail.sexageApi = this.sexage;
-          }
-        }
-        this.ordersService.setDetailsApiStorage(detailsApi);
-        this.detailApi.sexageApi = this.sexage;
-        this.showMessage('Planilla Sexaje Finalizada');
-        this.location.back();
-      }
-    });
+	this.sexage.stateSync = 'U';
+	this.saveSexage();
+	this.showMessage('Planilla Sexaje Finalizada');
+	this.location.back();
   }
 
   async presentAlertConfirm() {

@@ -185,6 +185,7 @@
                         <ion-col class="detail-sex">
                           <ion-label *ngIf="item.sex === 'M'" color="primary">M</ion-label>
                           <ion-label *ngIf="item.sex === 'H'" color="tertiary">H</ion-label>
+						  <ion-label *ngIf="item.sex === 'V'" color="danger">V</ion-label>
                         </ion-col>
                       </ion-row>
                     </ion-grid>
@@ -196,6 +197,9 @@
                     <ion-button class="button-slide" 
                       style="--background:#7e57ff !important;"
                      (click)="onChangeSex(item,'H',detailList)"> Hembra </ion-button>
+					 <ion-button class="button-slide" 
+                      style="--background:#f25454 !important;"
+                     (click)="onChangeSex(item,'V',detailList)"> Vacía </ion-button>
                   </ion-item-options>
                 </ion-item-sliding>
                 <ion-item *ngIf="sexage.details.length === 0">

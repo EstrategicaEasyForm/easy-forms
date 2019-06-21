@@ -192,20 +192,11 @@ export class DeliveryPage implements OnInit {
 
   finalizeDelivery() {
     this.delivery.state = 1;
-    this.ordersService.getDetailsApiStorage().then((detailsApi) => {
-      if (detailsApi) {
-        for (let detail of detailsApi) {
-          if (detail.deliveryApi && detail.deliveryApi.id === this.delivery.id) {
-            this.delivery.stateSync = 'U';
-            detail.deliveryApi = this.delivery;
-          }
-        }
-        this.ordersService.setDetailsApiStorage(detailsApi);
-        this.detailApi.deliveryApi = this.delivery;
-        this.showMessage('Planilla Entrega Finalizada');
-        this.location.back();
-      }
-    });
+	this.delivery.stateSync = 'U';
+	this.saveDelivery();
+	this.showMessage('Planilla Entrega Finalizada');
+	this.location.back();
+
   }
 
   async presentAlertConfirm() {

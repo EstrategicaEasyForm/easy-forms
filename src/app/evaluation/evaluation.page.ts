@@ -192,20 +192,10 @@ export class EvaluationPage implements OnInit {
 
   finalizeevaluation() {
     this.evaluation.state = 1;
-    this.ordersService.getDetailsApiStorage().then((detailsApi) => {
-      if (detailsApi) {
-        for (let detail of detailsApi) {
-          if (detail.evaluationApi && detail.evaluationApi.id === this.evaluation.id) {
-            this.evaluation.stateSync = 'U';
-            detail.evaluationApi = this.evaluation;
-          }
-        }
-        this.ordersService.setDetailsApiStorage(detailsApi);
-        this.detailApi.evaluationApi = this.evaluation;
-        this.showMessage('Planilla Evaluación Finalizada');
-        this.location.back();
-      }
-    });
+	this.evaluation.stateSync = 'U';
+	this.saveEvaluation();
+	this.showMessage('Planilla Evaluación Finalizada');
+	this.location.back();
   }
 
   async presentAlertConfirm() {
