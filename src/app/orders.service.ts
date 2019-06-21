@@ -284,6 +284,7 @@ query orders {
     client {
       id
       identification_type_id
+      identification_number
       documentType {
         id
         name

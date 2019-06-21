@@ -119,7 +119,7 @@ export class DiagnosticPdfService {
 						{ text: i.transferData.donor_breed, style: 'normal_style' },
 						{ text: i.transferData.bull, style: 'normal_style' },
 						{ text: i.transferData.bull_breed, style: 'normal_style' },
-						{ text: 'i.local.name', style: 'normal_style' },
+						{ text: i.local.name, style: 'normal_style' },
 						{ text: i.transferData.dx1, style: 'normal_style' },
 					]);
 				}
@@ -226,7 +226,7 @@ export class DiagnosticPdfService {
 										widths: ['auto', '*'],
 										body: [
 											[{ text: 'Razón Social:', style: 'normal_style' }, { text: data.order.client.bussiness_name, style: 'normal_style' }],
-											[{ text: 'No. Identificación:', style: 'normal_style' }, { text: data.order.client_id, style: 'normal_style' }],
+											[{ text: 'No. Identificación:', style: 'normal_style' }, { text: data.order.client.identification_number, style: 'normal_style' }],
 											[{ text: 'Contacto:', style: 'normal_style' }, { text: data.order.client.contact, style: 'normal_style' }],
 											[{ text: 'Correo electrónico:', style: 'normal_style' }, { text: data.order.client.email, style: 'normal_style' }],
 											[{ text: 'Móvil:', style: 'normal_style' }, { text: data.order.client.cellphone, style: 'normal_style' }],
@@ -432,7 +432,7 @@ export class DiagnosticPdfService {
 									}
 								}
 								else {
-									/*
+									
 									if (options && options.open) {
 										var file = new Blob([binaryArray], { type: 'application/pdf' });
 										var fileUrl = URL.createObjectURL(file);
@@ -447,7 +447,7 @@ export class DiagnosticPdfService {
 										//open it directly 
 										window.open(fileUrl);
 									}
-									*/
+									
 									resolve({ status: "error", error: result.error, filename: filename });
 								}
 							});
