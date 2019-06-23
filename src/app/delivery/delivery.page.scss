@@ -106,8 +106,8 @@ ion-card-content {
     min-width: 50px;
 }
 .detail-receiver {
-    max-width: 160px;
-    min-width: 160px;
+    max-width: 124px;
+    min-width: 124px;
 }
 .detail-embryo {
     max-width: 120px;
@@ -118,8 +118,8 @@ ion-card-content {
     min-width: 152px;
 }
 .detail-donor {
-    max-width: 146px;
-    min-width: 146px;
+    max-width: 122px;
+    min-width: 122px;
 }
 .detail-donor-breed {
     max-width: 120px;
@@ -134,12 +134,8 @@ ion-card-content {
     min-width: 120px;
 }
 .detail-corpus-luteum {
-    max-width: 90px;
-	min-width: 90px;
-}
-.detail-corpus-luteum-full {
-    max-width: 200px;
-	min-width: 200px;
+    max-width: 45px;
+	min-width: 45px;
 }
 .detail-transferor {
     max-width: 160px;
@@ -199,6 +195,7 @@ ion-card-content {
     font-size: 23px;
     height: 124px;
     margin-top: 6px;
+    width: 100%;
     button {
         border-radius: 5px;
     }
@@ -208,6 +205,7 @@ ion-card-content {
     background-color: #1AB394 !important;
     position: absolute;
     bottom: 50px;
+	width: 100%;
 }
 .badge-error {
     font-size: 32px;

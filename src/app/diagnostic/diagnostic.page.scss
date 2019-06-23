@@ -134,8 +134,8 @@ ion-card-content {
     min-width: 90px;
 }
 .detail-corpus-luteum {
-    max-width: 160px;
-	min-width: 160px;
+    max-width: 93px;
+	min-width: 93px;
 }
 .detail-transferor {
     max-width: 160px;
@@ -181,6 +181,7 @@ ion-card-content {
     font-size: 23px;
     height: 124px;
     margin-top: 6px;
+	width: 100%;
     button {
         border-radius: 5px;
     }
@@ -190,6 +191,7 @@ ion-card-content {
     background-color: #1AB394 !important;
     position: absolute;
     bottom: 50px;
+	width: 100%;
 }
 .badge-error {
     font-size: 32px;

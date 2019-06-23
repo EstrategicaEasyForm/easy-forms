@@ -74,7 +74,7 @@ export class TransferPage implements OnInit {
 	this.start_date = this.agenda && this.agenda.all_day === '1' ? this.agenda.start_date.substr(0,10) : this.agenda.start_date;
     
     this.validation_form_order = this.formBuilder.group({});
-	this.transfer.transferor = this.transfer.details_view[0].transferor
+	this.transfer.transferor = this.transfer.details_view && this.transfer.details_view[0] ? this.transfer.details_view[0].transferor : '';
     this.validation_form_general = this.formBuilder.group({
       received_by: [this.transfer.received_by, Validators.required],
       identification_number: [this.transfer.identification_number, Validators.required],
@@ -278,8 +278,8 @@ export class TransferPage implements OnInit {
   onChangeTransferor() {
 	  if(this.transfer.transferor) {
 		  for(let detail of this.transfer.details_view){
-			  detail.transferor = this.transfer.transferor;
-			  detail.stateSync = 'U';
+			  //detail.transferor = this.transfer.transferor;
+			  //detail.stateSync = 'U';
 		  }
 	  }
   }

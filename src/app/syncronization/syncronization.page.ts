@@ -27,6 +27,7 @@ export class SyncronizationPage {
   totalWorkSheets = 0;
   totalError = 0;
   orderStorage: any;
+  sincronize: boolean;
 
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
   constructor(
@@ -66,7 +67,7 @@ export class SyncronizationPage {
             this.writeLog({
               type: 'warning',
               message: "La sincronización se ha cancelado",
-              time: moment().format('HH:mm:ss')
+              time: moment().format('HH:mm A')
             });
           }
         },
@@ -90,7 +91,8 @@ export class SyncronizationPage {
 
   async initSync() {
     //Clear console
-    //this.logs = [];
+    this.logs = [];
+	this.sincronize = false;
 
     const _self = this;
     _self.loading = await this.loadingCtrl.create({
@@ -185,14 +187,15 @@ export class SyncronizationPage {
   updateWorkSheet(order, detailApi, workSheet, type) {
     
     let updateWorkSheetFunction;
-    if (type.id === "1") updateWorkSheetFunction = this.evaluationService.updateEvaluation(detailApi.evaluationApi);
-    if (type.id === "2") updateWorkSheetFunction = this.aspirationService.updateAspiration(detailApi.aspirationApi);
-    if (type.id === "3") updateWorkSheetFunction = this.transferService.updateTransfer(detailApi.transferApi);
-    if (type.id === "4") updateWorkSheetFunction = this.diagnosticService.updateDiagnostic(detailApi.diagnosticApi);
-    if (type.id === "5") updateWorkSheetFunction = this.sexageService.updateSexage(detailApi.sexageApi);
-    if (type.id === "6") updateWorkSheetFunction = this.deliveryService.updateDelivery(detailApi.deliveryApi);
+    if (type.id === this.ordersService.templates[0].id) updateWorkSheetFunction = this.evaluationService.updateEvaluation(detailApi.evaluationApi);
+    if (type.id === this.ordersService.templates[1].id) updateWorkSheetFunction = this.aspirationService.updateAspiration(detailApi.aspirationApi);
+    if (type.id === this.ordersService.templates[2].id) updateWorkSheetFunction = this.transferService.updateTransfer(detailApi.transferApi);
+    if (type.id === this.ordersService.templates[3].id) updateWorkSheetFunction = this.diagnosticService.updateDiagnostic(detailApi.diagnosticApi);
+    if (type.id === this.ordersService.templates[4].id) updateWorkSheetFunction = this.sexageService.updateSexage(detailApi.sexageApi);
+    if (type.id === this.ordersService.templates[5].id) updateWorkSheetFunction = this.deliveryService.updateDelivery(detailApi.deliveryApi);
 
     updateWorkSheetFunction.then((response: any) => {
+	  this.sincronize = true;
       if (response.status === 'error') {
         workSheet.stateErrorSync = 'Error sincronizando la planilla';
         this.writeLog({
@@ -201,7 +204,7 @@ export class SyncronizationPage {
           details: [
             response.error
           ],
-          time: moment().format('HH:mm:ss'),
+          time: moment().format('HH:mm A'),
           show: false,
         });
       }
@@ -219,7 +222,7 @@ export class SyncronizationPage {
 				details: [
 				  errorMessage
 				],
-				time: moment().format('HH:mm:ss'),
+				time: moment().format('HH:mm A'),
 				show: false,
 			  });
 			  this.finishSync(errorMessage);
@@ -236,7 +239,7 @@ export class SyncronizationPage {
 						"Correo automático enviado a @" + order.client.bussiness_name,
 						"Archivo adjunto " + pdf.filename
 					  ],
-					  time: moment().format('HH:mm:ss'),
+					  time: moment().format('HH:mm A'),
 					  show: false,
 					});
 				  }
@@ -251,7 +254,7 @@ export class SyncronizationPage {
 					  'No es posible enviar el correo electrónico', 
 					  resp.error
 					],
-					time: moment().format('HH:mm:ss'),
+					time: moment().format('HH:mm A'),
 					show: false,
 				  });
 				  this.finishSync(resp.error);
@@ -275,16 +278,12 @@ export class SyncronizationPage {
         this.writeLog({
           type: 'warning',
           message: 'La sincronización ha finalizado con errores',
-          time: moment().format('HH:mm:ss')
+          time: moment().format('HH:mm A')
         });
       }
-      else {
-        this.writeLog({
-          type: 'info',
-          message: 'La sincronización ha finalizado exitósamente',
-          time: moment().format('HH:mm:ss')
-        });
-      }
+	  else {
+		  this.sincronize
+	  }
 
       this.retriveAgenda();
     }
@@ -293,15 +292,37 @@ export class SyncronizationPage {
   async retriveAgenda() {
     
     this.ordersService.getDetailsApiQuery().then(detailsApi => {
+		
       this.loading.dismiss();
+	  
       if(this.orderStorage)
       detailsApi = this.diff(this.orderStorage,detailsApi);
       
+	  
+	  if(this.sincronize)
+      this.writeLog({
+          type: 'info',
+          message: 'La sincronización ha finalizado exitósamente',
+          time: moment().format('HH:mm A')
+      });
+	  else 
+	  this.writeLog({
+        type: 'info',
+        message: "La agenda se ha actualizó correctamente",
+        time: moment().format('HH:mm A')
+      });
+	  
       this.ordersService.setDetailsApiStorage(detailsApi);
       this.eventCtrl.publish('sync:finish');
 
     }).catch(error => {
       this.loading.dismiss();
+	  if(this.sincronize)
+      this.writeLog({
+          type: 'info',
+          message: 'La sincronización ha finalizado exitósamente',
+          time: moment().format('HH:mm A')
+      });
       this.writeLog({
         type: 'error',
         message: "Se ha generado un error realizando la descarga de la agenda",
@@ -310,7 +331,7 @@ export class SyncronizationPage {
           error
         ],
         show: false,
-        time: moment().format('HH:mm:ss')
+        time: moment().format('HH:mm A')
       });
       if (typeof error === 'string') {
         this.showMessage(error);
@@ -318,6 +339,7 @@ export class SyncronizationPage {
       else this.showMessage('No se puede consultar el servicio de ordenes');
     });
   }
+  
   diff(orderStorage: any, ordersList: any) {
     function getOrder(order){
       for(let ord of ordersList) {
@@ -412,7 +434,7 @@ export class SyncronizationPage {
                       "Usuario o clave inválidos",
                       "Por favor cierre e inicie nuevamente sesión"
                     ],
-                    time: moment().format('HH:mm:ss'),
+                    time: moment().format('HH:mm A'),
                     show: false,
                   });
                   resolve(false);
@@ -426,7 +448,7 @@ export class SyncronizationPage {
                   JSON.stringify(error),
                 ],
                 show: false,
-                time: moment().format('HH:mm:ss')
+                time: moment().format('hh:mm A')
               });
               resolve(false);
             }

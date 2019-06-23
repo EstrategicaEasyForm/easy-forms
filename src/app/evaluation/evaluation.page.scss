@@ -186,6 +186,7 @@ ion-card-content {
     font-size: 23px;
     height: 124px;
     margin-top: 6px;
+    width: 100%;
     button {
         border-radius: 5px;
     }
@@ -195,6 +196,7 @@ ion-card-content {
     background-color: #1AB394 !important;
     position: absolute;
     bottom: 50px;
+	width: 100%;
 }
 .badge-error {
     font-size: 32px;

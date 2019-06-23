@@ -360,7 +360,7 @@ export class AgendaPage implements OnInit {
           });
           this.router.navigate(['aspiration']);
           break;
-        case "3":
+        case "4":
         this.ordersService.setDetailApiParam({
           transferApi: detailApi.transferApi,
           agendaPage: this,
@@ -370,7 +370,7 @@ export class AgendaPage implements OnInit {
         });
         this.router.navigate(['transfer']);
         break;
-        case "4": 
+        case "5": 
         this.ordersService.setDetailApiParam({
           diagnosticApi: detailApi.diagnosticApi,
           agendaPage: this,
@@ -380,7 +380,7 @@ export class AgendaPage implements OnInit {
         });
         this.router.navigate(['diagnostic']);
         break;
-        case "5": 
+        case "6": 
         this.ordersService.setDetailApiParam({
           sexageApi: detailApi.sexageApi,
           agendaPage: this,
@@ -390,7 +390,7 @@ export class AgendaPage implements OnInit {
         });
         this.router.navigate(['sexage']);
         break;
-        case "6": 
+        case "7": 
         this.ordersService.setDetailApiParam({
           deliveryApi: detailApi.deliveryApi,
           agendaPage: this,

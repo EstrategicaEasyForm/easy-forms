@@ -98,53 +98,11 @@ query orders {
           }
         }
       }
-      transferApi {
-        id
-        locals {
-          id
-          name
-        }
-        order_detail_id
-        received_by
-        identification_number
-        comments
-        state
-        date
-        synchronizeds {
-          id
-          animal_id
-          chapeta
-        }
-        details_view {
-          id
-          embryo_class
-          donor
-          donor_breed
-          bull
-          bull_breed
-          receiver
-          corpus_luteum
-          comments
-          local_id
-          local {
-            id
-            name
-            city
-            department
-          }
-          transfer_id
-          production_detail_id
-          evaluation_detail_id
-          embryo
-          transferor
-          attendant
-          discard
-        }
-      }
       diagnosticApi {
         id
         order_detail_id
         transferor
+        technical
         received_by
         identification_number
         comments
@@ -168,7 +126,7 @@ query orders {
           bull_breed
           corpus_luteum
           transferor
-		  local_name
+          local_name
           comments
           dx1
         }
@@ -178,6 +136,7 @@ query orders {
         order_detail_id
         received_by
         transferor
+        technical
         identification_number
         comments
         apply_diagnostic {
@@ -202,7 +161,7 @@ query orders {
           corpus_luteum
           transferor
           comments
-		  local_name
+          local_name
           dx1
           sex
         }
@@ -216,6 +175,7 @@ query orders {
         order_detail_id
         transferor
         received_by
+        technical
         identification_number
         comments
         state
@@ -241,7 +201,7 @@ query orders {
           corpus_luteum
           transferor
           comments
-		  local_name
+          local_name
           dx1
           sex
           dx2
@@ -342,7 +302,7 @@ export class OrdersService {
       "color": "#F091AF"
     },
     {
-      "id": "3",
+      "id": "4",
       "name": "Transferencia Embrión",
       "tag": "transferApi",
       "icon": ['fas', 'magic'],
@@ -350,7 +310,7 @@ export class OrdersService {
       "color": "#16A588"
     },
     {
-      "id": "4",
+      "id": "5",
       "name": "Diagnóstico",
       "tag": "diagnosticApi",
       "icon": ['fas', 'stethoscope'],
@@ -358,7 +318,7 @@ export class OrdersService {
       "color": "#E42320"
     },
     {
-      "id": "5",
+      "id": "6",
       "name": "Sexaje",
       "tag": "sexageApi",
       "icon": ['fas', 'random'],
@@ -366,7 +326,7 @@ export class OrdersService {
       "color": "#694594"
     },
     {
-      "id": "6",
+      "id": "7",
       "name": "Entrega",
       "tag": "deliveryApi",
       "icon": ['fas', 'truck'],

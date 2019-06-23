@@ -139,7 +139,7 @@ export class DeliveryPdfService {
 				const employees = [];
 				let employee: string;
 				for (let agenda of data.order.agenda) {
-					if (agenda.event.id === '6' && data.local.name === agenda.name_local) {
+					if (agenda.event.id === '7' && data.local.name === agenda.name_local) {
 						if (agenda.user) {
 							employee = agenda.user.name;
 						}

@@ -105,6 +105,10 @@ ion-card-content {
     max-width: 38px;
     min-width: 38px;
 }
+.detail-class {
+    max-width: 60px;
+    min-width: 60px;
+}
 .detail-donor {
     max-width: 151px;
     min-width: 151px;
@@ -113,17 +117,9 @@ ion-card-content {
     max-width: 115px;
     min-width: 115px;
 }
-.detail-local-name {
+.detail-receiver {
     max-width: 110px;
     min-width: 110px;
-}
-.detail-type {
-    max-width: 130px;
-    min-width: 130px;
-}
-.detail-arrived-time {
-    max-width: 130px;
-    min-width: 130px;
 }
 .detail-bull {
     max-width: 110px;
@@ -133,25 +129,17 @@ ion-card-content {
     max-width: 110px;
     min-width: 110px;
 }
-.detail-gi {
-    max-width: 90px;
-	min-width: 90px;
-}
-.detail-gii {
-    max-width: 120px;
-	min-width: 120px;
-}
 .detail-sync {
     max-width: 60px;
 	min-width: 60px;
 }
-.detail-giii {
-    max-width: 90px;
-	min-width: 90px;
+.detail-corpus_luteum {
+    max-width: 45px;
+	min-width: 45px;
 }
-.detail-others {
-    min-width: 90px;
-    max-width: 90px;
+.detail-observ {
+    max-width: 120px;
+	min-width: 120px;
 }
 .grade-celsius {
     margin-left: -10px;
@@ -189,6 +177,7 @@ ion-card-content {
     font-size: 23px;
     height: 124px;
     margin-top: 6px;
+    width: 100%;
     button {
         border-radius: 5px;
     }
@@ -198,6 +187,7 @@ ion-card-content {
     background-color: #1AB394 !important;
     position: absolute;
     bottom: 50px;
+	width: 100%;
 }
 .badge-error {
     font-size: 32px;

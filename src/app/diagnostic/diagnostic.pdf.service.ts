@@ -134,7 +134,7 @@ export class DiagnosticPdfService {
 				const employees = [];
 				let employee: string;
 				for (let agenda of data.order.agenda) {
-					if (agenda.event.id === '4' && data.local.name === agenda.name_local) {
+					if (agenda.event.id === '5' && data.local.name === agenda.name_local) {
 						if (agenda.user) {
 							employee = agenda.user.name;
 						}
