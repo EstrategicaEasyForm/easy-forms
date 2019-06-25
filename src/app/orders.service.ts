@@ -30,6 +30,7 @@ query orders {
         date
         received_by
         identification_number
+        technical
         locals {
           id
           name

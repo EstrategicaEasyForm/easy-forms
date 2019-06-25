@@ -39,6 +39,7 @@ export class SexageService {
         "input": {
           "id": sexage.id,
           "received_by": sexage.received_by,
+          "technical": sexage.technical,
           "comments": sexage.comments,
           "identification_number": sexage.identification_number,
           "state": sexage.state,

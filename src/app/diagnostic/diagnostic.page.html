@@ -209,12 +209,22 @@
                 <ion-grid>
                   <ion-row>
                       <ion-col>
-                      <ion-label>Transferidor</ion-label>
+                      <ion-label>Nombre del técnico</ion-label>
                       </ion-col>
                   </ion-row>
                   <ion-row>
-                      <ion-col class="text-readonly">
-                      <ion-label>{{diagnostic.transferor}}</ion-label>
+                    <ion-col>
+                      <ion-input type="text" formControlName="technical" [(ngModel)]="diagnostic.technical">
+                        </ion-input>
+                        <div>
+                          <ng-container *ngFor="let validation of validation_messages.technical">
+                            <div class="error-message"
+                              *ngIf="validation_form_general.get('technical').hasError(validation.type) 
+                                  && (validation_form_general.get('technical').dirty || validation_form_general.get('technical').touched)">
+                              {{ validation.message }}
+                            </div>
+                          </ng-container>
+                        </div>
                       </ion-col>
                   </ion-row>
                   <ion-row>

@@ -330,7 +330,7 @@ export class EvaluationPdfService {
 							fontSize: 12,
 						},
 						{
-							text: 'Nombre del técnico : ' + employee,
+							text: 'Nombre del técnico : ' + data.evaluationApi.technical,
 							style: 'normal_style',
 						},
 						{

@@ -39,6 +39,7 @@ export class DiagnosticService {
         "input": {
           "id": diagnostic.id,
           "received_by": diagnostic.received_by,
+          "technical": diagnostic.technical,
           "comments": diagnostic.comments,
           "identification_number": diagnostic.identification_number,
           "state": diagnostic.state,

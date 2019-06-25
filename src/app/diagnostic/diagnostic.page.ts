@@ -34,7 +34,7 @@ export class DiagnosticPage implements OnInit {
   validation_form_general: FormGroup;
 
   validation_messages = {
-    'transferor': [
+    'technical': [
       { type: 'required', message: 'Campo requerido.' }
     ],
     'received_by': [
@@ -113,6 +113,7 @@ export class DiagnosticPage implements OnInit {
     }
 
     this.validation_form_general = this.formBuilder.group({
+      technical : [this.diagnostic.technical, Validators.required],
       received_by: [this.diagnostic.received_by, Validators.required],
       identification_number: [this.diagnostic.identification_number, Validators.required],
       comments: [this.diagnostic.comments, Validators.required]

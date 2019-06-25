@@ -364,7 +364,7 @@ export class DiagnosticPdfService {
 							fontSize: 12,
 						},
 						{
-							text: 'Nombre del técnico  : ' + diagnosticEmployee,
+							text: 'Nombre del técnico  : ' + data.diagnosticApi.technical,
 							style: 'normal_style',
 						},
 						{ text: '\n\ ' },

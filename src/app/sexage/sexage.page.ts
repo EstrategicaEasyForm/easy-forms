@@ -34,7 +34,7 @@ export class SexagePage implements OnInit {
   validation_form_general: FormGroup;
 
   validation_messages = {
-    'transferor': [
+    'technical': [
       { type: 'required', message: 'Campo requerido.' }
     ],
     'received_by': [
@@ -114,6 +114,7 @@ export class SexagePage implements OnInit {
     }
 
     this.validation_form_general = this.formBuilder.group({
+      technical : [this.sexage.technical, Validators.required],
       received_by: [this.sexage.received_by, Validators.required],
       identification_number: [this.sexage.identification_number, Validators.required],
       comments: [this.sexage.comments, Validators.required]

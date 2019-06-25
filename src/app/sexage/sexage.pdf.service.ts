@@ -367,7 +367,7 @@ export class SexagePdfService {
 							fontSize: 12,
 						},
 						{
-							text: 'Nombre del técnico  : ' + deliveryEmployee,
+							text: 'Nombre del técnico  : ' + data.sexageApi.technical,
 							style: 'normal_style',
 						},
 						{ text: '\n\ ' },

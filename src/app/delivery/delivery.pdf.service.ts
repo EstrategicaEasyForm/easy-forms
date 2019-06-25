@@ -364,7 +364,7 @@ export class DeliveryPdfService {
 							fontSize: 12,
 						},
 						{
-							text: 'Nombre del técnico  : ' + deliveryEmployee,
+							text: 'Nombre del técnico  : ' + data.deliveryApi.technical,
 							style: 'normal_style',
 						},
 						{ text: '\n\ ' },

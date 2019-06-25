@@ -36,7 +36,7 @@ export class EvaluationPage implements OnInit {
 
 
   validation_messages = {
-    'evaluator': [
+    'technical': [
       { type: 'required', message: 'Campo requerido.' }
     ],
     'comments': [
@@ -87,7 +87,7 @@ export class EvaluationPage implements OnInit {
     });
 
     this.validation_form_general = this.formBuilder.group({
-      //evaluator: [this.evaluation.attendant, Validators.required],
+      technical: [this.evaluation.technical, Validators.required],
       received_by: [this.evaluation.received_by, Validators.required],
       identification_number: [this.evaluation.identification_number, Validators.required],
       comments: [this.evaluation.comments, Validators.required]

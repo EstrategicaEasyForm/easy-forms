@@ -34,7 +34,7 @@ export class DeliveryPage implements OnInit {
   validation_form_general: FormGroup;
 
   validation_messages = {
-    'transferor': [
+    'technical': [
       { type: 'required', message: 'Campo requerido.' }
     ],
     'received_by': [
@@ -116,6 +116,7 @@ export class DeliveryPage implements OnInit {
     }
 
     this.validation_form_general = this.formBuilder.group({
+      technical : [this.delivery.technical, Validators.required],
       received_by: [this.delivery.received_by, Validators.required],
       identification_number: [this.delivery.identification_number, Validators.required],
       comments: [this.delivery.comments, Validators.required]

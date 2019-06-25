@@ -39,6 +39,7 @@ export class DeliveryService {
         "input": {
           "id": Number(delivery.id),
           "received_by": delivery.received_by,
+          "technical": delivery.technical,
           "comments": delivery.comments,
           "identification_number": delivery.identification_number,
           "state": Number(delivery.state),
