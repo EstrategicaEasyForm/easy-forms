@@ -99,6 +99,50 @@ query orders {
           }
         }
       }
+      transferApi {
+        id
+        locals {
+          id
+          name
+        }
+        order_detail_id
+		technical
+        received_by
+        identification_number
+        comments
+        state
+        date
+        synchronizeds {
+          id
+          animal_id
+          chapeta
+        }
+        details_view {
+          id
+          embryo_class
+          donor
+          donor_breed
+          bull
+          bull_breed
+          receiver
+          corpus_luteum
+          comments
+          local_id
+          local {
+            id
+            name
+            city
+            department
+          }
+          transfer_id
+          production_detail_id
+          evaluation_detail_id
+          embryo
+          transferor
+          attendant
+          discard
+        }
+      }
       diagnosticApi {
         id
         order_detail_id
