@@ -9,3 +9,20 @@
 @import '~@ionic/angular/css/text-alignment.css';
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
+@import 'theme/variables.scss';
+:root {
+    --ion-color-gold: #a38301;
+    --ion-color-gold-rgb: 255, 206, 0;
+    --ion-color-gold-contrast: #ffffff;
+    --ion-color-gold-contrast-rgb: 255, 255, 255;
+    --ion-color-gold-shade: #8f7301;
+    --ion-color-gold-tint: #ac8f1a;
+}
+.ion-color-gold {
+    --ion-color-base: var(--ion-color-gold) !important;
+    --ion-color-base-rgb: var(--ion-color-gold-rgb) !important;
+    --ion-color-contrast: var(--ion-color-gold-contrast) !important;
+    --ion-color-contrast-rgb: var(--ion-color-gold-contrast-rgb) !important;
+    --ion-color-shade: var(--ion-color-gold-shade) !important;
+    --ion-color-tint: var(--ion-color-gold-tint) !important;
+    }

@@ -101,6 +101,11 @@ ion-card-content {
 .detail-table-header {
     font-weight: bold;
 }
+.discard-id {
+    border-radius: 25px;
+    background: rgb(165, 182, 13);
+    color: rgb(85, 1, 1)
+  }
 .detail-id {
     max-width: 38px;
     min-width: 38px;
@@ -114,32 +119,36 @@ ion-card-content {
     min-width: 151px;
 }
 .detail-donor-breed {
-    max-width: 115px;
-    min-width: 115px;
+    max-width: 110px;
+    min-width: 110px;
 }
 .detail-receiver {
     max-width: 110px;
     min-width: 110px;
 }
 .detail-bull {
-    max-width: 110px;
-    min-width: 110px;
+    max-width: 90px;
+    min-width: 90px;
 }
 .detail-bull-breed {
     max-width: 110px;
     min-width: 110px;
 }
 .detail-sync {
-    max-width: 60px;
-	min-width: 60px;
+    max-width: 65px;
+	min-width: 65px;
 }
 .detail-corpus_luteum {
-    max-width: 45px;
-	min-width: 45px;
+    max-width: 50px;
+	min-width: 50px;
+}
+.detail-desc {
+    max-width: 65px;
+	min-width: 65px;
 }
 .detail-observ {
-    max-width: 120px;
-	min-width: 120px;
+    max-width: 200px;
+	min-width: 200px;
 }
 .grade-celsius {
     margin-left: -10px;

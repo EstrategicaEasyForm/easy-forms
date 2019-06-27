@@ -142,6 +142,9 @@
                           <ion-col class="detail-sync">
                             <ion-label>Sinc.</ion-label>
                           </ion-col>
+                          <ion-col class="detail-desc">
+                            <ion-label>Desc.</ion-label>
+                          </ion-col>
                           <ion-col class="detail-observ">
                             <ion-label>Obser.</ion-label>
                           </ion-col>
@@ -152,35 +155,41 @@
                       <ion-item>
                         <ion-grid class="item-sliding">
                           <ion-row>
-                              <ion-col class="detail-id">
+                              <ion-col [ngClass]="{'detail-id':true, 'discard-id':item.discard == '1'}">
                                 <ion-label>{{indx + 1}}</ion-label>
                               </ion-col>
-                              <ion-col class="detail-donor">
+                              <ion-col class="detail-class">
                                 <ion-label>{{item.embryo_class }}</ion-label>
                               </ion-col>
-                              <ion-col class="detail-donor-breed">
+                              <ion-col class="detail-donor">
                                 <ion-label>{{item.donor }}</ion-label>
                               </ion-col>
-                              <ion-col class="detail-local-name">
+                              <ion-col class="detail-donor-breed">
                                 <ion-label>{{item.donor_breed }}</ion-label>
                               </ion-col>
-                              <ion-col class="detail-type">
+                              <ion-col class="detail-bull">
                                 <ion-label>{{item.bull_breed }}</ion-label>
                               </ion-col>
-                              <ion-col class="detail-arrived-time">
+                              <ion-col class="detail-bull-breed">
                                 <ion-label>{{item.bull }}</ion-label>
                               </ion-col>
-                              <ion-col class="detail-bull">
+                              <ion-col class="detail-receiver">
                                 <ion-label>{{item.receiver }}</ion-label>
                               </ion-col>
-                              <ion-col class="detail-bull-breed">
+                              <ion-col class="detail-corpus_luteum">
                                 <ion-label>{{item.corpus_luteum }}</ion-label>
                               </ion-col>
                               <ion-col class="detail-sync">
                                 <ion-label *ngIf="item.evaluation_detail_id == null">No</ion-label>
                                 <ion-label *ngIf="item.evaluation_detail_id != null">Si</ion-label>
                               </ion-col>
-                              <ion-col class="detail-gii">
+                              <ion-col class="detail-desc">
+                                <ion-label *ngIf="item.discard === '1'" color="danger">D</ion-label>
+                                <ion-label *ngIf="item.discard !== '1'" color="success">N</ion-label>
+                                <!--ion-checkbox *ngIf="item.discard == '0'" disabled="true" color="primary" checked="false"></ion-checkbox>
+                                <ion-checkbox *ngIf="item.discard != '0'" disabled="true" color="primary" checked="true"></ion-checkbox-->
+                              </ion-col>
+                              <ion-col class="detail-observ">
                                 <ion-label>{{item.comments }}</ion-label>
                               </ion-col>
                           </ion-row>
@@ -190,7 +199,10 @@
                         <ion-button class="button-slide" color="success" icon-start (click)="openTransferDetail(indx)">
                           Editar
                         </ion-button>
-                        <ion-button class="button-slide" color="warning" icon-start (click)="presentAlertConfirmDiscard(indx)">
+                        <ion-button *ngIf="item.discard === '1'" class="button-slide" color="warning" icon-start (click)="presentAlertConfirmDiscard(indx)">
+                          Descartar
+                        </ion-button>
+                        <ion-button *ngIf="item.discard !== '1'" class="button-slide" color="gold" icon-start (click)="presentAlertConfirmDiscard(indx)">
                           Descartar
                         </ion-button>
                         <ion-button class="button-slide" color="danger" icon-start [disabled]="item.stateSync !== 'C'">
@@ -242,7 +254,7 @@
                   </ion-row>
                   <ion-row>
                     <ion-col size="5.9">
-                      <ion-label>Recibido por</ion-label>
+                      <ion-label>Nombre del encargado</ion-label>
                     </ion-col>
                     <ion-col size="5.9">
                       <ion-label>Cédula</ion-label>
