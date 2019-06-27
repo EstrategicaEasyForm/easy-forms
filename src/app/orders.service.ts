@@ -106,7 +106,6 @@ query orders {
           name
         }
         order_detail_id
-		technical
         received_by
         identification_number
         comments
