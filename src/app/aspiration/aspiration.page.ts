@@ -129,7 +129,8 @@ export class AspirationPage implements OnInit {
     this.ordersService.setDetailApiParam({
       aspiration: this.aspiration,
       detailApiId: indx,
-      aspirationPage: this
+      aspirationPage: this,
+      local: this.detailApi.local
     });
     this.router.navigate(['aspiration-detail']);
   }
