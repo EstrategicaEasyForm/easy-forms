@@ -98,7 +98,11 @@ export class TransferPage implements OnInit {
         for (let order of ordersList) {
           for (let detail of order.detailsApi) {
             if (detail.transferApi && detail.transferApi.id === this.transfer.id) {
-              detail.transferApi.details_view[indx].discard = '0';
+              if (detail.transferApi.details_view[indx].discard == '1') {
+                detail.transferApi.details_view[indx].discard = '0';
+              } else {
+                detail.transferApi.details_view[indx].discard = '1';
+              }
             }
           }
         }
@@ -107,9 +111,21 @@ export class TransferPage implements OnInit {
   }
 
   async presentAlertConfirmDiscard(indx) {
+    let varDiscard;
+    this.ordersService.getDetailsApiStorage().then((ordersList) => {
+      if (ordersList) {
+        for (let order of ordersList) {
+          for (let detail of order.detailsApi) {
+            if (detail.transferApi && detail.transferApi.id === this.transfer.id) {
+              varDiscard = detail.transferApi.details_view[indx].discard;
+            }
+          }
+        }
+      }
+    });
     const alert = await this.alertController.create({
       header: 'Descartar Detalle!',
-      message: '¿Confirma que desea descartar el detalle?',
+      message: varDiscard == '0' ? '¿Confirma que desea descartar el detalle?' : '¿Confirma que desea habilitar el detalle?',
       buttons: [
         {
           text: 'Cancelar',

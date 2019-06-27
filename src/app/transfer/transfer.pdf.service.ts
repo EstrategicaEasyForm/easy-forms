@@ -23,7 +23,8 @@ export class TransferPdfService {
 		public toastCtrl: ToastController,
 		public ordersService: OrdersService,
 		public http: HttpClient,
-		public imageSrc: ImageSrc) {
+		public imageSrc: ImageSrc,
+		public orderService : OrdersService) {
 
 	}
 	async makePdf(data, options) {
@@ -62,9 +63,9 @@ export class TransferPdfService {
 				]);
 				for (let i of data.transferApi.details_view) {
 					if (i.discard === '1') {
-						con_discard.transfers++;
-					} else {
 						con_discard.discards++;
+					} else {
+						con_discard.transfers++;
 					}
 					transferDetails.push([
 						{ text: cont_details++, style: 'normal_detail_style' },
@@ -92,7 +93,7 @@ export class TransferPdfService {
 				const employees = [];
 				let employee: string;
 				for (let agenda of data.order.agenda) {
-				  if (agenda.event.id === '4' && data.local.name === agenda.name_local) {
+				  if (agenda.event.id === this.orderService.templates[2].id && data.local.name === agenda.name_local) {
 					if(agenda.user) {
 						employee = agenda.user.name;
 					}

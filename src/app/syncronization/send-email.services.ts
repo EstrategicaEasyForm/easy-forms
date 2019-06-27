@@ -7,6 +7,7 @@ import { DeliveryPdfService } from '../delivery/delivery.pdf.service';
 import { TransferPdfService } from '../transfer/transfer.pdf.service';
 import { EvaluationPdfService } from '../evaluation/evaluation.pdf.service';
 import { UsersService } from '../users.service';
+import { OrdersService } from '../orders.service';
 
 
 @Injectable({
@@ -21,7 +22,8 @@ export class SendEmailService {
     public diagnosticPdf: DiagnosticPdfService,
     public sexagePdf: SexagePdfService,
     public deliveryPdf: DeliveryPdfService,
-	public userService: UsersService) {
+    public userService: UsersService,
+    public orderService: OrdersService) {
 
   }
 
@@ -40,12 +42,12 @@ export class SendEmailService {
     };
 
     let workSheetPdf;
-    if(type.id==='1') workSheetPdf = this.evaluationPdf;
-    if(type.id==='2') workSheetPdf = this.aspirationPdf;
-    if(type.id==='3') workSheetPdf = this.transferPdf;
-    if(type.id==='4') workSheetPdf = this.diagnosticPdf;
-    if(type.id==='5') workSheetPdf = this.sexagePdf;
-    if(type.id==='6') workSheetPdf = this.deliveryPdf;
+    if(type.id === this.orderService.templates[0].id) workSheetPdf = this.evaluationPdf;
+    if(type.id === this.orderService.templates[1].id) workSheetPdf = this.aspirationPdf;
+    if(type.id === this.orderService.templates[2].id) workSheetPdf = this.transferPdf;
+    if(type.id === this.orderService.templates[3].id) workSheetPdf = this.diagnosticPdf;
+    if(type.id === this.orderService.templates[4].id) workSheetPdf = this.sexagePdf;
+    if(type.id === this.orderService.templates[5].id) workSheetPdf = this.deliveryPdf;
     return workSheetPdf.makePdf(dataPdf, optionsPdf);
   }
 
