@@ -209,7 +209,6 @@ export class AspirationPage implements OnInit {
 	this.aspiration.stateSync = 'U';
 	this.saveAspiration();
 	this.showMessage('Planilla Aspiración Finalizada');
-	this.location.back();
   }
 
   async presentAlertConfirm() {

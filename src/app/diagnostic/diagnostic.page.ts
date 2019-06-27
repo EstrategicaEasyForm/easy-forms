@@ -193,7 +193,6 @@ export class DiagnosticPage implements OnInit {
 	this.diagnostic.stateSync = 'U';
 	this.saveDiagnostic();
 	this.showMessage('Planilla Diagnóstico Finalizada');
-	this.location.back();
   }
 
   async presentAlertConfirm() {

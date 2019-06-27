@@ -195,7 +195,6 @@ export class EvaluationPage implements OnInit {
 	this.evaluation.stateSync = 'U';
 	this.saveEvaluation();
 	this.showMessage('Planilla Evaluación Finalizada');
-	this.location.back();
   }
 
   async presentAlertConfirm() {

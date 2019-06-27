@@ -14,6 +14,8 @@ import { DiagnosticService } from './diagnostic.services';
 import { EvaluationService } from './evaluation.services';
 import { DeliveryService } from './delivery.services';
 import { SexageService } from './sexage.services';
+import gql from 'graphql-tag';
+import { Apollo } from 'apollo-angular';
 
 @Component({
   selector: 'app-syncronization',
@@ -44,7 +46,8 @@ export class SyncronizationPage {
     public sendEmail: SendEmailService,
     public diagnosticService: DiagnosticService,
     public sexageService: SexageService,
-    public deliveryService: DeliveryService) {
+    public deliveryService: DeliveryService,
+	public apollo: Apollo) {
 
     this.eventCtrl.subscribe('graphql:error', (elementPush) => {
       //this.writeLog(elementPush);
@@ -211,56 +214,72 @@ export class SyncronizationPage {
 	  //If Template State is Finalize
 	  else if(workSheet.state == "1") {
 		  
-		  this.sendEmail.makePdf(order, detailApi, workSheet, type, response).then((pdf) => {
-			if (pdf.status === 'error') {
-			  
-			  const errorMessage = typeof pdf.error === 'string' ? pdf.error : JSON.stringify(pdf.error);
-			  workSheet.stateErrorSync = 'Error generando el pdf';
-			  this.writeLog({
-				type: 'error',
-				message: 'No se pudo generar el archivo pdf: ' + pdf.filename,
-				details: [
-				  errorMessage
-				],
-				time: moment().format('HH:mm A'),
-				show: false,
-			  });
-			  this.finishSync(errorMessage);
+		  this.enableEvent(detailApi, workSheet, type).then((res: any) => {
+			if (res.status === 'error') {
+				workSheet.stateErrorSync = 'Error sincronizando la planilla finalizada';
+				this.writeLog({
+				  type: 'error',
+				  message: 'Error sincronizando la planilla ' + type.name + ' ya finalizada. Orden de producción No ' + order.id,
+				  details: [
+					response.error
+				  ],
+				  time: moment().format('HH:mm A'),
+				  show: false,
+				});
 			}
-			else if (pdf.status === 'success') {
-			  
-			  this.sendEmail.makeEmail(order, detailApi, workSheet, type, response, pdf).then((resp: any) => {
-				if (resp.status === 'success') {
-				  if (response.status === 'success') {
-					this.writeLog({
-					  type: 'info',
-					  message: 'La planilla de ' + type.name + ' fué actualizada correctamente para la orden de producción No ' + order.id,
-					  details: [
-						"Correo automático enviado a @" + order.client.bussiness_name,
-						"Archivo adjunto " + pdf.filename
-					  ],
-					  time: moment().format('HH:mm A'),
-					  show: false,
-					});
-				  }
-				  this.finishSync(null);
-				}
-				else {
-				  workSheet.stateErrorSync = 'Error enviando el correo';
-				  this.writeLog({
-					type: 'error',
-					message: "Error enviando correo automático a @" + order.client.bussiness_name,
-					details: [
-					  'No es posible enviar el correo electrónico', 
-					  resp.error
-					],
-					time: moment().format('HH:mm A'),
-					show: false,
+			else {
+				this.sendEmail.makePdf(order, detailApi, workSheet, type, response).then((pdf) => {
+					if (pdf.status === 'error') {
+					  
+					  const errorMessage = typeof pdf.error === 'string' ? pdf.error : JSON.stringify(pdf.error);
+					  workSheet.stateErrorSync = 'Error generando el pdf';
+					  this.writeLog({
+						type: 'error',
+						message: 'No se pudo generar el archivo pdf: ' + pdf.filename,
+						details: [
+						  errorMessage
+						],
+						time: moment().format('HH:mm A'),
+						show: false,
+					  });
+					  this.finishSync(errorMessage);
+					}
+					else if (pdf.status === 'success') {
+					  
+					  this.sendEmail.makeEmail(order, detailApi, workSheet, type, response, pdf).then((resp: any) => {
+						if (resp.status === 'success') {
+						  if (response.status === 'success') {
+							this.writeLog({
+							  type: 'info',
+							  message: 'La planilla de ' + type.name + ' fué actualizada correctamente para la orden de producción No ' + order.id,
+							  details: [
+								"Correo automático enviado a @" + order.client.bussiness_name,
+								"Archivo adjunto " + pdf.filename
+							  ],
+							  time: moment().format('HH:mm A'),
+							  show: false,
+							});
+						  }
+						  this.finishSync(null);
+						}
+						else {
+						  workSheet.stateErrorSync = 'Error enviando el correo';
+						  this.writeLog({
+							type: 'error',
+							message: "Error enviando correo automático a @" + order.client.bussiness_name,
+							details: [
+							  'No es posible enviar el correo electrónico', 
+							  resp.error
+							],
+							time: moment().format('HH:mm A'),
+							show: false,
+						  });
+						  this.finishSync(resp.error);
+						}
+					  })
+					}
 				  });
-				  this.finishSync(resp.error);
 				}
-			  })
-			}
 		  });
 	  }
 	  else {
@@ -460,5 +479,40 @@ export class SyncronizationPage {
 
   writeLog(elementPush) {
     this.logs = [elementPush].concat(this.logs);
+  }
+  
+  enableEvent(detailApi, workSheet, type) {
+    const enableEventMutation = gql`
+      mutation enableEvent($input: EnableEventInput!){
+        enableEvent (input: $input) {
+          eventCreate
+		  state
+        }
+      }`;
+
+    let variables = {
+      "input": {
+        "order_detail_id": detailApi.id,
+		"event_id": type.id,
+      }
+    };
+	
+	if(type.id === '1' || type.id === '4' || type.id === '5' || type.id === '6' ) {
+		return new Promise(resolve => {
+		  this.apollo.mutate({
+			mutation: enableEventMutation,
+			variables: Object.assign({ "input": {} }, variables)
+		  }).subscribe(({ data }) => {
+			resolve({ status: 'success', data: data });
+		  }, (error) => {
+			resolve({ status: 'error', error: error });
+		  });
+		});
+	}
+	else {
+		return new Promise(resolve => {
+		  resolve({ status: 'success'});
+		});
+	}
   }
 }

@@ -196,8 +196,6 @@ export class DeliveryPage implements OnInit {
 	this.delivery.stateSync = 'U';
 	this.saveDelivery();
 	this.showMessage('Planilla Entrega Finalizada');
-	this.location.back();
-
   }
 
   async presentAlertConfirm() {

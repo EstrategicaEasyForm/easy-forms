@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrdersService } from '../orders.service';
-import { LoadingController, ToastController, ModalController, AlertController, Platform } from '@ionic/angular';
+import { LoadingController, ToastController, ModalController, AlertController, Platform, IonList } from '@ionic/angular';
 import { NetworkNotifyBannerComponent } from '../network-notify-banner/network-notify-banner.component';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { SignatureDrawPadPage } from '../signature-draw-pad/signature-draw-pad.page';
@@ -92,58 +92,56 @@ export class TransferPage implements OnInit {
     this.router.navigate(['transfer-detail']);
   }
 
-  discardTransferDetail(indx) {
-    this.ordersService.getDetailsApiStorage().then((ordersList) => {
-      if (ordersList) {
-        for (let order of ordersList) {
-          for (let detail of order.detailsApi) {
-            if (detail.transferApi && detail.transferApi.id === this.transfer.id) {
-              if (detail.transferApi.details_view[indx].discard == '1') {
-                detail.transferApi.details_view[indx].discard = '0';
-              } else {
-                detail.transferApi.details_view[indx].discard = '1';
-              }
-            }
-          }
-        }
-      }
-    });
-  }
+//  discardTransferDetail(indx) {
+//    this.ordersService.getDetailsApiStorage().then((ordersList) => {
+//      if (ordersList) {
+//        for (let order of ordersList) {
+//          for (let detail of order.detailsApi) {
+//            if (detail.transferApi && detail.transferApi.id === this.transfer.id) {
+//              if (detail.transferApi.details_view[indx].discard == '1') {
+//                detail.transferApi.details_view[indx].discard = '0';
+//              } else {
+//                detail.transferApi.details_view[indx].discard = '1';
+//              }
+//            }
+//          }
+//        }
+//      }
+//    });
+//  }
 
-  async presentAlertConfirmDiscard(indx) {
-    let varDiscard;
-    this.ordersService.getDetailsApiStorage().then((ordersList) => {
-      if (ordersList) {
-        for (let order of ordersList) {
-          for (let detail of order.detailsApi) {
-            if (detail.transferApi && detail.transferApi.id === this.transfer.id) {
-              varDiscard = detail.transferApi.details_view[indx].discard;
-            }
-          }
-        }
-      }
-    });
-    const alert = await this.alertController.create({
-      header: 'Descartar Detalle!',
-      message: varDiscard == '0' ? '¿Confirma que desea descartar el detalle?' : '¿Confirma que desea habilitar el detalle?',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: (blah) => {
+  
+  async presentAlertConfirmDiscard(indx,detailList: IonList) {
+	if(this.transfer.details_view[indx].discard === '1' ) {
+	   this.transfer.details_view[indx].discard = this.transfer.details_view[indx].discard === '1' ? '0' : '1';
+	   detailList.closeSlidingItems();
+	   this.saveTransfer();
+	}
+	else {
+		const alert = await this.alertController.create({
+		  header: 'Descartar Detalle!',
+		  message: '¿Confirma que desea descartar el detalle?',
+		  buttons: [
+			{
+			  text: 'Cancelar',
+			  role: 'cancel',
+			  cssClass: 'secondary',
+			  handler: (blah) => {
 
-          }
-        }, {
-          text: 'Aceptar',
-          handler: () => {
-            this.discardTransferDetail(indx);
-          }
-        }
-      ]
-    });
+			  }
+			}, {
+			  text: 'Aceptar',
+			  handler: () => {
+				this.transfer.details_view[indx].discard = this.transfer.details_view[indx].discard === '1' ? '0' : '1';
+				detailList.closeSlidingItems();
+				this.saveTransfer();
+			  }
+			}
+		  ]
+		});
 
-    await alert.present();
+		await alert.present();
+	}
   }
 
   reloadDetailsList(detailsList) {
@@ -222,7 +220,6 @@ export class TransferPage implements OnInit {
 	this.transfer.stateSync = 'U';
 	this.saveTransfer();
 	this.showMessage('Planilla de Transferencia Finalizada');
-	this.location.back();
   }
 
   async presentAlertConfirm() {
@@ -291,15 +288,6 @@ export class TransferPage implements OnInit {
     await loading.present();
   }
   
-  onChangeTransferor() {
-	  if(this.transfer.transferor) {
-		  for(let detail of this.transfer.details_view){
-			  //detail.transferor = this.transfer.transferor;
-			  //detail.stateSync = 'U';
-		  }
-	  }
-  }
-
   ionViewWillEnter() {
       this.initOrientation();
   }

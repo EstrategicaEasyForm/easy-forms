@@ -194,7 +194,6 @@ export class SexagePage implements OnInit {
 	this.sexage.stateSync = 'U';
 	this.saveSexage();
 	this.showMessage('Planilla Sexaje Finalizada');
-	this.location.back();
   }
 
   async presentAlertConfirm() {
