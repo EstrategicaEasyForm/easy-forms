@@ -78,7 +78,8 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
       this.updateItem(detailApiId);
     }
     else {
-      this.newItem();
+      const local_id = dataParam.local ? dataParam.local.id : '';
+      this.newItem(local_id);
     }
   }
 
@@ -122,7 +123,7 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
     }
   }
 
-  newItem() {
+  newItem(local_id) {
 
     this.dataItem = {
       stateSync: 'C'
@@ -136,31 +137,33 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
       this.validation_form = this.formBuilder.group({
         donor: ['', Validators.required],
         donor_breed: ['', Validators.required],
-        local_id: ['', Validators.required],
+        local_id: [local_id, Validators.required],
         type: ['', Validators.required],
         arrived_time: ['', Validators.required],
         bull: [''],
         bull_breed: [''],
-        gi: ['', Validators.required],
-        gii: ['', Validators.required],
-        giii: ['', Validators.required],
-        others: ['', Validators.required]
+        gi: [0, Validators.required],
+        gii: [0, Validators.required],
+        giii: [0, Validators.required],
+        others: [0, Validators.required]
       });
     }
     else {
       this.validation_form.reset({
         donor: '',
         donor_breed: '',
-        local_id: '',
+        local_id: local_id,
         type: '',
         arrived_time: '',
         bull: '',
         bull_breed: '',
-        gi: '',
-        gii: '',
-        giii: '',
-        others: ''
+        gi: 0,
+        gii: 0,
+        giii: 0,
+        others: 0
       });
+      this.dataItem.local_id = local_id;
+      this.onChangeLocal(local_id);
     }
   }
 
@@ -186,7 +189,7 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
     if (this.validation_form.valid) {
       if (this.action === 'new') {
         this.saveItem();
-        this.newItem();
+        this.newItem(this.dataItem.local_id);
         this.dataItemOri = Object.assign({}, this.dataItem);
       }
       else if (this.action === 'update') {
@@ -195,7 +198,7 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
           this.dataItemOri = Object.assign({}, this.dataItem);
         }
         if (this.indx === this.detailsList.length - 1) {
-          this.newItem();
+          this.newItem(this.dataItem.local_id);
           this.dataItemOri = Object.assign({}, this.dataItem);
         }
         else {
@@ -267,6 +270,7 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
       for (let local of this.aspiration.locals) {
         if (local.id === $localId) {
           this.dataItem.local = local;
+          break;
         }
       }
     }
