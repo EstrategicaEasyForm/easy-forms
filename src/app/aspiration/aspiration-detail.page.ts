@@ -126,7 +126,11 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
   newItem(local_id) {
 
     this.dataItem = {
-      stateSync: 'C'
+      stateSync: 'C',
+	  gi: 0,
+	  gii: 0,
+	  giii: 0,
+	  others: 0
     };
 
     this.action = 'new';
@@ -147,6 +151,8 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
         giii: [0, Validators.required],
         others: [0, Validators.required]
       });
+	  this.dataItem.local_id = local_id;
+      this.onChangeLocal(local_id);
     }
     else {
       this.validation_form.reset({
