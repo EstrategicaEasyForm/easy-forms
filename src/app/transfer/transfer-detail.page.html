@@ -47,7 +47,7 @@
                   </div>
                 </ion-col>
                 <ion-col col-6>
-                  <ion-checkbox checked="{{checkInitial}}" (ionChange)="checkValue()"></ion-checkbox>
+                  <ion-checkbox (ionChange)="onChangeCheckRecept()" formControlName="checkRecept" [(ngModel)]="checkRecept"></ion-checkbox>
                 </ion-col>
               </ion-row>
               <ion-row>
@@ -57,8 +57,9 @@
               </ion-row>
               <ion-row>
                 <ion-col col-12 *ngIf="checkRecept">
-                  <ion-select style="max-width: 100%;" formControlName="recept"
+                  <ion-select #receptSyncIds style="max-width: 100%;" formControlName="evaluation_detail_id"
                     interface="popover" interfaceOptions="{header: 'Receptora'}"
+					(ionChange)="onChangeReceptSync(receptSyncIds.value)"
                     placeholder="Seleccione" [(ngModel)]="dataItem.evaluation_detail_id">
                     <ion-select-option *ngFor="let recept of transfer.synchronizeds" [value]="recept.id">
                       {{recept.animal_id + "-" + recept.chapeta}}

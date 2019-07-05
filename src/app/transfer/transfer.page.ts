@@ -75,6 +75,17 @@ export class TransferPage implements OnInit {
     
     this.validation_form_order = this.formBuilder.group({});
 	this.transfer.transferor = this.transfer.details_view && this.transfer.details_view[0] ? this.transfer.details_view[0].transferor : '';
+	
+	if (this.transfer.synchronizeds) {
+		for(let detailItem of this.transfer.details_view) {
+			for (let receptSync of this.transfer.synchronizeds) {
+				if (receptSync.id === Number(detailItem.evaluation_detail_id)) {
+				  detailItem.receptSync = receptSync.animal_id + "-" + receptSync.chapeta;
+				  break;
+				}
+			}
+		}
+	}
     this.validation_form_general = this.formBuilder.group({
       received_by: [this.transfer.received_by, Validators.required],
       identification_number: [this.transfer.identification_number, Validators.required],

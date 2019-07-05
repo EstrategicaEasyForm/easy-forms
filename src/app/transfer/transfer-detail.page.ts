@@ -69,7 +69,6 @@ export class TransferDetailPage implements OnInit, OnDestroy {
       this.updateItem(detailApiId);
     }
     else {
-      this.checkRecept = true;
       this.newItem();
     }
   }
@@ -77,37 +76,41 @@ export class TransferDetailPage implements OnInit, OnDestroy {
   updateItem(detailId) {
     this.indx = detailId;
     this.dataItem = this.detailsList[this.indx];
-    console.log(this.dataItem);
+    
+	if(this.dataItem.evaluation_detail_id) {
+		this.checkRecept = true;
+		this.dataItem.receiver = '...';
+	}
+	else {
+		this.checkRecept = false;
+	}
     this.action = 'update';
     this.newRegistry = false;
     //create a copy of the object
     this.dataItemOri = Object.assign({}, this.dataItem);
-    if (!this.dataItem.evaluation_detail_id || this.dataItem.evaluation_detail_id == null) {
-      this.checkInitial = false;
-    } else {
-      this.checkInitial = true;
-    }
     //initialize the form
     if (!this.validation_form) {
       this.validation_form = this.formBuilder.group({
         embryo_class: [this.dataItem.embryo_class, Validators.required],
+        checkRecept:  [this.checkRecept,''],
         corpus_luteum: [this.dataItem.corpus_luteum, Validators.required],
         local_id: [this.dataItem.local_id, Validators.required],
         transferor: [this.dataItem.transferor, Validators.required],
         comments: [this.dataItem.comments, Validators.required],
-        receiver: [this.dataItem.receiver, Validators.required],
-        recept: [this.dataItem.evaluation_detail_id, ''],
+        receiver: [this.dataItem.receiver, ''],
+        evaluation_detail_id: [this.dataItem.evaluation_detail_id, ''],
       });
     }
     else {
       this.validation_form.reset({
         embryo_class: this.dataItem.embryo_class,
+		checkRecept:  [this.checkRecept,''],
         corpus_luteum: this.dataItem.corpus_luteum,
         local_id: this.dataItem.local_id,
         transferor: this.dataItem.transferor,
         comments: this.dataItem.comments,
         receiver: this.dataItem.receiver,
-        recept: this.dataItem.evaluation_detail_id
+        evaluation_detail_id: this.dataItem.evaluation_detail_id
       });
     }
   }
@@ -122,36 +125,34 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     this.newRegistry = true;
     this.indx = this.detailsList.length;
 
+	this.checkRecept = false;
     if (!this.validation_form) {
       this.validation_form = this.formBuilder.group({
         embryo_class: ['', Validators.required],
-        receiver: ['', Validators.required],
+        receiver: ['', ''],
+		checkRecept:  [this.checkRecept],
         corpus_luteum: ['', Validators.required],
         local_id: ['', Validators.required],
         transferor: ['', Validators.required],
         comments: ['', Validators.required],
-        recept: ['', Validators.required],
+        evaluation_detail_id: ['', Validators.required],
       });
     }
     else {
       this.validation_form.reset({
         embryo_class: '',
+		checkRecept:  [this.checkRecept],
         receiver: '',
         corpus_luteum: '',
         local_id: '',
         transferor: '',
         comments: '',
-        recept: '',
+        evaluation_detail_id: '',
       });
     }
   }
 
   saveItem() {
-    if (this.checkRecept) {
-      this.dataItem.receiver = null;
-    } else {
-      this.dataItem.evaluation_detail_id = null;
-    }
     if (this.action === 'update') {
       this.dataItem.stateSync = this.dataItem.stateSync || 'U';
       this.transferPage.saveTransfer();
@@ -167,7 +168,6 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     this.action = 'update';
     this.newRegistry = false;
     this.dataItemOri = Object.assign({}, this.dataItem);
-    console.log(this.dataItemOri);
   }
 
   nextItemButton() {
@@ -193,6 +193,13 @@ export class TransferDetailPage implements OnInit, OnDestroy {
         }
       }
     }
+	if(this.dataItem.evaluation_detail_id) {
+		this.checkRecept = true;
+		this.dataItem.receiver = '...';
+	}
+	else {
+		this.checkRecept = false;
+	}
   }
 
   backItemButton() {
@@ -214,6 +221,13 @@ export class TransferDetailPage implements OnInit, OnDestroy {
       this.action = 'update';
       this.newRegistry = false;
     }
+	if(this.dataItem.evaluation_detail_id) {
+		this.checkRecept = true;
+		this.dataItem.receiver = '...';
+	}
+	else {
+		this.checkRecept = false;
+	}
   }
 
   ionViewWillLeave() {
@@ -265,16 +279,33 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     this.location.back();
   }
 
-  checkValue() {
-    this.checkRecept = !this.checkRecept;
-  }
-
   async showMessage(message: string) {
     const toast = await this.toastCtrl.create({
       message: message,
       duration: 2000
     });
     toast.present();
+  }
+  
+  onChangeReceptSync($receptId) {
+    if (this.transfer.synchronizeds) {
+      for (let receptSync of this.transfer.synchronizeds) {
+        if (receptSync.id === Number($receptId)) {
+          this.dataItem.receptSync = receptSync.animal_id + "-" + receptSync.chapeta;
+          break;
+        }
+      }
+    }
+	this.dataItem.receiver = '...';
+  }
+  
+  onChangeCheckRecept() {
+	if(this.checkRecept) {
+		this.dataItem.receiver = '...';
+	}
+	else {
+		this.dataItem.receiver = this.dataItem.receiver === '...' ?  '' : this.dataItem.receiver;
+	}
   }
 
 }

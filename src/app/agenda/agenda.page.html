@@ -12,7 +12,7 @@
           <ion-toggle item-end [(ngModel)]="filter.mySelf" (ngModelChange)="onItemFilter()"></ion-toggle>
         </ion-item>
         <ion-item>
-          <ion-label>Todos los dias</ion-label>
+          <ion-label>Todos los días</ion-label>
           <ion-toggle item-end [(ngModel)]="filter.allDays" (ngModelChange)="onItemFilter()"></ion-toggle>
         </ion-item>
         <ion-item *ngIf="!filter.allDays">
