@@ -55,8 +55,25 @@
                   <ion-label>Nombre de Receptora</ion-label>
                 </ion-col>
               </ion-row>
-              <ion-row>    
-                <ion-col col-12>
+              <ion-row>
+                <ion-col col-12 *ngIf="checkRecept">
+                  <ion-select style="max-width: 100%;" formControlName="recept"
+                    interface="popover" interfaceOptions="{header: 'Receptora'}"
+                    placeholder="Seleccione" [(ngModel)]="dataItem.evaluation_detail_id">
+                    <ion-select-option *ngFor="let recept of transfer.synchronizeds" [value]="recept.id">
+                      {{recept.animal_id + "-" + recept.chapeta}}
+                    </ion-select-option>
+                  </ion-select>
+                  <!--div class="validation-errors">
+                    <ng-container *ngFor="let validation of validation_messages.synchronizeds">
+                      <div class="error-message" *ngIf="validation_form.get('recept').hasError(validation.type) 
+                        && (validation_form.get('recept').dirty || validation_form.get('recept').touched)">
+                        {{ validation.message }}
+                      </div>
+                    </ng-container>
+                  </div-->
+                </ion-col>
+                <ion-col col-12 *ngIf="!checkRecept">
                   <ion-input type="text" formControlName="receiver" [(ngModel)]="dataItem.receiver"></ion-input>
                   <div class="validation-errors">
                     <ng-container *ngFor="let validation of validation_messages.receiver">
@@ -77,34 +94,17 @@
                 </ion-col>
               </ion-row>
               <ion-row>
-                <ion-col col-6 *ngIf="checkRecept">
-                    <ion-select style="max-width: 100%;" formControlName="recept"
-                      interface="popover" interfaceOptions="{header: 'Receptora'}"
-                      placeholder="Seleccione" [(ngModel)]="dataItem.evaluation_detail_id">
-                      <ion-select-option *ngFor="let recept of transfer.synchronizeds" [value]="recept.id">
-                        {{recept.animal_id + "-" + recept.chapeta}}
-                      </ion-select-option>
-                    </ion-select>
-                    <div class="validation-errors">
-                      <ng-container *ngFor="let validation of validation_messages.synchronizeds">
-                        <div class="error-message" *ngIf="validation_form.get('synchronizeds').hasError(validation.type) 
-                          && (validation_form.get('synchronizeds').dirty || validation_form.get('synchronizeds').touched)">
-                          {{ validation.message }}
-                        </div>
-                      </ng-container>
-                    </div>
-                  </ion-col>
-                  <ion-col col-6 *ngIf="!checkRecept">
-                    <ion-input type="text" formControlName="corpus_luteum" [(ngModel)]="dataItem.corpus_luteum"></ion-input>
-                    <div class="validation-errors">
-                      <ng-container *ngFor="let validation of validation_messages.corpus_luteum">
-                        <div class="error-message" *ngIf="validation_form.get('corpus_luteum').hasError(validation.type) 
-                          && (validation_form.get('corpus_luteum').dirty || validation_form.get('corpus_luteum').touched)">
-                          {{ validation.message }}
-                        </div>
-                      </ng-container>
-                    </div>
-                  </ion-col>
+                <ion-col col-6>
+                  <ion-input type="text" formControlName="corpus_luteum" [(ngModel)]="dataItem.corpus_luteum"></ion-input>
+                  <div class="validation-errors">
+                    <ng-container *ngFor="let validation of validation_messages.corpus_luteum">
+                      <div class="error-message" *ngIf="validation_form.get('corpus_luteum').hasError(validation.type) 
+                        && (validation_form.get('corpus_luteum').dirty || validation_form.get('corpus_luteum').touched)">
+                        {{ validation.message }}
+                      </div>
+                    </ng-container>
+                  </div>
+                </ion-col>
                 <ion-col col-6>
                   <ion-select style="max-width: 100%;" formControlName="local_id" 
                   interface = "popover"

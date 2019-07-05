@@ -30,8 +30,8 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     'embryo_class': [
       { type: 'required', message: 'Campo requerido.' }
     ],
-    'synchronizeds': [
-      { type: 'required', message: 'Campo requerido.' }
+    'recept': [
+      //{ type: 'required', message: 'Campo requerido.' }
     ],
     'receiver': [
       { type: 'required', message: 'Campo requerido.' }
@@ -91,21 +91,23 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     if (!this.validation_form) {
       this.validation_form = this.formBuilder.group({
         embryo_class: [this.dataItem.embryo_class, Validators.required],
-        receiver: [this.dataItem.receiver, Validators.required],
         corpus_luteum: [this.dataItem.corpus_luteum, Validators.required],
         local_id: [this.dataItem.local_id, Validators.required],
-        //transferor: [this.dataItem.transferor, Validators.required],
-        comments: [this.dataItem.comments, Validators.required]
+        transferor: [this.dataItem.transferor, Validators.required],
+        comments: [this.dataItem.comments, Validators.required],
+        receiver: [this.dataItem.receiver, Validators.required],
+        recept: [this.dataItem.evaluation_detail_id, ''],
       });
     }
     else {
       this.validation_form.reset({
         embryo_class: this.dataItem.embryo_class,
-        receiver: this.dataItem.receiver,
         corpus_luteum: this.dataItem.corpus_luteum,
         local_id: this.dataItem.local_id,
-        //transferor: this.dataItem.transferor,
-        comments: this.dataItem.comments
+        transferor: this.dataItem.transferor,
+        comments: this.dataItem.comments,
+        receiver: this.dataItem.receiver,
+        recept: this.dataItem.evaluation_detail_id
       });
     }
   }
@@ -126,8 +128,9 @@ export class TransferDetailPage implements OnInit, OnDestroy {
         receiver: ['', Validators.required],
         corpus_luteum: ['', Validators.required],
         local_id: ['', Validators.required],
-        //transferor: ['', Validators.required],
-        comments: ['', Validators.required]
+        transferor: ['', Validators.required],
+        comments: ['', Validators.required],
+        recept: ['', Validators.required],
       });
     }
     else {
@@ -136,15 +139,16 @@ export class TransferDetailPage implements OnInit, OnDestroy {
         receiver: '',
         corpus_luteum: '',
         local_id: '',
-        //transferor: '',
-        comments: ''
+        transferor: '',
+        comments: '',
+        recept: '',
       });
     }
   }
 
   saveItem() {
     if (this.checkRecept) {
-      this.dataItem.corpus_luteum = null;
+      this.dataItem.receiver = null;
     } else {
       this.dataItem.evaluation_detail_id = null;
     }
