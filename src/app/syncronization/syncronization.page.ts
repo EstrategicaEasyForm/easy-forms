@@ -29,7 +29,7 @@ export class SyncronizationPage {
   totalWorkSheets = 0;
   totalError = 0;
   orderStorage: any;
-  sincronize: boolean;
+  syncronizedSucess: boolean;
 
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
   constructor(
@@ -95,7 +95,7 @@ export class SyncronizationPage {
   async initSync() {
     //Clear console
     this.logs = [];
-	this.sincronize = false;
+	this.syncronizedSucess = false;
 
     const _self = this;
     _self.loading = await this.loadingCtrl.create({
@@ -198,12 +198,12 @@ export class SyncronizationPage {
     if (type.id === this.ordersService.templates[5].id) updateWorkSheetFunction = this.deliveryService.updateDelivery(detailApi.deliveryApi);
 
     updateWorkSheetFunction.then((response: any) => {
-	  this.sincronize = true;
+	  
       if (response.status === 'error') {
         workSheet.stateErrorSync = 'Error sincronizando la planilla';
         this.writeLog({
           type: 'error',
-          message: 'Error sincronizando la planilla ' + type.name + '. Orden de producción No ' + order.id,
+          message: 'Error sincronizando la planilla ' + type.name + '. Orden de producción #' + order.id,
           details: [
             response.error
           ],
@@ -219,7 +219,7 @@ export class SyncronizationPage {
 				workSheet.stateErrorSync = 'Error sincronizando la planilla finalizada';
 				this.writeLog({
 				  type: 'error',
-				  message: 'Error sincronizando la planilla ' + type.name + ' ya finalizada. Orden de producción No ' + order.id,
+				  message: 'Error sincronizando la planilla ' + type.name + ' ya finalizada. Orden de producción #' + order.id,
 				  details: [
 					response.error
 				  ],
@@ -229,13 +229,14 @@ export class SyncronizationPage {
 			}
 			else {
 				this.sendEmail.makePdf(order, detailApi, workSheet, type, response).then((pdf) => {
+					//reponse pdf Make
 					if (pdf.status === 'error') {
 					  
 					  const errorMessage = typeof pdf.error === 'string' ? pdf.error : JSON.stringify(pdf.error);
 					  workSheet.stateErrorSync = 'Error generando el pdf';
 					  this.writeLog({
 						type: 'error',
-						message: 'No se pudo generar el archivo pdf: ' + pdf.filename,
+						message: 'Error generando el archivo pdf: ' + pdf.filename,
 						details: [
 						  errorMessage
 						],
@@ -247,20 +248,37 @@ export class SyncronizationPage {
 					else if (pdf.status === 'success') {
 					  
 					  this.sendEmail.makeEmail(order, detailApi, workSheet, type, response, pdf).then((resp: any) => {
+						//response Send Email
 						if (resp.status === 'success') {
+						  
+						  //response mutation services
 						  if (response.status === 'success') {
 							this.writeLog({
 							  type: 'info',
-							  message: 'La planilla de ' + type.name + ' fué actualizada correctamente para la orden de producción No ' + order.id,
+							  message: 'La planilla de ' + type.name + ' fué actualizada correctamente para la orden de producción #' + order.id,
 							  details: [
-								"Correo automático enviado a @" + order.client.bussiness_name,
+								"Correo automático enviado a " + order.client.bussiness_name,
+								"Email: " + order.client.email,
 								"Archivo adjunto " + pdf.filename
 							  ],
 							  time: moment().format('HH:mm A'),
 							  show: false,
 							});
+							this.finishSync(null);
 						  }
-						  this.finishSync(null);
+						  else {
+							  this.writeLog({
+							  type: 'error',
+							  message: 'Error sincronizando la planilla de ' + type.name + ' para la orden de producción #' + order.id,
+							  details: [
+								response.error
+							  ],
+							  time: moment().format('HH:mm A'),
+							  show: false,
+							});
+							this.finishSync(response.error);
+						  }
+						  
 						}
 						else {
 						  workSheet.stateErrorSync = 'Error enviando el correo';
@@ -293,18 +311,8 @@ export class SyncronizationPage {
     if (error) this.totalError++;
 
     if (this.totalWorkSheets <= 0) {
-      if (this.totalError > 0) {
-        this.writeLog({
-          type: 'warning',
-          message: 'La sincronización ha finalizado con errores',
-          time: moment().format('HH:mm A')
-        });
-      }
-	  else {
-		  this.sincronize
-	  }
-
-      this.retriveAgenda();
+		this.syncronizedSucess = this.totalError === 0;
+        this.retriveAgenda(); 
     }
   }
 
@@ -318,7 +326,7 @@ export class SyncronizationPage {
       detailsApi = this.diff(this.orderStorage,detailsApi);
       
 	  
-	  if(this.sincronize)
+	  if(this.syncronizedSucess)
       this.writeLog({
           type: 'info',
           message: 'La sincronización ha finalizado exitósamente',
@@ -336,7 +344,7 @@ export class SyncronizationPage {
 
     }).catch(error => {
       this.loading.dismiss();
-	  if(this.sincronize)
+	  if(this.syncronizedSucess)
       this.writeLog({
           type: 'info',
           message: 'La sincronización ha finalizado exitósamente',
