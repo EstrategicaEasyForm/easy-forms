@@ -78,8 +78,10 @@ export class TransferPage implements OnInit {
 	
 	if (this.transfer.synchronizeds) {
 		for(let detailItem of this.transfer.details_view) {
+			if(detailItem.evaluation_detail_id) 
 			for (let receptSync of this.transfer.synchronizeds) {
-				if (receptSync.id === Number(detailItem.evaluation_detail_id)) {
+				receptSync.id += '';
+				if (receptSync.id === detailItem.evaluation_detail_id) {
 				  detailItem.receptSync = receptSync.animal_id + "-" + receptSync.chapeta;
 				  break;
 				}
@@ -103,28 +105,12 @@ export class TransferPage implements OnInit {
     this.router.navigate(['transfer-detail']);
   }
 
-//  discardTransferDetail(indx) {
-//    this.ordersService.getDetailsApiStorage().then((ordersList) => {
-//      if (ordersList) {
-//        for (let order of ordersList) {
-//          for (let detail of order.detailsApi) {
-//            if (detail.transferApi && detail.transferApi.id === this.transfer.id) {
-//              if (detail.transferApi.details_view[indx].discard == '1') {
-//                detail.transferApi.details_view[indx].discard = '0';
-//              } else {
-//                detail.transferApi.details_view[indx].discard = '1';
-//              }
-//            }
-//          }
-//        }
-//      }
-//    });
-//  }
-
-  
   async presentAlertConfirmDiscard(indx,detailList: IonList) {
-	if(this.transfer.details_view[indx].discard === '1' ) {
-	   this.transfer.details_view[indx].discard = this.transfer.details_view[indx].discard === '1' ? '0' : '1';
+	const detail = this.transfer.details_view[indx];
+	  
+	if(detail.discard === '1' ) {
+	   detail.discard = '0';
+	   detail.stateSync = 'U';
 	   detailList.closeSlidingItems();
 	   this.saveTransfer();
 	}
@@ -143,7 +129,9 @@ export class TransferPage implements OnInit {
 			}, {
 			  text: 'Aceptar',
 			  handler: () => {
-				this.transfer.details_view[indx].discard = this.transfer.details_view[indx].discard === '1' ? '0' : '1';
+				detail.discard = '1';
+				detail.stateSync = 'U';
+				detail.evaluation_detail_id = null;
 				detailList.closeSlidingItems();
 				this.saveTransfer();
 			  }

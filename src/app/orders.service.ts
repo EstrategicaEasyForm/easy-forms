@@ -59,6 +59,7 @@ query orders {
         id
         order_detail_id
         synchronized_receivers
+        synchronized_number
         medium_lot_miv
         medium_opu
         medium_lot_opu

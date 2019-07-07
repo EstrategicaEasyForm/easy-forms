@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OrdersService } from '../orders.service';
 import { ToastController, AlertController } from '@ionic/angular';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import * as moment from 'moment-timezone';
 import { Location } from '@angular/common';
 import { TransferPage } from './transfer.page';
@@ -25,13 +25,14 @@ export class TransferDetailPage implements OnInit, OnDestroy {
   validation_form: FormGroup;
   checkRecept: boolean;
   checkInitial: boolean;
+  synchronizedsList = [];
 
   validation_messages = {
     'embryo_class': [
       { type: 'required', message: 'Campo requerido.' }
     ],
-    'recept': [
-      //{ type: 'required', message: 'Campo requerido.' }
+	'evaluation_detail_id': [
+      { type: 'required', message: 'Campo requerido.' }
     ],
     'receiver': [
       { type: 'required', message: 'Campo requerido.' }
@@ -71,25 +72,24 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     else {
       this.newItem();
     }
+	this.filterReceiverselect();
   }
 
   updateItem(detailId) {
     this.indx = detailId;
     this.dataItem = this.detailsList[this.indx];
-    
-	if(this.dataItem.evaluation_detail_id) {
-		this.checkRecept = true;
-		this.dataItem.receiver = '...';
+	let receiver = this.dataItem.receiver;
+	if(receiver === null && this.dataItem.discard === '1') {
+		receiver = 'Descartada';
 	}
-	else {
-		this.checkRecept = false;
-	}
+	this.checkRecept = this.dataItem.evaluation_detail_id !== null; 
+	
     this.action = 'update';
     this.newRegistry = false;
     //create a copy of the object
     this.dataItemOri = Object.assign({}, this.dataItem);
     //initialize the form
-    if (!this.validation_form) {
+    
       this.validation_form = this.formBuilder.group({
         embryo_class: [this.dataItem.embryo_class, Validators.required],
         checkRecept:  [this.checkRecept,''],
@@ -97,22 +97,10 @@ export class TransferDetailPage implements OnInit, OnDestroy {
         local_id: [this.dataItem.local_id, Validators.required],
         transferor: [this.dataItem.transferor, Validators.required],
         comments: [this.dataItem.comments, Validators.required],
-        receiver: [this.dataItem.receiver, ''],
-        evaluation_detail_id: [this.dataItem.evaluation_detail_id, ''],
+        receiver: [receiver, this.receiverInputValidator.bind(this)],
+        evaluation_detail_id: [this.dataItem.evaluation_detail_id+'', this.receiverSyncValidator.bind(this)],
       });
-    }
-    else {
-      this.validation_form.reset({
-        embryo_class: this.dataItem.embryo_class,
-		checkRecept:  [this.checkRecept,''],
-        corpus_luteum: this.dataItem.corpus_luteum,
-        local_id: this.dataItem.local_id,
-        transferor: this.dataItem.transferor,
-        comments: this.dataItem.comments,
-        receiver: this.dataItem.receiver,
-        evaluation_detail_id: this.dataItem.evaluation_detail_id
-      });
-    }
+    
   }
 
   newItem() {
@@ -129,13 +117,13 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     if (!this.validation_form) {
       this.validation_form = this.formBuilder.group({
         embryo_class: ['', Validators.required],
-        receiver: ['', ''],
+        receiver: ['', this.receiverInputValidator.bind(this)],
 		checkRecept:  [this.checkRecept],
         corpus_luteum: ['', Validators.required],
         local_id: ['', Validators.required],
         transferor: ['', Validators.required],
         comments: ['', Validators.required],
-        evaluation_detail_id: ['', Validators.required],
+        evaluation_detail_id: ['', this.receiverSyncValidator.bind(this)],
       });
     }
     else {
@@ -193,13 +181,8 @@ export class TransferDetailPage implements OnInit, OnDestroy {
         }
       }
     }
-	if(this.dataItem.evaluation_detail_id) {
-		this.checkRecept = true;
-		this.dataItem.receiver = '...';
-	}
-	else {
-		this.checkRecept = false;
-	}
+	this.checkRecept = this.dataItem.evaluation_detail_id !== null ? true : false;
+	this.filterReceiverselect();
   }
 
   backItemButton() {
@@ -221,13 +204,9 @@ export class TransferDetailPage implements OnInit, OnDestroy {
       this.action = 'update';
       this.newRegistry = false;
     }
-	if(this.dataItem.evaluation_detail_id) {
-		this.checkRecept = true;
-		this.dataItem.receiver = '...';
-	}
-	else {
-		this.checkRecept = false;
-	}
+	
+	this.checkRecept = this.dataItem.evaluation_detail_id !== null;
+	this.filterReceiverselect();
   }
 
   ionViewWillLeave() {
@@ -238,18 +217,14 @@ export class TransferDetailPage implements OnInit, OnDestroy {
   }
 
   //CHANGE
-  equalsDetailsTransfer(dataObjOri: any, dataItem: any) {
-    return dataObjOri.donor === dataItem.donor &&
-      dataObjOri.donor_breed === dataItem.donor_breed &&
+  equalsDetailsTransfer(dataObjOri: any, dataItem: any): boolean {
+    return 
+	  dataObjOri.receiver === dataItem.receiver &&
+	  dataObjOri.evaluation_detail_id === dataItem.evaluation_detail_id &&
+      dataObjOri.corpus_luteum === dataItem.corpus_luteum &&
       dataObjOri.local_id === dataItem.local_id &&
-      dataObjOri.type === dataItem.type &&
-      dataObjOri.arrived_time === dataItem.arrived_time &&
-      dataObjOri.bull === dataItem.bull &&
-      dataObjOri.bull_breed === dataItem.bull_breed &&
-      dataObjOri.gi === dataItem.gi &&
-      dataObjOri.gii === dataItem.gii &&
-      dataObjOri.giii === dataItem.giii &&
-      dataObjOri.others === dataItem.others;
+      dataObjOri.transferor === dataItem.transferor &&
+      dataObjOri.comments === dataItem.comments;
   }
 
   ngOnDestroy() {
@@ -270,6 +245,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
       for (let local of this.transfer.locals) {
         if (local.id === $localId) {
           this.dataItem.local = local;
+		  break;
         }
       }
     }
@@ -290,22 +266,66 @@ export class TransferDetailPage implements OnInit, OnDestroy {
   onChangeReceptSync($receptId) {
     if (this.transfer.synchronizeds) {
       for (let receptSync of this.transfer.synchronizeds) {
-        if (receptSync.id === Number($receptId)) {
+        if (receptSync.id === $receptId) {
           this.dataItem.receptSync = receptSync.animal_id + "-" + receptSync.chapeta;
           break;
         }
       }
     }
-	this.dataItem.receiver = '...';
   }
   
   onChangeCheckRecept() {
-	if(this.checkRecept) {
-		this.dataItem.receiver = '...';
-	}
-	else {
-		this.dataItem.receiver = this.dataItem.receiver === '...' ?  '' : this.dataItem.receiver;
-	}
+	  this.validation_form = this.formBuilder.group({
+        embryo_class: [this.dataItem.embryo_class, Validators.required],
+        receiver: [this.dataItem.receiver, this.receiverInputValidator.bind(this)],
+		checkRecept:  [this.checkRecept],
+        corpus_luteum: [this.dataItem.corpus_luteum, Validators.required],
+        local_id: [this.dataItem.local_id, Validators.required],
+        transferor: [this.dataItem.transferor, Validators.required],
+        comments: [this.dataItem.comments, Validators.required],
+        evaluation_detail_id: [this.dataItem.evaluation_detail_id+'', this.receiverSyncValidator.bind(this)],
+      });
+  }
+  
+  receiverSyncValidator(fc: FormControl) {
+	  if(this.checkRecept) {
+		  if(!fc.value || fc.value === '')
+		  return ({required: true});
+		  else return (null);
+	  }
+	  else {
+		return (null);
+	  }
+  }
+  
+  receiverInputValidator(fc: FormControl) {
+	  if(this.checkRecept) {
+		  return (null);
+	  }
+	  else {
+		  if(!fc.value || fc.value === '')
+		  return ({required: true});
+		  else return (null);
+	  }
+  }
+  
+  filterReceiverselect() {
+	  const newList = [];
+	  let mbIsAssigned: boolean;
+	  for(let item of this.transfer.synchronizeds) {
+		mbIsAssigned = false;
+		for(let detail of this.detailsList) {
+			if(detail.evaluation_detail_id == item.id && detail.evaluation_detail_id !== this.dataItem.evaluation_detail_id ) {
+				mbIsAssigned = true;
+				break;
+			}
+		}
+		if(!mbIsAssigned) {
+			newList.push(item);
+		}
+	  }
+	  
+	  this.synchronizedsList = newList;
   }
 
 }

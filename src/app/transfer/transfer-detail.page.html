@@ -61,20 +61,20 @@
                     interface="popover" interfaceOptions="{header: 'Receptora'}"
 					(ionChange)="onChangeReceptSync(receptSyncIds.value)"
                     placeholder="Seleccione" [(ngModel)]="dataItem.evaluation_detail_id">
-                    <ion-select-option *ngFor="let recept of transfer.synchronizeds" [value]="recept.id">
+                    <ion-select-option *ngFor="let recept of synchronizedsList" [value]="recept.id">
                       {{recept.animal_id + "-" + recept.chapeta}}
                     </ion-select-option>
-                  </ion-select>
-                  <!--div class="validation-errors">
-                    <ng-container *ngFor="let validation of validation_messages.synchronizeds">
-                      <div class="error-message" *ngIf="validation_form.get('recept').hasError(validation.type) 
-                        && (validation_form.get('recept').dirty || validation_form.get('recept').touched)">
+                  </ion-select> 
+                  <div class="validation-errors">
+                    <ng-container *ngFor="let validation of validation_messages.evaluation_detail_id">
+                      <div class="error-message" *ngIf="validation_form.get('evaluation_detail_id').hasError(validation.type) 
+                        && (validation_form.get('evaluation_detail_id').dirty || validation_form.get('evaluation_detail_id').touched)">
                         {{ validation.message }}
                       </div>
                     </ng-container>
-                  </div-->
+                  </div>
                 </ion-col>
-                <ion-col col-12 *ngIf="!checkRecept">
+                <ion-col col-12 *ngIf="!checkRecept" [ngClass]="{'disable': dataItem.discard === '1' }">
                   <ion-input type="text" formControlName="receiver" [(ngModel)]="dataItem.receiver"></ion-input>
                   <div class="validation-errors">
                     <ng-container *ngFor="let validation of validation_messages.receiver">
@@ -96,7 +96,10 @@
               </ion-row>
               <ion-row>
                 <ion-col col-6>
-                  <ion-input type="text" formControlName="corpus_luteum" [(ngModel)]="dataItem.corpus_luteum"></ion-input>
+                  <ion-select style="max-width: 100%;" formControlName="corpus_luteum" interface="popover" placeholder="C.L." [(ngModel)]="dataItem.corpus_luteum">
+                    <ion-select-option value="Si">Si</ion-select-option>
+                    <ion-select-option value="No">No</ion-select-option>
+                  </ion-select>
                   <div class="validation-errors">
                     <ng-container *ngFor="let validation of validation_messages.corpus_luteum">
                       <div class="error-message" *ngIf="validation_form.get('corpus_luteum').hasError(validation.type) 
@@ -107,10 +110,11 @@
                   </div>
                 </ion-col>
                 <ion-col col-6>
-                  <ion-select style="max-width: 100%;" formControlName="local_id" 
+                  <ion-select #localIds style="max-width: 100%;" formControlName="local_id" 
                   interface = "popover"
                   interfaceOptions = "{header: 'Locales'}"
                   placeholder="Seleccione" 
+				  (ionChange)="onChangeLocal(localIds.value)"
                   [(ngModel)]="dataItem.local_id">
                     <ion-select-option *ngFor="let local of detailApi.order.client.locals" [value]="local.id">{{local.name}}</ion-select-option>
                   </ion-select>
@@ -131,7 +135,7 @@
               </ion-row>
               <ion-row>
                 <ion-col col-6>
-                  <ion-input formControlName="transferor" [(ngModel)]="dataItem.bull_breed"></ion-input>
+                  <ion-input formControlName="transferor" [(ngModel)]="dataItem.transferor"></ion-input>
                   <div class="validation-errors">
                     <ng-container *ngFor="let validation of validation_messages.transferor">
                       <div class="error-message" *ngIf="validation_form.get('transferor').hasError(validation.type) 

@@ -55,7 +55,7 @@ export class TransferService {
 			'local_id': detail.local_id,
             'evaluation_detail_id': detail.evaluation_detail_id,
             'receiver': detail.evaluation_detail_id ? null : detail.receiver,
-            'transferor': transfer.transferor,
+            'transferor': detail.transferor,
             'user_id_updated': this.userService.getUserId()
           });
         }
@@ -68,7 +68,7 @@ export class TransferService {
 			'local_id': detail.local_id,
             'evaluation_detail_id': detail.evaluation_detail_id,
             'receiver': detail.evaluation_detail_id ? null : detail.receiver,
-            'transferor': transfer.transferor,
+            'transferor': detail.transferor,
             'user_id_updated': this.userService.getUserId(),
             'user_id_created': this.userService.getUserId(),
           });

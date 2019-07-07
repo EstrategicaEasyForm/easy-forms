@@ -37,6 +37,7 @@ ion-textarea{
     background-color: #e5e5e5;
     min-height: 40px;
     padding-top: 10px;
+	padding-left: 10px !important;
     ion-label {
         min-height: 34px;
     }
@@ -144,14 +145,12 @@ ion-card-content {
 .detail-dx1 {
     max-width: 90px;
     min-width: 90px;
-    padding: 10px;
     border-radius: 29px;
     text-align: center;
 }
 .detail-sex {
     max-width: 90px;
     min-width: 90px;
-    padding: 10px;
     border-radius: 29px;
     text-align: center;
 }

@@ -80,10 +80,9 @@ export class DeliveryPage implements OnInit {
 
     let detailsTmp;
 
-
-
     //Si el objeto details es diferente al objeto detailsDelivery se rearma la lista para incluir todos los detalles de detailsDelivery.
-    if (this.delivery.details[0] && !this.delivery.details[0].transferData) {
+    if (( this.delivery.details && this.delivery.details.length === 0 ) || 
+	   ( this.delivery.details[0] && !this.delivery.details[0].transferData )) {
       const newDetails = [];
       for (let dtDiag of this.delivery.detailsDelivery) {
         detailsTmp = null;

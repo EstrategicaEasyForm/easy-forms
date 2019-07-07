@@ -104,7 +104,7 @@ export class DeliveryPdfService {
 					{ text: 'Local', style: 'title_table_style' },
 					{ text: 'DX1', style: 'title_table_style' },
 					{ text: 'SEX', style: 'title_table_style' },
-					{ text: 'Dx3', style: 'title_table_style' },
+					{ text: 'DX3', style: 'title_table_style' },
 				]);
 
 				let totalVoid = 0;

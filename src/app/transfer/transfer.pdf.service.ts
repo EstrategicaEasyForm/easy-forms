@@ -46,6 +46,7 @@ export class TransferPdfService {
 				var workTeam = [];
 				var cont_details = 1;
 				var con_discard = {transfers: 0, discards: 0};
+				let receiver;
 
 				transferDetails.push([
 					{ text: 'No.', style: 'title_detail_style' },
@@ -62,16 +63,31 @@ export class TransferPdfService {
 					{ text: 'Local', style: 'title_detail_style' },
 				]);
 				for (let i of data.transferApi.details_view) {
+					
 					if (i.discard === '1') {
 						con_discard.discards++;
+						receiver = 'Descartada';
 					} else {
 						con_discard.transfers++;
+						if(i.evaluation_detail_id === null) {
+							receiver = i.receiver;
+						}
+						else {
+							receiver = '';
+							for(let itemSync of data.transferApi.synchronizeds) {
+								if(i.evaluation_detail_id == itemSync.id) {
+									receiver = itemSync.id + " - " + itemSync.chapeta;
+									break;
+								}
+							}
+						}
+						
 					}
 					transferDetails.push([
 						{ text: cont_details++, style: 'normal_detail_style' },
-						{ text: i.receiver, style: 'normal_detail_style' },
+						{ text: receiver, style: 'normal_detail_style', fontSize: receiver === 'Descartada' ? 9 : 11 }, 
 						{ text: i.embryo, style: 'normal_detail_style' },
-						{ text: i.embryo_class, style: 'normal_detail_style' },
+						{ text: i.corpus_luteum, style: 'normal_detail_style' },
 						{ text: i.donor, style: 'normal_detail_style' },
 						{ text: i.donor_breed, style: 'normal_detail_style' },
 						{ text: i.bull, style: 'normal_detail_style' },
