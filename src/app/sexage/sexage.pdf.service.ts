@@ -375,6 +375,7 @@ export class SexagePdfService {
 							text: 'Observaciones  : ' + data.sexageApi.comments,
 							style: 'normal_style',
 						},
+						{ text: '\n\ ' },
 						{
 							columns: [
 								[{

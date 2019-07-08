@@ -372,6 +372,7 @@ export class DiagnosticPdfService {
 							text: 'Observaciones  : ' + data.diagnosticApi.comments,
 							style: 'normal_style',
 						},
+						{ text: '\n\ ' },
 						{
 							columns: [
 								[{

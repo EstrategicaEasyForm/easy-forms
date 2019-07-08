@@ -124,8 +124,8 @@ ion-card-content {
     min-width: 76px;
 }
 .detail-synchronized {
-    max-width: 200px;
-    min-width: 200px;
+    max-width: 76px;
+    min-width: 76px;
 }
 .detail-diagnostic {
     max-width: 280px;
@@ -135,24 +135,9 @@ ion-card-content {
     max-width: 115px;
     min-width: 115px;
 }
-.detail-gi {
-    max-width: 36px;
-	min-width: 36px;
-}
-.detail-gii {
-    max-width: 43px;
-	min-width: 43px;
-}
-.detail-giii {
-    max-width: 49px;
-	min-width: 49px;
-}
-.detail-others {
-    min-width: 45px;
-    max-width: 45px;
-}
-.grade-celsius {
-    margin-left: -10px;
+.detail-attendant {
+    max-width: 180px;
+    min-width: 180px;
 }
 .signature-image {
     border: solid 1px grey; 

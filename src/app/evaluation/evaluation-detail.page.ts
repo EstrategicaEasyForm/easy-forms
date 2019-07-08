@@ -37,6 +37,9 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
     'synchronized': [
       { type: 'required', message: 'Campo requerido.' }
     ],
+    'attendant': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
     'local_id': [
       { type: 'required', message: 'Campo requerido.' }
     ],
@@ -67,13 +70,13 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
     this.evaluationPage = dataParam.evaluationPage;
     this.evaluation = this.evaluationPage.evaluation;
     this.detailsList = this.evaluationPage.evaluation.details;
-	
+
     if (detailApiId >= 0) {
       this.updateItem(detailApiId);
     }
     else {
-	  const local_id = dataParam.local ? dataParam.local.id : ''; 
-	  this.newItem(local_id);
+      const local_id = dataParam.local ? dataParam.local.id : '';
+      this.newItem(local_id);
     }
   }
 
@@ -84,15 +87,16 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
     this.newRegistry = false;
     //create a copy of the object
     this.dataItemOri = Object.assign({}, this.dataItem);
-    
+
     //initialize the form
     if (!this.validation_form) {
-      
+
       this.validation_form = this.formBuilder.group({
         animal_id: [this.dataItem.animal_id, Validators.required],
         chapeta: [this.dataItem.chapeta, Validators.required],
         fit: [this.dataItem.fit, Validators.required],
         synchronized: [this.dataItem.synchronized, Validators.required],
+        attendant: [this.dataItem.attendant, Validators.required],
         local_id: [this.dataItem.local_id, Validators.required],
         diagnostic: [this.dataItem.diagnostic],
         other_procedures: [this.dataItem.other_procedures],
@@ -105,6 +109,7 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
         chapeta: this.dataItem.chapeta,
         fit: this.dataItem.fit,
         synchronized: this.dataItem.synchronized,
+        attendant: this.dataItem.attendant,
         local_id: this.dataItem.local_id,
         diagnostic: this.dataItem.diagnostic,
         other_procedures: this.dataItem.other_procedures,
@@ -129,13 +134,13 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
         chapeta: ['', Validators.required],
         fit: ['', Validators.required],
         synchronized: ['', Validators.required],
-        local_id: [local_id, Validators.required],
+        attendant: ['', Validators.required],
         diagnostic: [''],
         other_procedures: ['', Validators.required],
         comments: ['', Validators.required]
       });
-	  this.dataItem.local_id = local_id;
-	  this.onChangeLocal(local_id);
+      this.dataItem.local_id = local_id;
+      this.onChangeLocal(local_id);
     }
     else {
       this.validation_form.reset({
@@ -143,13 +148,14 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
         chapeta: '',
         fit: '',
         synchronized: '',
+        attendant:'',
         local_id: local_id,
         diagnostic: '',
         other_procedures: '',
         comments: ''
       });
-	  this.dataItem.local_id = local_id;
-	  this.onChangeLocal(local_id);
+      this.dataItem.local_id = local_id;
+      this.onChangeLocal(local_id);
     }
   }
 
@@ -239,6 +245,7 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
       Number(dataObjOri.fit) === Number(dataItem.fit) &&
       Number(dataObjOri.synchronized) === Number(dataItem.synchronized) &&
       Number(dataObjOri.local_id) === Number(dataItem.local_id) &&
+      dataObjOri.attendant === dataItem.attendant &&
       dataObjOri.diagnostic === dataItem.diagnostic &&
       dataObjOri.other_procedures === dataItem.other_procedures &&
       dataObjOri.comments === dataItem.comments;
@@ -258,7 +265,7 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
       for (let local of this.evaluation.locals) {
         if (local.id == $localId) {
           this.dataItem.local = local;
-		  break;
+          break;
         }
       }
     }
@@ -275,4 +282,4 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
     });
     toast.present();
   }
-}
+} 

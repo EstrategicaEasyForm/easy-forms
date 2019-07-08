@@ -64,10 +64,10 @@
                         <ion-col size="1.6">
                             <ion-label>Apta</ion-label>
                         </ion-col>
-                        <ion-col >
+                        <ion-col>
                             <ion-label>Sincronizada</ion-label>
                         </ion-col>
-                        <ion-col >
+                        <ion-col>
                             <ion-label>Locales</ion-label>
                         </ion-col>
                     </ion-row>
@@ -106,8 +106,7 @@
                         <ion-col col-4>
                             <ion-select #localIds style="max-width: 100%;" formControlName="local_id"
                                 interface="popover" interfaceOptions="{header: 'Locales'}" placeholder="Local"
-                                (ionChange)="onChangeLocal(localIds.value)"
-                                [(ngModel)]="dataItem.local_id">
+                                (ionChange)="onChangeLocal(localIds.value)" [(ngModel)]="dataItem.local_id">
                                 <ion-select-option *ngFor="let local of evaluation.locals" [value]="local.id">
                                     {{local.name}}</ion-select-option>
                             </ion-select>
@@ -116,6 +115,25 @@
                                     <div class="error-message"
                                         *ngIf="validation_form.get('local_id').hasError(validation.type) 
                                         && (validation_form.get('local_id').dirty || validation_form.get('local_id').touched)">
+                                        {{ validation.message }}
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col col-6>
+                            <ion-label>Nombre del Encargado</ion-label>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col col-6>
+                            <ion-input formControlName="attendant" [(ngModel)]="dataItem.attendant"></ion-input>
+                            <div class="validation-errors">
+                                <ng-container *ngFor="let validation of validation_messages.attendant">
+                                    <div class="error-message"
+                                        *ngIf="validation_form.get('attendant').hasError(validation.type) 
+                                        && (validation_form.get('attendant').dirty || validation_form.get('attendant').touched)">
                                         {{ validation.message }}
                                     </div>
                                 </ng-container>

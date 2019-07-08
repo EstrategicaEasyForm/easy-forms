@@ -360,17 +360,17 @@ export class AspirationPdfService {
 							text: 'Observaciones  : ' + data.aspirationApi.comments,
 							style: 'normal_style',
 						},
+						{ text: '\n\ ' },
 						{
 							columns: [
-								[	{ text: '\n\ ' },
+								[	
 									{
 										image: signatureImage,
 										width: 400,
 										height: 120,
 									},
 								],
-								[	{ text: '\n\ ' },
-									{ text: '\n\ ' },
+								[	
 									{
 										image: photoImage,
 										width: 100,

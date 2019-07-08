@@ -372,6 +372,7 @@ export class DeliveryPdfService {
 							text: 'Observaciones  : ' + data.deliveryApi.comments,
 							style: 'normal_style',
 						},
+						{ text: '\n\ ' },
 						{
 							columns: [
 								[{

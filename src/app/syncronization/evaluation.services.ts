@@ -56,6 +56,7 @@ export class EvaluationService {
           'synchronized': detail.synchronized,
           'other_procedures': detail.other_procedures,
           'comments': detail.comments,
+          'attendant': detail.attendant,
           'diagnostic': detail.diagnostic,
           'user_id_updated': this.userService.getUserId()
         });
@@ -67,6 +68,7 @@ export class EvaluationService {
           'chapeta': detail.chapeta,
           'fit': detail.fit,
           'synchronized': detail.synchronized,
+          'attendant': detail.attendant,
           'diagnostic': detail.diagnostic,
           'other_procedures': detail.other_procedures,
           'comments': detail.comments,

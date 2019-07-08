@@ -130,10 +130,13 @@
                         <ion-label>Apta</ion-label>
                       </ion-col>
                       <ion-col class="detail-synchronized">
-                        <ion-label>Sincronizada</ion-label>
+                        <ion-label>Sinc.</ion-label>
                       </ion-col>
                       <ion-col class="detail-local-name">
                         <ion-label>Local</ion-label>
+                      </ion-col>
+                      <ion-col class="detail-attendant">
+                        <ion-label>Encargado</ion-label>
                       </ion-col>
                       <ion-col class="detail-diagnostic">
                         <ion-label>Diagnóstico</ion-label>
@@ -162,6 +165,9 @@
                         </ion-col>
                         <ion-col class="detail-local-name">
                           <ion-label>{{item.local?.name }}</ion-label>
+                        </ion-col>
+                        <ion-col class="detail-attendant">
+                          <ion-label>{{item.attendant }}</ion-label>
                         </ion-col>
                         <ion-col class="detail-diagnostic">
                           <ion-label>{{item.diagnostic }}</ion-label>
