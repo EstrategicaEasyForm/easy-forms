@@ -31,7 +31,7 @@ export class TransferPdfService {
 
 		const _self = this;
 		let filename = "InVitroTransferencia_";
-		if(data && data.order) filename = "InvitroTransferencia_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
+		if(data && data.order) filename = "InvitroTransferencia_" + data.order.id + "_" + data.transferApi.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
 		
 		return new Promise(resolve => {
 		try {

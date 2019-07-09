@@ -53,22 +53,28 @@ export class GraphQLModule {
       else if (graphQLErrors) {
         graphQLErrors.forEach(err => {
           if (err.extensions.category === 'authentication') {
-            message = 'Usuario o clave incorrectos';
+            message = 'Error invocando el servicio';
+			// GraphQl error event	     
+			this.events.publish('graphql:error', {
+				type: 'error',
+				message: message,
+				details: [
+                    "Usuario o clave incorrectos",
+                    "Por favor cierre e inicie nuevamente sesión"
+				],
+				time: moment().format('HH:mm A'),
+				show: false
+			});
           }
-          else message = err.message || err.extensions.category;
+          //else message = err.message || err.extensions.category;
 
-          // GraphQl error event	     
-          this.events.publish('graphql:error', {
-            type: 'error',
-            message: message,
-            time: moment().format('HH:mm:ss')
-          });
+          
         });
       }
 
 
     });
-    const timeoutLink = new ApolloLinkTimeout(30000); // 30 second timeout
+    const timeoutLink = new ApolloLinkTimeout(60000); // 30 second timeout
 
     apollo.create({
       link: linkError.concat(timeoutLink).concat(authToken).concat(http),

@@ -42,7 +42,7 @@ export class DeliveryPdfService {
 
 		const _self = this;
 		let filename = "InVitroEntrega_";
-		if (data && data.order) filename = "InvitroEntrega_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
+		if (data && data.order) filename = "InvitroEntrega_" + data.order.id + "_" + data.deliveryApi.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
 
 		return new Promise(resolve => {
 			try {
@@ -52,6 +52,7 @@ export class DeliveryPdfService {
 				//Si el objeto details es diferente al objeto detailsDelivery se rearma la lista para incluir todos los detalles de detailsDelivery.
 				if (data.deliveryApi.details[0] && !data.deliveryApi.details[0].transferData) {
 					const newDetails = [];
+					if(data.deliveryApi.detailsDelivery)
 					for (let dtDiag of data.deliveryApi.detailsDelivery) {
 						detailsTmp = null;
 						for (let details of data.deliveryApi.details) {

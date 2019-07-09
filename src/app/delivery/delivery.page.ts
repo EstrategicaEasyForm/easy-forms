@@ -81,20 +81,21 @@ export class DeliveryPage implements OnInit {
     let detailsTmp;
 
     //Si el objeto details es diferente al objeto detailsDelivery se rearma la lista para incluir todos los detalles de detailsDelivery.
-    if (( this.delivery.details && this.delivery.details.length === 0 ) || 
-	   ( this.delivery.details[0] && !this.delivery.details[0].transferData )) {
+    if (this.delivery.details && ( this.delivery.details.length === 0 || !this.delivery.details[0].transferData )) {
       const newDetails = [];
+	  if(this.delivery.detailsDelivery)
       for (let dtDiag of this.delivery.detailsDelivery) {
         detailsTmp = null;
         for (let details of this.delivery.details) {
-          if (Number(dtDiag.sexage_detail_id) == Number(details.sexage_detail_id)) {
+          if (dtDiag.sexage_detail_id == details.sexage_detail_id) {
             detailsTmp = details;
+			break;
           }
         }
         if (detailsTmp) {
           newDetails.push({
             "id": detailsTmp.id,
-            "transfer_detail_id": Number(detailsTmp.transfer_detail_id),
+            "transfer_detail_id": detailsTmp.transfer_detail_id,
             "dx2": detailsTmp.dx2,
             "transferData": dtDiag
           });
@@ -102,7 +103,7 @@ export class DeliveryPage implements OnInit {
         else {
           newDetails.push({
             "id": -1,
-            "transfer_detail_id": Number(dtDiag.transfer_detail_id),
+            "transfer_detail_id": dtDiag.transfer_detail_id,
             "sex": dtDiag.sex,
             "dx1": dtDiag.dx1,
 		      	"dx2": dtDiag.dx2,

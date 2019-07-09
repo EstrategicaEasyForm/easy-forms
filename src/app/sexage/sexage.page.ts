@@ -81,14 +81,15 @@ export class SexagePage implements OnInit {
     let detailsTmp;
 
     //Si el objeto details es diferente al objeto detailsSexage se rearma la lista para incluir todos los detalles de detailsSexage.
-    if (( this.sexage.details && this.sexage.details.length === 0 ) || 
-		( this.sexage.details[0] && !this.sexage.details[0].transferData )) {
+    if (this.sexage.details &&  ( this.sexage.details.length === 0  || !this.sexage.details[0].transferData )) {
       const newDetails = [];
+	  if(this.sexage.detailsSexage)
       for (let dtDiag of this.sexage.detailsSexage) {
         detailsTmp = null;
         for (let details of this.sexage.details) {
           if (dtDiag.transfer_detail_id == details.transfer_detail_id) {
             detailsTmp = details;
+			break;
           }
         }
         if (detailsTmp) {

@@ -42,7 +42,7 @@ export class AspirationPdfService {
 
 		const _self = this;
 		let filename = "InVitroAspiracion_";
-		if(data && data.order) filename = "InvitroAspiracion_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
+		if(data && data.order) filename = "InvitroAspiracion_" + data.order.id + "_" + data.aspirationApi.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
 		
 		return new Promise(resolve => {
 		try {

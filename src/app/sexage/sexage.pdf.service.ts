@@ -42,7 +42,7 @@ export class SexagePdfService {
 
 		const _self = this;
 		let filename = "InVitroSexaje_";
-		if (data && data.order) filename = "InvitroSexaje_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
+		if (data && data.order) filename = "InvitroSexaje_" + data.order.id + "_" + data.sexageApi.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
 
 		return new Promise(resolve => {
 			try {
@@ -52,6 +52,7 @@ export class SexagePdfService {
 				//Si el objeto details es diferente al objeto detailsSexage se rearma la lista para incluir todos los detalles de detailsSexage.
 				if (data.sexageApi.details[0] && !data.sexageApi.details[0].transferData) {
 					const newDetails = [];
+					if(data.sexageApi.detailsSexage)
 					for (let dtDiag of data.sexageApi.detailsSexage) {
 						detailsTmp = null;
 						for (let details of data.sexageApi.details) {

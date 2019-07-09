@@ -80,9 +80,9 @@ export class DiagnosticPage implements OnInit {
     let detailsTmp;
 
     //Si el objeto details es diferente al objeto detailsDiagnostic se rearma la lista para incluir todos los detalles de detailsDiagnostic.
-    if ( ( this.diagnostic.details && this.diagnostic.details.length === 0 ) ||  
-		 ( this.diagnostic.details[0] && !this.diagnostic.details[0].transferData) ) {
+    if ( this.diagnostic.details && ( this.diagnostic.details.length === 0 ||  !this.diagnostic.details[0].transferData)) {
       const newDetails = [];
+	  if(this.diagnostic.detailsDiagnostic)
       for (let dtDiag of this.diagnostic.detailsDiagnostic) {
         detailsTmp = null;
         for (let details of this.diagnostic.details) {

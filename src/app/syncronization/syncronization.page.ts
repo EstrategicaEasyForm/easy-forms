@@ -50,7 +50,7 @@ export class SyncronizationPage {
 	public apollo: Apollo) {
 
     this.eventCtrl.subscribe('graphql:error', (elementPush) => {
-      //this.writeLog(elementPush);
+      this.writeLog(elementPush);
       if(this.loading) this.loading.dismiss();
     });
 
@@ -87,7 +87,8 @@ export class SyncronizationPage {
   }
 
   ionViewWillEnter() {
-    this.validateUserToken().then(() => {
+    this.validateUserToken().then((res) => {
+      if(res)
       this.presentAlert();
     });
   }
@@ -113,7 +114,6 @@ export class SyncronizationPage {
         if (orders) {
           orders.forEach(order => {
             order.detailsApi.forEach(detailApi => {
-
               //Api evaluation template
               if (detailApi.evaluationApi) {
                 const isSync = this.isSyncronized(detailApi.evaluationApi);
@@ -173,7 +173,7 @@ export class SyncronizationPage {
   }
 
   isSyncronized(workSheet: any): boolean {
-    if (workSheet === null) return false;
+	if (workSheet === null) return false;
     if (workSheet.stateSync === 'U' || workSheet.stateSync === 'E') return true;
     if (workSheet.details)
       workSheet.details.forEach(detail => {
@@ -210,22 +210,36 @@ export class SyncronizationPage {
           time: moment().format('HH:mm A'),
           show: false,
         });
+		this.finishSync(response.error);
       }
 	  //If Template State is Finalize
-	  else if(workSheet.state == "1") {
+	  //else if(workSheet.state == "1") {
+		  //else if(workSheet.state == "1") {
+			  //else if(workSheet.state == "1") {
+				  //else if(workSheet.state == "1") {
+					  //else if(workSheet.state == "1") {
+						  //else if(workSheet.state == "1") {
+							  //else if(workSheet.state == "1") {
+								  //else if(workSheet.state == "1") {
+									  
+		  else if(true) {
 		  
 		  this.enableEvent(detailApi, workSheet, type).then((res: any) => {
 			if (res.status === 'error') {
-				workSheet.stateErrorSync = 'Error sincronizando la planilla finalizada';
+				workSheet.stateErrorSync = 'Error finalizando la planilla ';
+				
 				this.writeLog({
 				  type: 'error',
-				  message: 'Error sincronizando la planilla ' + type.name + ' ya finalizada. Orden de producción #' + order.id,
+				  message: 'Error sincronizando la planilla ' + type.name + '. Orden de producción #' + order.id,
 				  details: [
-					response.error
+				    'No se puede invocar el servicio para la finalizacion de la planilla',	
+					res.error
 				  ],
 				  time: moment().format('HH:mm A'),
 				  show: false,
 				});
+				
+				this.finishSync(res.error);
 			}
 			else {
 				this.sendEmail.makePdf(order, detailApi, workSheet, type, response).then((pdf) => {
@@ -456,9 +470,9 @@ export class SyncronizationPage {
                   this.showMessage('Usuario o clave incorrectos');
                   this.writeLog({
                     type: 'error',
-                    message: "No se puede realizar la sincronización",
+                    message: "Error invocando el servicio",
                     details: [
-                      "Usuario o clave inválidos",
+                      "Usuario o clave incorrectos",
                       "Por favor cierre e inicie nuevamente sesión"
                     ],
                     time: moment().format('HH:mm A'),
@@ -467,7 +481,9 @@ export class SyncronizationPage {
                   resolve(false);
                 }
               }
-              this.writeLog({
+            }
+			else {
+			  this.writeLog({
                 type: 'error',
                 message: "No se puede acceder al servidor",
                 details: [
@@ -478,7 +494,7 @@ export class SyncronizationPage {
                 time: moment().format('hh:mm A')
               });
               resolve(false);
-            }
+			}
           })
       });
 

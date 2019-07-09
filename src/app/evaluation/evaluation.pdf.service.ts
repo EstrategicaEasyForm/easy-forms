@@ -43,7 +43,7 @@ export class EvaluationPdfService {
 
 		const _self = this;
 		let filename = "InVitroEvaluacion_";
-		if (data && data.order) filename = "InvitroEvaluacion_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
+		if (data && data.order) filename = "InvitroEvaluacion_" + data.order.id + "_" + data.evaluationApi.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
 
 		return new Promise(resolve => {
 			try {

@@ -42,7 +42,7 @@ export class DiagnosticPdfService {
 
 		const _self = this;
 		let filename = "InVitroDiagnostico_";
-		if (data && data.order) filename = "InvitroDiagnostico_" + data.order.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
+		if (data && data.order) filename = "InvitroDiagnostico_" + data.order.id + "_" + data.diagnosticApi.id + "_" + moment().format('YYYYMMDD_HHmm') + ".pdf";
 
 		return new Promise(resolve => {
 			try {
@@ -51,6 +51,7 @@ export class DiagnosticPdfService {
 				let detailsTmp;
 				if (data.diagnosticApi.details[0] && !data.diagnosticApi.details[0].transferData) {
 				  const newDetails = [];
+				  if(data.diagnosticApi.detailsDiagnostic)
 				  for (let dtDiag of data.diagnosticApi.detailsDiagnostic) {
 					detailsTmp = null;
 					for (let details of data.diagnosticApi.details) {

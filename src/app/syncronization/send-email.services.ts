@@ -55,7 +55,9 @@ export class SendEmailService {
 
     return new Promise(resolve => {
 
-	  let textBody = 'Adjunto encontrará copia del procedimiento realizado en sus instalaciones. Por favor confirmar la correcta recepción del correo.<br/><br/><br/>Cordialmente,<br/><br/><h2 style="font-weight: bold;"> Equipo técnico</h2><br/>In Vitro Colombia S.A.S.<br/>informes@invitro.com.co<br/>Celular: 3135911966<br/>Tel. (1) 7968626<br/>Carrera 72A # 49A-39 Normandia II Sector<br/>Bogotá-Colombia<br/><br/>Este correo es generado automáticamente por invitro.com.co';
+	  let textBody = 'Adjunto encontrará copia del procedimiento realizado en sus instalaciones. Por favor confirmar la correcta recepción del correo.' +
+	                 '<br/><br/>Archivo adjunto: ' + pdf.filename +
+	                 '<br/><br/><br/>Cordialmente,<br/><br/><h2 style="font-weight: bold;"> Equipo técnico</h2><br/>In Vitro Colombia S.A.S.<br/>informes@invitro.com.co<br/>Celular: 3135911966<br/>Tel. (1) 7968626<br/>Carrera 72A # 49A-39 Normandia II Sector<br/>Bogotá-Colombia<br/><br/>Este correo es generado automáticamente por invitro.com.co';
       
       if (response.status === 'error') {
         textBody += ' <br/> <h3 style="color: red"> Ha ocurrido un error al realizar la sincronizacion de esta planilla. <br/> Por favor, pongase en contacto con el administrador del sistema. </h3><br/><ul><li>' + response.error + ' </ul><br/>';
@@ -83,7 +85,7 @@ export class SendEmailService {
         attachments: [pdf.filename],
         dataDirectory: pdf.dataDirectory,
         subject: 'Orden de producción No  '+ order.id + ' - '+ ' Procedimiento de ' + type.name,
-        textBody: textBody
+		textBody: textBody
       };
 
       const success = function (message) {
