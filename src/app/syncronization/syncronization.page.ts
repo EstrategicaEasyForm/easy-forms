@@ -213,16 +213,7 @@ export class SyncronizationPage {
 		this.finishSync(response.error);
       }
 	  //If Template State is Finalize
-	  //else if(workSheet.state == "1") {
-		  //else if(workSheet.state == "1") {
-			  //else if(workSheet.state == "1") {
-				  //else if(workSheet.state == "1") {
-					  //else if(workSheet.state == "1") {
-						  //else if(workSheet.state == "1") {
-							  //else if(workSheet.state == "1") {
-								  //else if(workSheet.state == "1") {
-									  
-		  else if(true) {
+	  else if(workSheet.state == "1") {
 		  
 		  this.enableEvent(detailApi, workSheet, type).then((res: any) => {
 			if (res.status === 'error') {
