@@ -131,9 +131,6 @@
                       <ion-col class="detail-bull-breed">
                         <ion-label>Raza</ion-label>
                       </ion-col>
-                      <ion-col class="detail-corpus-luteum">
-                        <ion-label>C.L.</ion-label>
-                      </ion-col>
                       <ion-col *ngIf="sexage.apply_diagnostic.apply_diagnostic" class="detail-dx1">
                         <ion-label>Dx1</ion-label>
                       </ion-col>
@@ -167,12 +164,6 @@
                         </ion-col>
                         <ion-col class="detail-bull-breed">
                           <ion-label>{{item.transferData?.bull_breed }}</ion-label>
-                        </ion-col>
-                        <ion-col *ngIf="sexage.apply_diagnostic.apply_diagnostic" class="detail-corpus-luteum">
-                          <ion-label>{{item.transferData?.corpus_luteum }}</ion-label>
-                        </ion-col>
-                        <ion-col *ngIf="!sexage.apply_diagnostic.apply_diagnostic" class="detail-corpus-luteum-full">
-                          <ion-label>{{item.transferData?.corpus_luteum }}</ion-label>
                         </ion-col>
                         <ion-col *ngIf="sexage.apply_diagnostic.apply_diagnostic" class="detail-dx1">
                           <ion-label *ngIf="item.dx1 === 'P'" color="success">P</ion-label>
