@@ -302,5 +302,15 @@ export class TransferPage implements OnInit {
       this.showMessage(err);
     }
   }
+  
+  /*onChangeTransferor() {
+	  if(this.transferor.length > 0) {
+		  if(this.transfer.details_view)
+		  for(let detail of this.transfer.details_view) {
+			  detail.stateSync = 'U';
+			  detail.transferor = this.transferor;
+		  }
+	  }
+  }*/
 
 }
