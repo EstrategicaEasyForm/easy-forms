@@ -273,7 +273,7 @@ export class EvaluationPage implements OnInit {
 
   initOrientation() {
     try {  
-      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE_SECONDARY);
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY);
     } catch(err) {
       this.showMessage(err);
     }

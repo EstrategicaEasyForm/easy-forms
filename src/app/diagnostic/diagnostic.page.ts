@@ -281,7 +281,7 @@ export class DiagnosticPage implements OnInit {
 
   initOrientation() {
     try {  
-      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);	
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY);	
     } catch(err) {
       this.showMessage(err);
     }
