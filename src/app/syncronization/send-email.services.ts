@@ -67,13 +67,12 @@ export class SendEmailService {
         smtp: 'smtp.gmail.com',
         smtpUserName: 'estrategica.easy.form',
         smtpPassword: 'HqXR8cnnL',
+
+		/* Using for test */
+		emailTo: 'jcontreras@estrategicaco.com,',
+		emailCC: 'operaciones@estrategicaco.com, cristianjojoa01@gmail.com, edwardmartinez@hotmail.com, felizarazol@unal.edu.co, hsgarzon2020@gmail.com, davithc01@gmail.com',
 		
-		/* Using for test /
-		emailTo: 'felizarazol@unal.edu.co',
-		emailCC: 'edwardmartinez@hotmail.com, hsgarzon2020@gmail.com, davithc01@gmail.com',
-		
-		/* Using for e2e */
-	
+		/* Using for e2e /
 		emailTo: 'jcontreras@estrategicaco.com',
 		emailCC: 'operaciones@estrategicaco.com, cristianjojoa01@gmail.com',
 		

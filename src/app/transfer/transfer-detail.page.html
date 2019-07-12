@@ -96,10 +96,7 @@
               </ion-row>
               <ion-row>
                 <ion-col col-6>
-                  <ion-select style="max-width: 100%;" formControlName="corpus_luteum" interface="popover" placeholder="C.L." [(ngModel)]="dataItem.corpus_luteum">
-                    <ion-select-option value="Si">Si</ion-select-option>
-                    <ion-select-option value="No">No</ion-select-option>
-                  </ion-select>
+				  <ion-input type="text" readonly formControlName="corpus_luteum" [(ngModel)]="dataItem.corpus_luteum"></ion-input>
                   <div class="validation-errors">
                     <ng-container *ngFor="let validation of validation_messages.corpus_luteum">
                       <div class="error-message" *ngIf="validation_form.get('corpus_luteum').hasError(validation.type) 
