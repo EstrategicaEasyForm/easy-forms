@@ -245,6 +245,7 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
   }
 
   equalsDetailsAspiration(dataObjOri: any, dataItem: any) {
+	if(dataObjOri===null || dataObjOri===undefined ) return true;
     return dataObjOri.donor === dataItem.donor &&
       dataObjOri.donor_breed === dataItem.donor_breed &&
       dataObjOri.local_id === dataItem.local_id &&
@@ -268,7 +269,7 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
   }
 
   onChangeDatetime($datetime) {
-    this.dataItem.arrived_time = moment($datetime).format('hh:mmA');
+    this.dataItem.arrived_time = moment($datetime).format('HH:mm');
   }
 
   onChangeLocal($localId) {

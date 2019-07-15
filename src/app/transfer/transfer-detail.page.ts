@@ -222,8 +222,9 @@ export class TransferDetailPage implements OnInit, OnDestroy {
 
   //CHANGE
   equalsDetailsTransfer(dataObjOri: any, dataItem: any): boolean {
+	if(dataObjOri===null || dataObjOri===undefined ) return true;
     return
-    dataObjOri.receiver === dataItem.receiver &&
+	  dataObjOri.receiver === dataItem.receiver &&
       dataObjOri.evaluation_detail_id === dataItem.evaluation_detail_id &&
       dataObjOri.corpus_luteum === dataItem.corpus_luteum &&
       dataObjOri.local_id === dataItem.local_id &&

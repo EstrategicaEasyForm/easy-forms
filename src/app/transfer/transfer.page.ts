@@ -72,7 +72,7 @@ export class TransferPage implements OnInit {
     this.order = detail.order;
     this.agenda = detail.agenda;
     this.start_date = this.agenda && this.agenda.all_day === '1' ? this.agenda.start_date.substr(0, 10) : this.agenda.start_date;
-    this.transfer.date = this.start_date;
+    this.transfer.date = this.start_date || '';
     this.validation_form_order = this.formBuilder.group({});
     if (!this.transfer.technical || this.transfer.technical.length === 0)
       this.transfer.technical = this.transfer.details_view && this.transfer.details_view[0] ? this.transfer.details_view[0].technical : '';

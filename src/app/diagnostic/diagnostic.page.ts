@@ -75,7 +75,7 @@ export class DiagnosticPage implements OnInit {
     this.order = detail.order;
     this.detailApi = detail.detailApi;
     this.agenda = detail.agenda;
-    this.start_date = this.agenda ? this.agenda.start_date.substr(0, 10) : '';
+    this.start_date = this.agenda && this.agenda.start_date ? this.agenda.start_date.substr(0, 10) : '';
     this.diagnostic.date = this.start_date;
     let detailsTmp;
 

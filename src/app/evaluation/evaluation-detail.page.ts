@@ -240,6 +240,7 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
   }
 
   equalsDetailsEvaluation(dataObjOri: any, dataItem: any) {
+	if(dataObjOri===null || dataObjOri===undefined ) return true;
     return dataObjOri.animal_id === dataItem.animal_id &&
       dataObjOri.chapeta === dataItem.chapeta &&
       Number(dataObjOri.fit) === Number(dataItem.fit) &&

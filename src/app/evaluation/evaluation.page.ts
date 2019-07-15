@@ -81,7 +81,7 @@ export class EvaluationPage implements OnInit {
     this.order = detail.order;
     this.detailApi = detail.detailApi;
     this.agenda = detail.agenda;
-    this.start_date = this.agenda ? this.agenda.start_date.substr(0, 10) : '';
+    this.start_date = this.agenda && this.agenda.start_date ? this.agenda.start_date.substr(0, 10) : '';
     this.evaluation.date = this.start_date;
     this.validation_form_order = this.formBuilder.group({
     });
@@ -277,6 +277,14 @@ export class EvaluationPage implements OnInit {
     } catch (err) {
       this.showMessage(err);
     }
+  }
+  
+  removeDetail(index){
+	if(this.evaluation.details) {
+		this.evaluation.details = this.evaluation.details.filter((value, idx)=> {
+			return index !== idx;
+		});
+	}
   }
 
 }

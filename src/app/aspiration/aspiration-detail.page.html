@@ -106,7 +106,7 @@
             <ion-col col-4>
               <ion-item>
                 <ion-datetime #datetimePicker formControlName="arrived_time" [(ngModel)]="dataItem.ionDateTime"
-                  displayFormat="hh:mmA" pickerFormat="hh:mmA" cancelText="Cancelar" doneText="Aceptar"
+                  displayFormat="HH:mm" pickerFormat="HH:mm" cancelText="Cancelar" doneText="Aceptar"
                   (ionChange)="onChangeDatetime(datetimePicker.value)">
                 </ion-datetime>
                 <div class="validation-errors">

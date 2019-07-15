@@ -90,7 +90,7 @@ export class AspirationPage implements OnInit {
     this.order = detail.order;
     this.detailApi = detail.detailApi;
     this.agenda = detail.agenda;
-    this.start_date = this.agenda ? this.agenda.start_date.substr(0, 10) : '';
+    this.start_date = this.agenda && this.agenda.start_date ? this.agenda.start_date.substr(0, 10) : '';
     this.aspiration.date = this.start_date;
     this.aspiration.arrived_temperature = this.aspiration.arrived_temperature || '';
     this.aspiration.arrived_temperature_number = Number(this.aspiration.arrived_temperature.replace('°C', '').replace(',', '.'));
@@ -112,12 +112,11 @@ export class AspirationPage implements OnInit {
 
     for (let detail of this.aspiration.details) {
       if (detail.arrived_time) {
-        const minute = Number(detail.arrived_time.split(':')[1].substr(0, 2));
-        const pm = detail.arrived_time.split(':')[1].substr(2, 2) === 'PM' ? 12 : 0;
-        const hour = Number(detail.arrived_time.split(':')[0]) + pm;
+        const hour = Number(detail.arrived_time.split(':')[0]);
+		const minute = Number(detail.arrived_time.split(':')[1]);
         let time = moment().set({ hour: hour, minute: minute });
         detail.ionDateTime = time.format();
-        detail.arrived_time = time.format('hh:mmA');
+        detail.arrived_time = time.format('HH:mm');
       }
       detail.gi = Number(detail.gi) || 0;
       detail.gii = Number(detail.gii) || 0;
@@ -302,5 +301,13 @@ export class AspirationPage implements OnInit {
     } catch (err) {
       this.showMessage(err);
     }
+  }
+  
+  removeDetail(index){
+	if(this.aspiration.details) {
+		this.aspiration.details = this.aspiration.details.filter((value, idx)=> {
+			return index != idx;
+		});
+	}
   }
 }
