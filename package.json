@@ -121,6 +121,8 @@
       "cordova-send-email": {},
       "cordova-plugin-screen-orientation": {}
     },
-    "platforms": []
+    "platforms": [
+      "android"
+    ]
   }
 }

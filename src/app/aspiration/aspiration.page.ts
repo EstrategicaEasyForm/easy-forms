@@ -78,19 +78,20 @@ export class AspirationPage implements OnInit {
     public camera: Camera,
     public platform: Platform,
     public aspirationPdf: AspirationPdfService,
-	public screenOrientation: ScreenOrientation) {
-		
-    }
+    public screenOrientation: ScreenOrientation) {
+
+  }
 
   ngOnInit() {
-	  const detail = this.ordersService.getDetailApiParam();
+    const detail = this.ordersService.getDetailApiParam();
     this.aspirationObjOri = detail.aspirationApi;
     this.aspiration = Object.assign({}, this.aspirationObjOri);
     this.agendaPage = detail.agendaPage;
     this.order = detail.order;
     this.detailApi = detail.detailApi;
     this.agenda = detail.agenda;
-	this.start_date = this.agenda && this.agenda.all_day === '1' ? this.agenda.start_date.substr(0,10) : this.agenda.start_date;
+    this.start_date = this.agenda ? this.agenda.start_date.substr(0, 10) : '';
+    this.aspiration.date = this.start_date;
     this.aspiration.arrived_temperature = this.aspiration.arrived_temperature || '';
     this.aspiration.arrived_temperature_number = Number(this.aspiration.arrived_temperature.replace('°C', '').replace(',', '.'));
 
@@ -157,12 +158,12 @@ export class AspirationPage implements OnInit {
   }
 
   async openPdfViewer() {
-	  
-	const loading = await this.loadingCtrl.create({
-      message: 'Por favor espere' 
+
+    const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere'
     });
     await loading.present();
-	
+
     const data = {
       aspirationApi: this.aspiration,
       order: this.order,
@@ -174,8 +175,8 @@ export class AspirationPage implements OnInit {
       open: true
     };
     this.aspirationPdf.makePdf(data, options).then((pdf: any) => {
-	  loading.dismiss();	
-	  if (pdf.status === 'error') {
+      loading.dismiss();
+      if (pdf.status === 'error') {
         this.showMessage(pdf.error);
       }
     });
@@ -206,9 +207,9 @@ export class AspirationPage implements OnInit {
 
   finalizeAspiration() {
     this.aspiration.state = 1;
-	this.aspiration.stateSync = 'U';
-	this.saveAspiration();
-	this.showMessage('Planilla Aspiración Finalizada');
+    this.aspiration.stateSync = 'U';
+    this.saveAspiration();
+    this.showMessage('Planilla Aspiración Finalizada');
   }
 
   async presentAlertConfirm() {
@@ -288,7 +289,7 @@ export class AspirationPage implements OnInit {
   }
 
   ionViewWillEnter() {
-      this.initOrientation();
+    this.initOrientation();
   }
 
   ionViewDidLeave() {
@@ -296,9 +297,9 @@ export class AspirationPage implements OnInit {
   }
 
   initOrientation() {
-    try {  
-      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY);	
-    } catch(err) {
+    try {
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY);
+    } catch (err) {
       this.showMessage(err);
     }
   }

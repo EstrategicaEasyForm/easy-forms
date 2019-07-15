@@ -31,7 +31,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     'embryo_class': [
       { type: 'required', message: 'Campo requerido.' }
     ],
-	'evaluation_detail_id': [
+    'evaluation_detail_id': [
       { type: 'required', message: 'Campo requerido.' }
     ],
     'receiver': [
@@ -70,40 +70,40 @@ export class TransferDetailPage implements OnInit, OnDestroy {
       this.updateItem(detailApiId);
     }
     else {
-      this.newItem();
+      this.newItem(null);
     }
-	this.filterReceiverselect();
+    this.filterReceiverselect();
   }
 
   updateItem(detailId) {
     this.indx = detailId;
     this.dataItem = this.detailsList[this.indx];
-	let receiver = this.dataItem.receiver;
-	if(receiver === null && this.dataItem.discard === '1') {
-		receiver = 'Descartada';
-	}
-	this.checkRecept = this.dataItem.evaluation_detail_id !== null; 
-	
+    let receiver = this.dataItem.receiver;
+    if (receiver === null && this.dataItem.discard === '1') {
+      receiver = 'Descartada';
+    }
+    this.checkRecept = this.dataItem.evaluation_detail_id !== null;
+
     this.action = 'update';
     this.newRegistry = false;
     //create a copy of the object
     this.dataItemOri = Object.assign({}, this.dataItem);
     //initialize the form
-    
-      this.validation_form = this.formBuilder.group({
-        embryo_class: [this.dataItem.embryo_class, Validators.required],
-        checkRecept:  [this.checkRecept,''],
-        corpus_luteum: [this.dataItem.corpus_luteum, Validators.required],
-        local_id: [this.dataItem.local_id, Validators.required],
-        transferor: [this.dataItem.transferor, Validators.required],
-        comments: [this.dataItem.comments, Validators.required],
-        receiver: [receiver, this.receiverInputValidator.bind(this)],
-        evaluation_detail_id: [this.dataItem.evaluation_detail_id+'', this.receiverSyncValidator.bind(this)],
-      });
-    
+
+    this.validation_form = this.formBuilder.group({
+      embryo_class: [this.dataItem.embryo_class, Validators.required],
+      checkRecept: [this.checkRecept, ''],
+      corpus_luteum: [this.dataItem.corpus_luteum, Validators.required],
+      local_id: [this.dataItem.local_id, Validators.required],
+      transferor: [this.dataItem.transferor, Validators.required],
+      comments: [this.dataItem.comments, Validators.required],
+      receiver: [receiver, this.receiverInputValidator.bind(this)],
+      evaluation_detail_id: [this.dataItem.evaluation_detail_id + '', this.receiverSyncValidator.bind(this)],
+    });
+
   }
 
-  newItem() {
+  newItem(newTransferor) {
 
     this.dataItem = {
       stateSync: 'C'
@@ -113,15 +113,15 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     this.newRegistry = true;
     this.indx = this.detailsList.length;
 
-	this.checkRecept = false;
+    this.checkRecept = false;
     if (!this.validation_form) {
       this.validation_form = this.formBuilder.group({
         embryo_class: ['', Validators.required],
         receiver: ['', this.receiverInputValidator.bind(this)],
-		checkRecept:  [this.checkRecept],
+        checkRecept: [this.checkRecept],
         corpus_luteum: ['', Validators.required],
         local_id: ['', Validators.required],
-        transferor: ['', Validators.required],
+        transferor: [newTransferor || '', Validators.required],
         comments: ['', Validators.required],
         evaluation_detail_id: ['', this.receiverSyncValidator.bind(this)],
       });
@@ -129,11 +129,11 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     else {
       this.validation_form.reset({
         embryo_class: '',
-		checkRecept:  [this.checkRecept],
+        checkRecept: [this.checkRecept],
         receiver: '',
         corpus_luteum: '',
         local_id: '',
-        transferor: '',
+        transferor: newTransferor || '',
         comments: '',
         evaluation_detail_id: '',
       });
@@ -162,7 +162,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     if (this.validation_form.valid) {
       if (this.action === 'new') {
         this.saveItem();
-        this.newItem();
+        this.newItem(this.dataItem.transferor);
         this.dataItemOri = Object.assign({}, this.dataItem);
       }
       else if (this.action === 'update') {
@@ -171,18 +171,22 @@ export class TransferDetailPage implements OnInit, OnDestroy {
           this.dataItemOri = Object.assign({}, this.dataItem);
         }
         if (this.indx === this.detailsList.length - 1) {
-          this.newItem();
+          this.newItem(this.dataItem.transferor);
           this.dataItemOri = Object.assign({}, this.dataItem);
         }
         else {
           this.indx++;
+          const oldTransferor = this.dataItem.transferor;
           this.dataItem = this.detailsList[this.indx];
+          if(this.dataItem.transferor === null || this.dataItem.transferor.length === 0 )
+          this.dataItem.transferor = oldTransferor;
+          
           this.dataItemOri = Object.assign({}, this.dataItem);
         }
       }
     }
-	this.checkRecept = this.dataItem.evaluation_detail_id !== null ? true : false;
-	this.filterReceiverselect();
+    this.checkRecept = this.dataItem.evaluation_detail_id !== null ? true : false;
+    this.filterReceiverselect();
   }
 
   backItemButton() {
@@ -204,9 +208,9 @@ export class TransferDetailPage implements OnInit, OnDestroy {
       this.action = 'update';
       this.newRegistry = false;
     }
-	
-	this.checkRecept = this.dataItem.evaluation_detail_id !== null;
-	this.filterReceiverselect();
+
+    this.checkRecept = this.dataItem.evaluation_detail_id !== null;
+    this.filterReceiverselect();
   }
 
   ionViewWillLeave() {
@@ -218,9 +222,9 @@ export class TransferDetailPage implements OnInit, OnDestroy {
 
   //CHANGE
   equalsDetailsTransfer(dataObjOri: any, dataItem: any): boolean {
-    return 
-	  dataObjOri.receiver === dataItem.receiver &&
-	  dataObjOri.evaluation_detail_id === dataItem.evaluation_detail_id &&
+    return
+    dataObjOri.receiver === dataItem.receiver &&
+      dataObjOri.evaluation_detail_id === dataItem.evaluation_detail_id &&
       dataObjOri.corpus_luteum === dataItem.corpus_luteum &&
       dataObjOri.local_id === dataItem.local_id &&
       dataObjOri.transferor === dataItem.transferor &&
@@ -245,7 +249,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
       for (let local of this.transfer.locals) {
         if (local.id === $localId) {
           this.dataItem.local = local;
-		  break;
+          break;
         }
       }
     }
@@ -262,7 +266,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     });
     toast.present();
   }
-  
+
   onChangeReceptSync($receptId) {
     if (this.transfer.synchronizeds) {
       for (let receptSync of this.transfer.synchronizeds) {
@@ -273,59 +277,59 @@ export class TransferDetailPage implements OnInit, OnDestroy {
       }
     }
   }
-  
+
   onChangeCheckRecept() {
-	  this.validation_form = this.formBuilder.group({
-        embryo_class: [this.dataItem.embryo_class, Validators.required],
-        receiver: [this.dataItem.receiver, this.receiverInputValidator.bind(this)],
-		checkRecept:  [this.checkRecept],
-        corpus_luteum: [this.dataItem.corpus_luteum, Validators.required],
-        local_id: [this.dataItem.local_id, Validators.required],
-        transferor: [this.dataItem.transferor, Validators.required],
-        comments: [this.dataItem.comments, Validators.required],
-        evaluation_detail_id: [this.dataItem.evaluation_detail_id+'', this.receiverSyncValidator.bind(this)],
-      });
+    this.validation_form = this.formBuilder.group({
+      embryo_class: [this.dataItem.embryo_class, Validators.required],
+      receiver: [this.dataItem.receiver, this.receiverInputValidator.bind(this)],
+      checkRecept: [this.checkRecept],
+      corpus_luteum: [this.dataItem.corpus_luteum, Validators.required],
+      local_id: [this.dataItem.local_id, Validators.required],
+      transferor: [this.dataItem.transferor, Validators.required],
+      comments: [this.dataItem.comments, Validators.required],
+      evaluation_detail_id: [this.dataItem.evaluation_detail_id + '', this.receiverSyncValidator.bind(this)],
+    });
   }
-  
+
   receiverSyncValidator(fc: FormControl) {
-	  if(this.checkRecept) {
-		  if(!fc.value || fc.value === '')
-		  return ({required: true});
-		  else return (null);
-	  }
-	  else {
-		return (null);
-	  }
+    if (this.checkRecept) {
+      if (!fc.value || fc.value === '')
+        return ({ required: true });
+      else return (null);
+    }
+    else {
+      return (null);
+    }
   }
-  
+
   receiverInputValidator(fc: FormControl) {
-	  if(this.checkRecept) {
-		  return (null);
-	  }
-	  else {
-		  if(!fc.value || fc.value === '')
-		  return ({required: true});
-		  else return (null);
-	  }
+    if (this.checkRecept) {
+      return (null);
+    }
+    else {
+      if (!fc.value || fc.value === '')
+        return ({ required: true });
+      else return (null);
+    }
   }
-  
+
   filterReceiverselect() {
-	  const newList = [];
-	  let mbIsAssigned: boolean;
-	  for(let item of this.transfer.synchronizeds) {
-		mbIsAssigned = false;
-		for(let detail of this.detailsList) {
-			if(detail.evaluation_detail_id == item.id && detail.evaluation_detail_id !== this.dataItem.evaluation_detail_id ) {
-				mbIsAssigned = true;
-				break;
-			}
-		}
-		if(!mbIsAssigned) {
-			newList.push(item);
-		}
-	  }
-	  
-	  this.synchronizedsList = newList;
+    const newList = [];
+    let mbIsAssigned: boolean;
+    for (let item of this.transfer.synchronizeds) {
+      mbIsAssigned = false;
+      for (let detail of this.detailsList) {
+        if (detail.evaluation_detail_id == item.id && detail.evaluation_detail_id !== this.dataItem.evaluation_detail_id) {
+          mbIsAssigned = true;
+          break;
+        }
+      }
+      if (!mbIsAssigned) {
+        newList.push(item);
+      }
+    }
+
+    this.synchronizedsList = newList;
   }
 
 }

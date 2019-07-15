@@ -38,9 +38,11 @@ export class TransferService {
           "identification_number": transfer.identification_number,
           "received_by": transfer.received_by,
           'user_id_updated': this.userService.getUserId(),
-          "state": transfer.state
+          "state": transfer.state,
+          "technical": transfer.technical,
+          "date": transfer.date || ""
         }
-      });
+      }); 
     }
     const create = [];
     const update = [];
@@ -52,7 +54,7 @@ export class TransferService {
             'comments': detail.comments,
             'corpus_luteum': detail.corpus_luteum,
             'discard': detail.discard == "1",
-			'local_id': detail.local_id,
+            'local_id': detail.local_id,
             'evaluation_detail_id': detail.evaluation_detail_id,
             'receiver': detail.evaluation_detail_id ? null : detail.receiver,
             'transferor': detail.transferor,
@@ -65,7 +67,7 @@ export class TransferService {
             'comments': detail.comments,
             'corpus_luteum': detail.corpus_luteum,
             'discard': detail.discard == "1",
-			'local_id': detail.local_id,
+            'local_id': detail.local_id,
             'evaluation_detail_id': detail.evaluation_detail_id,
             'receiver': detail.evaluation_detail_id ? null : detail.receiver,
             'transferor': detail.transferor,

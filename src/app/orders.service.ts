@@ -112,6 +112,7 @@ query orders {
         comments
         state
         date
+        technical
         synchronizeds {
           id
           animal_id

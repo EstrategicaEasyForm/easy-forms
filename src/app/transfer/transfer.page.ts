@@ -37,7 +37,7 @@ export class TransferPage implements OnInit {
     'identification_number': [
       { type: 'required', message: 'Campo requerido.' }
     ],
-    'transferor': [
+    'technical': [
       { type: 'required', message: 'Campo requerido.' }
     ],
     'comments': [
@@ -63,7 +63,7 @@ export class TransferPage implements OnInit {
     public transferPdf: TransferPdfService,
     public screenOrientation: ScreenOrientation) { }
 
-  ngOnInit() {    
+  ngOnInit() {
     const detail = this.ordersService.getDetailApiParam();
     this.transferObjOri = detail.transferApi;
     this.transfer = Object.assign({}, this.transferObjOri);
@@ -71,27 +71,28 @@ export class TransferPage implements OnInit {
     this.detailApi = detail.detailApi;
     this.order = detail.order;
     this.agenda = detail.agenda;
-	this.start_date = this.agenda && this.agenda.all_day === '1' ? this.agenda.start_date.substr(0,10) : this.agenda.start_date;
-    
+    this.start_date = this.agenda && this.agenda.all_day === '1' ? this.agenda.start_date.substr(0, 10) : this.agenda.start_date;
+    this.transfer.date = this.start_date;
     this.validation_form_order = this.formBuilder.group({});
-	this.transfer.transferor = this.transfer.details_view && this.transfer.details_view[0] ? this.transfer.details_view[0].transferor : '';
-	
-	if (this.transfer.synchronizeds) {
-		for(let detailItem of this.transfer.details_view) {
-			if(detailItem.evaluation_detail_id) 
-			for (let receptSync of this.transfer.synchronizeds) {
-				receptSync.id += '';
-				if (receptSync.id === detailItem.evaluation_detail_id) {
-				  detailItem.receptSync = receptSync.animal_id + "-" + receptSync.chapeta;
-				  break;
-				}
-			}
-		}
-	}
+    if (!this.transfer.technical || this.transfer.technical.length === 0)
+      this.transfer.technical = this.transfer.details_view && this.transfer.details_view[0] ? this.transfer.details_view[0].technical : '';
+
+    if (this.transfer.synchronizeds) {
+      for (let detailItem of this.transfer.details_view) {
+        if (detailItem.evaluation_detail_id)
+          for (let receptSync of this.transfer.synchronizeds) {
+            receptSync.id += '';
+            if (receptSync.id === detailItem.evaluation_detail_id) {
+              detailItem.receptSync = receptSync.animal_id + "-" + receptSync.chapeta;
+              break;
+            }
+          }
+      }
+    }
     this.validation_form_general = this.formBuilder.group({
       received_by: [this.transfer.received_by, Validators.required],
       identification_number: [this.transfer.identification_number, Validators.required],
-      transferor: [this.transfer.transferor, Validators.required],
+      technical: [this.transfer.technical, Validators.required],
       comments: [this.transfer.comments, Validators.required]
     });
   }
@@ -105,42 +106,42 @@ export class TransferPage implements OnInit {
     this.router.navigate(['transfer-detail']);
   }
 
-  async presentAlertConfirmDiscard(indx,detailList: IonList) {
-	const detail = this.transfer.details_view[indx];
-	  
-	if(detail.discard === '1' ) {
-	   detail.discard = '0';
-	   detail.stateSync = 'U';
-	   detailList.closeSlidingItems();
-	   this.saveTransfer();
-	}
-	else {
-		const alert = await this.alertController.create({
-		  header: 'Descartar Detalle!',
-		  message: '¿Confirma que desea descartar el detalle?',
-		  buttons: [
-			{
-			  text: 'Cancelar',
-			  role: 'cancel',
-			  cssClass: 'secondary',
-			  handler: (blah) => {
+  async presentAlertConfirmDiscard(indx, detailList: IonList) {
+    const detail = this.transfer.details_view[indx];
 
-			  }
-			}, {
-			  text: 'Aceptar',
-			  handler: () => {
-				detail.discard = '1';
-				detail.stateSync = 'U';
-				detail.evaluation_detail_id = null;
-				detailList.closeSlidingItems();
-				this.saveTransfer();
-			  }
-			}
-		  ]
-		});
+    if (detail.discard === '1') {
+      detail.discard = '0';
+      detail.stateSync = 'U';
+      detailList.closeSlidingItems();
+      this.saveTransfer();
+    }
+    else {
+      const alert = await this.alertController.create({
+        header: 'Descartar Detalle!',
+        message: '¿Confirma que desea descartar el detalle?',
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+            cssClass: 'secondary',
+            handler: (blah) => {
 
-		await alert.present();
-	}
+            }
+          }, {
+            text: 'Aceptar',
+            handler: () => {
+              detail.discard = '1';
+              detail.stateSync = 'U';
+              detail.evaluation_detail_id = null;
+              detailList.closeSlidingItems();
+              this.saveTransfer();
+            }
+          }
+        ]
+      });
+
+      await alert.present();
+    }
   }
 
   reloadDetailsList(detailsList) {
@@ -165,12 +166,12 @@ export class TransferPage implements OnInit {
   }
 
   async openPdfViewer() {
-	  
-	const loading = await this.loadingCtrl.create({
-      message: 'Por favor espere' 
+
+    const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere'
     });
     await loading.present();
-	
+
     const data = {
       transferApi: this.transfer,
       order: this.order,
@@ -181,7 +182,7 @@ export class TransferPage implements OnInit {
       open: true
     };
     this.transferPdf.makePdf(data, options).then((pdf: any) => {
-      loading.dismiss();	
+      loading.dismiss();
       if (pdf.status === 'error') {
         this.showMessage(pdf.error);
       }
@@ -216,9 +217,9 @@ export class TransferPage implements OnInit {
 
   finalizeTransfer() {
     this.transfer.state = 1;
-	this.transfer.stateSync = 'U';
-	this.saveTransfer();
-	this.showMessage('Planilla de Transferencia Finalizada');
+    this.transfer.stateSync = 'U';
+    this.saveTransfer();
+    this.showMessage('Planilla de Transferencia Finalizada');
   }
 
   async presentAlertConfirm() {
@@ -286,9 +287,9 @@ export class TransferPage implements OnInit {
     });
     await loading.present();
   }
-  
+
   ionViewWillEnter() {
-      this.initOrientation();
+    this.initOrientation();
   }
 
   ionViewDidLeave() {
@@ -296,21 +297,11 @@ export class TransferPage implements OnInit {
   }
 
   initOrientation() {
-    try {  
-      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY);	
-    } catch(err) {
+    try {
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY);
+    } catch (err) {
       this.showMessage(err);
     }
   }
-  
-  /*onChangeTransferor() {
-	  if(this.transferor.length > 0) {
-		  if(this.transfer.details_view)
-		  for(let detail of this.transfer.details_view) {
-			  detail.stateSync = 'U';
-			  detail.transferor = this.transferor;
-		  }
-	  }
-  }*/
 
 }

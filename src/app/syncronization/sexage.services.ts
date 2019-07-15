@@ -40,6 +40,7 @@ export class SexageService {
           "id": sexage.id,
           "received_by": sexage.received_by,
           "technical": sexage.technical,
+          "date": sexage.date || "",
           "comments": sexage.comments,
           "identification_number": sexage.identification_number,
           "state": sexage.state,

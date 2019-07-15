@@ -37,7 +37,7 @@ export class AspirationService {
           "arrived_temperature": aspiration.arrived_temperature,
           "aspirator": aspiration.aspirator,
           "comments": aspiration.comments,
-          //"date": aspiration.date,
+          "date": aspiration.date || "",
           "identification_number": aspiration.identification_number,
           //"medium_lot_miv": aspiration.medium_lot_miv,
           "medium_lot_opu": aspiration.medium_lot_opu,

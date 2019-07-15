@@ -41,6 +41,7 @@ export class DeliveryService {
           "received_by": delivery.received_by,
           "technical": delivery.technical,
           "comments": delivery.comments,
+          "date": delivery.date || "",
           "identification_number": delivery.identification_number,
           "state": Number(delivery.state),
           'user_id_updated': this.userService.getUserId()

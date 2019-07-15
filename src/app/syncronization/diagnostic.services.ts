@@ -40,6 +40,7 @@ export class DiagnosticService {
           "id": diagnostic.id,
           "received_by": diagnostic.received_by,
           "technical": diagnostic.technical,
+          "date": diagnostic.date || "",
           "comments": diagnostic.comments,
           "identification_number": diagnostic.identification_number,
           "state": diagnostic.state,

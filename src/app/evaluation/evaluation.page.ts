@@ -69,8 +69,8 @@ export class EvaluationPage implements OnInit {
 
   ngOnInit() {
 
-    const detail :any = this.ordersService.getDetailApiParam();
-    for(let dt of detail.evaluationApi.details){
+    const detail: any = this.ordersService.getDetailApiParam();
+    for (let dt of detail.evaluationApi.details) {
       dt.fit = dt.fit + "";
       dt.synchronized = dt.synchronized + "";
       dt.local_id = dt.local.id + "";
@@ -81,8 +81,8 @@ export class EvaluationPage implements OnInit {
     this.order = detail.order;
     this.detailApi = detail.detailApi;
     this.agenda = detail.agenda;
-	this.start_date = this.agenda && this.agenda.all_day === '1' ? this.agenda.start_date.substr(0,10) : this.agenda.start_date;
-
+    this.start_date = this.agenda ? this.agenda.start_date.substr(0, 10) : '';
+    this.evaluation.date = this.start_date;
     this.validation_form_order = this.formBuilder.group({
     });
 
@@ -116,8 +116,8 @@ export class EvaluationPage implements OnInit {
       evaluation: this.evaluation,
       detailApiId: indx,
       evaluationPage: this,
-	  local: this.detailApi.local
-    }); 
+      local: this.detailApi.local
+    });
     this.router.navigate(['evaluation-detail']);
   }
 
@@ -144,12 +144,12 @@ export class EvaluationPage implements OnInit {
 
 
   async openPdfViewer() {
-	  
-	const loading = await this.loadingCtrl.create({
-      message: 'Por favor espere' 
+
+    const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere'
     });
     await loading.present();
-	
+
     const data = {
       evaluationApi: this.evaluation,
       order: this.order,
@@ -160,8 +160,8 @@ export class EvaluationPage implements OnInit {
       open: true
     };
     this.evaluationPdf.makePdf(data, options).then((pdf: any) => {
-	  loading.dismiss();	
-	  if (pdf.status === 'error') {
+      loading.dismiss();
+      if (pdf.status === 'error') {
         this.showMessage(pdf.error);
       }
     });
@@ -192,9 +192,9 @@ export class EvaluationPage implements OnInit {
 
   finalizeevaluation() {
     this.evaluation.state = 1;
-	this.evaluation.stateSync = 'U';
-	this.saveEvaluation();
-	this.showMessage('Planilla Evaluación Finalizada');
+    this.evaluation.stateSync = 'U';
+    this.saveEvaluation();
+    this.showMessage('Planilla Evaluación Finalizada');
   }
 
   async presentAlertConfirm() {
@@ -264,7 +264,7 @@ export class EvaluationPage implements OnInit {
   }
 
   ionViewWillEnter() {
-      this.initOrientation();
+    this.initOrientation();
   }
 
   ionViewDidLeave() {
@@ -272,9 +272,9 @@ export class EvaluationPage implements OnInit {
   }
 
   initOrientation() {
-    try {  
+    try {
       this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY);
-    } catch(err) {
+    } catch (err) {
       this.showMessage(err);
     }
   }

@@ -76,47 +76,47 @@ export class SexagePage implements OnInit {
     this.order = detail.order;
     this.detailApi = detail.detailApi;
     this.agenda = detail.agenda;
-	this.start_date = this.agenda && this.agenda.all_day === '1' ? this.agenda.start_date.substr(0,10) : this.agenda.start_date;
-
+    this.start_date = this.agenda ? this.agenda.start_date.substr(0, 10) : '';
+    this.sexage.date = this.start_date;
     let detailsTmp;
 
     //Si el objeto details es diferente al objeto detailsSexage se rearma la lista para incluir todos los detalles de detailsSexage.
-    if (this.sexage.details &&  ( this.sexage.details.length === 0  || !this.sexage.details[0].transferData )) {
+    if (this.sexage.details && (this.sexage.details.length === 0 || !this.sexage.details[0].transferData)) {
       const newDetails = [];
-	  if(this.sexage.detailsSexage)
-      for (let dtDiag of this.sexage.detailsSexage) {
-        detailsTmp = null;
-        for (let details of this.sexage.details) {
-          if (dtDiag.transfer_detail_id == details.transfer_detail_id) {
-            detailsTmp = details;
-			break;
+      if (this.sexage.detailsSexage)
+        for (let dtDiag of this.sexage.detailsSexage) {
+          detailsTmp = null;
+          for (let details of this.sexage.details) {
+            if (dtDiag.transfer_detail_id == details.transfer_detail_id) {
+              detailsTmp = details;
+              break;
+            }
+          }
+          if (detailsTmp) {
+            newDetails.push({
+              "id": detailsTmp.id,
+              "transfer_detail_id": detailsTmp.transfer_detail_id,
+              "sex": detailsTmp.sex,
+              "dx1": detailsTmp.dx1,
+              "transferData": dtDiag
+            });
+          }
+          else {
+            newDetails.push({
+              "id": -1,
+              "transfer_detail_id": dtDiag.transfer_detail_id,
+              "sex": dtDiag.sex,
+              "dx1": dtDiag.dx1,
+              "transferData": dtDiag
+            });
           }
         }
-        if (detailsTmp) {
-          newDetails.push({
-            "id": detailsTmp.id,
-            "transfer_detail_id": detailsTmp.transfer_detail_id,
-            "sex": detailsTmp.sex,
-            "dx1": detailsTmp.dx1,
-            "transferData": dtDiag
-          });
-        }
-        else {
-          newDetails.push({
-            "id": -1,
-            "transfer_detail_id": dtDiag.transfer_detail_id,
-            "sex": dtDiag.sex,
-            "dx1": dtDiag.dx1,
-            "transferData": dtDiag
-          });
-        }
-      }
       //se modifica la lista
       this.sexage.details = newDetails;
     }
 
     this.validation_form_general = this.formBuilder.group({
-      technical : [this.sexage.technical, Validators.required],
+      technical: [this.sexage.technical, Validators.required],
       received_by: [this.sexage.received_by, Validators.required],
       identification_number: [this.sexage.identification_number, Validators.required],
       comments: [this.sexage.comments, Validators.required]
@@ -145,12 +145,12 @@ export class SexagePage implements OnInit {
   }
 
   async openPdfViewer() {
-	  
-	const loading = await this.loadingCtrl.create({
-      message: 'Por favor espere' 
+
+    const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere'
     });
     await loading.present();
-	
+
     const data = {
       sexageApi: this.sexage,
       order: this.order,
@@ -161,8 +161,8 @@ export class SexagePage implements OnInit {
       open: true
     };
     this.sexagePdf.makePdf(data, options).then((pdf: any) => {
-	  loading.dismiss();	
-	  if (pdf.status === 'error') {
+      loading.dismiss();
+      if (pdf.status === 'error') {
         this.showMessage(pdf.error);
       }
     });
@@ -193,9 +193,9 @@ export class SexagePage implements OnInit {
 
   finalizeSexage() {
     this.sexage.state = 1;
-	this.sexage.stateSync = 'U';
-	this.saveSexage();
-	this.showMessage('Planilla Sexaje Finalizada');
+    this.sexage.stateSync = 'U';
+    this.saveSexage();
+    this.showMessage('Planilla Sexaje Finalizada');
   }
 
   async presentAlertConfirm() {

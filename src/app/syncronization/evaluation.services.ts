@@ -37,6 +37,7 @@ export class EvaluationService {
           "comments": evaluation.comments,
           "identification_number": evaluation.identification_number,
           "technical": evaluation.technical,
+          "date": evaluation.date|| "",
           "received_by": evaluation.received_by,
           "state": evaluation.state,
           "user_id_updated": this.userService.getUserId()

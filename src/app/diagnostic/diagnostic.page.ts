@@ -75,47 +75,47 @@ export class DiagnosticPage implements OnInit {
     this.order = detail.order;
     this.detailApi = detail.detailApi;
     this.agenda = detail.agenda;
-	this.start_date = this.agenda && this.agenda.all_day === '1' ? this.agenda.start_date.substr(0,10) : this.agenda.start_date;
-
+    this.start_date = this.agenda ? this.agenda.start_date.substr(0, 10) : '';
+    this.diagnostic.date = this.start_date;
     let detailsTmp;
 
     //Si el objeto details es diferente al objeto detailsDiagnostic se rearma la lista para incluir todos los detalles de detailsDiagnostic.
-    if ( this.diagnostic.details && ( this.diagnostic.details.length === 0 ||  !this.diagnostic.details[0].transferData)) {
+    if (this.diagnostic.details && (this.diagnostic.details.length === 0 || !this.diagnostic.details[0].transferData)) {
       const newDetails = [];
-	  if(this.diagnostic.detailsDiagnostic)
-      for (let dtDiag of this.diagnostic.detailsDiagnostic) {
-        detailsTmp = null;
-        for (let details of this.diagnostic.details) {
-          if (dtDiag.transfer_detail_id == details.transfer_detail_id) {
-            detailsTmp = details;
-			break;
+      if (this.diagnostic.detailsDiagnostic)
+        for (let dtDiag of this.diagnostic.detailsDiagnostic) {
+          detailsTmp = null;
+          for (let details of this.diagnostic.details) {
+            if (dtDiag.transfer_detail_id == details.transfer_detail_id) {
+              detailsTmp = details;
+              break;
+            }
+          }
+          if (detailsTmp) {
+            newDetails.push({
+              "id": detailsTmp.id,
+              "diagnostic_id": this.diagnostic.id,
+              "transfer_detail_id": detailsTmp.transfer_detail_id,
+              "dx1": detailsTmp.dx1,
+              "transferData": dtDiag
+            });
+          }
+          else {
+            newDetails.push({
+              "id": -1,
+              "diagnostic_id": this.diagnostic.id,
+              "transfer_detail_id": dtDiag.transfer_detail_id,
+              "dx1": "",
+              "transferData": dtDiag
+            });
           }
         }
-        if (detailsTmp) {
-          newDetails.push({
-            "id": detailsTmp.id,
-            "diagnostic_id": this.diagnostic.id,
-            "transfer_detail_id": detailsTmp.transfer_detail_id,
-            "dx1": detailsTmp.dx1,
-            "transferData": dtDiag
-          });
-        }
-        else {
-          newDetails.push({
-            "id": -1,
-            "diagnostic_id": this.diagnostic.id,
-            "transfer_detail_id": dtDiag.transfer_detail_id,
-            "dx1": "",
-            "transferData": dtDiag
-          });
-        }
-      }
       //se modifica la lista
       this.diagnostic.details = newDetails;
     }
 
     this.validation_form_general = this.formBuilder.group({
-      technical : [this.diagnostic.technical, Validators.required],
+      technical: [this.diagnostic.technical, Validators.required],
       received_by: [this.diagnostic.received_by, Validators.required],
       identification_number: [this.diagnostic.identification_number, Validators.required],
       comments: [this.diagnostic.comments, Validators.required]
@@ -144,12 +144,12 @@ export class DiagnosticPage implements OnInit {
   }
 
   async openPdfViewer() {
-	  
-	const loading = await this.loadingCtrl.create({
-      message: 'Por favor espere' 
+
+    const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere'
     });
     await loading.present();
-	
+
     const data = {
       diagnosticApi: this.diagnostic,
       order: this.order,
@@ -160,8 +160,8 @@ export class DiagnosticPage implements OnInit {
       open: true
     };
     this.diagnosticPdf.makePdf(data, options).then((pdf: any) => {
-	  loading.dismiss();	
-	  if (pdf.status === 'error') {
+      loading.dismiss();
+      if (pdf.status === 'error') {
         this.showMessage(pdf.error);
       }
     });
@@ -192,9 +192,9 @@ export class DiagnosticPage implements OnInit {
 
   finalizeDiagnostic() {
     this.diagnostic.state = 1;
-	this.diagnostic.stateSync = 'U';
-	this.saveDiagnostic();
-	this.showMessage('Planilla Diagnóstico Finalizada');
+    this.diagnostic.stateSync = 'U';
+    this.saveDiagnostic();
+    this.showMessage('Planilla Diagnóstico Finalizada');
   }
 
   async presentAlertConfirm() {
@@ -272,7 +272,7 @@ export class DiagnosticPage implements OnInit {
   }
 
   ionViewWillEnter() {
-      this.initOrientation();
+    this.initOrientation();
   }
 
   ionViewDidLeave() {
@@ -280,9 +280,9 @@ export class DiagnosticPage implements OnInit {
   }
 
   initOrientation() {
-    try {  
-      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY);	
-    } catch(err) {
+    try {
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY);
+    } catch (err) {
       this.showMessage(err);
     }
   }

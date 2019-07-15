@@ -76,47 +76,47 @@ export class DeliveryPage implements OnInit {
     this.order = detail.order;
     this.detailApi = detail.detailApi;
     this.agenda = detail.agenda;
-	this.start_date = this.agenda && this.agenda.all_day === '1' ? this.agenda.start_date.substr(0,10) : this.agenda.start_date;
-
+    this.start_date = this.agenda ? this.agenda.start_date.substr(0, 10) : '';
+    this.delivery.date = this.start_date;
     let detailsTmp;
 
     //Si el objeto details es diferente al objeto detailsDelivery se rearma la lista para incluir todos los detalles de detailsDelivery.
-    if (this.delivery.details && ( this.delivery.details.length === 0 || !this.delivery.details[0].transferData )) {
+    if (this.delivery.details && (this.delivery.details.length === 0 || !this.delivery.details[0].transferData)) {
       const newDetails = [];
-	  if(this.delivery.detailsDelivery)
-      for (let dtDiag of this.delivery.detailsDelivery) {
-        detailsTmp = null;
-        for (let details of this.delivery.details) {
-          if (dtDiag.sexage_detail_id == details.sexage_detail_id) {
-            detailsTmp = details;
-			break;
+      if (this.delivery.detailsDelivery)
+        for (let dtDiag of this.delivery.detailsDelivery) {
+          detailsTmp = null;
+          for (let details of this.delivery.details) {
+            if (dtDiag.sexage_detail_id == details.sexage_detail_id) {
+              detailsTmp = details;
+              break;
+            }
+          }
+          if (detailsTmp) {
+            newDetails.push({
+              "id": detailsTmp.id,
+              "transfer_detail_id": detailsTmp.transfer_detail_id,
+              "dx2": detailsTmp.dx2,
+              "transferData": dtDiag
+            });
+          }
+          else {
+            newDetails.push({
+              "id": -1,
+              "transfer_detail_id": dtDiag.transfer_detail_id,
+              "sex": dtDiag.sex,
+              "dx1": dtDiag.dx1,
+              "dx2": dtDiag.dx2,
+              "transferData": dtDiag
+            });
           }
         }
-        if (detailsTmp) {
-          newDetails.push({
-            "id": detailsTmp.id,
-            "transfer_detail_id": detailsTmp.transfer_detail_id,
-            "dx2": detailsTmp.dx2,
-            "transferData": dtDiag
-          });
-        }
-        else {
-          newDetails.push({
-            "id": -1,
-            "transfer_detail_id": dtDiag.transfer_detail_id,
-            "sex": dtDiag.sex,
-            "dx1": dtDiag.dx1,
-		      	"dx2": dtDiag.dx2,
-            "transferData": dtDiag
-          });
-        }
-      }
       //se modifica la lista
       this.delivery.details = newDetails;
     }
 
     this.validation_form_general = this.formBuilder.group({
-      technical : [this.delivery.technical, Validators.required],
+      technical: [this.delivery.technical, Validators.required],
       received_by: [this.delivery.received_by, Validators.required],
       identification_number: [this.delivery.identification_number, Validators.required],
       comments: [this.delivery.comments, Validators.required]
@@ -145,12 +145,12 @@ export class DeliveryPage implements OnInit {
   }
 
   async openPdfViewer() {
-	  
-	const loading = await this.loadingCtrl.create({
-      message: 'Por favor espere' 
+
+    const loading = await this.loadingCtrl.create({
+      message: 'Por favor espere'
     });
     await loading.present();
-	
+
     const data = {
       deliveryApi: this.delivery,
       order: this.order,
@@ -161,8 +161,8 @@ export class DeliveryPage implements OnInit {
       open: true
     };
     this.deliveryPdf.makePdf(data, options).then((pdf: any) => {
-	  loading.dismiss();	
-	  if (pdf.status === 'error') {
+      loading.dismiss();
+      if (pdf.status === 'error') {
         this.showMessage(pdf.error);
       }
     });
@@ -193,9 +193,9 @@ export class DeliveryPage implements OnInit {
 
   finalizeDelivery() {
     this.delivery.state = 1;
-	this.delivery.stateSync = 'U';
-	this.saveDelivery();
-	this.showMessage('Planilla Entrega Finalizada');
+    this.delivery.stateSync = 'U';
+    this.saveDelivery();
+    this.showMessage('Planilla Entrega Finalizada');
   }
 
   async presentAlertConfirm() {
@@ -246,7 +246,7 @@ export class DeliveryPage implements OnInit {
       }
     });
   }
-  
+
   async showMessage(message: string) {
     const toast = await this.toastCtrl.create({
       message: message,
@@ -273,7 +273,7 @@ export class DeliveryPage implements OnInit {
   }
 
   ionViewWillEnter() {
-      this.initOrientation();
+    this.initOrientation();
   }
 
   ionViewDidLeave() {
@@ -281,9 +281,9 @@ export class DeliveryPage implements OnInit {
   }
 
   initOrientation() {
-    try {  
-      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY);	
-    } catch(err) {
+    try {
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY);
+    } catch (err) {
       this.showMessage(err);
     }
   }
