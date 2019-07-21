@@ -35,7 +35,7 @@
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col col-6>
+            <ion-col size="5.8">
               <ion-input class="text-readonly" type="text" readonly formControlName="embryo_class"
                 [(ngModel)]="dataItem.embryo_class"></ion-input>
               <div class="validation-errors">
@@ -48,9 +48,12 @@
                 </ng-container>
               </div>
             </ion-col>
-            <ion-col col-6>
+            <ion-col size="1">
               <ion-checkbox (ionChange)="onChangeCheckRecept()" formControlName="checkRecept" [(ngModel)]="checkRecept">
               </ion-checkbox>
+            </ion-col>
+            <ion-col size="4.3">
+              <ion-input [disabled]="!checkRecept" [ngClass]="{'text-readonly': !checkRecept}" type="text" placeholder="Receptora" formControlName="filterReceptValue" [(ngModel)]="filterReceptValue" (ionChange)="filterRecepts()"></ion-input>
             </ion-col>
           </ion-row>
           <ion-row>

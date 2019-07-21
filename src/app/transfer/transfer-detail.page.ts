@@ -20,11 +20,13 @@ export class TransferDetailPage implements OnInit, OnDestroy {
   detailsList: any;
   detailApi: any;
   dataItem: any;
+  filterReceptValue: string;
   dataItemOri: any;
   newRegistry: boolean;
   validation_form: FormGroup;
   checkRecept: boolean;
   checkInitial: boolean;
+  synchronizedsListOriginal = [];
   synchronizedsList = [];
 
   validation_messages = {
@@ -73,11 +75,13 @@ export class TransferDetailPage implements OnInit, OnDestroy {
       this.newItem(null);
     }
     this.filterReceiverselect();
+    console.log(this.transfer.synchronizeds);
   }
 
   updateItem(detailId) {
     this.indx = detailId;
     this.dataItem = this.detailsList[this.indx];
+    this.filterReceptValue = "";
     let receiver = this.dataItem.receiver;
     if (receiver === null && this.dataItem.discard === '1') {
       receiver = 'Descartada';
@@ -93,6 +97,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     this.validation_form = this.formBuilder.group({
       embryo_class: [this.dataItem.embryo_class, Validators.required],
       checkRecept: [this.checkRecept, ''],
+      filterReceptValue: [this.filterReceptValue, ''],
       corpus_luteum: [this.dataItem.corpus_luteum, Validators.required],
       local_id: [this.dataItem.local_id, Validators.required],
       transferor: [this.dataItem.transferor, Validators.required],
@@ -284,6 +289,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
       embryo_class: [this.dataItem.embryo_class, Validators.required],
       receiver: [this.dataItem.receiver, this.receiverInputValidator.bind(this)],
       checkRecept: [this.checkRecept],
+      filterReceptValue: [this.filterReceptValue],
       corpus_luteum: [this.dataItem.corpus_luteum, Validators.required],
       local_id: [this.dataItem.local_id, Validators.required],
       transferor: [this.dataItem.transferor, Validators.required],
@@ -330,7 +336,15 @@ export class TransferDetailPage implements OnInit, OnDestroy {
       }
     }
 
+    this.synchronizedsListOriginal = newList;
     this.synchronizedsList = newList;
+  }
+
+  filterRecepts() {
+    this.synchronizedsList = this.synchronizedsListOriginal.filter(item => {
+      return item.animal_id.includes(this.filterReceptValue) || 
+            item.chapeta.includes(this.filterReceptValue);
+    });
   }
 
 }
