@@ -5,6 +5,7 @@ import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms'
 import * as moment from 'moment-timezone';
 import { Location } from '@angular/common';
 import { TransferPage } from './transfer.page';
+import { Observable } from 'apollo-link';
 
 @Component({
   selector: 'app-transfer-detail',
@@ -27,7 +28,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
   checkRecept: boolean;
   checkInitial: boolean;
   synchronizedsListOriginal = [];
-  synchronizedsList = [];
+  synchronizedsList: Observable<Array<string>>;
 
   validation_messages = {
     'embryo_class': [
@@ -75,13 +76,11 @@ export class TransferDetailPage implements OnInit, OnDestroy {
       this.newItem(null);
     }
     this.filterReceiverselect();
-    console.log(this.transfer.synchronizeds);
   }
 
   updateItem(detailId) {
     this.indx = detailId;
     this.dataItem = this.detailsList[this.indx];
-    this.filterReceptValue = "";
     let receiver = this.dataItem.receiver;
     if (receiver === null && this.dataItem.discard === '1') {
       receiver = 'Descartada';
@@ -337,14 +336,14 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     }
 
     this.synchronizedsListOriginal = newList;
-    this.synchronizedsList = newList;
+    this.synchronizedsList = Observable.of(this.synchronizedsListOriginal);
   }
 
-  filterRecepts() {
-    this.synchronizedsList = this.synchronizedsListOriginal.filter(item => {
-      return item.animal_id.includes(this.filterReceptValue) || 
-            item.chapeta.includes(this.filterReceptValue);
-    });
+  filterRecepts(filter) {
+    this.synchronizedsList = Observable.of(this.synchronizedsListOriginal.filter(item => {
+      return item.animal_id.includes(filter) || 
+            item.chapeta.includes(filter);
+    }));
   }
 
 }

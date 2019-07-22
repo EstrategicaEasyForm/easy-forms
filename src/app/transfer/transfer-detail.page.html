@@ -53,7 +53,9 @@
               </ion-checkbox>
             </ion-col>
             <ion-col size="4.3">
-              <ion-input [disabled]="!checkRecept" [ngClass]="{'text-readonly': !checkRecept}" type="text" placeholder="Receptora" formControlName="filterReceptValue" [(ngModel)]="filterReceptValue" (ionChange)="filterRecepts()"></ion-input>
+              <ion-input [disabled]="!checkRecept" [ngClass]="{'text-readonly': !checkRecept}" type="text" 
+              placeholder="Receptora" formControlName="filterReceptValue" [(ngModel)]="filterReceptValue" 
+              (ionChange)="filterRecepts(filterReceptValue)"></ion-input>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -67,7 +69,7 @@
                 interface="popover" interfaceOptions="{header: 'Receptora'}"
                 (ionChange)="onChangeReceptSync(receptSyncIds.value)" placeholder="Seleccione"
                 [(ngModel)]="dataItem.evaluation_detail_id">
-                <ion-select-option *ngFor="let recept of synchronizedsList" [value]="recept.id">
+                <ion-select-option *ngFor="let recept of synchronizedsList | async" [value]="recept.id">
                   {{recept.animal_id + "-" + recept.chapeta}}
                 </ion-select-option>
               </ion-select>
