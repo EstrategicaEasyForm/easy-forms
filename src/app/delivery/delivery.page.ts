@@ -29,6 +29,8 @@ export class DeliveryPage implements OnInit {
   photoImage: any;
   mbControlPanel: number = 1;
   start_date = '';
+  receptListOriginal = [];
+  detailsFilterList = [];
 
   //validations forms
   validation_form_general: FormGroup;
@@ -121,6 +123,9 @@ export class DeliveryPage implements OnInit {
       identification_number: [this.delivery.identification_number, Validators.required],
       comments: [this.delivery.comments, Validators.required]
     });
+	
+	this.receptListOriginal = this.delivery.details;
+	this.detailsFilterList = this.delivery.details;
   }
 
   reloadDetailsList(detailsList) {
@@ -286,5 +291,12 @@ export class DeliveryPage implements OnInit {
     } catch (err) {
       this.showMessage(err);
     }
+  }
+  
+  filterRecepts(filterValue) {
+	if(filterValue.length === 0) return true;
+	this.detailsFilterList = this.receptListOriginal.filter(item => {
+      return item.transferData && item.transferData.receiver.toUpperCase().includes(filterValue.toUpperCase());
+    });
   }
 }

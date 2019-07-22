@@ -29,6 +29,8 @@ export class SexagePage implements OnInit {
   photoImage: any;
   mbControlPanel: number = 1;
   start_date = '';
+  receptListOriginal = [];
+  detailsFilterList = [];
 
   //validations forms
   validation_form_general: FormGroup;
@@ -121,6 +123,9 @@ export class SexagePage implements OnInit {
       identification_number: [this.sexage.identification_number, Validators.required],
       comments: [this.sexage.comments, Validators.required]
     });
+	
+	this.receptListOriginal = this.sexage.details;
+	this.detailsFilterList = this.sexage.details;
   }
 
   reloadDetailsList(detailsList) {
@@ -288,4 +293,10 @@ export class SexagePage implements OnInit {
     }
   }
 
+  filterRecepts(filterValue) {
+	if(filterValue.length === 0) return true;
+	this.detailsFilterList = this.receptListOriginal.filter(item => {
+      return item.transferData && item.transferData.receiver.toUpperCase().includes(filterValue.toUpperCase());
+    });
+  }
 }

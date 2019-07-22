@@ -94,10 +94,11 @@
     <ion-item *ngIf="mbControlPanel===2">
       <ion-list>
         <ion-item>
+		
           <ion-label item-start style="margin: 0 auto"> Registros encontratos {{delivery.details?.length }}
           </ion-label>
           <ion-item item-end>
-
+			<ion-input type="text" #filterValue placeholder="Receptora" (ionChange)="filterRecepts(filterValue.value)"></ion-input>
           </ion-item>
         </ion-item>
         <ion-item class="card-page-details">
@@ -143,7 +144,7 @@
                     </ion-row>
                   </ion-grid>
                 </ion-item>
-                <ion-item-sliding *ngFor="let item of delivery.details; let indx = index">
+                <ion-item-sliding *ngFor="let item of detailsFilterList; let indx = index">
                   <ion-item>
                     <ion-grid class="item-sliding">
                       <ion-row>

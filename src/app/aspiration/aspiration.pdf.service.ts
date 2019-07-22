@@ -348,7 +348,7 @@ export class AspirationPdfService {
 							fontSize: 12,
 						},
 						{
-							text: 'Temperatura de llegada  : ' + data.aspirationApi.arrived_temperature_number + '°C',
+							text: 'Temperatura de envío  : ' + data.aspirationApi.arrived_temperature_number + '°C',
 							style: 'normal_style',
 						},
 						{
@@ -425,6 +425,22 @@ export class AspirationPdfService {
 									}
 								}
 								else { 
+									/*
+									if (options && options.open) {
+										var file = new Blob([binaryArray], { type: 'application/pdf' });
+										var fileUrl = URL.createObjectURL(file);
+
+										//open it via a link
+										var fileName = "test.pdf";
+										var a = document.createElement("a");
+										document.body.appendChild(a);
+										a.href = fileUrl;
+										a.download = fileName;
+										a.click();
+										//open it directly 
+										window.open(fileUrl);
+									}
+									*/
 									resolve({ status: "error", error: result.error, filename: filename });
 								}
 							});
