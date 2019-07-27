@@ -31,6 +31,8 @@ export class AgendaPage implements OnInit {
     public toastCtrl: ToastController,
     public events: Events,
 	public screenOrientation: ScreenOrientation) {
+		
+	usersService.setDataParamAgenda(this);
 
     this.initFilters();
 
@@ -441,6 +443,12 @@ export class AgendaPage implements OnInit {
     } catch(err) {
       this.showMessage(err);
     }
+  }
+  
+  clearAgenda() {
+	this.detailsApi = [];
+	this.detailsApiOriginal = [];
+	this.onResetFilter();
   }
 
 }

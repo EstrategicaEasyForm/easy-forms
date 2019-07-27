@@ -42,6 +42,17 @@ export class UsersService {
       }
     });
   }
+  
+  /*References to AgendaPage class*/
+  agendaPage: any;
+  
+  setDataParamAgenda(agendaPage){
+	this.agendaPage = agendaPage;
+  }
+  
+  getDataParamAgenda(){
+	return this.agendaPage;
+  }
 
   /* Token Authentication Storage */
 
@@ -99,5 +110,7 @@ export class UsersService {
       });
     });
   }
+  
+  
   
 }

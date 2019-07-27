@@ -11,7 +11,11 @@ import * as moment from 'moment-timezone';
 import ApolloLinkTimeout from 'apollo-link-timeout';
 
 // <-- The URL of the GraphQL server 
+// Using for testing
 const uri = 'http://tester.estrategicacomunicaciones.com/graphql';
+
+// Using for production
+//const uri = 'https://invitro.com.co/graphql';
 
 @NgModule({
   exports: [ApolloModule, HttpLinkModule],
@@ -81,9 +85,6 @@ export class GraphQLModule {
       // other options like cache
       cache: new InMemoryCache(),
       defaultOptions: {
-        watchQuery: {
-          fetchPolicy: 'no-cache'
-        },
         query: {
           fetchPolicy: 'no-cache'
         }

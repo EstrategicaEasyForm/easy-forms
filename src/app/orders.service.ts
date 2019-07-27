@@ -395,12 +395,17 @@ export class OrdersService {
           })
           .valueChanges
           .subscribe(({ data }: any) => {
-            if (data.orders) {
-              resolve(data.orders);
-            }
-            else {
-              reject(data.errors || "Error consultando el servicio");
-            }
+			if(data)  {
+				if (data.orders) {
+				  resolve(data.orders);
+				}
+				else {
+				  reject(data.errors || "Error consultando el servicio");
+				}
+			}
+			else {
+				reject("Error consultando el servicio");
+			}
           });
       } catch (e) {
         reject(e);
