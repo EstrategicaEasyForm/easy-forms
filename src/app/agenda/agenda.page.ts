@@ -22,6 +22,7 @@ export class AgendaPage implements OnInit {
   templates: any;
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
   @ViewChild('ion-content') public ionContent: IonContent;
+  loading: any;
 
   constructor(
     public ordersService: OrdersService,
@@ -39,6 +40,11 @@ export class AgendaPage implements OnInit {
     this.events.subscribe('sync:finish', (registry) => {
       this.newAgenda = true;
     });
+	
+	this.events.subscribe('graphql:error', (elementPush) => {
+      this.showMessage(elementPush.message);
+      if(this.loading) this.loading.dismiss();
+    });
   }
 
   async ngOnInit() {
@@ -49,26 +55,26 @@ export class AgendaPage implements OnInit {
   }
 
   async retriveDetailsApi() {
-    const loading = await this.loadingCtrl.create({
+    this.loading = await this.loadingCtrl.create({
       message: 'Por favor espere'
     });
-    await loading.present();
+    await this.loading.present();
 
     this.ordersService.getDetailsApiStorage()
       .then((ordersList) => {
         if (ordersList) {
-          loading.dismiss();
+          this.loading.dismiss();
           this.setTemplateToDetail(ordersList);
           this.filterItems();
         }
         else {
           this.ordersService.getDetailsApiQuery().then((data: any) => {
-            loading.dismiss();
+            this.loading.dismiss();
             this.ordersService.setDetailsApiStorage(data);
             this.setTemplateToDetail(data);
             this.filterItems();
           }).catch(error => {
-            loading.dismiss();
+            this.loading.dismiss();
             if (typeof error === 'string') {
               this.showMessage(error);
             }
@@ -227,21 +233,21 @@ export class AgendaPage implements OnInit {
   }
 
   async onItemFilter() {
-    const loading = await this.loadingCtrl.create({
+    this.loading = await this.loadingCtrl.create({
       message: 'Por favor espere',
       duration: 100
     });
-    await loading.present();
+    await this.loading.present();
 
     this.filterItems();
   }
 
   async onResetFilter() {
-    const loading = await this.loadingCtrl.create({
+    this.loading = await this.loadingCtrl.create({
       message: 'Por favor espere',
       duration: 100
     });
-    await loading.present();
+    await this.loading.present();
 
     this.initFilters();
     this.filterItems();
@@ -335,10 +341,10 @@ export class AgendaPage implements OnInit {
   }
 
   async goToTemplate(detailApi) {
-    const loading = await this.loadingCtrl.create({
+    this.loading = await this.loadingCtrl.create({
       message: 'Por favor espere'
     });
-    await loading.present();
+    await this.loading.present();
 
     if (detailApi.type)
       switch (detailApi.type.id) {
@@ -404,7 +410,7 @@ export class AgendaPage implements OnInit {
         break;
       }
     await this.wait(500);
-    loading.dismiss();
+    this.loading.dismiss();
   }
 
   detailApiRefresh(detailsApi) {

@@ -44,14 +44,23 @@ export class GraphQLModule {
     });
     const linkError = onError(({ graphQLErrors, networkError }) => {
       let message = '';
+	  let details = [];
 
       if (networkError) {
         message = networkError.message;
+		if(message && message.includes('Http failure response for')) {
+			details = [
+				message
+			];
+			message = "Error de red al conectar con el servicio";
+		}
         // GraphQl error event	     
         this.events.publish('graphql:error', {
           type: 'error',
           message: message,
-          time: moment().format('HH:mm:ss')
+          time: moment().format('HH:mm:ss'),
+		  show: false,
+		  details: details
         });
       }
       else if (graphQLErrors) {
@@ -85,6 +94,9 @@ export class GraphQLModule {
       // other options like cache
       cache: new InMemoryCache(),
       defaultOptions: {
+		watchQuery: {
+          fetchPolicy: 'no-cache'
+        },
         query: {
           fetchPolicy: 'no-cache'
         }

@@ -79,7 +79,7 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
     }
     else {
       const local_id = dataParam.local ? dataParam.local.id : '';
-      this.newItem(local_id);
+      this.newItem(local_id,'','','');
     }
   }
 
@@ -123,7 +123,7 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
     }
   }
 
-  newItem(local_id) {
+  newItem(local_id,type,bull,bull_breed) {
 
     this.dataItem = {
       stateSync: 'C',
@@ -142,10 +142,10 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
         donor: ['', Validators.required],
         donor_breed: ['', Validators.required],
         local_id: [local_id, Validators.required],
-        type: ['', Validators.required],
+        type: [type, Validators.required],
         arrived_time: ['', Validators.required],
-        bull: [''],
-        bull_breed: [''],
+        bull: [bull],
+        bull_breed: [bull_breed],
         gi: [0, Validators.required],
         gii: [0, Validators.required],
         giii: [0, Validators.required],
@@ -159,10 +159,10 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
         donor: '',
         donor_breed: '',
         local_id: local_id,
-        type: '',
+        type: type,
         arrived_time: '',
-        bull: '',
-        bull_breed: '',
+        bull: bull,
+        bull_breed: bull_breed,
         gi: 0,
         gii: 0,
         giii: 0,
@@ -195,7 +195,7 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
     if (this.validation_form.valid) {
       if (this.action === 'new') {
         this.saveItem();
-        this.newItem(this.dataItem.local_id);
+        this.newItem(this.dataItem.local_id,this.dataItem.type,this.dataItem.bull,this.dataItem.bull_breed);
         this.dataItemOri = Object.assign({}, this.dataItem);
       }
       else if (this.action === 'update') {
@@ -204,7 +204,7 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
           this.dataItemOri = Object.assign({}, this.dataItem);
         }
         if (this.indx === this.detailsList.length - 1) {
-          this.newItem(this.dataItem.local_id);
+          this.newItem(this.dataItem.local_id,this.dataItem.type,this.dataItem.bull,this.dataItem.bull_breed);
           this.dataItemOri = Object.assign({}, this.dataItem);
         }
         else {

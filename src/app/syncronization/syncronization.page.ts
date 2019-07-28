@@ -29,7 +29,7 @@ export class SyncronizationPage {
   totalWorkSheets = 0;
   totalError = 0;
   orderStorage: any;
-  syncronizedSucess: boolean;
+  
 
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
   constructor(
@@ -96,7 +96,7 @@ export class SyncronizationPage {
   async initSync() {
     //Clear console
     this.logs = [];
-	this.syncronizedSucess = false;
+	
 
     const _self = this;
     _self.loading = await this.loadingCtrl.create({
@@ -223,7 +223,7 @@ export class SyncronizationPage {
 				  type: 'error',
 				  message: 'Error sincronizando la planilla ' + type.name + '. Orden de producción #' + order.id,
 				  details: [
-				    'No se puede invocar el servicio para la finalizacion de la planilla',	
+				    'No se puede invocar el servicio para finalizar la planilla',	
 					res.error
 				  ],
 				  time: moment().format('HH:mm A'),
@@ -313,11 +313,11 @@ export class SyncronizationPage {
 
   finishSync(error) {
     this.totalWorkSheets--;
+	
     if (error) this.totalError++;
 
     if (this.totalWorkSheets <= 0) {
-		this.syncronizedSucess = this.totalError === 0;
-        this.retriveAgenda(); 
+		this.retriveAgenda(); 
     }
   }
 
@@ -329,32 +329,28 @@ export class SyncronizationPage {
 	  
       if(this.orderStorage)
       detailsApi = this.diff(this.orderStorage,detailsApi);
-      
+  
 	  
-	  if(this.syncronizedSucess)
-      this.writeLog({
-          type: 'info',
-          message: 'La sincronización ha finalizado exitósamente',
-          time: moment().format('HH:mm A')
-      });
-	  else 
-	  this.writeLog({
-        type: 'info',
-        message: "La agenda se ha actualizó correctamente",
-        time: moment().format('HH:mm A')
-      });
-	  
-      this.ordersService.setDetailsApiStorage(detailsApi);
+	  if(this.totalError === 0) {
+		  this.writeLog({
+			  type: 'info',
+			  message: 'La sincronización ha finalizado exitósamente',
+			  time: moment().format('HH:mm A')
+		  });
+	  } else {
+		  this.writeLog({
+			type: 'info',
+			message: 'La sincronización finalizó con errores',
+			time: moment().format('HH:mm A')
+		  });
+	  }
+		
+	  this.ordersService.setDetailsApiStorage(detailsApi);
       this.eventCtrl.publish('sync:finish');
 
     }).catch(error => {
       this.loading.dismiss();
-	  if(this.syncronizedSucess)
-      this.writeLog({
-          type: 'info',
-          message: 'La sincronización ha finalizado exitósamente',
-          time: moment().format('HH:mm A')
-      });
+	  
       this.writeLog({
         type: 'error',
         message: "Se ha generado un error realizando la descarga de la agenda",

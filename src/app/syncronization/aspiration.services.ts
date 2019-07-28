@@ -43,7 +43,7 @@ export class AspirationService {
           "medium_lot_opu": aspiration.medium_lot_opu,
           "medium_opu": aspiration.medium_opu,
           "received_by": aspiration.received_by,
-          //"receiver_name": aspiration.receiver_name,
+          "receiver_name": aspiration.receiver_name,
           "searcher": aspiration.searcher,
           "state": aspiration.state,
           "transport_type": aspiration.transport_type,

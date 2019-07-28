@@ -61,7 +61,10 @@ export class AspirationPage implements OnInit {
     ],
     'comments': [
       { type: 'required', message: 'Campo requerido.' }
-    ]
+    ],
+	'receiver_name': [
+      { type: 'required', message: 'Campo requerido.' }
+    ],
   };
 
 
@@ -107,7 +110,8 @@ export class AspirationPage implements OnInit {
       transport_type: [this.aspiration.transport_type, Validators.required],
       received_by: [this.aspiration.received_by, Validators.required],
       identification_number: [this.aspiration.identification_number, Validators.required],
-      comments: [this.aspiration.comments, Validators.required]
+      comments: [this.aspiration.comments, Validators.required],
+	  receiver_name: [this.aspiration.receiver_name, Validators.required],
     });
 
     for (let detail of this.aspiration.details) {
