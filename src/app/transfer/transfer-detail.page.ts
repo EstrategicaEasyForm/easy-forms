@@ -29,6 +29,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
   checkInitial: boolean;
   synchronizedsListOriginal = [];
   synchronizedsList: Observable<Array<string>>;
+  corpusLuteumList: any =  ['I1', 'I2', 'I3', 'D1', 'D2', 'D3'];
 
   validation_messages = {
     'embryo_class': [
@@ -73,7 +74,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
       this.updateItem(detailApiId);
     }
     else {
-      this.newItem(null);
+      this.newItem(null,'','');
     }
     this.filterReceiverselect();
   }
@@ -107,7 +108,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
 
   }
 
-  newItem(newTransferor) {
+  newItem(newTransferor,localId,comments) {
 
     this.dataItem = {
       stateSync: 'C'
@@ -124,9 +125,9 @@ export class TransferDetailPage implements OnInit, OnDestroy {
         receiver: ['', this.receiverInputValidator.bind(this)],
         checkRecept: [this.checkRecept],
         corpus_luteum: ['', Validators.required],
-        local_id: ['', Validators.required],
+        local_id: [localId, Validators.required],
         transferor: [newTransferor || '', Validators.required],
-        comments: ['', Validators.required],
+        comments: [comments, Validators.required],
         evaluation_detail_id: ['', this.receiverSyncValidator.bind(this)],
       });
     }
@@ -136,9 +137,9 @@ export class TransferDetailPage implements OnInit, OnDestroy {
         checkRecept: [this.checkRecept],
         receiver: '',
         corpus_luteum: '',
-        local_id: '',
+        local_id: localId,
         transferor: newTransferor || '',
-        comments: '',
+        comments: comments,
         evaluation_detail_id: '',
       });
     }
@@ -166,7 +167,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     if (this.validation_form.valid) {
       if (this.action === 'new') {
         this.saveItem();
-        this.newItem(this.dataItem.transferor);
+        this.newItem(this.dataItem.transferor,this.dataItem.local_id,this.dataItem.comments);
         this.dataItemOri = Object.assign({}, this.dataItem);
       }
       else if (this.action === 'update') {
@@ -175,16 +176,18 @@ export class TransferDetailPage implements OnInit, OnDestroy {
           this.dataItemOri = Object.assign({}, this.dataItem);
         }
         if (this.indx === this.detailsList.length - 1) {
-          this.newItem(this.dataItem.transferor);
+		  this.newItem(this.dataItem.transferor,this.dataItem.local_id,this.dataItem.comments);
           this.dataItemOri = Object.assign({}, this.dataItem);
         }
         else {
           this.indx++;
-          const oldTransferor = this.dataItem.transferor;
+          const oldData = this.dataItem;
           this.dataItem = this.detailsList[this.indx];
-          if(this.dataItem.transferor === null || this.dataItem.transferor.length === 0 )
-          this.dataItem.transferor = oldTransferor;
-          
+            
+		  if(!this.dataItem.transferor || this.dataItem.transferor.length === 0 ) this.dataItem.transferor = oldData.transferor;
+		  if(!this.dataItem.local_id || this.dataItem.local_id === null) this.dataItem.local_id = oldData.local_id;
+		  if(!this.dataItem.comments || this.dataItem.comments.length === 0)  this.dataItem.comments = oldData.comments;
+		  
           this.dataItemOri = Object.assign({}, this.dataItem);
         }
       }

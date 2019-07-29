@@ -76,7 +76,7 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
     }
     else {
       const local_id = dataParam.local ? dataParam.local.id : '';
-      this.newItem(local_id);
+      this.newItem(local_id,'','','','');
     }
   }
 
@@ -118,7 +118,7 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
     }
   }
 
-  newItem(local_id) {
+  newItem(local_id,attendant,diagnostic,other_procedures,comments) {
 
     this.dataItem = {
       stateSync: 'C'
@@ -134,10 +134,10 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
         chapeta: ['', Validators.required],
         fit: ['', Validators.required],
         synchronized: ['', Validators.required],
-        attendant: ['', Validators.required],
-        diagnostic: [''],
-        other_procedures: ['', Validators.required],
-        comments: ['', Validators.required]
+        attendant: [attendant, Validators.required],
+        diagnostic: [diagnostic],
+        other_procedures: [other_procedures, Validators.required],
+        comments: [comments, Validators.required]
       });
       this.dataItem.local_id = local_id;
       this.onChangeLocal(local_id);
@@ -148,11 +148,11 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
         chapeta: '',
         fit: '',
         synchronized: '',
-        attendant:'',
+        attendant: attendant,
         local_id: local_id,
-        diagnostic: '',
-        other_procedures: '',
-        comments: ''
+        diagnostic: diagnostic,
+        other_procedures: other_procedures,
+        comments: comments
       });
       this.dataItem.local_id = local_id;
       this.onChangeLocal(local_id);
@@ -181,7 +181,7 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
     if (this.validation_form.valid) {
       if (this.action === 'new') {
         this.saveItem();
-        this.newItem(this.dataItem.local_id);
+        this.newItem(this.dataItem.local_id,this.dataItem.attendant,this.dataItem.diagnostic,this.dataItem.other_procedures,this.dataItem.comments);
         this.dataItemOri = Object.assign({}, this.dataItem);
       }
       else if (this.action === 'update') {
@@ -190,7 +190,7 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
           this.dataItemOri = Object.assign({}, this.dataItem);
         }
         if (this.indx === this.detailsList.length - 1) {
-          this.newItem(this.dataItem.local_id);
+          this.newItem(this.dataItem.local_id,this.dataItem.attendant,this.dataItem.diagnostic,this.dataItem.other_procedures,this.dataItem.comments);
           this.dataItemOri = Object.assign({}, this.dataItem);
         }
         else {

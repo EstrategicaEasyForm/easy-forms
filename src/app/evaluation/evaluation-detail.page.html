@@ -72,7 +72,7 @@
                         </ion-col>
                     </ion-row>
                     <ion-row>
-                        <ion-col col-4>
+                        <ion-col size="1.6">
                             <ion-select style="max-width: 100%;" formControlName="fit" interface="popover"
                                 interfaceOptions="{header: 'Apta'}" placeholder="Apta" [(ngModel)]="dataItem.fit">
                                 <ion-select-option value="1">Si</ion-select-option>
@@ -87,7 +87,7 @@
                                 </ng-container>
                             </div>
                         </ion-col>
-                        <ion-col col-4>
+                        <ion-col>
                             <ion-select style="max-width: 100%;" formControlName="synchronized" interface="popover"
                                 interfaceOptions="{header: 'Sincronizada'}" placeholder="Sincronizada"
                                 [(ngModel)]="dataItem.synchronized">
@@ -103,7 +103,7 @@
                                 </ng-container>
                             </div>
                         </ion-col>
-                        <ion-col col-4>
+                        <ion-col>
                             <ion-select #localIds style="max-width: 100%;" formControlName="local_id"
                                 interface="popover" interfaceOptions="{header: 'Locales'}" placeholder="Local"
                                 (ionChange)="onChangeLocal(localIds.value)" [(ngModel)]="dataItem.local_id">

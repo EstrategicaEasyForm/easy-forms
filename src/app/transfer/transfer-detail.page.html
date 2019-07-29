@@ -105,12 +105,15 @@
           </ion-row>
           <ion-row>
             <ion-col col-6>
-              <ion-input type="text" formControlName="corpus_luteum" [(ngModel)]="dataItem.corpus_luteum"></ion-input>
+			  <ion-select style="max-width: 100%;" formControlName="corpus_luteum" interface="popover"
+                interfaceOptions="{header: 'Cuerpo Lúteo'}" placeholder="Seleccione" [(ngModel)]="dataItem.corpus_luteum">
+                <ion-select-option *ngFor="let corpus of corpusLuteumList" [value]="corpus">{{corpus}}
+                </ion-select-option>
+              </ion-select>
               <div class="validation-errors">
-                <ng-container *ngFor="let validation of validation_messages.corpus_luteum">
-                  <div class="error-message"
-                    *ngIf="validation_form.get('corpus_luteum').hasError(validation.type) 
-                        && (validation_form.get('corpus_luteum').dirty || validation_form.get('corpus_luteum').touched)">
+                <ng-container *ngFor="let validation of validation_messages.local_id">
+                  <div class="error-message" *ngIf="validation_form.get('local_id').hasError(validation.type) 
+                        && (validation_form.get('local_id').dirty || validation_form.get('local_id').touched)">
                     {{ validation.message }}
                   </div>
                 </ng-container>
