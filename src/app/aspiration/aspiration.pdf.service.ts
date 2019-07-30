@@ -287,7 +287,7 @@ export class AspirationPdfService {
 											{ text: data.local.name, style: 'normal_style' },
 												'',
 											{ text: 'Receptoras sinc. : ', style: 'normal_style' },
-											{ text: data.aspirationApi.synchronized_receivers, style: 'normal_style' },
+											{ text: data.aspirationApi.synchronized_number, style: 'normal_style' },
 											],
 											[{ text: 'Medio OPU: ', style: 'normal_style' },
 											{ text: data.aspirationApi.medium_opu, style: 'normal_style' },
