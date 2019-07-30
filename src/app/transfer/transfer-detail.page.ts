@@ -344,8 +344,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
 
   filterRecepts(filter) {
     this.synchronizedsList = Observable.of(this.synchronizedsListOriginal.filter(item => {
-      return item.animal_id.includes(filter) || 
-            item.chapeta.includes(filter);
+      return (item.animal_id + "-" + item.chapeta).includes(filter);
     }));
   }
 
