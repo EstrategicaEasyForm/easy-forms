@@ -143,6 +143,8 @@ export class TransferDetailPage implements OnInit, OnDestroy {
         evaluation_detail_id: '',
       });
     }
+	
+	this.onChangeLocal(localId);
   }
 
   saveItem() {
@@ -185,7 +187,10 @@ export class TransferDetailPage implements OnInit, OnDestroy {
           this.dataItem = this.detailsList[this.indx];
             
 		  if(!this.dataItem.transferor || this.dataItem.transferor.length === 0 ) this.dataItem.transferor = oldData.transferor;
-		  if(!this.dataItem.local_id || this.dataItem.local_id === null) this.dataItem.local_id = oldData.local_id;
+		  if(!this.dataItem.local_id || this.dataItem.local_id === null) { 
+			this.dataItem.local_id = oldData.local_id;
+			this.onChangeLocal(this.dataItem.local_id);
+		  }
 		  if(!this.dataItem.comments || this.dataItem.comments.length === 0)  this.dataItem.comments = oldData.comments;
 		  
           this.dataItemOri = Object.assign({}, this.dataItem);

@@ -328,7 +328,7 @@ export class TransferPdfService {
 							fontSize: 12,
 						},
 						{
-							text: 'Nombre del técnico  : ' + data.transferApi.transferor,
+							text: 'Nombre del técnico  : ' + data.transferApi.technical,
 							style: 'normal_style',
 						},
 						{ text: '\n\ ' },
