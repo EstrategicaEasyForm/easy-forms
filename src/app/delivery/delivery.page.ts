@@ -98,6 +98,7 @@ export class DeliveryPage implements OnInit {
             newDetails.push({
               "id": detailsTmp.id,
               "transfer_detail_id": detailsTmp.transfer_detail_id,
+			  "sex": dtDiag.sex,
 			  "dx1": dtDiag.dx1,
               "dx2": detailsTmp.dx2,
               "transferData": dtDiag

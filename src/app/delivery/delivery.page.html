@@ -132,10 +132,10 @@
                       <ion-col class="detail-bull-breed">
                         <ion-label>Raza</ion-label>
                       </ion-col>
-                      <ion-col *ngIf="delivery.apply_delivery.apply_diagnostic === 1" class="detail-dx1">
+                      <ion-col *ngIf="delivery.apply_delivery.apply_diagnostic == 1" class="detail-dx1">
                         <ion-label>Dx1</ion-label>
                       </ion-col>
-                      <ion-col *ngIf="delivery.apply_delivery.apply_sexage === 1" class="detail-sex">
+                      <ion-col *ngIf="delivery.apply_delivery.apply_sexage == 1" class="detail-sex">
                         <ion-label>Sexaje</ion-label>
                       </ion-col>
                       <ion-col class="detail-dx2">
@@ -170,13 +170,13 @@
                           <ion-label>{{item.transferData?.bull_breed }}</ion-label>
                         </ion-col>
                         <ion-col
-                          *ngIf="delivery.apply_delivery.apply_diagnostic == 1 && delivery.apply_delivery.apply_sexage == 1"
+                          *ngIf="delivery.apply_delivery.apply_diagnostic == 1"
                           class="detail-dx1">
                           <ion-label *ngIf="item.dx1 === 'P'" color="success">{{item.dx1}}</ion-label>
                           <ion-label *ngIf="item.dx1 === 'V'" color="danger">{{item.dx1}}</ion-label>
                           <ion-label *ngIf="item.dx1 === 'PPL'" color="warning">{{item.dx1}}</ion-label>
                         </ion-col>
-                        <ion-col class="detail-sex" *ngIf="delivery.apply_delivery.apply_sexage === 1">
+                        <ion-col class="detail-sex" *ngIf="delivery.apply_delivery.apply_sexage == 1">
                           <ion-label *ngIf="item.sex === 'M'" color="primary">{{item.sex}}</ion-label>
                           <ion-label *ngIf="item.sex === 'H'" color="tertiary">{{item.sex}}</ion-label>
                         </ion-col>
