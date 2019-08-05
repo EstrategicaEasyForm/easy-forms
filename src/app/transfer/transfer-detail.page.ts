@@ -95,7 +95,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     //initialize the form
 
     this.validation_form = this.formBuilder.group({
-      embryo_class: [this.dataItem.embryo_class, Validators.required],
+      embryo_class: [this.dataItem.embryo_class, ''],
       checkRecept: [this.checkRecept, ''],
       filterReceptValue: [this.filterReceptValue, ''],
       corpus_luteum: [this.dataItem.corpus_luteum, Validators.required],
@@ -121,7 +121,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     this.checkRecept = false;
     if (!this.validation_form) {
       this.validation_form = this.formBuilder.group({
-        embryo_class: ['', Validators.required],
+        embryo_class: ['', ''],
         receiver: ['', this.receiverInputValidator.bind(this)],
         checkRecept: [this.checkRecept],
         corpus_luteum: ['', Validators.required],
@@ -293,7 +293,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
 
   onChangeCheckRecept() {
     this.validation_form = this.formBuilder.group({
-      embryo_class: [this.dataItem.embryo_class, Validators.required],
+      embryo_class: [this.dataItem.embryo_class, ''],
       receiver: [this.dataItem.receiver, this.receiverInputValidator.bind(this)],
       checkRecept: [this.checkRecept],
       filterReceptValue: [this.filterReceptValue],
