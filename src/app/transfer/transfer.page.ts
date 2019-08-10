@@ -304,4 +304,8 @@ export class TransferPage implements OnInit {
     }
   }
 
+  resetItemDetail(detailItem, indx) {
+    this.transfer.details_view[indx] = detailItem;
+  }
+
 }

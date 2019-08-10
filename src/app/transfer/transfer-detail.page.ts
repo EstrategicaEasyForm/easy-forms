@@ -29,7 +29,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
   checkInitial: boolean;
   synchronizedsListOriginal = [];
   synchronizedsList: Observable<Array<string>>;
-  corpusLuteumList: any =  ['I1', 'I2', 'I3', 'D1', 'D2', 'D3'];
+  corpusLuteumList: any = ['I1', 'I2', 'I3', 'D1', 'D2', 'D3'];
 
   validation_messages = {
     'embryo_class': [
@@ -74,7 +74,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
       this.updateItem(detailApiId);
     }
     else {
-      this.newItem(null,'','');
+      this.newItem(null, '', '');
     }
     this.filterReceiverselect();
   }
@@ -108,7 +108,7 @@ export class TransferDetailPage implements OnInit, OnDestroy {
 
   }
 
-  newItem(newTransferor,localId,comments) {
+  newItem(newTransferor, localId, comments) {
 
     this.dataItem = {
       stateSync: 'C'
@@ -143,8 +143,8 @@ export class TransferDetailPage implements OnInit, OnDestroy {
         evaluation_detail_id: '',
       });
     }
-	
-	this.onChangeLocal(localId);
+
+    this.onChangeLocal(localId);
   }
 
   saveItem() {
@@ -169,8 +169,9 @@ export class TransferDetailPage implements OnInit, OnDestroy {
     if (this.validation_form.valid) {
       if (this.action === 'new') {
         this.saveItem();
-        this.newItem(this.dataItem.transferor,this.dataItem.local_id,this.dataItem.comments);
         this.dataItemOri = Object.assign({}, this.dataItem);
+        this.newItem(this.dataItem.transferor, this.dataItem.local_id, this.dataItem.comments);
+
       }
       else if (this.action === 'update') {
         if (!this.equalsDetailsTransfer(this.dataItemOri, this.dataItem)) {
@@ -178,22 +179,23 @@ export class TransferDetailPage implements OnInit, OnDestroy {
           this.dataItemOri = Object.assign({}, this.dataItem);
         }
         if (this.indx === this.detailsList.length - 1) {
-		  this.newItem(this.dataItem.transferor,this.dataItem.local_id,this.dataItem.comments);
           this.dataItemOri = Object.assign({}, this.dataItem);
+          this.newItem(this.dataItem.transferor, this.dataItem.local_id, this.dataItem.comments);          
         }
         else {
           this.indx++;
           const oldData = this.dataItem;
           this.dataItem = this.detailsList[this.indx];
-            
-		  if(!this.dataItem.transferor || this.dataItem.transferor.length === 0 ) this.dataItem.transferor = oldData.transferor;
-		  if(!this.dataItem.local_id || this.dataItem.local_id === null) { 
-			this.dataItem.local_id = oldData.local_id;
-			this.onChangeLocal(this.dataItem.local_id);
-		  }
-		  if(!this.dataItem.comments || this.dataItem.comments.length === 0)  this.dataItem.comments = oldData.comments;
-		  
           this.dataItemOri = Object.assign({}, this.dataItem);
+
+          if (!this.dataItem.transferor || this.dataItem.transferor.length === 0) this.dataItem.transferor = oldData.transferor;
+          if (!this.dataItem.local_id || this.dataItem.local_id === null) {
+            this.dataItem.local_id = oldData.local_id;
+            this.onChangeLocal(this.dataItem.local_id);
+          }
+          if (!this.dataItem.comments || this.dataItem.comments.length === 0) this.dataItem.comments = oldData.comments;
+
+         
         }
       }
     }
@@ -234,9 +236,9 @@ export class TransferDetailPage implements OnInit, OnDestroy {
 
   //CHANGE
   equalsDetailsTransfer(dataObjOri: any, dataItem: any): boolean {
-	if(dataObjOri===null || dataObjOri===undefined ) return true;
+    if (dataObjOri === null || dataObjOri === undefined) return true;
     return
-	  dataObjOri.receiver === dataItem.receiver &&
+    dataObjOri.receiver === dataItem.receiver &&
       dataObjOri.evaluation_detail_id === dataItem.evaluation_detail_id &&
       dataObjOri.corpus_luteum === dataItem.corpus_luteum &&
       dataObjOri.local_id === dataItem.local_id &&
@@ -247,8 +249,9 @@ export class TransferDetailPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     const dataObjOri = this.detailsList[this.indx];
     if (dataObjOri) {
-      if (!this.equalsDetailsTransfer(dataObjOri, this.dataItem)) {
+      if (!this.equalsDetailsTransfer(dataObjOri, this.dataItemOri)) {
         //TODO: confirmation to exit
+        this.transferPage.resetItemDetail(this.dataItemOri, this.indx);
       }
     }
   }
