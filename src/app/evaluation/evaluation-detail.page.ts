@@ -257,6 +257,7 @@ export class EvaluationDetailPage implements OnInit, OnDestroy {
     if (dataObjOri) {
       if (!this.equalsDetailsEvaluation(dataObjOri, this.dataItem)) {
         //TODO: confirmation to exit
+		this.evaluationPage.resetItemDetail(this.dataItemOri, this.indx);
       }
     }
   }

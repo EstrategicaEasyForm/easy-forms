@@ -262,8 +262,9 @@ export class AspirationDetailPage implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     const dataObjOri = this.detailsList[this.indx];
     if (dataObjOri) {
-      if (!this.equalsDetailsAspiration(dataObjOri, this.dataItem)) {
+      if (!this.equalsDetailsAspiration(dataObjOri, this.dataItemOri)) {
         //TODO: confirmation to exit
+		this.aspirationPage.resetItemDetail(this.dataItemOri, this.indx);
       }
     }
   }

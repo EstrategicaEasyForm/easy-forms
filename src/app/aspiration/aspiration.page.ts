@@ -314,4 +314,8 @@ export class AspirationPage implements OnInit {
 		});
 	}
   }
+  
+  resetItemDetail(detailItem, indx) {
+    this.aspiration.details[indx] = detailItem;
+  }
 }

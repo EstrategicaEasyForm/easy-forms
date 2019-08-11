@@ -286,5 +286,9 @@ export class EvaluationPage implements OnInit {
 		});
 	}
   }
+  
+  resetItemDetail(detailItem, indx) {
+    this.evaluation.details[indx] = detailItem;
+  }
 
 }
