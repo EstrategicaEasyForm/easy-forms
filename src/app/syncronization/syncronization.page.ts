@@ -344,7 +344,8 @@ export class SyncronizationPage {
 			time: moment().format('HH:mm A')
 		  });
 	  }
-		
+	  const syncronizedDate = moment().format('DD/MM/YYYY');
+	  this.ordersService.setSyncronizedDate(syncronizedDate);
 	  this.ordersService.setDetailsApiStorage(detailsApi);
       this.eventCtrl.publish('sync:finish');
 

@@ -23,6 +23,7 @@ export class AgendaPage implements OnInit {
   @ViewChild('networkNotifyBanner') public networkNotifyBanner: NetworkNotifyBannerComponent;
   @ViewChild('ion-content') public ionContent: IonContent;
   loading: any;
+  syncronizedDate: string = null;
 
   constructor(
     public ordersService: OrdersService,
@@ -66,6 +67,9 @@ export class AgendaPage implements OnInit {
           this.loading.dismiss();
           this.setTemplateToDetail(ordersList);
           this.filterItems();
+		  this.ordersService.getSyncronizedDate().then((syncronizedDate: any)=>{
+			  this.syncronizedDate = syncronizedDate;
+		  });
         }
         else {
           this.ordersService.getDetailsApiQuery().then((data: any) => {
@@ -73,12 +77,14 @@ export class AgendaPage implements OnInit {
             this.ordersService.setDetailsApiStorage(data);
             this.setTemplateToDetail(data);
             this.filterItems();
+			this.syncronizedDate = moment().format('DD/MM/YYYY');
+			this.ordersService.setSyncronizedDate(this.syncronizedDate);
           }).catch(error => {
             this.loading.dismiss();
             if (typeof error === 'string') {
               this.showMessage(error);
             }
-            else this.showMessage('No se puede consultar la lista de agendas');
+            else this.showMessage('Error consultando el servicio de ordenes');
           });
         }
       });

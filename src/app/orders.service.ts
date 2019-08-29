@@ -433,5 +433,15 @@ export class OrdersService {
   getDetailApiParam() {
     return this.dataParam;
   }
+  
+  /* Syncronized last Date */
+  
+  setSyncronizedDate(syncronizedDate){
+	return this.storage.set('syncronizedDate', syncronizedDate);
+  };
+  
+  getSyncronizedDate(){
+	return this.storage.get('syncronizedDate');
+  };
 
 }

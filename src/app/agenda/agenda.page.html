@@ -69,8 +69,13 @@
         <ion-grid>
           <ion-row>
             <ion-col class="filter-registry-label" col-10>
-              <ion-label>
+			  <ion-label>
                 {{detailsApi.length}} item(s) filtrado(s) de {{detailsApiOriginal.length}} encontrado(s)
+              </ion-label>
+			  <br>
+			  <br>
+			  <ion-label *ngIf="syncronizedDate">	
+                Última sincronización: {{syncronizedDate}}
               </ion-label>
             </ion-col>
             <ion-col class="filter-all-days">
